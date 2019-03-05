@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Filter</title>
+</head>
+<body>
+{% for book in list %}
+    {% if book.btitle|length <= 4 %}
+        <li style="background: red">
+            {{ book.btitle }}
+            ----默认的时间格式为：
+            {{ book.bpub_date }}
+        </li>
+    {% else %}
+        <li style="background: green">
+            {{ book.btitle }}
+            ----格式化的时间为：
+            {{ book.bpub_date|date:"Y年-m月-j日" }}
+        </li>
+    {% endif %}
+{% endfor %}
+</body>
+</html>

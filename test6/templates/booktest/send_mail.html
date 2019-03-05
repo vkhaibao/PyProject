@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>发送邮件</title>
+</head>
+<body>
+<form method="post" action="/send/">
+    <div>
+        主&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题：<br><input type="text" name="subject">
+    </div>
+    <br>
+    <div>
+        收&nbsp;件&nbsp;人：<br><input type="text" name="mail_list">
+    </div>
+    <br>
+    <div>
+        正&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文：<br><textarea name="main_body"></textarea>
+    </div>
+    <br>
+    <input type="submit" value="发送">
+    <input type="reset" value="重置">
+</form>
+</body>
+</html>

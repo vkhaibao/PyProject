@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>虚拟机详细信息</title>
+    <style type="text/css">
+        table.dataintable {
+            top: 200px;
+            border-collapse:collapse;
+            border:1px solid #aaa;
+            width:500px;
+            text-align: center;
+            }
+        table.dataintable td {
+            vertical-align:text-top;
+            padding:6px 15px 6px 6px;
+            border:1px solid #aaa;
+            text-align: left;
+            }
+        table.dataintable tr:nth-child(odd) {
+            background-color:#F5F5F5;
+        }
+        table.dataintable tr:nth-child(even) {
+            background-color:#fff;
+        }
+        #main {position: absolute;top:5%;left: 20%}
+	</style>
+</head>
+<body>
+<div id="main">
+        <table class="dataintable" align="center" valign="middle">
+            <tr>
+                <td style="width: 85px">虚拟机名：</td>
+                <td>{{ vmname }}</td>
+            </tr>
+             <tr>
+                <td style="width: 85px">操作系统：</td>
+                <td>{{ vmguest }}</td>
+            </tr>
+            <tr>
+                <td style="width: 85px">CPU数量：</td>
+                <td>{{ vmcpu }} vCPU</td>
+            </tr>
+            <tr>
+                <td style="width: 85px">内存大小：</td>
+                <td>{{ vmmemory }} MB</td>
+            </tr>
+            <tr>
+            {% if vmdisknum != 0 %}
+                <td rowspan="{{ vmdisknum }}" style="width: 85px;vertical-align: middle">磁盘信息：</td>
+                <td>{{ vmdisk | first }}</td>
+                {{ vmdisk.pop | slice:"0" }}
+                {% for i in vmdisk %}
+                <tr>
+                    <td>{{ i }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <td style="width: 85px;vertical-align: middle">磁盘信息：</td>
+                <td></td>
+            {% endif %}
+            </tr>
+
+            <tr>
+                <td style="width: 85px">运行状态：</td>
+                <td>{{ vmstatus }}</td>
+            </tr>
+             <tr>
+                <td style="width: 80px">虚拟机IP：</td>
+                <td>{{ vmip }}</td>
+            </tr>
+        </table>
+</div>
+</body>
+</html>

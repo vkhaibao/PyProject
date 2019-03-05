@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>显示上传图片</title>
+</head>
+<body>
+{% for pic in list %}
+    <img src="/abc/media/{{ pic.pic }}"/>
+{% endfor %}
+</body>
+</html>

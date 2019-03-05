@@ -1,0 +1,15 @@
+<html>
+<head>
+    <title>POST方式提交数据</title>
+</head>
+<body>
+name:{{ name }}<br/>
+gender:{{ gender }}<br/>
+hobbys:
+<ul>
+    {% for hobby in hobbys %}
+        <li>{{ hobby }}</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

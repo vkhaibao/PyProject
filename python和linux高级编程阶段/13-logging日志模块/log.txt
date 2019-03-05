@@ -1,0 +1,11 @@
+2018-11-22 16:00:56,098 - 02-将日志输出到文件.py[line:11] - WARNING: 这是 loggging a warning message
+2018-11-22 16:00:56,098 - 02-将日志输出到文件.py[line:12] - ERROR: 这是1 an loggging error message
+2018-11-22 16:00:56,098 - 02-将日志输出到文件.py[line:13] - CRITICAL: 这是 loggging critical message
+2018-11-22 16:31:11,481 - 03-既要把日志输出到控制台， 还要写入日志文件.py[line:29] - INFO: 这是 logger info message
+2018-11-22 16:31:11,482 - 03-既要把日志输出到控制台， 还要写入日志文件.py[line:30] - WARNING: 这是 logger warning message
+2018-11-22 16:31:11,482 - 03-既要把日志输出到控制台， 还要写入日志文件.py[line:31] - ERROR: 这是 logger error message
+2018-11-22 16:31:11,482 - 03-既要把日志输出到控制台， 还要写入日志文件.py[line:32] - CRITICAL: 这是 logger critical message
+2018-11-22 16:32:16,070 - 03-既要把日志输出到控制台， 还要写入日志文件.py[line:29] - INFO: 这是 logger info message
+2018-11-22 16:32:16,070 - 03-既要把日志输出到控制台， 还要写入日志文件.py[line:30] - WARNING: 这是 logger warning message
+2018-11-22 16:32:16,070 - 03-既要把日志输出到控制台， 还要写入日志文件.py[line:31] - ERROR: 这是 logger error message
+2018-11-22 16:32:16,071 - 03-既要把日志输出到控制台， 还要写入日志文件.py[line:32] - CRITICAL: 这是 logger critical message

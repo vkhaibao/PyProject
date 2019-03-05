@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>虚拟机创建</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
+    <script type="text/javascript" src="../../static/js/jquery-1.12.4.min.js"></script>
+    <style>
+        .main{
+            border-radius: 20px;
+            width: 350px;
+            height: 350px;
+            margin: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            }
+    </style>
+</head>
+<body>
+<div id="main" type="margin:auto" class="main">
+    <form method="post" action="createvm/postnewvm">
+        <input id="newvmname" name="newvmname" type="text" placeholder="请输入要创建的虚拟机名" size="43"><br/>
+        <label>模&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;板：</label><select id="tep_name" name="tep_name" style="width: 200px">
+            {% for tepvmname in template %}
+            <option name="tepvmname">{{ tepvmname.vmname }}</option>
+            {% endfor %}
+        </select><br/>
+        <label>数据中心：</label><select id="datacenter_name" name="datacenter_name" style="width: 200px" onchange="firstlel()">
+            <option name="datacnetername" value="-1">请选择数据中心</option>
+            {% for datacnetername in datacenter %}
+            <option name="datacnetername" value="{{ datacnetername.datacentername }}">{{ datacnetername.datacentername }}</option>
+            {% endfor %}
+        </select><br/>
+        <label>物理主机：</label><select id="esxi_name" name="esxi_name" style="width: 200px" onchange="secondlel()">
+            <option name="esxiname" value="-1">请选择物理主机</option>
+        </select><br/>
+        <label>数据存储：</label><select id="datastore_name" name="datastore_name" style="width: 200px">
+            <option name="datastorename" value="-1">请选择数据存储</option>
+        </select><br/>
+        <input id="createvm" type="submit" value="创建">
+    </form>
+    <p style="color: red">
+        注意:<br/>
+        1、模板：选择相应的模板<br/>
+        2、数据中心：选择相应的数据中心<br/>
+        3、物理主机：选择虚拟机承载的物理主机<br/>
+        4、数据存储：选择存放虚拟机的存储<br/>
+    </p>
+</div>
+</body>
+<script type="text/javascript">
+    function firstlel()
+    {
+        var datacenter_name = $("#datacenter_name").val();
+        if (datacenter_name != -1)
+        {
+            $.post("createvm/showdata", {datacenter_name:datacenter_name},
+            function (arr, status) {
+                $("#esxi_name").empty();
+                $("#esxi_name").append("<option name=esxiname value='-1'>请选择物理主机</option>");
+                var jsonarray= $.parseJSON(arr);
+                $.each(
+                    jsonarray, function (i, n){
+                        $("#esxi_name").append("<option name=esxiname value=" + n + ">" + n + "</option>");
+                    }
+                )
+            });
+        }
+        else
+        {
+            $("#esxi_name").empty();
+            $("#esxi_name").append("<option name=esxiname value='-1'>请选择物理主机</option>");
+            $("#datastore_name").empty();
+            $("#datastore_name").append("<option name=datastorename value='-1'>请选择数据存储</option>");
+        }
+    };
+    function secondlel()
+    {
+        var esxi_name = $("#esxi_name").val();
+        if (esxi_name != -1)
+        {
+          $.post("createvm/showstore", {esxi_name:esxi_name},
+            function (arr, status) {
+                $("#datastore_name").empty();
+                $("#datastore_name").append("<option name=datastorename value='-1'>请选择数据存储</option>");
+                var jsonarray= $.parseJSON(arr);
+                $.each(
+                    jsonarray, function (i, n){
+                        $("#datastore_name").append("<option name=esxiname value=" + n + ">" + n + "</option>");
+                    }
+                )
+            });
+        }
+        else
+        {
+            $("#datastore_name").empty();
+            $("#datastore_name").append("<option name=datastorename value='-1'>请选择数据存储</option>");
+        }
+    };
+</script>
+</html>

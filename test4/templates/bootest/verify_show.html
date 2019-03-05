@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>验证码</title>
+    <script src="/static/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //刷新验证码
+            $("#yzmc").css('cursor','pointer').click(function () {
+            $(this)[0].src += Math.ceil(Math.random()*10)
+            });
+            //刷新验证码
+            $('#change').css('cursor','pointer').click(function() {
+            $('#yzmc').attr('src',$('#yzmc').attr('src')+Math.ceil(Math.random()*10))
+            });
+        });
+    </script>
+</head>
+<body>
+<form method="post" action="/verify_yz/">
+    {% csrf_token %}
+    <input type="text" name="yzm"><br>
+    <img id="yzmc" src="/verify_code/?"/>
+    <span id="change">看不清，换一个</span>
+    <br>
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>

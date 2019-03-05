@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录案例</title>
+</head>
+<body>
+<form method="post" action="/login_check/">
+    {% csrf_token %}
+    用 户 名：<input name="username" type="text"/><br/>
+    密    码：<input name="password" type="password"/><br/>
+    <input type="submit" value="提交"/>
+</form>
+</body>
+</html>

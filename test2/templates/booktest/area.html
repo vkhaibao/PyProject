@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title>地区</title>
+</head>
+<body>
+<input id="search" name="search" type="text" class="query-search" placeholder="输入城市名.....">
+<a id="a1" href="" onclick="addParam()">查询</a><br/>
+<hr/>
+当前地区：{{area.atitle}}
+<hr/>
+上级地区：{{area.aParent.atitle}}
+<hr/>
+下级地区：
+<ul>
+    {%for a in area.areainfo_set.all%}
+    <li>{{a.atitle}}</li>
+    {%endfor%}
+</ul>
+</body>
+</html>
+<script>
+    function addParam() {
+        var area_name=document.getElementById("a1");
+        if (document.getElementById("search").value.length == 0)
+        {
+            area_name.href ="/area/?atitle=宿迁市";
+        } else
+        {
+        area_name.href ="/area/?atitle="+document.getElementById("search").value;
+        }
+    }
+</script>

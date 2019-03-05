@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义使用tinymce</title>
+    <script type="text/javascript" src="/static/js/tiny_mce.js"></script>
+    <script type="text/javascript">
+        tinyMCE.init({
+            'mode':'textareas',
+            'theme':'advanced',
+            'width':800,
+            'height':100
+        });
+    </script>
+</head>
+<body>
+<form method="post" action="/save_ed/">
+    <textarea name='gcontent'>哈哈，这是啥呀</textarea>
+    <input type="submit" value="保存">
+</form>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>转义</title>
+</head>
+<body>
+自动转义：{{content}}
+<hr>
+过滤器safe关闭转义：{{content|escape}}
+<hr>
+过滤器safe关闭转义：{{content|safe}}
+<hr>
+模板硬编码不转义：{{data|default:'<b>hello</b>'}}
+</body>
+</html>

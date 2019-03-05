@@ -1,0 +1,16 @@
+<html>
+<head>
+    <title>详细页</title>
+</head>
+<body>
+{#输出图书标题#}
+<h1>{{book.btitle}}</h1>
+<ul>
+    {#通过关系找到本图书的所有英雄，并遍历#}
+    {%for hero in heros%}
+    {#输出英雄的姓名及描述#}
+    <li>{{hero.hname}}---{{hero.hcomment}}</li>
+    {%endfor%}
+</ul>
+</body>
+</html>

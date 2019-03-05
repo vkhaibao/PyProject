@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% extends 'bootest/inherit_base.html' %}
+{%block qu1%}
+<ul>
+    {% for book in list %}
+        <li>{{ book.btitle }}</li>
+    {% endfor %}
+</ul>
+{%endblock qu1%}
+</body>
+</html>

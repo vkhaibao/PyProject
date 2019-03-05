@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>标签</title>
+</head>
+<body>
+<ul>
+    {%for book in list%}
+        {%if book.id <= 2%}
+            <li style="background: red">{{ book.btitle }}</li>
+        {%elif book.id <= 3%}
+            <li style="background: blue">{{ book.btitle }}</li>
+        {%else%}
+            <li style="background: aqua">{{ book.btitle }}</li>
+        {%endif%}
+    {% empty %}
+        <li>no book</li>
+    {%endfor%}
+</ul>
+</body>
+</html>

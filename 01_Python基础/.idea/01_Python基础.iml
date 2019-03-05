@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="Python 3.6" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="sunhaibao" />
+    <orderEntry type="module" module-name="名片管理系统" />
+    <orderEntry type="module" module-name="面向对象" />
+    <orderEntry type="module" module-name="飞机大战" />
+    <orderEntry type="module" module-name="Pygame" />
+    <orderEntry type="module" module-name="python和linux高级编程阶段" />
+    <orderEntry type="module" module-name="book" />
+    <orderEntry type="module" module-name="test2" />
+    <orderEntry type="module" module-name="test3" />
+    <orderEntry type="module" module-name="test4" />
+    <orderEntry type="module" module-name="test6" />
+    <orderEntry type="module" module-name="VMwareAutoApi" />
+  </component>
+  <component name="TestRunnerService">
+    <option name="projectConfiguration" value="py.test" />
+    <option name="PROJECT_TEST_RUNNER" value="py.test" />
+  </component>
+</module>

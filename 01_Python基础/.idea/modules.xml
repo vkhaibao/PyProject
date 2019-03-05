@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/01_Python基础.iml" filepath="$PROJECT_DIR$/.idea/01_Python基础.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../Pygame/.idea/Pygame.iml" filepath="$PROJECT_DIR$/../Pygame/.idea/Pygame.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../VMwareAutoApi/.idea/VMwareAutoApi.iml" filepath="$PROJECT_DIR$/../VMwareAutoApi/.idea/VMwareAutoApi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../book/.idea/book.iml" filepath="$PROJECT_DIR$/../book/.idea/book.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../python和linux高级编程阶段/.idea/python和linux高级编程阶段.iml" filepath="$PROJECT_DIR$/../python和linux高级编程阶段/.idea/python和linux高级编程阶段.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sunhaibao/.idea/sunhaibao.iml" filepath="$PROJECT_DIR$/../sunhaibao/.idea/sunhaibao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../test2/.idea/test2.iml" filepath="$PROJECT_DIR$/../test2/.idea/test2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../test3/.idea/test3.iml" filepath="$PROJECT_DIR$/../test3/.idea/test3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../test4/.idea/test4.iml" filepath="$PROJECT_DIR$/../test4/.idea/test4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../test6/.idea/test6.iml" filepath="$PROJECT_DIR$/../test6/.idea/test6.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../名片管理系统/.idea/名片管理系统.iml" filepath="$PROJECT_DIR$/../名片管理系统/.idea/名片管理系统.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../面向对象/.idea/面向对象.iml" filepath="$PROJECT_DIR$/../面向对象/.idea/面向对象.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../飞机大战/.idea/飞机大战.iml" filepath="$PROJECT_DIR$/../飞机大战/.idea/飞机大战.iml" />
+    </modules>
+  </component>
+</project>

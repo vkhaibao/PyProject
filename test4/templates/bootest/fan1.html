@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>反向解析</title>
+</head>
+<body>
+普通链接：<a href="/fan2/">fan2</a>
+<hr>
+反向解析：<a href="{%url 'booktest:fan2' 1 %}">fan2</a>
+<hr>
+反向解析：<a href="{%url 'booktest:fan3' 2 3 %}">fan3</a>
+<hr>
+反向解析：<a href="{%url 'booktest:fan4' id=100 age=200 %}">fan4</a>
+</body>
+</html>

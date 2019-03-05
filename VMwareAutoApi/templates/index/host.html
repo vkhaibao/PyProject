@@ -1,0 +1,32 @@
+{% extends 'index/base.html' %}
+{% load staticfiles %}
+{% block title %}虚拟机列表{% endblock title %}
+{% block topfiles %}{% endblock topfiles %}
+{% block vmhost %}
+    <div id="right" style="width:auto;float:left;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>序列</th>
+                    <th>ESXI主机</th>
+                    <th>详情</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+             {% block tbodyh %}
+                 {{ block.super }}
+             {% endblock tbodyh %}
+                {% for vmname in vmlist  %}
+                    <tr>
+                        <td id="num"></td>
+                        <td id="vmname">{{ vmname.hostname }}</td>
+                        <td><button onclick="window.open('/vmdetail','_blank','top=100,left=200')">详情</button></td>
+                        <td><button onclick="window.open('/vmdel','_blank','top=100,left=200')">删除</button></td>
+                    </tr>
+                {% endfor %}
+             {% block tbodyd %}
+                    {{ block.super }}
+             {% endblock tbodyd %}
+        </table>
+    </div>
+{% endblock vmhost %}

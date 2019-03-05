@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+修改前：<img src="/static/img/sg.png"/>
+<hr>
+修改后：<img src="/abc/img/sg.png">
+<hr>
+动态配置：
+{% load static from staticfiles %}
+<img src="{% static "img/sg.png" %}">
+</body>
+</html>

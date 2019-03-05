@@ -1,0 +1,58 @@
+{% extends 'index/base.html' %}
+{% load staticfiles %}
+{% block title %}虚拟机列表{% endblock title %}
+{% block topfiles %}{% endblock topfiles %}
+{% block vmhost %}
+    <div id="right" style="width:auto;float:left;">
+        &nbsp;<button id="btncreatevm" onclick="window.location.href='index/createvm'">创建虚拟机</button>
+        &nbsp;<button id="btncreatevm" onclick="window.location.href='index/createvm'">克隆虚拟机</button>
+        &nbsp;<button id="btncreatevm" onclick="window.location.href='index/createvm'">模板部署虚拟机</button>
+        <br/>
+        <br/>
+        <form action="index" method="post">
+            &nbsp;<input style="height: 26px" type="search" placeholder="请输入虚拟机名" size="55"><input id="sou" type="submit" value="搜索">
+            <br/>
+            <br/>
+        </form>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>序列</th>
+                        <th>虚拟机名</th>
+                        <th>是否模板</th>
+                        <th>状态</th>
+                        <th>详情</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                {% block tbodyh %}
+                    {{ block.super }}
+                {% endblock tbodyh %}
+                    {% for vmname in vmlist %}
+                        {% if vmname.istemplate == 0 %}
+                            <tr>
+                                <td id="num"></td>
+                                <td id="vmname">{{ vmname.vmname }}</td>
+                                <td id="model">虚拟机</td>
+                                {% if vmname.vmstatus == "running" %}
+                                    <td id="vmstatus" bgcolor="green">运行</td>
+                                {% else %}
+                                    <td id="vmstatus" bgcolor="red">关机</td>
+                                {% endif %}
+                                <td><button onclick="window.open('/index/vmdetail/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=200,resizable=no')">详情</button></td>
+                                <td>
+                                    <button onclick="window.open('/index/webconsole/'+{{ vmname.id }},'_blank')">控制台</button>
+                                    <button onclick="window.open('/index/vmshudown/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=400,resizable=no')">关机</button>
+                                    <button onclick="window.open('/index/vmreboot/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=400,resizable=no')">重启</button>
+                                    <button onclick="window.open('/index/vmreset/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=400,resizable=no')">重置</button>
+                                    <button onclick="window.open('/index/vmdel/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=400,resizable=no')">删除</button>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% block tbodyd %}
+                    {{ block.super }}
+                {% endblock tbodyd %}
+            </table>
+    </div>
+{% endblock vmhost %}

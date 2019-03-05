@@ -1,0 +1,120 @@
+说明：
+    并发：指的是任务数多余cpu核数，通过操作系统的各种任务调度算法，实现用多个任务“一起”执行（实际上总有一些任务不在执行，因为切换任务的速度相当快，看上去一起执行而已）
+    并行：指的是任务数小于等于cpu核数，即任务真的是一起执行的
+
+python的thread模块是比较底层的模块，python的threading模块是对thread做了一些包装的，可以更加方便的被使用
+使用threading模块
+
+单线程执行
+    #coding=utf-8
+    import time
+
+    def saySorry():
+        print("亲爱的，我错了，我能吃饭了吗？")
+        time.sleep(1)
+
+    if __name__ == "__main__":
+        for i in range(5):
+            saySorry()
+多线程执行
+    #coding=utf-8
+    import threading
+    import time
+
+    def saySorry():
+        print("亲爱的，我错了，我能吃饭了吗？")
+        time.sleep(1)
+
+    if __name__ == "__main__":
+        for i in range(5):
+            t = threading.Thread(target=saySorry)
+            t.start() #启动线程，即让线程开始执行
+
+可以明显看出使用了多线程并发的操作，花费时间要短很多
+当调用start()时，才会真正的创建线程，并且开始执行
+
+主线程会等待所有的子线程结束后才结束
+
+
+python的threading.Thread类有一个run方法，用于定义线程的功能函数，可以在自己的线程类中覆盖该方法。而创建自己的线程实例后，
+通过Thread类的start方法，可以启动该线程，交给python虚拟机进行调度，当该线程获得执行的机会时，就会调用run方法执行线程。
+    #coding=utf-8
+    import threading
+    import time
+
+    class MyThread(threading.Thread):
+        def run(self):
+            for i in range(3):
+                time.sleep(1)
+                msg = "I'm "+self.name+' @ '+str(i) # name属性中保存的是当前线程的名字
+                print(msg)
+
+
+    if __name__ == '__main__':
+        t = MyThread()
+        t.start()
+
+线程的执行顺序
+
+    #coding=utf-8
+    import threading
+    import time
+
+    class MyThread(threading.Thread):
+        def run(self):
+            for i in range(3):
+                time.sleep(1)
+                msg = "I'm "+self.name+' @ '+str(i)
+                print(msg)
+    def test():
+        for i in range(5):
+            t = MyThread()
+            t.start()
+    if __name__ == '__main__':
+        test()
+
+代码和执行结果我们可以看出，多线程程序的执行顺序是不确定的。当执行到sleep语句时，线程将被阻塞（Blocked），
+到sleep结束后，线程进入就绪（Runnable）状态，等待调度。而线程调度将自行选择一个线程执行。
+上面的代码中只能保证每个线程都运行完整个run函数，但是线程的启动顺序、run函数中每次循环的执行顺序都不能确定。
+
+每个线程默认有一个名字，尽管上面的例子中没有指定线程对象的name，但是python会自动为线程指定一个名字。
+当线程的run()方法结束时该线程完成。
+无法控制线程调度程序，但可以通过别的方式来影响线程调度的方式。
+
+
+04-多线程-共享全局变量
+
+在一个进程内的所有线程共享全局变量，很方便在多个线程间共享数据
+缺点就是，线程是对全局变量随意遂改可能造成多线程之间对全局变量的混乱（即线程非安全）
+
+如果多个线程同时对同一个全局变量操作，会出现资源竞争问题，从而数据结果会不正确
+
+同步的概念
+
+进程、线程同步，可理解为进程或线程A和B一块配合，A执行到一定程度时要依靠B的某个结果，于是停下来，示意B运行;B执行，再将结果给A;A再继续操作
+解决线程同时修改全局变量的方式
+
+
+是自动补全的变量的类别
+p：parameter 参数
+m：method 方法
+c：class 类
+v：variable 变量
+f：function 函数
+
+一个线程调用锁的acquire()方法获得锁时，锁就进入“locked”状态。
+
+每次只有一个线程可以获得锁。如果此时另一个线程试图获得这个锁，该线程就会变为“blocked”状态，称为“阻塞”，
+直到拥有锁的线程调用锁的release()方法释放锁之后，锁进入“unlocked”状态。
+
+线程调度程序从处于同步阻塞状态的线程中选择一个来获得锁，并使得该线程进入运行（running）状态
+
+好处：
+
+确保了某段关键代码只能由一个线程从头到尾完整地执行
+锁的坏处：
+
+阻止了多线程并发执行，包含锁的某段代码实际上只能以单线程模式执行，效率就大大地下降了
+由于可以存在多个锁，不同的线程持有不同的锁，并试图获取对方持有的锁时，可能会造成死锁
+
+

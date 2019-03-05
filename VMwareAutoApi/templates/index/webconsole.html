@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC"-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>虚拟机控制台</title>
+</head>
+<body>
+<link rel="stylesheet" type="text/css" href="../../static/css/wmks-all.css" />
+<script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../../static/js/wmks.min.js"></script>
+<!-- Page bar -->
+<div id="bar">
+   <div id="buttonBar">
+      <div class="buttonC">
+         <button id="relativepad">
+            切换相关触控板
+         </button>
+         <button id="keyboard" data-toggle="false"
+            data-alt="请勿强制执行美式键盘布局">
+            强制执行美式键盘布局
+         </button>
+         <button id="fullscreen">
+            查看全屏
+         </button>
+         <button id="cad">
+            发送 Ctrl+Alt+Delete
+         </button>
+      </div>
+   </div>
+</div>
+
+<div id="wmksContainer" style="position:absolute;width:100%;height:100%"></div>
+<script>
+    var bar = $("#bar");
+    var cad = $("#cad");
+    var container = $("#wmksContainer");
+    var fullscreen = $("#fullscreen");
+    var keyboard = $("#keyboard");
+    var wmks = WMKS.createWMKS("wmksContainer",{});
+    wmks.register(WMKS.CONST.Events.CONNECTION_STATE_CHANGE, function(evt, data) {
+      switch (data.state) {
+         case WMKS.CONST.ConnectionState.CONNECTING:
+            console.log("The console is connecting");
+            break;
+         case WMKS.CONST.ConnectionState.CONNECTED:
+            console.log("The console has been connected");
+            break;
+         case WMKS.CONST.ConnectionState.DISCONNECTED:
+            console.log("The console has been disconnected");
+            break;
+      }
+    });
+    wmks.register(WMKS.CONST.Events.CONNECTION_STATE_CHANGE, function(event,data){
+     if(data.state == WMKS.CONST.ConnectionState.CONNECTED){
+      console.log("connection state change : connected");}
+    });
+    cad.on("click", function() {
+      wmks.sendCAD();
+    });
+   if (wmks.canFullScreen()) {
+      fullscreen.on("click", function (evt) {
+         wmks.enterFullScreen();
+      });
+   } else {
+      fullscreen.hide();
+   }
+   keyboard.on("click", function (evt) {
+      var fixANSIEquivalentKeys = keyboard.data("toggle");
+      var label = keyboard.html();
+      wmks.setOption("fixANSIEquivalentKeys", !fixANSIEquivalentKeys);
+      keyboard.html(keyboard.data("alt"));
+      keyboard.data("toggle", !fixANSIEquivalentKeys);
+      keyboard.data("alt", label);
+    });
+    wmks.connect("wss://{{ host }}:{{ port }}/ticket/{{ ticket }}");
+</script>
+</body>
+</html>

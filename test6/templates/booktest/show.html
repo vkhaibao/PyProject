@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>展示富文本编辑器内容</title>
+</head>
+<body>
+{% for goods in g %}
+    <hr>
+    <li>{{ goods.gcontent | safe }}</li>
+{% endfor %}
+</body>
+</html>

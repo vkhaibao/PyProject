@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板变量</title>
+</head>
+<body>
+{%for book in list%}
+    {% if book.id <= 2 %}
+    <li style="background: red">{{ book.id }}:{{ book.btitle }}</li>
+    {% endif %}
+{% endfor %}
+</body>
+</html>
