@@ -382,6 +382,10 @@ class VCenter:
 
         return vmstatus
 
+    def get_task(self):
+        tasks = self.content.taskManager.recentTask
+        return tasks
+
 # conn = VCenter("sunhaibao@kedacom.com", "shbmyy0615..")
 # conn.connect_to_vcenter()
 # conn.get_vm_status("KMS")

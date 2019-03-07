@@ -295,7 +295,37 @@ def postnewvm(request):
                  datacenter,
                  datastore,
                  esxi)
-        return render(request, "altervm/progressbar.html")
+        testint = ["30"]
+        testint = json.dumps(testint)
+        return HttpResponse(testint)
     else:
-        return HttpResponse("创建失败")
+        testint = ["20"]
+        testint = json.dumps(testint)
+        return HttpResponse(testint)
+
+@logincheck
+def progressint(request):
+    conn.connect_to_vcenter()
+    content = conn.content
+    progressint = list()
+    if request.POST:
+        temlpate = request.POST["tep_name"]
+        temlpate = get_obj(content, [vim.VirtualMachine], temlpate)
+        newvm_tasks = temlpate.recentTask
+        if len(newvm_tasks) != 0:
+            for i in newvm_tasks:
+                if i.info.descriptionId == "VirtualMachine.clone" and i.info.state == "running":
+                    progressint.append({"prog": i.info.progress, "status": i.info.state})
+                elif i.info.descriptionId == "VirtualMachine.clone" and i.info.state == "success":
+                    progressint.append({"prog": i.info.progress, "status": i.info.state})
+            return HttpResponse(json.dumps(progressint))
+        else:
+            progressint = list()
+            progressint.append({"prog": 0, "status": "任务错误"})
+            return HttpResponse(json.dumps(progressint))
+    else:
+        progressint = list()
+        progressint.append({"prog": 0, "status": "任务错误"})
+        return HttpResponse(json.dumps(progressint))
+
 

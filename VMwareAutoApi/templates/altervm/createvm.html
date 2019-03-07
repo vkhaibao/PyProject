@@ -40,8 +40,8 @@
         <label>数据存储：</label><select id="datastore_name" name="datastore_name" style="width: 200px">
             <option name="datastorename" value="-1">请选择数据存储</option>
         </select><br/>
-        <input id="createvm" type="submit" value="创建" onclick="submit_new()">
     </form>
+    <input id="createvm" type="submit" value="创建" onclick="submit_new()">
     <p style="color: red">
         注意:<br/>
         1、模板：选择相应的模板<br/>
@@ -64,7 +64,7 @@
         var datacenter_name = $("#datacenter_name").val();
         if (datacenter_name != -1)
         {
-            $.post("createvm/postnewvm", {datacenter_name:datacenter_name},
+            $.post("createvm/showdata", {datacenter_name:datacenter_name},
             function (arr, status) {
                 $("#esxi_name").empty();
                 $("#esxi_name").append("<option name=esxiname value='-1'>请选择物理主机</option>");
@@ -108,39 +108,54 @@
         }
     }
 
-
+    function submit_new() {
         var newvmname = $("#newvmname").val();
         var tep_name =$("#tep_name").val();
         var datacenter_name = $("#datacenter_name").val();
         var esxi_name = $("#esxi_name").val();
         var datastore_name = $("#datastore_name").val();
-        $.post("createvm/postnewvm",
-            function (arr)
-            {
-                alert(arr);
-            });
-        {#$.post("createvm/postnewvm",{newvmname:newvmname,#}
-        {#    tep_name:tep_name,#}
-        {#    datacenter_name:datacenter_name,#}
-        {#    esxi_name:esxi_name,#}
-        {#    datastore_name:datastore_name},#}
-        {#    function (data,status) {#}
-        {#        alert(data+status);#}
-        {#{);#}
-        {#var sitv = setInterval(function(){#}
-        {#    $.post("createvm/progressint",{tep_name:tep_name},#}
-        {#    function (data,status) {#}
-        {#        var jsonarray= $.parseJSON(data);#}
-        {#        $("#prog_in").width(data[0]+ '%');#}
-        {#        $("#prog_text").text(data[0]+"%")#}
-        {#        if (data[0] == 100)#}
-        {#        {#}
-        {#            $('#prog_out').attr("class", "progress progress-bar-success");#}
-        {#            $('#prog_text').text("已经完成");#}
-        {#            clearInterval(sitv);#}
-        {#        }#}
-        {#    })#}
-        {#{, 1000);#}
 
+        $.post("createvm/postnewvm",{newvmname:newvmname,
+            tep_name:tep_name,
+            datacenter_name:datacenter_name,
+            esxi_name:esxi_name,
+            datastore_name:datastore_name}
+          );
+
+                //$("#prog_in").width(data[0]+ "%");
+                //$("#prog_text").text(data[0]+"%");
+                {#if (data[0] == 100)#}
+                {#{#}
+                {#    $('#prog_out').attr("class", "progress progress-bar-success");#}
+                {#    $('#prog_text').text("已经完成");#}
+                {#    clearInterval(sitv);#}
+
+        var sitv = setInterval(function(){
+            $.post("createvm/progressint",{tep_name:tep_name},
+                function (data,status) {
+                var jsonarray= $.parseJSON(data);
+                if (jsonarray[0].status == "running")
+                {
+                    $("#prog_in").width(jsonarray[0].prog + "%");
+                    $("#prog_text").text(jsonarray[0].prog + "%");
+                }
+                else if (jsonarray[0].status == "success")
+                {
+                    $("#prog_in").width("100" + "%");
+                    $("#prog_text").text("100" + "%");
+                    $('#prog_out').attr("class", "progress progress-bar-success");
+                    $('#prog_text').text("已经完成");
+                    clearInterval(sitv);
+                }
+                else
+                    {
+                        $("#prog_in").width(jsonarray[0].prog + "%");
+                        $('#prog_in').attr("class", "progress-bar progress-bar-danger", "role","progressbar");
+                        $('#prog_text').text("创建失败");
+                        clearInterval(sitv);
+                    }
+            })
+            }, 5000);
+    };
 </script>
 </html>

@@ -1,3 +1,4 @@
+#coding=utf8
 """VMwareAutoApi URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -35,7 +36,8 @@ urlpatterns = [
     path('index/createvm', views.createvm, name='createvm'),
     path('index/createvm/showdata', views.showdata, name='showdata'),
     path('index/createvm/showstore', views.showstore, name='showstore'),
-    path('index/createvm/postnewvm', views.postnewvm, name='postnewvm')
+    path('index/createvm/postnewvm', views.postnewvm, name='postnewvm'),
+    path('index/createvm/progressint', views.progressint, name='progressint')
 
 
 ]

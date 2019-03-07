@@ -74,8 +74,6 @@ def clone_vm(
 
     vmconf = vim.vm.ConfigSpec()
     # set relospec
-    print(host)
-    print(host.parent.resourcePool)
     relospec = vim.vm.RelocateSpec()
     relospec.datastore = datastore
     relospec.pool = host.parent.resourcePool
