@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>虚拟机创建</title>
     <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.css">
     <script type="text/javascript" src="../../static/js/jquery-1.12.4.min.js"></script>
+	<script src="../../static/bootstrap/js/bootstrap.js"></script>
     <style>
         .main{
             border-radius: 20px;
@@ -19,7 +21,7 @@
 </head>
 <body>
 <div id="main" type="margin:auto" class="main">
-    <form method="post" action="createvm/postnewvm">
+    <form method="post">
         <input id="newvmname" name="newvmname" type="text" placeholder="请输入要创建的虚拟机名" size="43"><br/>
         <label>模&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;板：</label><select id="tep_name" name="tep_name" style="width: 200px">
             {% for tepvmname in template %}
@@ -38,7 +40,7 @@
         <label>数据存储：</label><select id="datastore_name" name="datastore_name" style="width: 200px">
             <option name="datastorename" value="-1">请选择数据存储</option>
         </select><br/>
-        <input id="createvm" type="submit" value="创建">
+        <input id="createvm" type="submit" value="创建" onclick="submit_new()">
     </form>
     <p style="color: red">
         注意:<br/>
@@ -47,6 +49,13 @@
         3、物理主机：选择虚拟机承载的物理主机<br/>
         4、数据存储：选择存放虚拟机的存储<br/>
     </p>
+    <div id="prog_out" class="progress progress-striped active">
+    <div id="prog_in" class="progress-bar progress-bar-success" role="progressbar"
+         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+         style="width: 0%;">
+        <span id="prog_text"></span>
+    </div>
+</div>
 </div>
 </body>
 <script type="text/javascript">
@@ -55,7 +64,7 @@
         var datacenter_name = $("#datacenter_name").val();
         if (datacenter_name != -1)
         {
-            $.post("createvm/showdata", {datacenter_name:datacenter_name},
+            $.post("createvm/postnewvm", {datacenter_name:datacenter_name},
             function (arr, status) {
                 $("#esxi_name").empty();
                 $("#esxi_name").append("<option name=esxiname value='-1'>请选择物理主机</option>");
@@ -74,7 +83,7 @@
             $("#datastore_name").empty();
             $("#datastore_name").append("<option name=datastorename value='-1'>请选择数据存储</option>");
         }
-    };
+    }
     function secondlel()
     {
         var esxi_name = $("#esxi_name").val();
@@ -97,6 +106,41 @@
             $("#datastore_name").empty();
             $("#datastore_name").append("<option name=datastorename value='-1'>请选择数据存储</option>");
         }
-    };
+    }
+
+
+        var newvmname = $("#newvmname").val();
+        var tep_name =$("#tep_name").val();
+        var datacenter_name = $("#datacenter_name").val();
+        var esxi_name = $("#esxi_name").val();
+        var datastore_name = $("#datastore_name").val();
+        $.post("createvm/postnewvm",
+            function (arr)
+            {
+                alert(arr);
+            });
+        {#$.post("createvm/postnewvm",{newvmname:newvmname,#}
+        {#    tep_name:tep_name,#}
+        {#    datacenter_name:datacenter_name,#}
+        {#    esxi_name:esxi_name,#}
+        {#    datastore_name:datastore_name},#}
+        {#    function (data,status) {#}
+        {#        alert(data+status);#}
+        {#{);#}
+        {#var sitv = setInterval(function(){#}
+        {#    $.post("createvm/progressint",{tep_name:tep_name},#}
+        {#    function (data,status) {#}
+        {#        var jsonarray= $.parseJSON(data);#}
+        {#        $("#prog_in").width(data[0]+ '%');#}
+        {#        $("#prog_text").text(data[0]+"%")#}
+        {#        if (data[0] == 100)#}
+        {#        {#}
+        {#            $('#prog_out').attr("class", "progress progress-bar-success");#}
+        {#            $('#prog_text').text("已经完成");#}
+        {#            clearInterval(sitv);#}
+        {#        }#}
+        {#    })#}
+        {#{, 1000);#}
+
 </script>
 </html>
