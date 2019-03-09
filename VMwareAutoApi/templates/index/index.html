@@ -4,8 +4,6 @@
 {% block topfiles %}{% endblock topfiles %}
 {% block vmhost %}
     <div id="right" style="width:auto;float:left;">
-        &nbsp;<button id="btncreatevm" onclick="window.location.href='index/createvm'">创建虚拟机</button>
-        &nbsp;<button id="btncreatevm" onclick="window.location.href='index/createvm'">克隆虚拟机</button>
         &nbsp;<button id="btncreatevm" onclick="window.location.href='index/createvm'">模板部署虚拟机</button>
         <br/>
         <br/>
@@ -34,7 +32,7 @@
                                 <td id="num"></td>
                                 <td id="vmname">{{ vmname.vmname }}</td>
                                 <td id="model">虚拟机</td>
-                                {% if vmname.vmstatus == "running" %}
+                                {% if vmname.vmstatus == "poweredOn" %}
                                     <td id="vmstatus" bgcolor="green">运行</td>
                                 {% else %}
                                     <td id="vmstatus" bgcolor="red">关机</td>

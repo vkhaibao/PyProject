@@ -1,0 +1,36 @@
+{% extends 'index/base.html' %}
+{% load staticfiles %}
+{% block title %}虚拟机列表{% endblock title %}
+{% block topfiles %}{% endblock topfiles %}
+{% block vmhost %}
+    <div id="right" style="width:auto;float:left;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>序列</th>
+                    <th>目标</th>
+                    <th>名称</th>
+                    <th>状态</th>
+                    <th>详细信息</th>
+                </tr>
+            </thead>
+            {% block tbodyh %}
+                {{ block.super }}
+            {% endblock tbodyh %}
+                {% for task in alltaks  %}
+                    <tr>
+                        <td id="num"></td>
+                        <td id="vmname">{{ task.info.entityName }}</td>
+                        <td id="model">{{ task.info.descriptionId }}</td>
+                        <td>{{ task.info.state }}</td>
+                        <td>{{ tak.info.description }}</td>
+                    </tr>
+                {% endfor %}
+            {% block tbodyd %}
+                {{ block.super }}
+            {% endblock tbodyd %}
+        </table>
+    </div>
+    <script>
+    </script>
+{% endblock vmhost %}

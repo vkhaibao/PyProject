@@ -86,6 +86,7 @@ def clone_vm(
     print("cloning VM...")
     # task = \
     template.Clone(folder=destfolder, name=vm_name, spec=clonespec)
+
     # wait_for_task(task)
 
 

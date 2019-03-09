@@ -7,6 +7,7 @@ from django.contrib.sessions.models import Session
 from pyVmomi import vim, vmodl
 from VMwareAPI.vmtools.clone_vm import *
 import json
+import datetime
 # Create your views here.
 
 
@@ -115,7 +116,7 @@ def updatevm_db(request):
                                      istemplate=istemp,
                                      clustername_id='',
                                      datacentername_id='1',
-                                     vmstatus=each.guest.guestState)
+                                     vmstatus=each.runtime.powerState)
                 postdata.save()
             else:
                 istemp = 1
@@ -123,7 +124,7 @@ def updatevm_db(request):
                                      istemplate=istemp,
                                      clustername_id='',
                                      datacentername_id='1',
-                                     vmstatus=each.guest.guestState)
+                                     vmstatus=each.runtime.powerState)
                 postdata.save()
     else:
         for each in listvmobj:
@@ -135,7 +136,7 @@ def updatevm_db(request):
                                          istemplate=istemp,
                                          clustername_id='',
                                          datacentername_id='1',
-                                         vmstatus=each.guest.guestState)
+                                         vmstatus=each.runtime.powerState)
                     postdata.save()
                 else:
                     istemp = 1
@@ -143,7 +144,7 @@ def updatevm_db(request):
                                          istemplate=istemp,
                                          clustername_id='',
                                          datacentername_id='1',
-                                         vmstatus=each.guest.guestState)
+                                         vmstatus=each.runtime.powerState)
                     postdata.save
 
         listvm = list()
@@ -230,9 +231,17 @@ def webconsole(request, id):
             return render(request, 'index/webconsoleapi.html', webconsoleurl)
 
 @logincheck
-def vmdel(request):
-    pass
-
+def vmshudown(request, id):
+    conn.connect_to_vcenter()
+    content = conn.content
+    vmname = VMVirtual.objects.filter(id=id).values("vmname")
+    vmname = get_obj(content, [vim.VirtualMachine], vmname[0]["vmname"])
+    if vmname.runtime.powerState == "poweredOn":
+        vmname.PowerOff()
+        powerState = vmname.runtime.powerState
+    else:
+        powerState = vmname.runtime.powerState
+    return HttpResponse(powerState)
 
 @logincheck
 def createvm(request):
@@ -309,23 +318,43 @@ def progressint(request):
     content = conn.content
     progressint = list()
     if request.POST:
-        temlpate = request.POST["tep_name"]
-        temlpate = get_obj(content, [vim.VirtualMachine], temlpate)
+        tep_name = request.POST["tep_name"]
+        datenow = request.POST["datenow"]
+        datenow = datetime.datetime.strptime(datenow, "%Y-%m-%d %H:%M:%S")
+        startt = datenow+datetime.timedelta(minutes=3)
+        endt = datenow+datetime.timedelta(minutes=-3)
+        temlpate = get_obj(content, [vim.VirtualMachine], tep_name)
         newvm_tasks = temlpate.recentTask
         if len(newvm_tasks) != 0:
             for i in newvm_tasks:
-                if i.info.descriptionId == "VirtualMachine.clone" and i.info.state == "running":
+                taskstarttime = i.info.startTime+datetime.timedelta(hours=8)
+                taskstarttime = taskstarttime.strftime("%Y-%m-%d %H:%M:%S")
+                taskstarttime = datetime.datetime.strptime(taskstarttime, "%Y-%m-%d %H:%M:%S")
+                if i.info.descriptionId == "VirtualMachine.clone" \
+                        and i.info.state == "running" \
+                        and i.info.entityName == tep_name \
+                        and endt < taskstarttime < startt:
                     progressint.append({"prog": i.info.progress, "status": i.info.state})
-                elif i.info.descriptionId == "VirtualMachine.clone" and i.info.state == "success":
+                elif i.info.descriptionId == "VirtualMachine.clone" \
+                        and i.info.state == "success" \
+                        and i.info.entityName == tep_name \
+                        and endt < taskstarttime < startt:
                     progressint.append({"prog": i.info.progress, "status": i.info.state})
             return HttpResponse(json.dumps(progressint))
         else:
             progressint = list()
-            progressint.append({"prog": 0, "status": "任务错误"})
+            progressint.append({"prog": 50, "status": "任务错误"})
             return HttpResponse(json.dumps(progressint))
     else:
         progressint = list()
-        progressint.append({"prog": 0, "status": "任务错误"})
+        progressint.append({"prog": 50, "status": "任务错误"})
         return HttpResponse(json.dumps(progressint))
+
+@logincheck
+def alltasks(request):
+    conn.connect_to_vcenter()
+    alltasks = {"alltaks": conn.get_task()}
+    return render(request, "index/alltasks.html", alltasks)
+
 
 

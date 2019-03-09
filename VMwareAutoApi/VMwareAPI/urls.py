@@ -29,10 +29,11 @@ urlpatterns = [
     path('template', views.vmtemp, name='vmtemp'),
     path('updatepop', views.updatevm_db, name='update'),
     path('host', views.showhost, name='showhost'),
+    path('alltasks', views.alltasks, name="alltasks"),
 
     path('index/vmdetail/<int:id>', views.vmdetail, name='vmdetail'),
-    path('index/vmdel/<int:id>', views.vmdel, name='vmdel'),
     path('index/webconsole/<int:id>', views.webconsole, name='webconsole'),
+    path('index/vmshudown/<int:id>', views.vmshudown, name='vmshudown'),
     path('index/createvm', views.createvm, name='createvm'),
     path('index/createvm/showdata', views.showdata, name='showdata'),
     path('index/createvm/showstore', views.showstore, name='showstore'),
