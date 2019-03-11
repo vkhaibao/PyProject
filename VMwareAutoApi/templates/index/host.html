@@ -3,8 +3,21 @@
 {% block title %}虚拟机列表{% endblock title %}
 {% block topfiles %}{% endblock topfiles %}
 {% block vmhost %}
-    <div id="right" style="width:auto;float:left;">
-        <table class="table">
+    <div id="right" style="width:1100px;float:left;">
+    {{ block.super }}
+        <table id ="table"
+                   data-toggle="table"
+                   data-locale="zh-CN"
+                   data-height="700"
+                   data-toolbar=".toolbar"
+                   data-search="true"
+                   data-sortable="true"
+                   data-show-refresh="true"
+                   data-show-toggle="true"
+                   data-show-columns="true"
+                   data-show-export="true"
+                   data-pagination="true"
+                   data-page-size="50">
             <thead>
                 <tr>
                     <th>序列</th>

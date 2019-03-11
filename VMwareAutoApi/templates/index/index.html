@@ -3,22 +3,35 @@
 {% block title %}虚拟机列表{% endblock title %}
 {% block topfiles %}{% endblock topfiles %}
 {% block vmhost %}
-    <div id="right" style="width:auto;float:left;">
+    <div id="right" style="width:1100px;float:left;">
         &nbsp;<button id="btncreatevm" onclick="window.location.href='index/createvm'">模板部署虚拟机</button>
         <br/>
         <br/>
-        <form action="index" method="post">
-            &nbsp;<input style="height: 26px" type="search" placeholder="请输入虚拟机名" size="55"><input id="sou" type="submit" value="搜索">
-            <br/>
-            <br/>
-        </form>
-            <table class="table">
+{#        <form action="index" method="post">#}
+{#            &nbsp;<input style="height: 26px" type="search" placeholder="请输入虚拟机名" size="55"><input id="sou" type="submit" value="搜索">#}
+{#            <br/>#}
+{#            <br/>#}
+{#        </form>#}
+        {{ block.super }}
+            <table id ="table"
+                   data-toggle="table"
+                   data-locale="zh-CN"
+                   data-height="700"
+                   data-toolbar=".toolbar"
+                   data-search="true"
+                   data-sortable="true"
+                   data-show-refresh="true"
+                   data-show-toggle="true"
+                   data-show-columns="true"
+                   data-show-export="true"
+                   data-pagination="true"
+                   data-page-size="50">
                 <thead>
                     <tr>
-                        <th>序列</th>
-                        <th>虚拟机名</th>
-                        <th>是否模板</th>
-                        <th>状态</th>
+                        <th data-sortable="true"></th>
+                        <th data-sortable="true">虚拟机名</th>
+                        <th data-sortable="true">是否模板</th>
+                        <th data-sortable="true">状态</th>
                         <th>详情</th>
                         <th>操作</th>
                     </tr>

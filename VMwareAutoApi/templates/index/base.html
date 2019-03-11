@@ -10,6 +10,7 @@
     <script type="text/javascript" src="../../static/js/jquery-1.12.4.min.js"></script>
 	<script type="text/javascript" src="../../static/bootstrap/js/bootstrap.js"></script>
     <script type="text/javascript" src="../../static/bootstrap-table/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../static/bootstrap-table/bootstrap-table-locale-all.js"></script>
     <script type="text/javascript" src="../../static/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
     {% block topfiles %}{% endblock topfiles %}
 </head>
@@ -30,6 +31,12 @@
         </ul>
     </div>
     {% block vmhost %}
+        <div class="toolbar">
+          <select class="form-control" id="locale">
+            <option value="en-US">en-US</option>
+            <option value="zh-CN" selected>zh-CN</option>
+          </select>
+        </div>
         {% block tbodyh %}
              <tbody id="countTab">
         {% endblock tbodyh %}
@@ -53,18 +60,42 @@
         document.getElementById('btnupdate').style.background = "#3383da"
     }
 
-    window.onload = function(){
-    var oTable = document.getElementById("countTab");
-    for(var i=0;i<oTable.rows.length;i++){
-        oTable.rows[i].cells[0].innerHTML = (i+1);
-        if(i%2==0)
-            oTable.rows[i].className = "ys01";
-    }
-    }
+    {#window.onload = function(){#}
+    {#var oTable = document.getElementById("countTab");#}
+    {#for(var i=0;i<oTable.rows.length;i++){#}
+    {#    oTable.rows[i].cells[0].innerHTML = (i+1);#}
+    {#    if(i%2==0)#}
+    {#        oTable.rows[i].className = "ys01";#}
+    //{#}#}
+    //{#}#}
     $(function(){
         $("#nav li a").click(function(){
              $(this).addClass("active").siblings().removeClass("active");
         });
     });
+    var $table = $('#table')
+      $(function() {
+        $table.bootstrapTable()
+        $('#locale').change(function () {
+          $table.bootstrapTable('refreshOptions', {
+            locale: $(this).val()
+          })
+        })
+      })
+      $table.bootstrapTable(
+        {
+            columns: [{
+                title: '序号',
+                field: '',
+                align: 'center',
+                width:5 ,
+                formatter: function (value, row, index) {
+                    //var options = $table.bootstrapTable('getOptions');
+                    //return options.pageSize * (options.pageNumber - 1) + index + 1;
+                    return index+1;
+                }
+            }]
+        }
+    )
 </script>
 </html>
