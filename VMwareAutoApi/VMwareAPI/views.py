@@ -196,7 +196,7 @@ def vmdetail(request, id):
         if i.summary.config.name == vmname[0]["vmname"]:
             vmname01 = i.summary.config.name
             vmcpu = i.config.hardware.numCoresPerSocket
-            vmmemory = i.config.hardware.memoryMB
+            vmmemory = i.config.hardware.memoryMB/1024
             vmguest = i.summary.config.guestFullName
             vmip = i.summary.guest.ipAddress
             vmstatus = i.guest.guestState
