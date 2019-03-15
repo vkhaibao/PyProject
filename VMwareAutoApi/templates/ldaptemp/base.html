@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock title %}</title>
-    <link rel="stylesheet" type="text/css" href="../../static/css/index.css"/>
-    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" href="../../static/bootstrap-table/bootstrap-table.css">
-    <script type="text/javascript" src="../../static/js/jquery-1.12.4.min.js"></script>
-    <script type="text/javascript" src="../../static/bootstrap/js/bootstrap.js"></script>
-    <script type="text/javascript" src="../../static/bootstrap-table/bootstrap-table.js"></script>
-    <script type="text/javascript" src="../../static/bootstrap-table/bootstrap-table-locale-all.js"></script>
-    <script type="text/javascript" src="../../static/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" type="text/css" href={% static 'css/index.css' %}/>
+    <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.css' %}>
+    <link rel="stylesheet" href={% static 'bootstrap-table/bootstrap-table.css' %}>
+    <script type="text/javascript" src={% static 'js/jquery-1.12.4.min.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap/js/bootstrap.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table-locale-all.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/locale/bootstrap-table-zh-CN.js' %}></script>
     {% block topfiles %}{% endblock topfiles %}
 </head>
 <body>
@@ -34,14 +34,6 @@
     </div>
 {% block menu %}
 {% endblock menu %}
-{#<div id="left" style="width:auto;float:left;">#}#
-{#        <ul class="nav nav-pills">#}
-{#              <li class="active"><a href="index">虚拟机</a></li>#}
-{#              <li><a href="host">物理主机</a></li>#}
-{#              <li><a href="template">模板</a></li>#}
-{#              <li><a href="alltasks">任务</a></li>#}
-{#        </ul>#}
-{#</div>#}
     {% block vmhost %}
         <div class="toolbar">
           <select class="form-control" id="locale">
@@ -71,29 +63,6 @@
     {
         document.getElementById('btnupdate').style.background = "#3383da"
     }
-
-    {#window.onload = function(){#}
-    {#var oTable = document.getElementById("countTab");#}
-    {#for(var i=0;i<oTable.rows.length;i++){#}
-    {#    oTable.rows[i].cells[0].innerHTML = (i+1);#}
-    {#    if(i%2==0)#}
-    {#        oTable.rows[i].className = "ys01";#}
-    //{#}#}
-    //{#}#}
-
-    {#$("#nav li a").click(function(){#}
-    {#    $(this).removeClass("active")#}
-    {#    $(this).addClass("active")#}
-    {#        //.siblings().removeClass("active");#}
-    //{#});#}
-    {#$(document).ready(function(){#}
-    {#$("a").each(function(index){#}
-    {#  $("a").eq(index).click(function(){#}
-    {#       $("a").removeClass("active");#}
-    {#       $(this).addClass("active");#}
-    {#  });#}
-    //{#});#}
-    //{#});#}
 
     var $table = $('#table')
       $(function() {

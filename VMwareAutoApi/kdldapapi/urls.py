@@ -20,7 +20,7 @@ import django_cas_ng.views
 
 urlpatterns = [
     path('', views.index, name='root'),
-    path('ldindex', views.index, name='index'),
+    path('index', views.index, name='index'),
 
     path('login', django_cas_ng.views.LoginView.as_view(), name='cas_ng_login'),
     path('logout', django_cas_ng.views.LogoutView.as_view(), name='cas_ng_logout'),

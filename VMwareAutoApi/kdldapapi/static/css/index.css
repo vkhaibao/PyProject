@@ -1,0 +1,175 @@
+        table
+        {
+            border-collapse: collapse;
+            text-align: center;
+        }
+        /*table td*/
+        /*{*/
+            /*border: 1px solid #cad9ea;*/
+            /*color: #666;*/
+        /*}*/
+        table thead,table th
+        {
+            border: 1px solid #cad9ea;
+            background: #eeeeee;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        /*table tr*/
+        /*{*/
+            /*line-height: 20px;*/
+        /*}*/
+        #vmname
+        {
+            text-align: left;
+        }
+        #num
+        {
+            width: 80px;
+        }
+        #model
+        {
+            width: 80px;
+        }
+        #top
+        {
+            text-align: right;
+            background: #dff3ff;
+        }
+        table tr:nth-child(odd)
+        {
+            background: #fff;
+        }
+        table tr:nth-child(even)
+        {
+            background: #F5FAFA;
+        }
+        #nav {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 200px;
+            background-color: #f1f1f1;
+        }
+        li a {
+        display: block;
+        color: #000;
+        padding: 8px 16px;
+        text-decoration: none;
+        }
+        li a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        li a:hover:not(.active) {
+        background-color: #555;
+        color: white;
+        }
+        #navu {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width:auto;
+            background-color: #f1f1f1;
+        }
+        #nava.active{
+            background:#3388ff;
+        }
+        #navi #nava:hover:not(.active){
+            background-color: #555;
+            color: white;
+        }
+
+#btnupdate
+            {
+                font-family: 'Î¢ÈíÑÅºÚ','Helvetica Neue',Helvetica,Arial,sans-serif;
+                font-size: 15px!important;
+                height: 20px;
+                line-height: 15px!important;
+                padding: 3px 15px;
+                display: inline-block;
+                vertical-align: middle;
+                font-weight: normal;
+                border-radius: 2px;
+                margin: 0 8px 0 3px;
+                border: 1px solid #3383da;
+                color: #ffffff;
+                background-color: #3383da;
+                text-align: right;
+            }
+#btncreatevm
+    {
+        font-family: 'Î¢ÈíÑÅºÚ','Helvetica Neue',Helvetica,Arial,sans-serif;
+        font-size: 15px!important;
+        height: 30px;
+        line-height: 15px!important;
+        padding: 3px 15px;
+        display: inline-block;
+        vertical-align: middle;
+        font-weight: normal;
+        border-radius: 2px;
+        margin: 0 8px 0 3px;
+        border: 1px solid #3383da;
+        color: #ffffff;
+        background-color: #3383da;
+        text-align: right;
+    }
+
+#createvm
+    {
+        font-family: 'Î¢ÈíÑÅºÚ','Helvetica Neue',Helvetica,Arial,sans-serif;
+        font-size: 15px!important;
+        height: 25px;
+        line-height: 15px!important;
+        padding: 3px 15px;
+        display: inline-block;
+        vertical-align: middle;
+        font-weight: normal;
+        border-radius: 2px;
+        border: 1px solid #3383da;
+        color: #ffffff;
+        background-color: #3383da;
+        text-align: center;
+        letter-spacing: 10px;
+    }
+#sou
+    {
+    cursor: pointer;
+    width: 50px;
+    height: 26px;
+    line-height: 23px;
+    padding: 0;
+    border: 0;
+    background: none;
+    background-color: #38f;
+    font-size: 15px;
+    color: white;
+    box-shadow: none;
+    font-weight: normal;
+    }
+
+#vmstatus
+    {
+        width: 50px;
+        font-family: 'Î¢ÈíÑÅºÚ','Helvetica Neue',Helvetica,Arial,sans-serif;
+        color: black;
+        letter-spacing: 2px;
+    }
+
+table.dataintable {
+  margin-top:15px;
+  border-collapse:collapse;
+  border:1px solid #aaa;
+  width:100%;
+}
+table.dataintable td {
+  vertical-align:text-top;
+  padding:6px 15px 6px 6px;
+  border:1px solid #aaa;
+}
+table.dataintable tr:nth-child(odd) {
+  background-color:#F5F5F5;
+}
+table.dataintable tr:nth-child(even) {
+  background-color:#fff;
+}
