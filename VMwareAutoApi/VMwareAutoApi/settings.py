@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '5-10bs7_1eec*qfx18vb-=*&7ay79ea@#)#z7!eka(j0(rv%jd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'VMwareAPI.apps.VmwareapiConfig',
+    'kdldapapi',
     'django_cas_ng',
 ]
 
