@@ -17,7 +17,7 @@ Including another URLconf
 from django.urls import path
 from VMwareAPI import views
 import django_cas_ng.views
-
+app_name = 'vmware'
 urlpatterns = [
     path('', views.index, name='root'),
     path('index', views.index, name='index'),

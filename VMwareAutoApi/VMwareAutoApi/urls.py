@@ -18,6 +18,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('VMwareAPI.urls')),
-    path('ldap/', include('kdldapapi.urls')),
+    path('', include('VMwareAPI.urls', namespace='vmware')),
+    path('ldap/', include('kdldapapi.urls', namespace='ldapapi')),
 ]

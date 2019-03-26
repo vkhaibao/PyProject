@@ -2,13 +2,23 @@
 {% load staticfiles %}
 {% block title %}LDAP运维管理平台{% endblock title %}
 {% block topfiles %}{% endblock topfiles %}
+{% block topmenu %}
+        <div>
+        <ul id="navu" class="nav nav-pills">
+              <li id="navi"><a id="nava" href={% url 'vmware:index' %}>VMWare平台</a></li>
+              <li id="navi"><a id="nava" class="active" href={% url 'ldapapi:index' %}>LDAP自助运维</a></li>
+              <li id="navi"><a id="nava" href="#">监控平台自助运维</a></li>
+              <li id="navi"><a id="nava" href="#">OA自助运维</a></li>
+        </ul>
+        </div>
+{% endblock topmenu %}
 {% block menu %}
 <div id="left" style="width:auto;float:left;">
         <ul id="nav">
-              <li><a class="active" href="index">虚拟机</a></li>
-              <li><a href="host">物理主机</a></li>
-              <li><a href="template">模板</a></li>
-              <li><a href="alltasks">任务</a></li>
+              <li><a class="active" href="index">账户管理</a></li>
+              <li><a href="accountm">权限管理</a></li>
+              <li><a href="orgm">组织管理</a></li>
+              <li><a href="plicm">策略管理</a></li>
         </ul>
 </div>
 {% endblock menu %}

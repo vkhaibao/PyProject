@@ -17,7 +17,7 @@ Including another URLconf
 from django.urls import path
 from kdldapapi import views
 import django_cas_ng.views
-
+app_name = 'ldapapi'
 urlpatterns = [
     path('', views.index, name='root'),
     path('index', views.index, name='index'),
@@ -25,4 +25,8 @@ urlpatterns = [
     path('login', django_cas_ng.views.LoginView.as_view(), name='cas_ng_login'),
     path('logout', django_cas_ng.views.LogoutView.as_view(), name='cas_ng_logout'),
     path('callback', django_cas_ng.views.CallbackView.as_view(), name='cas_ng_proxy_callback'),
+
+    path('accountm', views.accountm, name='accountm'),
+    path('orgm', views.orgm, name='orgm'),
+    path('plicm', views.plicm, name='plicm')
 ]

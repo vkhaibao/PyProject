@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock title %}</title>
-    <link rel="stylesheet" type="text/css" href={% static 'css/index.css' %}/>
+    <link rel="stylesheet" href={% static 'css/index.css' %}>
     <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.css' %}>
     <link rel="stylesheet" href={% static 'bootstrap-table/bootstrap-table.css' %}>
     <script type="text/javascript" src={% static 'js/jquery-1.12.4.min.js' %}></script>
@@ -12,24 +12,17 @@
     <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table.js' %}></script>
     <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table-locale-all.js' %}></script>
     <script type="text/javascript" src={% static 'bootstrap-table/locale/bootstrap-table-zh-CN.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}></script>
+    <script type="text/javascript" src={% static 'tableExport/tableExport.min.js' %}></script>
     {% block topfiles %}{% endblock topfiles %}
 </head>
 <body>
 <div id="main" style="width:auto;">
     <div id="top" style="width:auto;float:top;">
-        <button id="btnupdate" onclick="punch()" onmouseout="mouseOut()" onmousemove="mouseOver()">更新数据</button>
         <a>登录用户：</a>
         <a>{{ username }}</a>&nbsp;&nbsp;
         <a class="navigatorButton" href="logout">退出登录</a>
         {% block topmenu %}
-        <div>
-        <ul id="navu" class="nav nav-pills">
-              <li id="navi"><a id="nava" class="active" href="#">VMWare平台</a></li>
-              <li id="navi"><a id="nava" href="ldap">LDAP自助运维</a></li>
-              <li id="navi"><a id="nava" href="#">监控平台自助运维</a></li>
-              <li id="navi"><a id="nava" href="#">OA自助运维</a></li>
-        </ul>
-        </div>
         {% endblock topmenu %}
     </div>
 {% block menu %}
@@ -51,19 +44,6 @@
 </div>
 </body>
 <script type="text/javascript">
-    function punch() {
-        window.open('updatepop',"_blank","width:100,height:100,toolbar=0,resizeable=0," +
-            "top=100,left=200")
-    }
-    function mouseOver()
-    {
-        document.getElementById('btnupdate').style.background = "#1c19ff"
-    }
-    function mouseOut()
-    {
-        document.getElementById('btnupdate').style.background = "#3383da"
-    }
-
     var $table = $('#table')
       $(function() {
         $table.bootstrapTable()
