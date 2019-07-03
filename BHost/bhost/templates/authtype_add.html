@@ -1,0 +1,4626 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<link rel="stylesheet" href="/manage/css/G-style.css" type="text/css" />
+	<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+
+</head>
+<style>
+	i.ctr {
+		display: inline-block;
+		width: 15px;
+		height: 15px;
+		overflow: hidden;
+		background: url(/manage/images/icon-ctr.png) no-repeat 0 0;
+		vertical-align: middle;
+		cursor: pointer;
+	}
+	i.ctr-add {
+		background-position: 0 -15px;
+		position: absolute;
+		margin-left: -20px;
+		margin-top: 8px;
+	}
+	div.h-content2 div.csp_group:hover i.ctr-del {
+		display: inline-block;
+	}
+	i.ctr-del {
+		background-position: 0 0;
+		position: relative;
+		left: 8px;
+		top: -2px;
+		display: none;
+	}
+	.form-c {
+		/*padding-left: 260px;*/
+	}
+	#token_suspend .form-c {
+		padding-left: 260px;
+	}
+	#token_update_suspend .form-c {
+		padding-left: 260px;
+	}
+	#test_suspend .form-c {
+		padding-left: 260px;
+	}
+	#synchronization_suspend .form-c {
+		padding-left: 260px;
+	}
+	.form-item .form-c a.btn {
+		float: left;
+		padding: 1px 15px;
+		line-height: 24px;
+		color: #8D808A;
+		border: 1px solid #b2b2b2;
+		margin-right: 12px;
+		border-radius: 5px;
+		transition: all 0.4s;
+		margin-top: -0.5px;
+	}
+	a.btn-normal1:hover,.form-item .form-c a.btn:hover {
+		background-color: #8d808a;
+		color: #fff;
+	}
+	.filter_token{
+		position: absolute;
+		margin-top: -20px;
+		margin-left: 375px;
+		width: 700px
+	}
+	.c-exp{
+		min-width: 1100px;
+	}
+	.form-button{
+		cursor: pointer;
+	}
+	.select2-results__option{
+		font-size: 14px;
+	}
+	#btn_pwd {
+		float: none;
+		padding: 0px 5px;
+		line-height: 26px;
+		color: #8D808A;
+		border: 1px solid #8D808A;
+		margin-right: 12px;
+		border-radius: 5px;
+		transition: all 0.4s;
+		margin-left: 10px;
+		margin-top: -1px;
+		height: 26px;
+	}
+	#btn_pwd:hover {
+		background-color: #8D808A;
+		border-color: #8D808A;
+		color: #fff;
+	}
+	#authmodule_check + .select2-container .select2-selection--single{
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+	}
+	#authmodule_check + .select2-container{
+		margin-left: -1px;
+	}
+</style>
+<body style="overflow:hidden;display:none;" class="bg-white">
+	<div class="rwrap" id="authtype_z">
+		<div class="c-top">
+			<div class="c-title">
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title">
+						<span onclick="location.reload();" style="">认证方式</span>
+						<i class="authtype_icon"></i>
+					</div>
+				</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)">
+						<i></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		<!--认证方式添加或编辑-->
+
+		<div class="mainer" style='/*display:none;*/'>
+
+			<div class="container">
+				<div class="c-cont_auth1 c-cont" style="overflow: auto;">
+					<div class="c-form c-form2">
+						<div class="form form1" style=" margin-left: -48px;">
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>名称：</span>
+								<div class="form-c">
+									<input type="text" class="form-text" id="d_n" name="d_n" onblur="regCheck(this,nameReg);" maxlength="128">
+									<i class="v-check"></i>
+									<p class="form-tip">仅支持中文、字母、数字、下划线、横杠、小数点</p>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">默认：</span>
+								<div class="form-c">
+									<label class="form-label" style="margin-top: 4px;">
+										<input id="IsDefault" name="IsDefault" class="form-checkbox" type="checkbox" name="">
+									</label>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">验证方式：</span>
+								<div class="form-c" id="MustAllModule" name="MustAllModule" style="line-height: 25px;">
+									<label class="form-label">
+										<input class="form-radio" type="radio" name="MustAllModule_radio" value="true" id="r1" checked="checked">全部通过
+									</label>
+									<label class="form-label" style="padding-left: 30px;">
+										<input class="form-radio" type="radio" name="MustAllModule_radio" value="false" id="r2">任一通过
+									</label>
+								</div>
+							</div>
+							<div class="form-item" style="padding-bottom: 20px; display: none;" id="sep_div">
+								<span class="form-tag">分隔符：</span>
+								<div class="form-c" style="line-height: 23px;">
+									<select class="filter-select" name="Separator_select" id="Separator_select" style="width:80px;">
+										<option value="1" selected>符号</option>
+										<option value="2">长度</option>
+									</select>
+									<input type="text" id="Separator" name="Separator" class="form-text" maxlength="3" style="width:125px;padding-right:8px;">
+									<p id="Separator_p" class="form-tip" style="padding-left: 85px;">仅支持特殊字符</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="form" style="width: 580px;margin-left: -48px;">
+							<div class="h-content3" style="padding-top: 20px;padding-left:0px;width:900px;font-size:16px;max-height:600px;">
+								<span class="form-tag" style="width:192px;">
+									<em class="imp">*</em>模块配置：</span>
+								
+								<div name="module_all" id="module_all" style="/*padding-top: 3px;*/float: left;max-width: 210px;width:auto;">
+									<div class="item" style="padding-top:0px;width:270px;padding-left: 30px;display:none;padding-bottom: 20px;" id="module_check" name="module_check" value>
+										<select class="filter-select form-select2" name="module_select" id="module_select" style="width:143px;">
+											<option value="0" selected>请选择</option>
+										</select>
+										<input type="text" class="form-text num" id="length" name="length" maxlength="3" style="width: 20px;height: 26px;display:none;padding-right:8px;" onfocus="this.select()" onblur="dataCheck(this, 1, 32);" onkeyup="dataCheck(this, 1, 32);">
+										<i class="ctrl add" style="margin-left: 0px;" onclick="_addModule(this)"></i>
+										<p class="form-tip">该序列为有序排列(指纹模块只能放在最后)</p>
+									</div>
+								</div>
+								<a href="javascript:;" id='test_button' class="form-button" style="/*margin-top: 3px;*/float: left;height: 26px;border: 1px solid #b2b2b2;"
+								 onclick="test_button(this);">模块管理</a>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<div class="btns save_l perm_disabled is_hide" style="display:none;">
+							<a href="javascript:;" class="btn btn-normal" onclick="authtype_add();">保&nbsp;&nbsp;存</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			
+			<div id="bBtn" class='_btn1' style="position: fixed;z-index:5;">
+				<a href="javascript:;" class="btn" style="float: right;" onclick="authtype_list(0);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+			</div>
+		</div>
+	</div>
+	<div class="rwrap" id='authset_z' style="display:none;">
+		<!--认证配置表-->
+		<div class="c-top">
+			<div class="c-title">
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title">
+						<span onclick="back_authtype_add();" style="">模块配置</span>
+						<i class="authmodule_icon"></i>
+					</div>
+				</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)">
+						<i></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer" name="authmodule" id="authmodule">
+
+			<div class="container">
+				<div class="c-cont c-cont_auth">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr">
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="edit_item=0;authmodule_add(1,0);">创建</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="delete_list_authmodule();">删除</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="click_all_list_authmodule();">全选</a>
+									<a href="javascript:;" class="btn btn-default" onclick="clear_all_authmodule();">刷新</a>
+								</div>
+
+								<div class="filter">
+									<div class="search">
+										<select name="authmodule_select" id="authmodule_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="authmodulename">名称</option>
+											<option value="authmode">类型</option>
+										</select>
+
+										<input type="text" class="filter-text" placeholder="输入关键字" 
+										name="authmodule_text" id="authmodule_text" maxlength="128" style="/*display:none;*/padding-right: 22px;"
+										onchange="if($('#authmodule_text').val()==''){$('#authmodule_text_check').hide();}else{$('#authmodule_text_check').show();}"
+										onblur="if($('#authmodule_text').val()=='' && search_typeall_new_authmodule!=''){search_typeall_new_authmodule='';_addFilter_authmodule(this,false,1);}"
+										onkeyup="if($('#authmodule_text').val()==''){$('#authmodule_text_check').hide();}else{$('#authmodule_text_check').show();}"
+										onkeydown="if($('#authmodule_text').val()==''){$('#authmodule_text_check').hide();}else{$('#authmodule_text_check').show();};if (event.keyCode == 13){_addFilter_authmodule(this,false);return false;} else return; ">
+										<i class="v-check v-wrong" id="authmodule_text_check" 
+										onclick="_clearFilter_authmodule(this,1)" 
+										style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<select name="authmodule_check" id="authmodule_check" class="select2" style="width:140px;">
+											<option value="0" selected>所有</option>
+											<option value="1">本地认证</option>
+											<option value="2">AD域</option>
+											<option value="3">LDAP</option>
+											<option value="4">RADIUS</option>
+											<option value="6">令牌</option>
+											<option value="8">BHost USBKey</option>
+											<option value="10">TOTP</option>
+											<option value="11">短信认证</option>
+											<option value="12">邮箱认证</option>
+											<option value="13">指纹</option>
+										</select>
+										<button class="btn filter-btn" onclick="_addFilter_authmodule(this,false);">
+											<i class="add-filter"></i>
+										</button>
+										<button class="btn filter-btn" onclick="_addFilter_authmodule(this,true)">
+											<i class="append-filter"></i>
+										</button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter_authmodule(this)">
+											<i class="clear-filter"></i>
+										</button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW_authmodule" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th width="50" class="perm_disabled">
+												<input type="checkbox" class="form-checkbox" id="check_one_page_authmodule" />
+											</th>
+											<th>名称</th>
+											<th>类型</th>
+											<!--<th>密码长度</th>-->
+											<th id="authmodule_list_th" width="105"></th>
+										</tr>
+									</thead>
+
+									<tbody name="authmodule_list" id="authmodule_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示
+									<span id="page_nums_authmodule">10</span>条 总数：
+									<span id="authmodule_total">0</span><span class="perm_disabled"> 选中：</span>
+									<span class="sum perm_disabled">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="authmodule_begin" onclick="authmodule_page(0.1);">
+										<i></i>
+									</a>
+									<a href="javascript:;" class="nav prev" id="authmodule_prev" onclick="authmodule_page(-1);">
+										<i></i>
+									</a>
+									<input type="text" id="authmodule_page" value="1" onblur="showMsg_authmodule();" onchange="showMsg_authmodule();">/&nbsp;
+									<span id="authmodule_pages">1</span>
+									<a href="javascript:;" class="nav next" id="authmodule_next" onclick="authmodule_page(1);">
+										<i></i>
+									</a>
+									<a href="javascript:;" class="nav2 end" id="authmodule_end" onclick="authmodule_page(0.9);">
+										<i></i>
+									</a>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="save_authmodule();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="mainer" id="authmodule_change">
+			<div class="container" id="step1">
+				<div class="c-cont c-cont_auth" style="text-align:center">
+					<div class="c-wrap" style="padding: 10px 20px 0 20px;margin:0 auto;text-align: left;width:auto;">
+						<div class="c-exp" style="margin: -1px auto;">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;认证模块</strong>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 0 0 10px 0;">
+									<div class="form-item" style="width: 100%;">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>名称：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="name" maxlength="32" style="width: 235px;" onblur="regCheck(this,nameReg);">
+											<i class="v-check" style=""></i>
+											<p class="form-tip" style="">仅支持中文、字母、数字、下划线、横杠、小数点</p>
+										</div>
+									</div>
+									<div class="form-item" style="width: 100%;min-height: auto;">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>方式选择：</span>
+										<div class="form-c g-radios" style="padding-top: 7px;width: 800px;" id="authmodule_check_z">
+											<label class="form-label" style="display:none;"><input class="form-radio" type="radio" name="auth" value="1" id="auth-1">本地认证</label>
+											<label class="form-label"><input class="form-radio" type="radio" name="auth" value="2" id="auth-2">AD域</label>
+											<label class="form-label"><input class="form-radio" type="radio" name="auth" value="3" id="auth-3">LDAP</label>
+											<label class="form-label"><input class="form-radio" type="radio" name="auth" value="4" id="auth-4">RADIUS</label>
+											<label class="form-label" style="display:none;"><input class="form-radio" type="radio" name="auth" value="6" id="auth-6">令牌</label>
+											<label class="form-label" style="display:none;"><input class="form-radio" type="radio" name="auth" value="8" id="auth-8">BHost USBKey</label>
+											<label class="form-label"><input class="form-radio" type="radio" name="auth" value="9" id="auth-9">USBKey</label>
+											<label class="form-label" style="display:none;"><input class="form-radio" type="radio" name="auth" value="10" id="auth-10">TOTP</label>
+											<label class="form-label"><input class="form-radio" type="radio" name="auth" value="11" id="auth-11">短信</label>
+											<label class="form-label"><input class="form-radio" type="radio" name="auth" value="12" id="auth-12">邮箱</label>
+											<label class="form-label"><input class="form-radio" type="radio" name="auth" value="13" id="auth-13">指纹</label>
+										</div>
+									</div>
+									<!--
+									<div class="form-item" style="width: 100%;">
+										<span class="form-tag" style="">长度：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="authtype_length" maxlength="3" style="width: 60px;padding: 0 8px;" onblur="dataCheck(this, 1, 32);"
+											onkeyup="dataCheck(this, 1, 32);">
+										</div>
+									</div>
+								-->
+								</div>
+							</div>
+						</div>
+						<!--认证设置-->
+						<div class="c-exp" style="margin: -1px auto;display:none;" id="one">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;认证设置</strong>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>认证类型：</span>
+										<div class="form-c g-radios" style="padding-top: 7px;width: 800px;">
+											<label class="form-label" style="padding-right: 15px;">
+												<input class="form-radio" type="radio" name="authtype" value="true" id="authtype-true" checked="checked">动态认证
+											</label>
+											<label class="form-label">
+												<input class="form-radio" type="radio" name="authtype" value="false" id="authtype-false">静态认证
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--Radius设置-->
+						<div class="c-exp" style="margin: -1px auto;display:none;" id="two">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;Radius设置</strong>
+								</div>
+								<div class="h-content2" style="    height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>IP：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="two_ServerIp" maxlength="1024" style="" onblur="regCheck(this,ipReg);">
+											<i class="v-check" style=""></i>
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>端口：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="two_ServerPort" maxlength="5" style="" onblur="dataCheck(this,1,65534);regCheck(this,portReg);"
+											onkeyup="dataCheck(this,i,65534);">
+											<i class="v-check" style=""></i>
+											<p class="form-tip" style="">仅支持1到65534数字</p>
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>认证密码：</span>
+										<div class="form-c " style="">
+											<input type="password" class="form-text" onblur="" id="two_AuthPwd" maxlength="32" style="width:214px;padding-right:8px;">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--openldap-->
+						<div class="c-exp" style="margin: -1px auto;display:none;" id="three">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;LDAP</strong>
+									<div class="G-box2">Ldaps：
+										<input type="checkbox" class="form-checkbox" name="" id="IsSsl" value="">
+									</div>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>IP：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="three_ServerIp" maxlength="1024" style="" onblur="regCheck(this,ipReg);">
+											<i class="v-check" style=""></i>
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>端口：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="three_ServerPort" maxlength="5" style="" onblur="dataCheck(this,1,65534);regCheck(this,portReg);"
+											onkeyup="dataCheck(this,1,65534);">
+											<i class="v-check" style=""></i>
+											<p class="form-tip" style="">仅支持1到65534数字</p>
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>Base_DN：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" onblur="" id="three_BaseDn" maxlength="128" style="width:214px;padding-right:8px;">
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>用户标识：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" onblur="" id="three_UserObject" maxlength="32" style="width:214px;padding-right:8px;">
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>用户组标识：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" onblur="" id="three_GroupObject" maxlength="32" style="width:214px;padding-right:8px;">
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">管理员DN：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" onblur="" id="three_AuthUser" maxlength="64" style="width:214px;padding-right:8px;">
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">管理员密码：</span>
+										<div class="form-c " style="">
+											<input type="password" class="form-text" onblur="" id="three_AuthPwd" maxlength="32" style="width:214px;padding-right:8px;">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--AD域设置-->
+						<div class="c-exp" style="margin: -1px auto;display:none;" id="four">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;AD域</strong>
+								</div>
+								<div class="h-content2" style="    height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>IP：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="four_ServerIp" maxlength="1024" style="width:214px;padding-right:8px;">
+											<p class="form-tip" style="">可输入多个，以分号分隔</p>
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>端口：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="four_ServerPort" maxlength="5" style="" onblur="dataCheck(this,1,65534);regCheck(this,portReg);"
+											onkeyup="dataCheck(this,1,65534);" value="89">
+											<i class="v-check" style=""></i>
+											<p class="form-tip" style="">仅支持1到65534数字</p>
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>域名：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="four_BaseDn" maxlength="128" style="" onblur="regCheck(this,domainReg);">
+											<i class="v-check" style=""></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="c-exp" style="margin: -1px auto;display:none;" id="six">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;令牌列表</strong>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<div class="filter filter_token">
+										<div class="search">
+											<select name="token_select" id="token_select" class="filter-select">
+												<option value="all" selected>所有</option>
+												<option value="id">ID</option>
+												<option value="key">密钥</option>
+												<option value="user">已指定用户</option>
+											</select>
+											<input type="text" class="filter-text" placeholder="输入关键字" 
+											name="token_text" id="token_text" maxlength="128" 
+											style="/*display:none;*/padding-right: 22px;"
+											onchange="if($('#token_text').val()==''){$('#token_text_check').hide();}else{$('#token_text_check').show();}"
+											onkeyup="if($('#token_text').val()==''){$('#token_text_check').hide();}else{$('#token_text_check').show();}"
+											onblur="if($('#token_text').val()=='' && search_token_n!=''){search_token_n='';_addFilter_token(this,false,1);}"
+											onkeydown="if($('#token_text').val()==''){$('#token_text_check').hide();}else{$('#token_text_check').show();}; if (event.keyCode == 13){_addFilter_token(this,false);return false;} else return; ">
+											<i class="v-check v-wrong" id="token_text_check" 
+											onclick="_clearFilter_token(this,1)" 
+											style="display:none;cursor: pointer;float: left;position: static;"></i>
+											<button class="btn filter-btn" onclick="_addFilter_token(this,false);">
+												<i class="add-filter"></i>
+											</button>
+											<button class="btn filter-btn" onclick="_addFilter_token(this,true)">
+												<i class="append-filter"></i>
+											</button>
+										</div>
+										<div class="search" id="clearFilter_token" style="margin: 0px 15px 0px -16px;display:none;">
+											<button class="filter-btn" onclick="_clearFilter_token(this)">
+												<i class="clear-filter"></i>
+											</button>
+										</div>
+										<div class="selector selector-multiple" id="filterWW_token" style="display:none;">
+											<span class="ww">搜索条件</span>
+											<ul style="width: 98px;">
+											</ul>
+										</div>
+									</div>
+									<div class="c-table">
+										<div class="box-table">
+											<table cellpadding="0" cellspacing="0" style="    margin-bottom: 0px;">
+												<thead>
+													<tr>
+														<th width='5%'><input type="checkbox" class="form-checkbox" id="check_page"/></th>
+														<th width='12%'>令牌ID</th>
+														<th width='20%'>令牌密钥</th>
+														<th width='10%'>上次成功值</th>
+														<th width='10%'>上次漂移值</th>
+														<th width='20%'>已指定用户</th>
+														<th width='10%'>状态</th>
+														<th id="token_list_th" width="105"></th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="box-table">
+											<table cellpadding="0" cellspacing="0" style="margin-bottom:0px;">
+												<tbody id="token_list" style="height:auto">
+		
+												</tbody>
+											</table>
+										</div>
+										<div class="form">
+											<div class="form-item form-item-100" style="width:100%">
+												<div style="text-align: right;">
+														<a href="javascript:;" id="" class="btn btn-normal1 perm_disabled" onclick="get_dialog_token_down();">导&nbsp;&nbsp;入</a>
+													<a href="javascript:;" id="" class="btn btn-normal1 perm_disabled" onclick="get_dialog_token(1);">添&nbsp;&nbsp;加</a>
+													<a href="javascript:;" id="" class="btn btn-normal1 perm_disabled" onclick="delect_together();">删&nbsp;&nbsp;除</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!--认证配置页面-->
+						<div class="c-exp" style="margin: -1px auto;display:none;" id="seven">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;USBKey</strong>
+								</div>
+								<div class="h-content2" style="    height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<!-- <div class="form-item" style="">
+										<span class="form-tag" style="">强制使用usbkey：</span>
+										<div class="form-c " style="">
+											<label class="form-label" style="margin-top: 5px;float: left;padding-right: 0px;">
+												<input type="checkbox" class="form-checkbox" name="" id="" value="">
+											</label>
+											<span style="float: left;width: 211px;">勾选后所有用户包括admin将被强制使用usbkey，请配置好usbkey</span>
+										</div>
+									</div> -->
+									<div style="width:100%;float: left;" class="csp_group">
+										<div class="form-item" style="">
+											<span class="form-tag" style="">
+												<!--<em class="imp">*</em>-->CSP：</span>
+											<div class="form-c " style="">
+												<input type="text" class="form-text" id="key_csp" maxlength="128" style="width: 214px;padding-right: 8px;">
+											</div>
+										</div>
+										<div class="form-item" style="">
+											<span class="form-tag" style="">
+												<!--<em class="imp">*</em>-->认证唯一标识对象：</span>
+											<div class="form-c " style="">
+												<input type="text" class="form-text" id="key_csp_user" maxlength="128" style="width: 214px;padding-right: 8px;">
+											</div>
+										</div>
+										<i class="ctr ctr-add" id="_addcsp" onclick="_addcsp(this)" style="margin-top: 12px;margin-left: 0px;"></i>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+						<!--吊销服务器配置(LDAP)-->
+						<!--
+						<div class="c-exp" style="margin: -1px auto;display:none;" id="eight">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;吊销服务器配置(LDAP)</strong>
+								</div>
+								<div class="h-content2" style="    height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<div class="form-item" style="">
+										<span class="form-tag" style="">IP：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="key_ip" maxlength="1024" style="" onblur="regCheck(this,ipReg);">
+											<i class="v-check" style=""></i>
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">端口：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" value="389" id="key_port" maxlength="6" style="" onblur="dataCheck(this,1,65534);regCheck(this,portReg);"
+											onkeyup="dataCheck(this,1,65534);">
+											<i class="v-check" style=""></i>
+											<p class="form-tip" style="">仅支持1到65534数字，默认389</p>
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">BASE：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="key_base" maxlength="32" style="width: 214px;padding-right: 8px;">
+										</div>
+									</div>
+									<div class="form-item" style="">
+										<span class="form-tag" style="">ENTRY：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="key_entry" maxlength="128" style="width: 214px;padding-right: 8px;">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						-->
+						<!--根证书更新-->
+						<div class="c-exp" style="margin: -1px auto;display:none;" id="nine">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;根证书更新</strong>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<div class="form-item" style="width: auto;">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>选择根证书文件：</span>
+										<div class="form-c " style="">
+											<form id="uploadForm_1">
+												<input id="file_v_1" name="file_v_1" class="form-text" type="text" style="float: left;width: 214px;padding-right: 8px;">
+												<input id="file_change_1" name="file_change_1" class="form-text" type="file" onchange="filetip_1(this);" style="float: left;opacity: 0;margin-left: -232px;padding: 0 22px 0 8px;cursor: pointer;">
+												<a class="btn" href="javascript:;" style="margin-left: 20px;" onclick="browes_1();">浏览</a>
+												<!-- <a class="btn" href="javascript:;" style="margin-left: 10px;" onclick="send_file();">导入</a> -->
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--认证配置页面-->
+						<div class="c-exp" style="margin: -1px auto;display:none;" id="ten">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;认证配置页面</strong>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<!-- <div class="form-item" style="width: 100%;">
+										<span class="form-tag" style="">强制使用usbkey：</span>
+										<div class="form-c " style="">
+											<label class="form-label" style="margin-top: 5px;float: left;padding-right: 0px;">
+												<input type="checkbox" class="form-checkbox" name="" id="" value="">
+											</label>
+											<span style="float: left;width: auto;padding-top: 6px;padding-left: 15px;">勾选后所有用户包括admin将被强制使用usbkey，请配置好usbkey</span>
+										</div>
+									</div> -->
+									<div class="form-item" style="width: 100%;">
+										<span class="form-tag" style="">userca名称：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="userca_name" maxlength="" 
+											style="width: 214px;padding-right: 8px;float: left;">
+											<label class="form-label" style="margin-top: 5px;float: left;padding-right: 0px;padding-left: 25px;">
+												<input type="checkbox" class="form-checkbox" name="userca_check" id="userca_check" value="">
+											</label>
+											<span style="float: left;width: auto;padding-top: 6px;color: #000;">重新生成用户根证书</span>
+											<span style="float: left;width: auto;padding-top: 6px;padding-left: 25px;">注：如果重新生成，则可能会造成之前颁发过的用户证书不可用</span>
+										</div>
+									</div>
+									<!-- <div class="form-item" style="width: 100%;">
+										<span class="form-tag" style="">证书吊销配置：</span>
+										<div class="form-c " style="">
+											<a class="btn" href="javascript:;" style="margin-left: 10px;" onclick="">吊销</a>
+										</div>
+									</div> -->
+								</div>
+							</div>
+						</div>
+						<!--测试-->
+						<div class="c-exp perm_disabled" style="margin: -1px auto;display:none;" id="five">
+							<div class="h-explorer" style="padding-bottom: 10px;">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;测试</strong>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<div class="form-item" style="">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>用户名：</span>
+										<div class="form-c " style="">
+											<input type="text" class="form-text" id="user" maxlength="128" onblur="regCheck(this,userReg);" style="width: 200px;">
+											<i class="v-check"></i>
+											<p id="test_name_p" class="form-tip" style="">仅支持英文、数字、下划线、横杠、小数点</p>
+										</div>
+									</div>
+									<div class="form-item" style="width: 485px;margin-top: -1px;">
+										<span class="form-tag" style="">
+											<em class="imp">*</em>密码：</span>
+										<div class="form-c " style="">
+											<input type="password" class="form-text" onblur="" id="pwd" maxlength="128" style="width:200px;">
+											<i class="v-check" style="margin-left: -24px"></i>
+											<button class="form-button" style="margin-top: 1px;margin-left: 10px;" onclick="_getDialog_pingTest();">测试</button>
+											<p id="test_pwd_p" class="form-tip" style="">仅支持英文、数字、下划线、横杠、小数点</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="btns perm_disabled" id="authmodule_btn">
+				<a href="javascript:;" class="btn btn-normal " onclick="savedata();" style="font-weight: 400;">保&nbsp;&nbsp;存</a>
+			</div>
+			<div id="bBtn" style="position: fixed;z-index: 5;">
+				<a href="javascript:;" class="btn" style="float: right;" onclick="back(0);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+			</div>
+		</div>
+		
+	</div>
+	<form action="/bhost/authtype_handle" method="POST" name="frm_authtype_add" id="frm_authtype_add">
+		<input type="hidden" name="tasktype" id="tasktype" value="{{ tasktype }}" />
+		<!--创建 编辑 列表-->
+		<input type="hidden" name="authtypeId" id="authtypeId" value="{{ authtypeId }}" />
+		<!--authtypeId-->
+		<input type="hidden" name="paging" id="paging" value="{{paging}}" />
+		<!--页码-->
+		<input type="hidden" name="search_typeall" id="search_typeall" value="{{search_typeall}}" />
+		<!--search_typeall-->
+		<input type="hidden" name="e" id="e" value="{{e}}" />
+		<!--e-->
+		<input type="hidden" name="se" id="se" value="{{se}}" />
+		<!--se-->
+		<input type="hidden" name="a" id = "a" value="{{a}}" />
+		<!--需要查询id-->
+		<input type="hidden" name="c" id = "c" value="{{c}}" />
+		<!--页码-->
+		<input type="hidden" name="b" id = "b" value="{{b}}" />
+		<!--b-->
+		<input type="hidden" name="f0" id = "f0" value="" />
+	</form>
+	<!--token  -->
+	<div class="dialog-cont" id="token_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+				<div class="" style="padding: 0px; height: 240px;">
+				<div class="c-form " style="padding-top: 8px;">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="" name="">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>令牌ID：</span>
+							<div class="form-c">
+								<input type="text" style="width: 224px;" class="form-text" id="token_id" name="token_id" maxlength="32" onblur="regCheck(this,idReg);">
+								<i class="v-check" style=""></i>
+								 <p class="form-tip" style="">仅支持数字</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;padding-bottom: 15px;">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>令牌密钥：</span>
+							<div class="form-c">
+									<input type="text" style="width: 224px;" class="form-text" id="token_key" name="token_key" maxlength="128" onblur="regCheck(this,keyReg);">
+									<i class="v-check" style=""></i>
+									 <p class="form-tip" style="">仅支持字母、数字</p>
+								</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;padding-bottom: 15px;">
+							<span class="form-tag" style="width: 260px;">令牌码：</span>
+							<div class="form-c">
+								<input type="text" style="width: 224px;" class="form-text" id="token_code" name="token_code" maxlength="128" onblur="regCheck(this,idReg);">
+								<i class="v-check" style=""></i>
+								 <p class="form-tip" style="">仅支持数字</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit perm_disabled">保&nbsp;&nbsp;存</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!--token 同步 -->
+	<div class="dialog-cont" id="token_update_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+				<div class="" style="padding: 0px; height: 240px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="" name="">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>令牌码1：</span>
+							<div class="form-c">
+								<input type="text" style="width: 224px;" class="form-text" id="token_num1" name="token_num1" maxlength="8" onblur="regCheck(this,idReg);">
+								<i class="v-check" style=""></i>
+								 <p class="form-tip" style="">仅支持数字</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;padding-bottom: 15px;">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>令牌码2：</span>
+							<div class="form-c">
+								<input type="text" style="width: 224px;" class="form-text" id="token_num2" name="token_num2" maxlength="8" onblur="regCheck(this,idReg);">
+								<i class="v-check" style=""></i>
+									<p class="form-tip" style="">仅支持数字</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit">同&nbsp;&nbsp;步</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!--token导入  -->
+	<div class="dialog-cont" id="token_down_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+				<div class="" style="padding: 0px; height: 240px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="" name="">
+							<span class="form-tag" style="width: 260px;">下载模板：</span>
+							<div class="form-c">
+								<a class="btn" href="javascript:;" style="" onclick="_export_token();">下载</a>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;padding-bottom: 15px;">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>选择文件：</span>
+							<div class="form-c" style="width:100%;">
+								<form id="uploadForm">
+									<input id="file_v" name="file_v" class="form-text" type="text" style="float: left;width: 224px;">
+									<input id="file_change" name="file_change" class="form-text" type="file" onchange="filetip(this);" style="float: left;opacity: 0;margin-left: -256px;padding: 0 8px;cursor: pointer;">
+									<a class="btn" href="javascript:;" style="margin-left: 10px;" onclick="browes();">浏览</a>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit">导&nbsp;&nbsp;入</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!-- 测试 -->
+	<div class="dialog-cont" id="test_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+				<div class="" style="padding: 0px; height: 240px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="" name="">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>账号：</span>
+							<div class="form-c">
+								<input type="text" style="width: 224px;" class="form-text" id="test_user" name="test_user" maxlength="128" onblur="regCheck(this,userReg);">
+								<i class="v-check" style=""></i>
+								<p  class="form-tip" style="">仅支持英文、数字、下划线、横杠、小数点</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0 20px;">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>密码：</span>
+							<div class="form-c">
+								<input type="password" style="width: 224px;" class="form-text" id="test_pwd" name="test_pwd" maxlength="64" onblur="">
+								<i class="v-check" style=""></i>
+								<p  class="form-tip" style="">仅支持英文、数字、下划线、横杠、小数点</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit">测&nbsp;&nbsp;试</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!-- 测试 令牌 -->
+	<div class="dialog-cont" id="test_suspend_token" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+				<div class="" style="padding: 0px; height: 240px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;min-height: 40px;" id="" name="">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>令牌码：</span>
+							<div class="form-c">
+								<input type="text" style="width: 224px;" class="form-text" id="test_token_l" name="test_token_l" maxlength="128" onblur="regCheck(this,idReg);">
+								<i class="v-check" style=""></i>
+								<p  class="form-tip" style="">仅支持数字</p>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit">测&nbsp;&nbsp;试</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!-- 同步 -->
+	<div class="dialog-cont" id="synchronization_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+				<div class="" style="padding: 0px; height: 430px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="" name="">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>账号：</span>
+							<div class="form-c">
+								<input type="text" style="width: 224px;" class="form-text" id="synchronization_user" name="synchronization_user" maxlength="128" onblur="regCheck(this,userReg);">
+								<i class="v-check" style=""></i>
+								<p  class="form-tip" style="">仅支持英文、数字、下划线、横杠、小数点</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0 20px;">
+							<span class="form-tag" style="width: 260px;"><em class="imp">*</em>密码：</span>
+							<div class="form-c">
+								<input type="password" style="width: 238px;padding-right: 8px;" class="form-text" id="synchronization_pwd" name="synchronization_pwd" maxlength="64" onblur="">
+								<i class="v-check" style=""></i>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;" id="" name="">
+							<span class="form-tag" style="width: 260px;">过滤条件（路径）：</span>
+							<div class="form-c">
+								<input type="text" style="width: 238px;padding-right: 8px;" class="form-text" id="search_ad_or_ldap" name="search_ad_or_ldap" maxlength="128" onblur="/*regCheck(this,userReg);*/">
+								<i class="v-check" style=""></i>
+								<a href="javascript:;" id="btn_pwd" class="form-button" onclick="more_search()">高级</a>
+								<p  class="form-tip" style="">多个用户组以";"隔开</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;display:none;" id="search2_form" name="search2_form">
+							<span class="form-tag" style="width: 260px;">过滤条件（属性）：</span>
+							<div class="form-c">
+								<input type="text" style="width: 238px;padding-right: 8px;" class="form-text" id="search_ad_or_ldap_2" name="search_ad_or_ldap_2" maxlength="128" onblur="/*regCheck(this,userReg);*/">
+								<i class="v-check" style=""></i>
+								<!-- <p  class="form-tip" style="">仅支持英文、数字、下划线、横杠、小数点</p> -->
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0 20px;">
+							<span class="form-tag" style="width: 260px;">默认密码：</span>
+							<div class="form-c">
+								<input type="password" style="width: 238px;padding-right: 8px;" class="form-text" id="pwd_ad_or_ldap" name="pwd_ad_or_ldap" maxlength="128" onblur="">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0 20px;">
+							<span class="form-tag" style="width: 260px;">用户组：</span>
+							<div class="form-c">
+								<select name="HG_select" id="HG_select" class="filter-select form-select2" style="width:256px;">
+									<option value="1" selected>未分组</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit">同&nbsp;&nbsp;步</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<style>
+		#authmodule_change .form-c {
+			padding-left: 155px;
+			position: relative;
+		}
+
+		#authmodule_change .h-content2 .form-tip {
+			padding-left: 0px;
+		}
+
+		#authmodule_change .form-label {
+			padding-right: 20px;
+		}
+
+		#authmodule_change .h-content2 .form-item {
+			height: auto;
+			padding: 20px 0 10px;
+			min-height: 38px;
+			padding: 5px;
+			width: 392px;
+			float: left;
+		}
+
+		#authmodule_change .h-content2 .form-tag {
+			float: left;
+			width: 150px;
+			text-align: right;
+			color: #000;
+			line-height: 28px;
+		}
+
+		#authmodule_change .h-content2 .form-text {
+			width: 200px;
+		}
+
+		#authmodule_change a.btn-normal1 {
+			display: inline-block;
+			width: 90px;
+			height: 32px;
+			border: 1px solid #DDD;
+			text-align: center;
+			line-height: 32px;
+			border-radius: 18px;
+			margin: 0 10px;
+			background-color: #fff;
+			transition: background-color 0.4s;
+			color: #7c7c7c;
+			outline: none;
+		}
+		#authmodule_change a.btn-normal1:hover {
+			background-color: #8d808a;
+			color: #fff;
+		}
+		.filter_token ul li{
+			padding: 0; 
+		}
+	</style>
+	<script>
+		var perm={{perm}};
+		if (perm==0) parent.parent.$('#nav-s1 a.active').click();
+		else{
+			$('.bg-white').show();
+			if(perm==1 || parent.AuthType_role ==1){
+				$('.perm_disabled').remove();
+				$('#authmodule_list_th').attr('width','25');
+				$('#token_list_th').attr('width','25');
+			}
+		}
+		
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+		$('.filter-select:not(.form-select2),.select2').select2({ minimumResultsForSearch: -1 });
+		$('.form-select2').select2();
+	</script>
+
+	<script>
+		var authtype = {
+			"AuthTypeId": 0,
+			"AuthTypeName": "",
+			"MustAllModulesSucc": true,
+			"Separator": null,
+			"IsDefault": false,
+			"Set": new Array()
+		};
+		var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+		var idReg=/^[\d]+$/;
+		var userReg=/^[a-zA-Z\d_\-\.]+$/;
+		var keyReg=/^[a-zA-Z\d]+$/;
+		var option_str = [];
+		var check_option_str = [];
+		var module_str = "";
+		var display = "none";
+		var authmodule = null;
+		var se;
+		var auth_id_value;
+		var token_obj;
+		var search_token_r=new Array();
+		var delect_str_token=new Array();
+		var search_token_n='';
+		var usekey_len_prev = -1;
+		var usekey_len_next = -1;
+		$(function () {
+			_initSize1();
+			is_user = '{{is_user}}';
+			if(is_user == '1'){
+				$('.c-top').hide();
+				$('._btn1').hide();
+				$('.save_l').css('bottom','0px');
+				$('#authmodule_btn').css('bottom','0px');
+				se = "{{se}}";
+				document.frm_authtype_add.se.value =se;
+			}else{
+				se = window.parent.document.frm.se.value;
+				document.frm_authtype_add.se.value = window.parent.document.frm.se.value;
+			}
+			parent._switchBtn(0);//隐藏按钮
+			//输入数字
+			$(".num,#four_ServerPort,#three_ServerPort,#two_ServerPort,#authmodule_page").bind('keydown', function (e) {
+				DigitInput(e);
+			}).on("input propertychange", function () {				//防止在输入法开启的情况下输入非数字
+				this.value = this.value.replace(/\D/g, "").trim();
+			});
+			$("#module_select").on("change", function () {
+				$('#Separator_select').trigger('change');
+				if($('#module_select').val()=='0'){
+					$(this).parent().find('input[type=text]').val('');
+				}
+				if ($('#module_select').find('option').length == 1) {
+					$('#module_check').hide();
+				} else if ($('#module_select').find('option').length == 2 && $('#module_select option:selected').val() != '0') {
+					//_addModule($('#module_select').siblings('i'));
+					//$('#module_check').hide();
+				} else {
+					var authtypeId=parseInt(document.frm_authtype_add.authtypeId.value);
+					if(authtypeId==0 || authtypeId>1000){
+						$('#module_check').show();
+					}
+				}
+			});
+			$('#check_page').on(' ifClicked',function(e){
+				if(!$('#check_page').is(':checked')){
+					$('#token_list tr td input:not(:disabled)').iCheck('check');
+				}else{
+					$('#token_list tr td input:not(:disabled)').iCheck('uncheck');
+				}
+			});
+			$("#token_list").on("ifChecked",function(e){
+				if($("#token_list tr input:checked").length==$("#token_list tr input:not(:disabled)").length){
+					$('#check_page').iCheck('check');
+				}
+			}).on("ifUnchecked",function(e){
+				$('#check_page').iCheck('uncheck');
+			});
+			$("#four_ServerPort").val("89");
+			$('#IsSsl').on("ifChecked",function(e){
+				$('#three_ServerPort').val(636);
+			}).on("ifUnchecked",function(e){
+				$('#three_ServerPort').val(389);
+			});
+			$('#Separator_select').on('change', function () {
+				var Separator_select = $('#Separator_select').val();
+				var module_len = $("#module_all").children('div').length - 1; //认证模块数量
+				var fp_flag = false;			
+				if (Separator_select == "1") {//符号
+					$('#Separator').show();
+					$('#Separator_p').show();
+					display = "none";
+					$('#module_all').find('.item').find('.num').hide();
+					$('#test_button').css('margin-left', '0px');
+				} else {//长度
+					$('#Separator').hide();
+					$('#Separator_p').hide();
+					if ($('#module_all').find('.item[id!=module_check]').length>1){
+						display = "inline";
+						//没有 || 只有一个认证模块的时候不需要show   hide
+						//有两个认证模块的时候 其中一个是指纹的时候不需要show   hide
+						//有两个认证模块的时候 其中没有指纹的时候需要show    show
+						//有两个以上认证模块的时候 需要show   show
+						if(module_len == 1 || module_len == 0){
+							$('#module_all').find('.item').find('.num').hide();
+						}else if(module_len == 2){
+							$.each($("#module_all").children('div'),function(i,item){
+								if($(item).attr('name') == '13'){
+									fp_flag = true;
+								}
+							})
+							if(fp_flag == true){
+								$('#module_all').find('.item').find('.num').hide();
+							}else{
+								$('#module_all').find('.item').find('.num').show();
+								$('#test_button').css('margin-left', '50px');
+							}
+						}else{
+							$('#module_all').find('.item').find('.num').show();
+							$('#test_button').css('margin-left', '50px');
+						}
+
+						
+					}else{
+						display = "none";
+						$('#module_all').find('.item').find('.num').hide();
+						$('#test_button').css('margin-left', '0px');
+					}
+				}
+			});
+			$("#token_list").on('dblclick','tr',function(e){
+				//双击事件的执行代码
+				x=e.target;
+				if(x.nodeName !='A' && x.nodeName !='INS'){
+					token_obj=$(this);
+					get_dialog_token(2);
+				}
+			}).on("click", "tr", function (e){
+				x=e.target;
+				//删除按钮
+				if(x.id == 'del'){
+					var id=$(this).find("td");
+					var input  = $(this).find("input");
+					$('.btn').blur();parent.layer.open({
+						type:1,
+						title: '令牌列表',
+						content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+						btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+						btnAlign:'c',
+						closeBtn: false,
+						skin:'layer-custom',
+						area:['380px','310px'],
+						move: false,
+						resize: false,
+						yes:function(i){
+							parent.layer.close(i);
+							var delete_item=$(id).eq(1).text();
+							// $(input).iCheck('uncheck');
+							delete_fun_token(delete_item);
+						}
+					});
+				}
+				//编辑按钮
+				else if(x.id == 'edit'){
+					token_obj=$(this);
+					get_dialog_token(2);
+				}
+				else if(x.id=='synchronization'){
+					token_obj=$(this);
+					get_dialog_token_update();
+				}
+			});
+			//模块显示
+			$.ajax({
+				url: "/bhost/get_authmodule_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: 0 },
+				success: function (result) {
+					var authmodule_result = JSON.parse(result);
+					if (authmodule_result.Result == true) {
+						var authmodule_data = authmodule_result.info;
+						var total_all = authmodule_data.totalrow;
+						if (total_all) {
+							authmodule = new Array();
+							$.each(authmodule_data.data, function (i, item) {
+								if (item.PwdLen == null) {
+									item.PwdLen = "";
+								}
+								$("#module_select").append("<option index=\"0\" value=\"" + item.AuthModuleId + "\" name=\""+item.AuthMode+"\" len=\""+item.PwdLen+"\">" + item.AuthModuleName + "</option>");
+								option_str[item.AuthModuleId] = "<option index=\"0\" value=\"" + item.AuthModuleId + "\" name=\""+item.AuthMode+"\" len=\""+item.PwdLen+"\">" + item.AuthModuleName + "</option>";
+								authmodule[item.AuthModuleId] = item;
+
+							});
+						}
+					} else {
+						_alert(1, "模块配置", authmodule_result.ErrMsg);
+						return false;
+					}
+				}
+			});
+
+			var tasktype = document.frm_authtype_add.tasktype.value;
+			//编辑页面
+			if (tasktype == "2") {
+				var authtypeId = document.frm_authtype_add.authtypeId.value;
+				$.ajax({
+					url: "/bhost/get_authtype_list",
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: authtypeId },
+					success: function (result) {
+						var authtype_result = JSON.parse(result);
+						if (authtype_result.Result == true) {
+							var authtype_data = authtype_result.info.data[0];
+							auth_id_value=authtype_data.AuthTypeId;
+							if (authtype_data.AuthTypeId <= 1000) {
+								$("#d_n").attr("disabled", true);
+								$(".num").attr("disabled", true);
+								$("#r1").iCheck('disable');
+								$("#r2").iCheck('disable');
+								$("#Separator_select").attr("disabled", true);
+								$("#module_select").attr('disabled',true);
+								$(".ctrl").attr("style", "display:none;");
+								$('#module_check').hide();
+								$('#module_all div li').removeAttr("onclick");
+								$('.save_l').show();
+							}else{
+								$('.save_l').show();
+								$('#module_check').show();
+							}
+							$("#d_n").val(authtype_data.AuthTypeName);
+							$("#d_n").attr("disabled", true);
+							if (authtype_data.Separator == null || authtype_data.Separator == '') {
+								$('#Separator_select').val('2').trigger('change');
+								$('#Separator').hide();
+								display = "inline";
+								$('#module_all').find('.item').find('input[type=text]').show();
+							} else {
+								$('#Separator_select').val('1').trigger('change');
+								$('#Separator').val(authtype_data.Separator);
+								$('#Separator').show();
+								display = "none";
+								$('#module_all').find('.item').find('input[type=text]').hide();
+							}
+							if (authtype_data.MustAllModulesSucc) {
+								$('#r1').iCheck('check');
+							} else {
+								$('#r2').iCheck('check');
+							}
+							if (authtype_data.IsDefault) {
+								$('#IsDefault').iCheck('check');
+								$('#IsDefault').iCheck('disable'); //将输入框的状态设置为 disabled 
+							}
+							var authtype_data_mod = authtype_data.Set;
+							$.each(authtype_data_mod, function (i, item) {
+								var $c = $('<div class="item" style="padding-top:0px;width: 270px;" value="' + item.AuthModuleId + '" name=\"'+authmodule[item.AuthModuleId].AuthMode+'\"/>');
+								
+								var disabled_len = "";
+								if(item.AuthModuleName == 'TOTP' || item.AuthModuleName == '令牌' || item.AuthMode==11 || item.AuthMode==12){
+									item.PwdLen = 6;
+									disabled_len = "disabled";
+								}
+								if(item.AuthModuleName == 'BHost Key' && item.PwdLen !=null){
+									usekey_len_prev = item.PwdLen;
+								}
+								if(item.AuthMode==9){
+									module_index=9;
+								}
+								if(item.AuthMode==8){
+									module_index=8;
+								}						
+								if(item.AuthModuleName == "指纹认证" || item.AuthMode==13){
+									$c.html('<li style="float: left;text-align: center;width: 24px;margin: 6px 0 0 0;" onclick="">' + item.Order + '</li><input type="text" class="form-text" value="' + item.AuthModuleName + '" disabled="true" style="padding-right:8px;width: 125px;height: 26px;margin-left: 6px;">  <input type="text" class="form-text num" maxlength="3" value="" style="padding-right:8px;width: 20px;height: 26px;display:' + display + ';margin-right: 5px;" onfocus="this.select()" onblur="dataCheck(this, 1, 32);" onkeyup="dataCheck(this, 1, 32);" '+disabled_len+' disabled><i class="ctrl del" style="margin-left:0px;" onclick="_delModule(this)"></i>');
+									$("#module_select option[name='13']").remove();
+								}else{
+									$c.html('<li style="float: left;text-align: center;width: 24px;margin: 6px 0 0 0;" onclick="_editSort(this)">' + item.Order + '</li><input type="text" class="form-text" value="' + item.AuthModuleName + '" disabled="true" style="padding-right:8px;width: 125px;height: 26px;margin-left: 6px;">  <input type="text" class="form-text num" maxlength="3" value="' + (item.PwdLen?item.PwdLen:'') + '" style="padding-right:8px;width: 20px;height: 26px;display:' + display + ';margin-right: 5px;" onfocus="this.select()" onblur="dataCheck(this, 1, 32);" onkeyup="dataCheck(this, 1, 32);" '+disabled_len+'><i class="ctrl del" style="margin-left:0px;" onclick="_delModule(this)"></i>');
+								}
+								$("#module_all").append($c);
+								$("#module_select option[value=" + item.AuthModuleId + "]").remove();
+								check_option_str[item.AuthModuleId] = option_str[item.AuthModuleId];
+								option_str[item.AuthModuleId] = null;
+							});
+							sepDeal();						
+							//console.log(module_index);
+							var module_select_val=$('#module_select').val();
+							$('#module_select option[index=0]').remove();
+							$.each(option_str, function (i, item) {
+								if (item != null) {
+									if(module_index==0 || (module_index==9 && item.indexOf('name="8"')<0 && item.indexOf('name="9"')<0) || (module_index==8 && item.indexOf('name="9"')<0)){
+										//console.log(item);
+										$('#module_select').append(item);
+									}
+								}
+							});
+							$('#module_select').val(module_select_val).trigger('change');
+							if (authtype_data.AuthTypeId <= 1000) {
+								$('i.ctrl.del').remove();
+							}
+							$('#Separator_select').trigger('change');
+							return false;
+						} else {
+							_alert(1, '认证方式', authtype_result.ErrMsg);
+							return false;
+						}
+					}
+				});
+			}else{
+				$('.save_l').show();
+				$('#module_check').show();
+			}
+		});
+		window.onresize=function(){
+			_initSize1();//加载长度
+		};
+		function more_search() {
+			if($('#search2_form').is(':hidden')){
+				$('#search2_form').show();
+			}else{
+				$('#search2_form').hide();
+			}
+		}
+		function browes_1(){
+			$("#file_change_1").click();
+		}
+		function filetip_1(obj){
+			var c = $(obj).val();
+			c = c.split("\\");
+			var b = c[c.length-1];
+			$('#file_v_1').val(b);
+		}
+		function send_file(){
+			
+		}
+		function _addcsp(obj,type){
+			if(type=='del'){
+				$(obj).parent().remove();
+			}
+			else{
+				var key_csp=$('#key_csp').val();
+				var key_csp_user=$('#key_csp_user').val();
+				if(key_csp==''){
+					_alert(2,'认证模块','请输入CSP',$('#key_csp'));
+					return false;
+				}
+				if(key_csp_user==''){
+					_alert(2,'认证模块','请输入认证唯一标识对象',$('#key_csp_user'));
+					return false;
+				}
+				var $div_arr=$('#seven').find('div.csp_group');
+				for(var i=1;i<$div_arr.length;i++){
+					var $input=$($div_arr[i]).find('input');
+					var input1=$input.eq(0).val();
+					var input2=$input.eq(1).val();
+					if(input1==key_csp){
+						_alert(2,'认证模块','含有相同CSP',$('#key_csp'));
+						return false;
+					}
+				}
+				$div=$(obj).parent().clone();
+				$div.find('input').attr('id','');
+				$div.find('i').after('<i class="ctr ctr-del" style="cursor: pointer;margin-left: -8px;margin-top: 13px;" onclick="_addcsp(this,\'del\')"></i>').remove();
+				$(obj).parent().after($div);
+				$('#key_csp').val('');
+				$('#key_csp_user').val('');
+			}
+		}
+		function _initSize1() {
+			var h = $(window).height();
+			var w=$(window).width();
+			$('#token_list').parents('.box-table').css('max-height',(perm==2?h-470:h-400));
+			var w_f=w-804;
+			if((w-804)<376){
+				w_f=376;
+			}
+			// if (perm==1) w_f+=70
+			$('.filter_token').css('margin-left',w_f);
+			$('.c-cont_auth1').height(h - 104);
+			//$('.c-cont_auth').height(300);
+		}
+		function browes(){
+			$("#file_change").click();
+		}
+		function clear_token(){
+			$('#token_suspend input').val('');
+			$('#token_suspend i.v-check').attr('class','v-check');
+			$('#token_id').attr('disabled',false);
+			// $('#token_suspend .btn-update').hide();
+		}
+		function clear_test_table(authmode_value) {
+			$('#test_suspend input').val('');
+			$('#test_suspend i.v-check').attr('class','v-check');
+			var form_item=$('#test_suspend .form-item');
+			if(parseInt(authmode_value)==6){
+				form_item.eq(0).find('.form-tag').html('<em class="imp">*</em>令牌ID：');
+				form_item.eq(1).find('.form-tag').html('<em class="imp">*</em>令牌码：');
+				form_item.eq(0).find('p').text('仅支持数字');
+				form_item.eq(1).find('p').text('仅支持字母、数字');
+				form_item.eq(0).find('input').attr('maxlength','32').attr('onblur','regCheck(this,idReg);');
+				form_item.eq(1).find('input').attr('maxlength','128').attr('type','text').attr('onblur','regCheck(this,keyReg);');
+			}else{
+				form_item.eq(0).find('.form-tag').html('<em class="imp">*</em>账号：');
+				form_item.eq(1).find('.form-tag').html('<em class="imp">*</em>密码：');
+				form_item.eq(0).find('p').text('仅支持英文、数字、下划线、横杠、小数点');
+				form_item.eq(1).find('p').text('');
+				form_item.eq(0).find('input').attr('maxlength','128').attr('onblur','regCheck(this,userReg);');
+				form_item.eq(1).find('input').attr('maxlength','64').attr('type','password').attr('onblur','');
+			}
+		}
+		function _getDialog_pingTest(){
+			var authmodule_save1 = {
+				"AuthModuleId": 0,
+				"AuthModuleName": null,
+				"AuthMode": 0,
+				"IsDynamicAuth": null,
+				"ServerIp": null,
+				"ServerPort": null,
+				"AuthUser": null,
+				"AuthPwd": null,
+				"BaseDn": null,
+				"UserObject": null,
+				"IsSsl": null,
+				"PwdLen": null
+			}
+			var name = $("#name").val();
+			if (name == '') {
+				_alert(2, '模块配置', '请输入名称', $("#name"));
+				return false;
+			} else if (!nameReg.test(name)) {
+				_alert(1, '模块配置', '名称格式不正确', $("#name"));
+				return false;
+			} else if (name.length > 32) {
+				_alert(1, '模块配置', '名称长度不得超过32位字符', $("#name"));
+				return false;
+			}
+			
+			if (type_id == '') {
+				_alert(2, '模块配置', '请选择方式');
+				return false;
+			}
+			// var length_num = $('#authtype_length').val() == '' ? null : $('#authtype_length').val();
+			//var data = authmodule_array[type_id];
+			switch (parseInt(type_id)) {
+				case 1:
+					break;
+				case 2:
+					var four_ServerIp = $('#four_ServerIp').val();
+					var four_ServerIp_array = four_ServerIp.split(';');
+					four_ServerIp = '';
+					var pass = 1;
+					$.each(four_ServerIp_array, function (i, item) {
+						if (item != '') {
+							if (ipReg.test(item)) {
+								if (four_ServerIp.indexOf(item) >= 0) {
+									_alert(2, '模块配置', 'IP地址重复', $('#four_ServerIp'));
+									pass = 0;
+									return false;
+								} else {
+									four_ServerIp += (item + ';');
+								}
+							} else {
+								_alert(1, '模块配置', 'IP地址格式不正确', $('#four_ServerIp'));
+								pass = 0;
+								return false;
+							}
+						}
+					});
+					if (pass == 0) {
+						return false;
+					}
+					if (four_ServerIp == '') {
+						_alert(2, '模块配置', '请输入IP地址', $('#four_ServerIp'));
+						return false;
+					}
+					four_ServerIp = four_ServerIp.substr(0, four_ServerIp.length - 1)
+					var four_ServerPort = $('#four_ServerPort').val();
+					if (four_ServerPort == '') {
+						_alert(2, '模块配置', '请输入端口', $('#four_ServerPort'));
+						return false;
+					} else if (!portReg.test(four_ServerPort)) {
+						_alert(2, '模块配置', '请输入0-65535之间的数字', $('#four_ServerPort'));
+						return false;
+					}
+					var four_BaseDn = $('#four_BaseDn').val();
+					if (four_BaseDn == '') {
+						_alert(2, '模块配置', '请输入域名', $('#four_BaseDn'));
+						return false;
+					} else if (!domainReg.test(four_BaseDn)) {
+						_alert(2, '模块配置', '域名格式不正确', $('#four_BaseDn'));
+						return false;
+					}
+					authmodule_save1.ServerIp = four_ServerIp;
+					authmodule_save1.ServerPort = four_ServerPort;
+					authmodule_save1.BaseDn = four_BaseDn;
+					break;
+				case 3:
+					var three_ServerIp = $('#three_ServerIp').val();
+					if (three_ServerIp == '') {
+						_alert(2, '模块配置', '请输入IP地址', $('#three_ServerIp'));
+						return false;
+					} else if (!ipReg.test(three_ServerIp)) {
+						_alert(1, '模块配置', 'IP地址不正确', $('#three_ServerIp'));
+						return false;
+					}
+					var three_ServerPort = $("#three_ServerPort").val();
+					if (three_ServerPort == '') {
+						_alert(2, '模块配置', '请输入端口', $('#three_ServerPort'));
+						return false;
+					} else if (!portReg.test(three_ServerPort)) {
+						_alert(2, '模块配置', '请输入0-65535之间的数字', $('#three_ServerPort'));
+						return false;
+					}
+					var three_BaseDn = $('#three_BaseDn').val();
+					if (three_BaseDn == '') {
+						_alert(2, '模块配置', '请输入Base_DN', $('#three_BaseDn'));
+						return false;
+					}
+					var three_UserObject = $('#three_UserObject').val();
+					if (three_UserObject == '') {
+						_alert(2, '模块配置', '用户标识不能为空', $('#three_UserObject'));
+						return false;
+					}
+					var three_GroupObject = $('#three_GroupObject').val();
+					if (three_GroupObject == '') {
+						_alert(2, '模块配置', '用户组标识不能为空', $('#three_GroupObject'));
+						return false;
+					}
+					
+					var three_AuthUser = $('#three_AuthUser').val();
+					if (three_AuthUser == '') {
+						three_AuthUser = null;
+					}
+					var three_AuthPwd = $('#three_AuthPwd').val();
+					if (three_AuthPwd == '') {
+						three_AuthPwd = null;
+					}
+					authmodule_save1.IsSsl = $('#IsSsl').is(':checked');
+					authmodule_save1.AuthUser = three_AuthUser;
+					authmodule_save1.AuthPwd = three_AuthPwd;
+					authmodule_save1.UserObject = three_UserObject;
+					authmodule_save1.BaseDn = three_BaseDn;
+					authmodule_save1.ServerPort = three_ServerPort;
+					authmodule_save1.ServerIp = three_ServerIp;
+					authmodule_save1.GroupObject = three_GroupObject;
+					break;
+				case 4:
+					var two_ServerIp = $('#two_ServerIp').val();
+					var two_ServerPort = $('#two_ServerPort').val();
+					var two_AuthPwd = $('#two_AuthPwd').val();
+					if (two_ServerIp == '') {
+						_alert(2, '模块配置', 'IP不能为空', $('#two_ServerIp'));
+						return false;
+					} else if (!ipReg.test(two_ServerIp)) {
+						_alert(2, '模块配置', 'IP不符合要求', $('#two_ServerIp'));
+						return false;
+					}
+					if (two_ServerPort == '') {
+						_alert(2, '模块配置', '端口不能为空', $('#two_ServerPort'));
+						return false;
+					} else if (!portReg.test(two_ServerPort)) {
+						_alert(2, '模块配置', '请输入0-65535之间的数字', $('#two_ServerPort'));
+						return false;
+					}
+					if (two_AuthPwd == '') {
+						_alert(2, '模块配置', '认证密码不能为空', $('#two_AuthPwd'));
+						return false;
+					}
+					authmodule_save1.ServerIp = two_ServerIp;
+					authmodule_save1.ServerPort = two_ServerPort;
+					authmodule_save1.AuthPwd = two_AuthPwd;
+					break;
+				case 5:
+					authmodule_save1.IsDynamicAuth = $('#authtype-true').is(':checked');
+					break;
+				case 6:
+					break;
+				case 7:
+					authmodule_save1.IsDynamicAuth = $('#authtype-true').is(':checked');
+					break;
+			}
+			authmodule_save1.AuthModuleName = name;
+			authmodule_save1.AuthMode = parseInt(type_id);
+			var test_json={
+				"id":parseInt(edit_item),
+				'user':null,
+				'pwd':null,
+				'authmode':type_id
+			}
+			var test_user=$('#user').val().trim();
+			if(test_user==''){
+				_alert(2, '模块测试', '请输入账号',$('#user'));
+				return false;
+			}else if(!userReg.test(test_user)){
+				_alert(1, '模块测试', '账号格式不正确',$('#user'));
+				return false;
+			}
+			var test_pwd=$('#pwd').val();
+			if(test_pwd==''){
+				_alert(2, '模块测试', '请输入密码',$('#pwd'));
+				return false;
+			}
+			test_json.user=test_user;
+			test_json.pwd=test_pwd;
+			_showLoading();
+			var AuthModuleId;
+			var msstr = aceg(JSON.stringify(authmodule_save1),se);
+			
+			$.ajax({
+				url: '/bhost/update_authmodule_tmp',
+				type: "POST",
+				async: true,
+				data: { a0: se, a1: JSON.stringify(authmodule_save1), m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						AuthModuleId=result.AuthModuleId;
+						test_json.id=AuthModuleId;
+						test_json.authmode=authmodule_save1.AuthMode;
+						var ajaxTimeoutTest=$.ajax({
+							url: '/bhost/test_authmdule',
+							type: "POST",
+							async: true,
+							data: { a0: $("input[name=se]").val(), a1: JSON.stringify(test_json),a2:(authmodule_save1.AuthMode==4?'radiusclient_'+$("input[name=se]").val()+'.conf':'AuthModuleTmp'),a3:$("#name").val() },
+							success: function (result) {
+								var result=JSON.parse(result);
+								if(result.Result){
+									if(result.info==0){
+										_alert(0,'模块测试','测试成功');
+										_closeLoading();
+									}else{
+										_alert(2,'模块测试','测试失败');
+										_closeLoading();
+									}
+								}
+								delect_authmodule(AuthModuleId,authmodule_save1.AuthMode);
+								return false;
+							},
+							error:function(){
+								_alert(2,'模块测试','连接失败');
+								_closeLoading();
+								delect_authmodule(AuthModuleId,authmodule_save1.AuthMode);
+								return false;
+							}
+						});
+					} else {
+						_alert(2,'模块测试','测试失败');
+						return false;
+					}
+					if(type_id==6){
+						show_token_list();
+					}
+				}
+			});
+			
+		}
+		function delect_authmodule(AuthModuleId,AuthMode){
+			$.ajax({
+				url: '/bhost/delect_authmodule',
+				type: "POST",
+				async: true,
+				data: { a0: $("input[name=se]").val(), a1:AuthModuleId,a2:AuthMode},
+				success: function (result) {
+				},
+				error:function(){
+				
+				}
+			});
+		}
+		function clear_synchronization_table(){
+			$('#synchronization_suspend input').val('');
+			$('#synchronization_suspend i.v-check').attr('class','v-check');
+			$('#search2_form').hide();
+			$.ajax({
+				url: '/bhost/get_usergroup',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val()},
+				success: function (result) {
+					var result=JSON.parse(result);
+					if(result.Result){
+						$('#HG_select').empty();
+						$('#HG_select').append('<option value="1" selected>未分组</option>'+result.info.map(function (params) {
+							return '<option value="'+params.Id+'">'+params.Path+'</option>';
+						}).join(''));
+					}
+				}
+			});
+
+		}
+		function get_dialog_synchronization(authmode_id,authmode_value,authmode_name) {
+			clear_synchronization_table();
+			var title='同步';
+			var $dialogCont = $("#synchronization_suspend").show();
+
+			var d = dialog({
+				title:title,
+				content:$dialogCont,
+				id:"synchronization_suspend",
+				width:"800px"
+			});
+			d.addEventListener('close', function () {
+				$dialogCont.appendTo("body").hide();
+			});
+			d.showModal();
+			$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+				clear_synchronization_table();
+			});
+			$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+				var synchronization_user=$('#synchronization_user').val().trim();
+				if(synchronization_user==''){
+					_alert(2, '模块同步', '请输入账号',$('#synchronization_user'));
+					return false;
+				}else if(!userReg.test(synchronization_user)){
+					_alert(1, '模块同步', '账号格式不正确',$('#synchronization_user'));
+					return false;
+				}
+				var synchronization_pwd=$('#synchronization_pwd').val();
+				if(synchronization_pwd==''){
+					_alert(2, '模块同步', '请输入密码',$('#synchronization_pwd'));
+					return false;
+				}
+				var search_ad_or_ldap=$('#search_ad_or_ldap').val().trim();
+				if(!$('#search_ad_or_ldap_2').is(':hidden')){
+					var search_ad_or_ldap_2=$('#search_ad_or_ldap_2').val().trim();
+					search_ad_or_ldap+=('\n'+search_ad_or_ldap_2);
+				}else{
+					search_ad_or_ldap+=('\n');
+				}
+				/*
+				if(search_ad_or_ldap!='' || !userReg.test(search_ad_or_ldap)){
+					_alert(1, '模块同步', '过滤条件格式不正确',$('#search_ad_or_ldap'));
+					return false;
+				}
+				*/
+				var HG_select=$('#HG_select').val();
+				var pwd_ad_or_ldap=$('#pwd_ad_or_ldap').val().trim();
+				var pass=1;
+				var PwdMinLen;
+				var IfPwdComplex;
+				var IfPwdIncUpperApha
+				var IfPwdIncLowerApha;
+				var IfPwdIncNumber;
+				var IfPwdIncSpecialChar;
+				$.ajax({
+					url: "/bhost/get_pwdstrategy",
+					type:"POST",
+					async:false,
+					data:{a0:$("input[name=se]").val()},
+					success:function(result){
+						var result=JSON.parse(result);
+						if(result.Result){
+							PwdMinLen=result.info.PwdMinLen;
+							IfPwdComplex=result.info.IfPwdComplex;
+							IfPwdIncUpperApha=result.info.IfPwdIncUpperApha;
+							IfPwdIncLowerApha=result.info.IfPwdIncLowerApha;
+							IfPwdIncNumber=result.info.IfPwdIncNumber;
+							IfPwdIncSpecialChar=result.info.IfPwdIncSpecialChar;
+						}else{
+							pass=0;
+							_alert(2, '全局策略', result.ErrMsg);
+							return false;
+						}
+					}
+				});
+				if(pass==0){
+					return false;
+				}
+				if(pwd_ad_or_ldap!='' && pwd_ad_or_ldap.length<PwdMinLen){
+					_alert(2, '模块同步', '默认密码长度不能小于'+PwdMinLen+'位',$('#pwd_ad_or_ldap'));
+					return false;
+				}
+				if(IfPwdComplex){
+					if(IfPwdIncUpperApha && pwd_ad_or_ldap.search(/[A-Z]/)<0){
+						_alert(2, '模块同步', '密码中请包含大写字母',$('#pwd_ad_or_ldap'));
+						return false;
+					}
+					if(IfPwdIncLowerApha && pwd_ad_or_ldap.search(/[a-z]/)<0){
+						_alert(2, '模块同步', '密码中请包含小写字母',$('#pwd_ad_or_ldap'));
+						return false;
+					}
+					if(IfPwdIncNumber && pwd_ad_or_ldap.search(/[0-9]/)<0){
+						_alert(2, '模块同步', '密码中请包含数字',$('#pwd_ad_or_ldap'));
+						return false;
+					}
+					if(IfPwdIncSpecialChar && pwd_ad_or_ldap.search(/[^A-Za-z0-9]/)<0){
+						_alert(2, '模块同步', '密码中请包含特殊字符',$('#pwd_ad_or_ldap'));
+						return false;
+					}
+				}
+				_showLoading();
+				$.ajax({
+					url: '/bhost/synchronization_ad_or_ldap',
+					type: "POST",
+					async: true,
+					data: { a0: $("input[name=se]").val(), a1: search_ad_or_ldap,a2:pwd_ad_or_ldap,a3:synchronization_user,a4:synchronization_pwd,a5:parseInt(authmode_value)-1,a6:authmode_id,a7:HG_select,a8:authmode_name},
+					success: function (result) {
+						var result=JSON.parse(result);
+						if (result.Result){
+							_alert(0,'模块同步','同步成功');
+							_closeLoading();
+							d.close().remove();
+							return false;
+						}else{
+							_alert(2,'模块同步',result.ErrMsg);
+							_closeLoading();
+							return false;
+						}
+					},
+					error:function(){
+						var t_get_ret;
+						function get_ret(){
+							clearTimeout(t_get_ret);
+							$.ajax({
+								url: '/bhost/get_ret',
+								type: "POST",
+								async: false,
+								data: { a0: $("input[name=se]").val()},
+								success: function (result) {
+									if (result.Result){
+										if(result.info!=''){
+											_alert(0,'模块同步','同步成功');
+											_closeLoading();
+											d.close().remove();
+											return false;
+										}else{
+											t_get_ret=setTimeout(function(){get_ret();},5000);
+										}
+										return false;
+									}else{
+										_alert(2,'模块同步',result.ErrMsg);
+										_closeLoading();
+										return false;
+									}	
+								}
+							});
+						}
+						get_ret();
+					}
+					
+				});
+			})
+		}
+		function get_dialog_test(test_id,authmode_value,test_name){
+			clear_test_table(authmode_value);
+			var title='测试';
+			var $dialogCont = $("#test_suspend").show();
+
+			var d = dialog({
+				title:title,
+				content:$dialogCont,
+				id:"test_suspend",
+				width:"800px"
+			});
+			d.addEventListener('close', function () {
+				$dialogCont.appendTo("body").hide();
+			});
+			d.showModal();
+			$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+				clear_test_table();
+			});
+			$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+				var test_json={
+					"id":parseInt(test_id),
+					'user':null,
+					'pwd':null,
+					'authmode':parseInt(authmode_value)
+				}
+				var test_user=$('#test_user').val().trim();
+				if(test_user==''){
+					_alert(2, '模块测试', '请输入账号',$('#test_user'));
+					return false;
+				}else if(!userReg.test(test_user)){
+					_alert(1, '模块测试', '账号格式不正确',$('#test_user'));
+					return false;
+				}
+				var test_pwd=$('#test_pwd').val();
+				if(test_pwd==''){
+					_alert(2, '模块测试', '请输入密码',$('#test_pwd'));
+					return false;
+				}
+				test_json.user=test_user;
+				test_json.pwd=test_pwd;
+				_showLoading();
+				$.ajax({
+					url: '/bhost/test_authmdule',
+					type: "POST",
+					async: true,
+					data: { a0: $("input[name=se]").val(), a1: JSON.stringify(test_json),a2:(parseInt(authmode_value)==4?'radiusclient'+parseInt(test_id)+'.conf':''),a3:test_name },
+					//data: { a0: $("input[name=se]").val(), a1: JSON.stringify(test_json),a2:(parseInt(authmode_value)==4?'radiusclient.conf':''),a3:test_name },
+					success: function (result) {
+						var result=JSON.parse(result);
+						if(result.Result){
+							if(result.info==0){
+								_alert(0,'模块测试','测试成功');
+								_closeLoading();
+								d.close().remove();
+								return false;
+							}else{
+								_alert(2,'模块测试','测试失败');
+								_closeLoading();
+								return false;
+							}
+						}
+					},
+					error:function(){
+						_alert(2,'模块测试','测试失败');
+						_closeLoading();
+						return false;
+					}
+				});
+				
+			})
+		}
+		function clear_token_down(){
+			$("#token_down_suspend input").val('');
+		}
+		function get_dialog_token_down() {
+			clear_token_down();
+			var $dialogCont = $("#token_down_suspend").show();
+			var d = dialog({
+				title:'令牌导入',
+				content:$dialogCont,
+				id:"token_down_suspend",
+				width:"800px"
+			});
+			d.addEventListener('close', function () {
+				$dialogCont.appendTo("body").hide();
+			});
+			d.showModal();
+			$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+				clear_token_down();
+			});
+			$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+				var file_v = $("#file_v").val();
+				if (file_v == ""){
+					_alert(2,"令牌导入","请选择文件");
+					return false;
+				}
+				if (file_v.substr(file_v.length-4) != ".csv"){
+					_alert(1,"令牌导入","导入文件格式不正确，只支持.CSV格式文件");
+					return false;
+				}
+				var formData_f = new FormData($("#uploadForm")[0]);
+				formData_f.append('a0',se);
+				$.ajax({
+					url:'/bhost/import_test_data',
+					type: 'POST',
+					data: formData_f,  
+					async: false,  
+					cache: false,
+					contentType: false,  
+					processData: false,  
+					success: function (result) {
+						var result=JSON.parse(result);
+						if(result.Result){
+							// _alert(0,'令牌导入',result.info);
+							$('.btn').blur();parent.layer.open({
+								type: 1,
+								title: '令牌导入',
+								content: '<div class="layer-alert"><i class="alert succ"></i>'+result.info+'</div>',
+								btn: ['确&nbsp;&nbsp;定'],
+								btnAlign: 'c',
+								closeBtn: false,
+								skin: 'layer-custom',
+								area: ['380px', '310px'],
+								move: false,
+								resize: false,
+								yes: function (i) {
+									parent.layer.close(i);
+									d.close().remove();
+									show_token_list();
+								}
+							});
+						}else{
+							// _alert(2,'令牌导入',result.ErrMsg);
+							$('.btn').blur();parent.layer.open({
+								type: 1,
+								title: '令牌导入',
+								content: '<div class="layer-alert"><i class="alert warning"></i>'+result.ErrMsg+'</div>',
+								btn: ['确&nbsp;&nbsp;定'],
+								btnAlign: 'c',
+								closeBtn: false,
+								skin: 'layer-custom',
+								area: ['380px', '310px'],
+								move: false,
+								resize: false,
+								yes: function (i) {
+									parent.layer.close(i);
+									show_token_list();
+								}
+							});
+						}
+						
+					}
+				});
+			})
+		}
+		function _export_token(){
+			var data = [['令牌ID（仅支持数字，最多32个字符，必填）','令牌密钥（支持英文、数字，最多128个字符，必填）']]; 
+			// var data = [['令牌ID','令牌密钥']]; 
+			var csvContent = "data:text/csv;charset=utf-8,\ufeff";
+			if (window.navigator.msSaveOrOpenBlob) {
+				csvContent = "\ufeff";
+			}
+			data.forEach(function(infoArray, index){
+				dataString = infoArray.join(",");
+				csvContent += index < data.length ? dataString+ "\n" : dataString;
+			});
+			if (window.navigator.msSaveOrOpenBlob) {
+				// if browser is IE
+				var blob = new Blob([decodeURIComponent(encodeURI(csvContent))],{
+					type: "text/csv;charset=utf-8;"
+				});
+				navigator.msSaveBlob(blob, 'token.csv');
+			}else{
+				var encodedUri = encodeURI(csvContent);
+				var link = document.createElement("a");
+				link.setAttribute("href", encodedUri);
+				link.setAttribute("download", "token.csv");
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+			}
+	
+		}
+		function get_dialog_token(type){
+			clear_token();
+			var title;
+			if(type==1){
+				title = "添加令牌";
+			}else{
+				title='编辑令牌';
+				// $('#token_suspend .btn-update').show();
+				var td_arr=$('td',token_obj);
+				$('#token_id').val(td_arr.eq(1).text());
+				$('#token_id').attr('disabled',true);
+				$('#token_key').val(td_arr.eq(2).text());
+			}
+			var $dialogCont = $("#token_suspend").show();
+
+			var d = dialog({
+				title:title,
+				content:$dialogCont,
+				id:"token_suspend",
+				width:"800px"
+			});
+			d.addEventListener('close', function () {
+				$dialogCont.appendTo("body").hide();
+			});
+			d.showModal();
+			$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+				clear_token();
+				if(type==1){
+				}else{
+					// $('#token_suspend .btn-update').show();
+					var td_arr=$('td',token_obj);
+					$('#token_id').val(td_arr.eq(1).text());
+					$('#token_id').attr('disabled',true);
+					$('#token_key').val(td_arr.eq(2).text());
+				}
+			});
+			$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+				if(save_token(type)){
+					$('.btn').blur();parent.layer.open({
+						type: 1,
+						title: '令牌认证',
+						content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+						btn: ['确&nbsp;&nbsp;定'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							parent.layer.close(i);
+							d.close().remove();
+							//{"id":1,"user":"11222","pwd":"121212","authmode":6}
+							if($('#token_code').val() !=""){ //测试
+								_showLoading();
+								test_json = {"id":1,"user":""+$("#token_id").val()+"","pwd":$('#token_code').val(),"authmode":6}
+								$.ajax({
+									url: '/bhost/test_authmdule',
+									type: "POST",
+									async: true,
+									data: { a0: $("input[name=se]").val(), a1: JSON.stringify(test_json),a2:'AuthModuleTmp',a3:'令牌' },
+									success: function (result) {
+										var result=JSON.parse(result);
+										if(result.Result){
+											if(result.info==0){
+												_alert(0,'模块测试','测试成功');
+												status = "已检测";
+											}else{
+												_alert(2,'模块测试','测试失败');
+												status = "未检测";
+											}
+										}
+										_closeLoading();
+										update_token_status(status);
+										return false;
+									},
+									error:function(){
+										_alert(2,'模块测试','连接失败');
+										_closeLoading();
+										return false;
+									}
+								});
+							}
+							// $('#token_suspend .btn-update').show();
+						}
+					});
+				}
+				show_token_list();
+			});
+		}
+		function update_token_status(status){
+			$.ajax({
+				url: '/bhost/update_token_status',
+				type: "POST",
+				async: true,
+				data: { a0: $("input[name=se]").val(), a1: global_token_id,a2:status},
+				success: function (result) {
+					var result=JSON.parse(result);
+					if(result.Result){
+						show_token_list();
+					}
+				}
+			});
+		}
+		function clear_token_update() {
+			$('#token_update_suspend input').val('');
+			$('#token_update_suspend i.v-check').attr('class','v-check');
+		}
+		function get_dialog_token_update(){
+			clear_token_update();
+			var title = "同步（请输入连续的2个令牌码）";
+			var $dialogCont = $("#token_update_suspend").show();
+
+			var d = dialog({
+				title:title,
+				content:$dialogCont,
+				id:"token_update_suspend",
+				width:"800px"
+			});
+			d.addEventListener('close', function () {
+				$dialogCont.appendTo("body").hide();
+			});
+			d.showModal();
+			$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+				clear_token_update();
+			});
+			$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+				var update_token_json={
+					'dpwd1':null,
+					'dpwd2':null,
+					'last_drift':0,
+					'last_succ':0,
+					'TokenId':null,
+					'Key':null
+				};
+				var token_num1=$('#token_num1').val();
+				var token_num2=$('#token_num2').val();
+				if(token_num1==''){
+					_alert(2,'令牌同步','请输入令牌码1',$('#token_num1'));
+					return false;
+				}else if(!idReg.test(token_num1)){
+					_alert(2,'令牌同步','令牌码1格式不正确',$('#token_num1'));
+					return false;
+				}else if(token_num1.length!=6){
+					_alert(2,'令牌同步','令牌码1长度为6位数字',$('#token_num1'));
+					return false;
+				}
+				if(token_num2==''){
+					_alert(2,'令牌同步','请输入令牌码2',$('#token_num2'));
+					return false;
+				}else if(!idReg.test(token_num2)){
+					_alert(2,'令牌同步','令牌码2格式不正确',$('#token_num2'));
+					return false;
+				}else if(token_num2.length!=6){
+					_alert(2,'令牌同步','令牌码2长度为6位数字',$('#token_num2'));
+					return false;
+				}
+				update_token_json.dpwd1=token_num1;
+				update_token_json.dpwd2=token_num2;
+				var tr_arr=$('td',token_obj);
+				var last_drift=tr_arr.eq(4).text();
+				if(last_drift!=''){
+					update_token_json.last_drift=parseInt(last_drift);
+				}
+				var last_succ=tr_arr.eq(3).text();
+				if(last_succ!=''){
+					update_token_json.last_succ=parseInt(last_succ);
+				}
+				update_token_json.Key=tr_arr.eq(2).text();
+				update_token_json.TokenId=tr_arr.eq(1).text();
+				$.ajax({
+					url: '/bhost/update_token',
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: JSON.stringify(update_token_json) },
+					success: function (result) {
+						var result=JSON.parse(result);
+						if(result.Result){
+							_alert(0, '令牌同步', '同步成功');
+							d.close().remove();
+							show_token_list();
+							return false;
+						}else{
+							_alert(2, '令牌同步', result.ErrMsg);
+							return false;
+						}
+					}
+				});		
+			});
+		}
+		var global_token_id = 0;
+		function save_token(type){
+			var token_json={
+				"TokenId":null,    
+				"Key": null,
+				"KeyCode":''
+			}
+			var pass=true;
+			var token_id=$('#token_id').val().trim();
+			var token_key=$('#token_key').val().trim();
+			var token_KeyCode=$('#token_code').val().trim();
+			if(token_id==''){
+				_alert(2, '令牌认证', '请输入ID',$('#token_id'));
+				return false;
+			}else if(!idReg.test(token_id)){
+				_alert(1, '令牌认证', 'ID格式不正确',$('#token_id'));
+				return false;
+			}
+			if(token_key==''){
+				_alert(2, '令牌认证', '请输入密钥',$('#token_key'));
+				return false;
+			}else if(!keyReg.test(token_key)){
+				_alert(1, '令牌认证', '密钥格式不正确',$('#token_key'));
+				return false;
+			}
+			if(token_KeyCode !="" && !idReg.test(token_id)){
+				_alert(1, '令牌认证', '令牌码不正确',$('#token_id'));
+				return false;
+			}
+			token_json.Key=token_key;
+			token_json.TokenId=token_id;
+			token_json.KeyCode =token_KeyCode ;
+			
+			$.ajax({
+				url: '/bhost/add_token',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(token_json),a2:type },
+				success: function (result) {
+					var result=JSON.parse(result);
+					if(!result.Result){
+						_alert(1,'令牌认证',result.ErrMsg);
+						pass=false;						
+					}else{
+						global_token_id = result.TokenId;
+					}
+				}
+			});
+			return pass;
+		}
+		function delect_together() {
+			if($('#token_list tr input:checked').length==0){
+				_alert('2','令牌列表','请选择要删除的数据');
+				return false;
+			}
+			//利用对话框返回的值 （true 或者 false）
+			$('.btn').blur();parent.layer.open({
+				type:1,
+				title: '认证方式',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+				btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+				btnAlign:'c',
+				closeBtn: false,
+				skin:'layer-custom',
+				area:['380px','310px'],
+				move: false,
+				resize: false,
+				yes:function(i){
+					parent.layer.close(i);
+					delete_fun_token(null);
+				}
+			});
+		}
+		function delete_fun_token(delete_item){
+			if(delete_item!=null){
+				var id_Str=delete_item;
+			}else{
+				var id_Str=$('#token_list tr input:checked').map(function(){
+					return $(this).parents('td').next('td').text();
+				}).get().join(",");
+			}
+			$.ajax({
+				url: '/bhost/del_token',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: id_Str },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						if(delete_item!=null){
+							show_token_list();
+						}else{
+							show_token_list(0);
+						}
+						if(result.fail_num!=0){
+							if (result.success_num!=0)
+								_alert(0,"令牌列表","成功："+result.success_num+'，失败：'+result.fail_num);
+							else
+								if ((result.fail_num+success_num)==1)
+									_alert(1,"令牌列表",result.ErrMsg);
+								else
+									_alert(0,"令牌列表",'失败：'+result.fail_num);
+						}else{
+							_alert(0,"令牌列表","删除成功");
+						}
+					} else {
+						show_token_list();
+						_alert(1, "令牌列表", result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+		function back_authtype_add() {
+		}
+		
+		function test_button(obj) {
+			$('.authmodule_icon').prev('span').attr('onclick','test_button();');
+			$('#authtype_z').hide();
+			$('#authset_z').show();
+			$(".save_l").show();
+			$("#authmodule_text").val('');
+			$('#authmodule_text_check').hide();
+			$("#authmodule_select").val('all').trigger('change');
+			$("#clearFilter").hide();
+			$("#filterWW_authmodule").find('ul').empty();
+			$("#filterWW_authmodule").hide();
+			delect_str_authmodule = [];
+			$("#authmodule_btn").hide();
+			$('#authmodule_change').hide();
+			$('#authmodule_btn').next().hide();
+			search_typeall_r_authmodule='';
+			search_typeall_new_authmodule='';
+			frm_authmodule_paging=1;
+			show_authmodule_list();
+		}
+		//检查格式
+		function dataCheck(obj, min, max) {//min can not bigger than 1
+			obj.value = obj.value.replace(/\D/g, "");
+			if (min) {
+				if (parseInt(obj.value, 10) < parseInt(min, 10)) obj.value = min;
+			}
+			if (max) {
+				if (parseInt(obj.value, 10) > parseInt(max, 10)) obj.value = max;
+			}
+		}
+		//删除模块
+		function _delModule(obj) {
+			var $c = $(obj).parent();
+			var m_i = $c.attr('value');
+			var m_name = $c.attr('name');
+			option_str[m_i] = check_option_str[m_i];
+			check_option_str[m_i] = null;
+			if(m_name=='9' && $('#module_all div.item[name=9]').length<=1){
+				module_index=0;
+			}
+			if(m_name=='8' && $('#module_all div.item[name=8]').length<=1){
+				module_index=0;
+			}
+			if(m_name=='13' && $('#module_all div.item[name=13]').length<=1){
+				module_index=0;
+			}
+			var module_select_val=$('#module_select').val();
+			$('#module_select option[index=0]').remove();
+			$.each(option_str, function (i, item) {
+				if (item != null) {
+					if(module_index==0 || (module_index==9 && item.indexOf('name="8"')<0 && item.indexOf('name="9"')<0) || (module_index==8 && item.indexOf('name="9"')<0) || (module_index==13 && item.indexOf('name="9"')<0 && item.indexOf('name="8"')<0)){
+						$('#module_select').append(item);
+					}
+				}
+			});
+			$('#module_select').val(module_select_val).trigger('change');
+			//$c.fadeOut(function () {
+			$c.remove();
+			$('#Separator_select').trigger('change');
+			_sort();
+			sepDeal();
+			//});
+		}
+		function _editSort(obj) {
+			var li_text = $(obj).text();
+			var $c = '<input type="text" class="form-text" value="' + li_text + '" maxlength="3" onblur="_checkNum(this)" onkeyup="_Numcheck(this);_autoWidth(this)" style="width: 20px;height: 26px;padding-right: 0px;">';
+			$(obj).after($c);
+			$(obj).next('input').focus().select();;
+			$(obj).hide();
+		}
+		function _Numcheck(obj) {
+			var num = $(obj).val();
+			num = num.replace(/\D/g, "");
+			$(obj).val(num);
+		}
+		function filetip(obj){
+			var c=$(obj).val();
+			c = c.split("\\");
+			var b = c[c.length-1];
+			$('#file_v').val(b);
+		}
+		function _checkNum(obj) {
+			var v = $(obj).val().trim();
+			var numCheck = /^\d{1,}$/;
+			if (v == "") {
+				$(obj).prev('li').show();
+				$(obj).remove();
+			} else if (!numCheck.test(v)) {
+				_alert(1, '认证方式', '输入框格式不正确', $(obj));
+				return false;
+			} else {
+				v = parseInt(v); // 1
+				var $all = $('#module_all').find('div[name!=module_check]');
+				var len = $all.length; // 3
+				if (v < 1) {
+					v = 1;
+				} else if (v > len) {
+					v = len;
+				}
+				if(v == len){
+					if($('#module_all').find('div[name!=module_check]').last().attr('name') == "13"){
+						_alert(1, '认证方式', '只能将指纹模块放在最后');
+						return false;
+					}
+				}
+
+				$(obj).prev('li').text(v);
+				var $div = $(obj).parent(); // item
+				var div_num = len - $all.index($div); // 2 = 3 - 1
+				if (v == 1) {
+					$('#module_check').after($div);
+				} else if (v == len) {
+					$('#module_all').append($div);
+				} else {
+					if (v > div_num) {
+						$all.eq(len - v - 1).after($div);
+					} else {
+						$all.eq(len - v + 1).before($div);
+					}
+
+				}
+				$(obj).prev('li').show();
+				$(obj).remove();
+				_sort();
+			}
+		}
+		function _sort() {
+			var len = $('#module_all').find('div[name!=module_check]').length;
+			$('>div[name!=module_check]', '#module_all').each(function (i, item) {
+				var $li = $(item).find('li');
+				var li_text = $li.text();
+				if (li_text != (i+1)) {
+					$li.text(i+1);
+				}
+			});
+		}
+		function _autoWidth(obj) {
+			var v = $(obj).val();
+			var len = v.length;
+			$(obj).width(((len + 1) * 10) + 'px');
+		}
+		var module_index=0;
+		//添加模块
+		function _addModule(obj) {
+			var m_i = $("#module_select").children("option:selected").val();
+			var m_itext = $("#module_select").children("option:selected").text();
+			var m_iname=$("#module_select").children("option:selected").attr('name');
+			var m_len = $('#length').val();
+			if (m_i == "0") {
+				_alert(2, '认证方式', '请选择模块配置');
+				return false;
+			}
+			
+			var len = $('#module_all').find('div[name!=module_check]').length;
+			var empty_len = 0;
+			var $empty_input=null;
+
+			$("#module_all").children('div:not(:first)').each(function(){
+				if ($(this).children('input:eq(1)').val() == "" && $(this).children('input:eq(1)').is(":visible")  && $(this).attr('name') != '13'){
+					empty_len++;
+					if($empty_input==null){
+						$empty_input=$(this).children('input:eq(1)');
+					}
+				}
+			});
+			var disabled_len = "";
+			if(m_itext == 'TOTP' || m_itext == '令牌' || m_iname=='11' || m_iname=='6' || m_iname=='10' || m_iname=='12'){
+				m_len = 6;
+				disabled_len = "disabled";
+			}
+			if(m_itext == '指纹认证' || m_iname=='13'){
+				m_len = '';
+				disabled_len = "disabled";
+			}
+			if ((empty_len >1 ||(empty_len==1 &&  m_len == "")) && display!='none'){
+				_alert(2, '认证方式', '模块长度最多只能有一个为空',$empty_input);
+				return false;
+			}
+
+			if(m_iname=='9'){
+				module_index=9;
+			}
+			else if(m_iname=='8'){
+				module_index=8;
+			}
+			else if(m_iname=='13'){
+				module_index=13;
+			}
+			if(m_itext == "指纹认证" || m_iname == "13"){
+				var $c = $('<div class="item" style="padding-top:0px;width: 270px;" value="' + m_i + '" name="'+m_iname+'"/>');
+				$c.html('<li style="float: left;text-align: center;width: 24px;margin: 6px 0 0 0;" onclick="">' + (len + 1) + '</li>'+
+				'<input type="text" class="form-text" value="' + m_itext + '" disabled="true" style="padding-right:8px;width: 125px;height: 26px;margin-left: 6px;">  '+
+				'<input type="text" class="form-text num" maxlength="3" value="' + m_len + '" '+disabled_len+' style="padding-right:8px;width: 20px;height: 26px;display:' + display + '; margin-right: 5px;" onfocus="this.select()" onblur="dataCheck(this, 1, 32);" onkeyup="dataCheck(this, 1, 32);">'+
+				'<i class="ctrl del" style="margin-left: 0px;" onclick="_delModule(this)"></i>');
+				$(obj).parent().parent().append($c);
+			}else{
+				len_tmp = len + 1;
+				$.each($("#module_all").children('div'),function(i,item){
+					if($(item).attr('name') == '13'){
+						len_tmp = len_tmp - 1;
+					}
+				})
+				var $c = $('<div class="item" style="padding-top:0px;width: 270px;" value="' + m_i + '" name="'+m_iname+'"/>');
+				$c.html('<li style="float: left;text-align: center;width: 24px;margin: 6px 0 0 0;" onclick="_editSort(this)">' + len_tmp + '</li>'+
+				'<input type="text" class="form-text" value="' + m_itext + '" disabled="true" style="padding-right:8px;width: 125px;height: 26px;margin-left: 6px;">  '+
+				'<input type="text" class="form-text num" maxlength="3" value="' + m_len + '" '+disabled_len+' style="padding-right:8px;width: 20px;height: 26px;display:' + display + '; margin-right: 5px;" onfocus="this.select()" onblur="dataCheck(this, 1, 32);" onkeyup="dataCheck(this, 1, 32);">'+
+				'<i class="ctrl del" style="margin-left: 0px;" onclick="_delModule(this)"></i>');
+				if($("#module_all").find("div[name='13']").length != 0){
+					$("#module_all").find("div[name='13']").before($c);
+					//var number_tmp = $("#module_all").find("div[name='13']").prev().text();
+					var new_tmp = len + 1;
+					$("#module_all").find("div[name='13']").children('li').text(new_tmp);
+					//$("#module_all").find("div[name='13']").children('li').text(number_tmp);
+				}else{
+					$(obj).parent().parent().append($c);
+				}
+			}
+
+			$("#module_select option:selected").remove();
+			if(module_index==9){
+				$("#module_select option[name=8]").remove();
+				$("#module_select option[name=9]").remove();
+			}
+			else if(module_index==8){
+				$("#module_select option[name=9]").remove();
+			}else if(module_index==13){
+				$("#module_select option[name=13]").remove();
+			}
+			$("#module_select").val('0').trigger('change');
+			check_option_str[m_i] = option_str[m_i];
+			option_str[m_i] = null;
+			//$('#Separator_select').trigger('change');
+			//输入数字
+			$(".num").bind('keydown', function (e) {
+				DigitInput(e);
+			});
+			//usbkey 放在最前面
+			/*
+			if(m_i == '8'){
+				$("div.item[name='8']").children('li').eq(0).text('1').trigger('change');
+				_editSort($("div.item[name='8']").children('li').eq(0));
+				_checkNum($("div.item[name='8']").children('input').eq(0));
+			}
+			*/
+			sepDeal();
+		}
+		function sepDeal(){
+			//没有 || 只有一个认证模块的时候不需要分隔符 sep_div hide
+			//有两个认证模块的时候 其中一个是指纹的时候不需要分隔符 sep_div hide
+			//有两个认证模块的时候 其中没有指纹的时候需要分隔符 sep_div show
+			//有两个以上认证模块的时候 需要分隔符 sep_div show			
+			var module_len = $("#module_all").children('div').length - 1; //认证模块数量
+			var fp_flag = false;
+			if(module_len == 1 || module_len == 0){
+				$("#sep_div").hide();
+			}else if(module_len == 2){
+				$.each($("#module_all").children('div'),function(i,item){
+					if($(item).attr('name') == '13'){
+						fp_flag = true;
+					}
+				})
+				if(fp_flag == true){
+					$("#sep_div").hide();
+				}else{
+					$("#sep_div").show();
+					$('#Separator_select').trigger('change');
+				}
+			}else{
+				$("#sep_div").show();
+				$('#Separator_select').trigger('change');
+			}
+		}
+		///
+		//创建or 编辑
+		function authtype_add() {
+			var no_pass = "";
+			var val = $("#d_n").val();
+			var sel = $("#module_select").val();
+			var $i = $("#d_n").next('i.v-check');
+			if (val == "") {
+				_alert(2, '认证方式', "请输入名称", $("#d_n"));
+				return false;
+			}
+			if ($i.hasClass("v-check v-wrong")) {
+				_alert(1, '认证方式', "名称格式不正确", $("#d_n"));
+				return false;
+			}
+			// /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+			var SeparatorReg=/^[0-9a-zA-Z\u4e00-\u9fa5]+$/;
+			if ($('#Separator_select').val() == "1" && $('#Separator').val().trim() == '' && $('#Separator').is(":visible")) {
+				_alert(2, '认证方式', "请输入分隔符号", $('#Separator'));
+				return false;
+			}else if($('#Separator_select').val() == "1" && ($('#Separator').val().trim()!=$('#Separator').val().trim().replace(/[0-9a-zA-Z\u4e00-\u9fa5]/g,'')) && $('#Separator').is(":visible")){
+				_alert(1, '认证方式', "分隔符号格式不正确", $('#Separator'));
+				return false;
+			}
+			if ($('#Separator_select').val() == "1"){
+				for (var item__=0;item__<$('#Separator').val().trim().length;item__++){
+					if($('#Separator').val().trim().charCodeAt(item__)>255){
+						_alert(1, '认证方式', "分隔符号格式不正确", $('#Separator'));
+						return false;
+					}
+				}
+			}
+			if (!$('#module_all').find('div[name!=module_check]').length) {
+				_alert(2, '认证方式', "请添加模块配置");
+				return false;
+			}
+			var $all = $('#module_all div[name!=module_check]');
+			var len = $all.length;
+			if (len > 1 && $('#Separator_select').val() == "2") {
+				var num = 0;
+				var pass = 1;
+				var $input;
+				$('>div[name!=module_check]', '#module_all').each(function () {
+					console.log($(this));
+					var input_text = $(this).find('input').last().val().trim();
+					if (input_text == '' && $(this).attr("name") != "13" && num == 0 && $(this).find('input').last().is(":visible")) {
+						num++;
+						$input = $(this).find('input').last();
+					} else if (input_text == '' && num == 1 && $(this).attr("name") != "13" && $(this).find('input').last().is(":visible")) {
+						//$input.val('z');
+						_alert(2, '认证方式', "模块长度最多只能有一个为空", $input);
+						pass = 0;
+						return false;
+					}
+				});
+				if (pass == 0) {
+					return false;
+				}
+			}else if(len==1 && $('#Separator_select').val() == "2" && $all.eq(0).find('input').first().val()=='本地认证'){
+				var $input = $all.eq(0).find('input').last();
+				var input_text=$input.val().trim();
+				// if(input_text!=''){
+				// 	_alert(2, '认证方式', "单一模块长度必须为空", $input);
+				// 	return false;
+				// }
+			}
+			var bool = $('#MustAllModule').find('input[type=radio]:checked').val();
+			var MustAllModule = false;
+			if (bool == "true") {
+				MustAllModule = true;
+			}
+			var IsDefault = $('#IsDefault').is(':checked');
+			var authtypeId = document.frm_authtype_add.authtypeId.value;
+			authtype.AuthTypeId = authtypeId;
+			authtype.AuthTypeName = val;
+			authtype.MustAllModulesSucc = MustAllModule;
+			authtype.IsDefault = IsDefault;
+			if ($('#Separator_select').val() == "1" && $('#Separator_select').is(":visible")) {
+				var sep = $("#Separator").val().trim();
+			} else {
+				var sep = null;
+			}
+			authtype.Separator = sep;
+			authtype.Set = new Array();
+			var $all = $('#module_all').find('div[name!=module_check]');
+			var len = $all.length;
+			var order_num=0;
+			for (var i = len - 1; i >= 0; i--) {
+				var $div_item=$all.eq(i);
+				var mod_i = $div_item.attr('value');
+				var mod_name = $div_item.attr('name');
+				var li_text = $div_item.find('li').text();
+				var PwdLen=null;
+				if ($('#Separator_select').val() == "2" && $('#module_all').find('.item[name!=module_check]').length>1) {
+					PwdLen = $div_item.find('input.num').val();
+					if(PwdLen=='' || PwdLen=='-' || !$('#Separator_select').is(":visible")){
+						PwdLen=null
+					}else{
+						PwdLen=parseInt(PwdLen);
+					}
+				}
+				if (mod_i != "" && mod_i != "0") {
+					if (mod_i=='8' || mod_i=='6'){
+						if(mod_i=='8') {
+								if(PwdLen !=null){
+									usekey_len_next = PwdLen;
+								}
+							}
+					}
+					{
+						var json_a = '{"AuthModuleId":' + mod_i + ',"Order":' + (parseInt(li_text)-order_num) + ',"AuthMode":' + mod_name + ',"PwdLen":' + PwdLen + '}';
+						authtype.Set.push(JSON.parse(json_a));
+					}
+				}
+			}
+			if(true){
+				var module_9=0;
+				var module_8=0;
+				var module_13=0;
+				$.each(authtype.Set,function(i,item){
+					if(item.AuthMode==9){
+						module_9++;
+					}else if(item.AuthMode==8){
+						module_8++;
+					}else if(item.AuthMode==13){
+						module_13++;
+					}
+				});
+				if(module_8>0 && module_9>0){
+					_alert(2, '认证方式', "无法同时配置BHost USBKey和USBKey");
+					return false;
+				}
+				if(module_9>1){
+					_alert(2, '认证方式', "无法配置多个USBKey");
+					return false;
+				}
+				if(module_13>1){
+					_alert(2, '认证方式', "无法配置多个指纹");
+					return false;
+				}				
+			}
+
+			if(usekey_len_prev > 0 && usekey_len_next != usekey_len_prev){
+				layer.open({
+					type: 1,
+					title: '认证方式',
+					content: '<div class="layer-alert"><i class="alert fail"></i>变更配置导致用户需要重新初始化密码，是否继续？</div>',
+					btn: ['是', '否'],
+					btnAlign: 'c',
+					closeBtn: false,
+					skin: 'layer-custom',
+					area: ['380px', '310px'],
+					move: false,
+					resize: false,
+					btn1: function (i) {
+						var msstr = aceg(JSON.stringify(authtype),$("input[name=se]").val());
+						$.ajax({
+							url: '/bhost/add_authtype',
+							type: "POST",
+							async: false,
+							data: { a0: $("input[name=se]").val(), a1: JSON.stringify(authtype) ,a2:1,m1:msstr},
+							success: function (result) {
+								var result = JSON.parse(result);
+								if (result.Result == true) {
+									$('.btn').blur(); parent.layer.open({
+										type: 1,
+										title: '认证方式',
+										content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+										btn: ['确&nbsp;&nbsp;定'],
+										btnAlign: 'c',
+										closeBtn: false,
+										skin: 'layer-custom',
+										area: ['380px', '310px'],
+										move: false,
+										resize: false,
+										yes: function (i) {
+											parent.layer.close(i);
+											if(is_user =='1'){parent.bind_authtype_xSelect();parent.d_authtype.close().remove();}
+											else authtype_list(1, result.AuthTypeId);
+										}
+									});
+								} else {
+									_alert(1, "认证方式", result.ErrMsg, $("#d_n"));
+									return false;
+								}
+							}
+						});
+						
+					},
+					btn2: function (i) {
+						
+					}
+				});
+			}else{
+				var msstr = aceg(JSON.stringify(authtype),$("input[name=se]").val());
+				$.ajax({
+					url: '/bhost/add_authtype',
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: JSON.stringify(authtype),m1:msstr},
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result == true) {
+							$('.btn').blur(); parent.layer.open({
+								type: 1,
+								title: '认证方式',
+								content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+								btn: ['确&nbsp;&nbsp;定'],
+								btnAlign: 'c',
+								closeBtn: false,
+								skin: 'layer-custom',
+								area: ['380px', '310px'],
+								move: false,
+								resize: false,
+								yes: function (i) {
+									parent.layer.close(i);
+									if(is_user =='1'){parent.bind_authtype_xSelect();parent.d_authtype.close().remove();}
+									else authtype_list(1, result.AuthTypeId);
+								}
+							});
+						} else {
+							_alert(1, "认证方式", result.ErrMsg, $("#d_n"));
+							return false;
+						}
+					}
+				});
+			}
+		
+				
+		}
+		//显示列表页面
+		function authtype_list(num, id) {
+			if (num == 1) {
+				$.ajax({
+					url: '/bhost/PGetRecordRownum',
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: id, a2: 7 },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result == true) {
+							document.frm_authtype_add.paging.value = Math.ceil(result.info / MAX_PAGE);
+						}
+					}
+				});
+				document.frm_authtype_add.search_typeall.value = '';
+				document.frm_authtype_add.e.value = ':';
+			}
+			document.frm_authtype_add.tasktype.value = 3;
+			document.frm_authtype_add.action = '/bhost/authtype_handle'
+			document.frm_authtype_add.submit();
+		}
+		$(function () {
+
+			$("#authtype").on("click", function () {
+				parent.reload();
+			});
+		});
+
+	</script>
+	<!-- 模块配置 -->
+	<script>
+		var delect_str_authmodule = new Array();
+		var check_num_authmodule = 0;
+		var total_all_r_authmodule = 0;
+		var authmodule_array = null;
+		//总数
+		var fenye_r_authmodule = 0;
+		//总页码
+		var search_typeall_r_authmodule = '';
+		//关键字
+		function save_authmodule() {
+			$("#authtype_z").show();
+			$("#authset_z").hide();
+			$('.save_l').show();
+			//模块显示
+			$.ajax({
+				url: "/bhost/get_authmodule_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: 0},
+				success: function (result) {
+					var authmodule_result = JSON.parse(result);
+					if (authmodule_result.Result == true) {
+						var authmodule_data = authmodule_result.info;
+						var total_all = authmodule_data.totalrow;
+						if (total_all) {
+							authmodule = new Array();
+							var module_select_value=$("#module_select").val();
+							var new_id=[];
+							$.each(authmodule_data.data, function (i, item) {
+								if (item.PwdLen == null) {
+									item.PwdLen = "";
+								}
+								new_id.push(item.AuthModuleId);
+								if(option_str[item.AuthModuleId]===undefined){
+									option_str[item.AuthModuleId] = "<option index=\"0\" value=\"" + item.AuthModuleId + "\" name=\""+item.AuthMode+"\" len=\""+item.PwdLen+"\">" + item.AuthModuleName + "</option>";
+									// if($("#module_select option[value="+item.AuthModuleId+"]").length==0 && item.AuthMode!=module_index){
+									// 	$("#module_select").append("<option index=\"0\" value=\"" + item.AuthModuleId + "\" name=\""+item.AuthMode+"\" len=\""+item.PwdLen+"\">" + item.AuthModuleName + "</option>");
+									// }
+									authmodule[item.AuthModuleId] = item;
+								}else{
+									if(option_str[item.AuthModuleId]===null){
+										check_option_str[item.AuthModuleId] = "<option index=\"0\" value=\"" + item.AuthModuleId + "\" name=\""+item.AuthMode+"\" len=\""+item.PwdLen+"\">" + item.AuthModuleName + "</option>";;
+										$('#module_all div.item[value='+item.AuthModuleId+']').attr('name',item.AuthMode);
+										
+									}else{
+										option_str[item.AuthModuleId] = "<option index=\"0\" value=\"" + item.AuthModuleId + "\" name=\""+item.AuthMode+"\" len=\""+item.PwdLen+"\">" + item.AuthModuleName + "</option>";
+										// $("#module_select option[value="+item.AuthModuleId+"]").after("<option index=\"0\" value=\"" + item.AuthModuleId + "\" name=\""+item.AuthMode+"\" len=\""+item.PwdLen+"\">" + item.AuthModuleName + "</option>").remove();
+									}
+								}
+								
+							});
+							for (i in option_str){
+								i=parseInt(i);
+								if ((option_str[i]!==undefined) && $.inArray(i,new_id)<0){
+									option_str[i]=undefined;
+									check_option_str[i]=undefined;
+									$("#module_select option[value="+i+"]").remove();
+									$('div.item[value='+i +']').children('i').click();
+								}
+							}
+							if($("#module_select option[value="+module_select_value+"]").length>0){
+								$("#module_select").val(module_select_value).trigger('change');
+							}
+							else{
+								$("#module_select").val(0).trigger('change');
+							}
+							if (module_index==9){
+								if($('#module_all div.item[name=8]').length>0){
+									$('#module_all div.item[name=8]').each(function(i_a,item_a){
+										$(item_a).find('i.del').click();	
+									});
+								}
+								if($('#module_all div.item[name=9]').length<=0){
+									module_index=0;
+								}
+							}
+							else if(module_index==8){
+								if($('#module_all div.item[name=9]').length>0){
+									$('#module_all div.item[name=9]').each(function(i_a,item_a){
+										$(item_a).find('i.del').click();	
+									});
+								}
+								if($('#module_all div.item[name=8]').length<=0){
+									module_index=0;
+								}
+							}
+							else if(module_index==0){
+								$('#module_all div.item[name=9]').each(function(i_a,item_a){
+									$(item_a).find('i.del').click();	
+								});
+								$('#module_all div.item[name=8]').each(function(i_a,item_a){
+									$(item_a).find('i.del').click();	
+								});
+							}
+							var module_select_val=$('#module_select').val();
+							$('#module_select option[index=0]').remove();
+							$.each(option_str, function (i, item) {
+								if (item != null) {
+									if(module_index==0 || (module_index==9 && item.indexOf('name="8"')<0 && item.indexOf('name="9"')<0) || (module_index==8 && item.indexOf('name="9"')<0)){
+										$('#module_select').append(item);
+									}
+								}
+							});
+							$('#module_select').val(module_select_val).trigger('change');
+						}
+					} else {
+						_alert(1, "模块配置", authmodule_result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+		var edit_item;
+		var frm_authmodule_paging=1;
+		$(function () {
+			$("#authmodule_select").change(function () {
+				var type = $(this).val();
+				
+				if (type == 'authmode') {
+					if ($('#filterWW_authmodule ul li').length) {
+						$('#filterWW_authmodule').show();
+						$('#clearFilter').show();
+					}
+					$("#authmodule_text").hide();
+					$('#authmodule_text_check').hide();
+					$('#authmodule_check').next('span').show();
+				}else{
+					if ($('#filterWW_authmodule ul li').length) {
+						$('#filterWW_authmodule').show();
+						$('#clearFilter').show();
+					}
+					$("#authmodule_text").show();
+					if($('#authmodule_text').val()!=''){
+						$('#authmodule_text_check').show();
+					}
+					$('#authmodule_check').next('span').hide();
+					$('#authmodule_check').val(0).trigger('change');
+				}
+			});
+			//tr双击事件
+			$("#authmodule_list").on('dblclick', 'tr', function (e) {
+				x = e.target;
+				if (x.nodeName != 'A' && x.nodeName != 'INS') {
+					var id = $(this).find("td");
+					edit_item = $(id).eq(1).text();
+					authmodule_add(2,edit_item);
+				}
+			}).on("click", "tr", function (e) {
+				x = e.target;
+				//删除按钮
+				if (x.id == 'del') {
+					var id = $(this).find("td");
+					var input = $(this).find("input");
+					$('.btn').blur(); parent.layer.open({
+						type: 1,
+						title: ' 模块配置',
+						content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+						btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							parent.layer.close(i);
+							var delete_item = $(id).eq(1).text();
+							// $(input).iCheck('uncheck');
+							delete_fun_authmodule(delete_item+'\t'+$(id).eq(2).text());
+						}
+					});
+				}
+				//编辑按钮
+				else if (x.id == 'edit') {
+					var id = $(this).find("td");
+					edit_item = $(id).eq(1).text();
+					authmodule_add(2,edit_item);
+				}
+				else if(x.id=='icon5'){
+					var id = $(this).find("td");
+					var test_id=$(id).eq(1).text();
+					var authmode_value=$(id).eq(3).attr('value');
+					get_dialog_test(test_id,authmode_value,$(id).eq(2).text());
+				}
+				else if (x.id=='synchronization') {
+					var id = $(this).find("td");
+					var test_id=$(id).eq(1).text();
+					var authmode_value=$(id).eq(3).attr('value');
+					get_dialog_synchronization(test_id,authmode_value,$(id).eq(2).text());
+				}
+			});
+			$('#check_one_page_authmodule').on(' ifClicked', function (e) {
+				if (!$('#check_one_page_authmodule').is(':checked')) {
+					$("#authmodule_list tr input:not(:disabled)").iCheck('check');
+				} else {
+					$("#authmodule_list tr input:not(:disabled)").iCheck('uncheck');
+				}
+			});
+			$("#authmodule_list").on("ifChecked", function (e) {
+				check_num_authmodule++;
+				$("#authmodule_total").next().next("span.sum").text(check_num_authmodule);
+				if ($("#authmodule_list tr input:checked").length == $("#authmodule_list tr input:not(:disabled)").length) {
+					$('#check_one_page_authmodule').iCheck('check');
+				}
+			}).on("ifUnchecked", function (e) {
+				check_num_authmodule--;
+				$("#authmodule_total").next().next("span.sum").text(check_num_authmodule);
+				$('#check_one_page_authmodule').iCheck('uncheck');
+			});
+			$('#authmodule_check_z').on('ifChecked', 'input.form-radio', function (e) {
+				type_id = $(this).attr('id').split('-')[1];
+				show_authmodule_num(type_id);
+			});
+			//页码显示
+			$("#page_nums_authmodule").val(MAX_PAGE);
+			//list show
+			parent._switchBtn(0);//显示按钮
+		});
+		
+		function clear_authmodule(){
+			$("#name").val('').attr('disabled',false);
+			// $("#authtype_length").val('');
+			$("#user").val('');
+			$("#pwd").val('');
+			$('#four_ServerIp').val('');
+			$('#four_ServerPort').val('89');
+			$('#four_BaseDn').val('');
+			$('#IsSsl').iCheck('check');
+			$('#three_ServerIp').val('');
+			$("#three_ServerPort").val('');
+			$('#three_BaseDn').val('');
+			$('#three_UserObject').val('uid');
+			$('#three_GroupObject').val('ou');
+			$('#three_AuthUser').val('');
+			$('#three_AuthPwd').val('');
+			$('#two_ServerIp').val('');
+			$('#two_ServerPort').val('');
+			$('#two_AuthPwd').val('');
+			$('#key_csp').val('');
+			$('#key_csp_user').val('');
+			$('#seven').find('div.csp_group:not(:first-child)').remove();
+			$('#key_ip').val('');
+			$('#key_port').val('389');
+			$('#key_base').val('');
+			$('#key_entry').val('');
+			$('#file_change_1').val('').trigger('change');
+			$('#step1 i.v-check').not('#token_text_check').attr('class','v-check');
+		}
+		//显示创建页面
+		var AuthMode_9_UserObject=null;
+		function authmodule_add(type,id) {
+			search_token_r=new Array();
+			search_token_n='';
+			if(id==1){
+				$('#authmodule_btn').hide();
+			}else{
+				$('#authmodule_btn').show();
+			}
+			$('#token_text').val('');$('#token_text_check').hide();
+			$('#token_select').val('all').trigger('change');
+			$('.authmodule_icon').prev('span').attr('onclick','authmodule_add('+type+',edit_item);');
+			$("#authset").show();
+			$("#authmodule").hide();
+			$("#authmodule_change").show();
+			// $("#authmodule_btn").show();
+			$("#authmodule_btn").next().show();
+			//$('#one').hide();
+			//$('#two').hide();
+			//$('#three').hide();
+			//$('#five').hide();
+			//$('#four').hide();
+			$('#authmodule_check_z').parents('div.form-item').show();
+			clear_authmodule();
+			//获取初始信息
+			//方式选择
+			AuthMode_9_UserObject=null;
+			$.ajax({
+				url: "/bhost/get_authmodule_list",
+				type: "POST",
+				async: false,
+				data: { a0: se, a1: 0 ,dsc:true},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						//$('#authmodule_check_z').empty();
+						authmodule_array = new Array();
+						$.each(result.info.data, function (i, item) {
+							/*
+							if (item.AuthModuleId <=1000) {
+								if(item.AuthModuleId>=2 && item.AuthModuleId<=4){
+									$('#authmodule_check_z').append('<label class="form-label"><input class="form-radio" type="radio" name="auth" value="' + item.AuthModuleId + '" id="auth-' + item.AuthModuleId + '">' + item.AuthModuleName + '</label>');
+								}else{
+									$('#authmodule_check_z').append('<label class="form-label" style="display:none;"><input class="form-radio" type="radio" name="auth" value="' + item.AuthModuleId + '" id="auth-' + item.AuthModuleId + '">' + item.AuthModuleName + '</label>');
+								}
+								$('#auth-' + item.AuthModuleId).iCheck({
+									checkboxClass: 'icheckbox_minimal-blue',
+									radioClass: 'iradio_minimal-blue',
+									increaseArea: '0' // optional
+								});
+							}
+							*/
+							authmodule_array[item.AuthModuleId] = item;
+							AuthMode_edit_old=null;
+							if(type!=1 && item.AuthModuleId==parseInt(edit_item)){
+								var data = item;
+								AuthMode_edit_old=data.AuthMode;
+								$('#auth-' + data.AuthMode).iCheck('check');
+								authmodule_save.AuthModuleId = data.AuthModuleId;
+								if (data.AuthModuleId < 1000) {
+									$('#authmodule_check_z').parents('div.form-item').hide();
+								}
+								type_id=data.AuthMode+'';
+								//id = '' + data.AuthMode;
+								$('#name').val(data.AuthModuleName);
+								$("#name").attr("disabled", true);
+								// $('#authtype_length').val(data.PwdLen);
+								switch (data.AuthMode) {
+									case 2:
+										$('#four_ServerIp').val(data.ServerIp);
+										$('#four_ServerPort').val(data.ServerPort);
+										$('#four_BaseDn').val(data.BaseDn);
+										break;
+									case 3:
+										if (data.IsSsl) {
+											$('#IsSsl').iCheck('check');
+										}else{
+											$('#IsSsl').iCheck('uncheck');
+										}
+										$('#three_ServerIp').val(data.ServerIp);
+										$("#three_ServerPort").val(data.ServerPort);
+										$('#three_BaseDn').val(data.BaseDn);
+										$('#three_UserObject').val(data.UserObject);
+										$('#three_GroupObject').val(data.GroupObject);
+										$('#three_AuthUser').val(data.AuthUser);
+										$('#three_AuthPwd').val(data.AuthPwd);
+										break;
+									case 4:
+										$('#two_ServerIp').val(data.ServerIp);
+										$('#two_ServerPort').val(data.ServerPort);
+										$('#two_AuthPwd').val(data.AuthPwd);
+										break;
+									case 9:
+										if(data.Csp!=null){
+											data.Csp=JSON.parse(data.Csp);
+											for(var i=data.Csp.length-1;i>=0;i--){
+												var item=data.Csp[i];
+												$('#key_csp').val(item.CSP);
+												$('#key_csp_user').val(item.CN);
+												if(i!=0){
+													$('#_addcsp').click();
+												}
+											}
+										}
+										if(data.ServerIp!=null){
+											$('#key_ip').val(data.ServerIp);
+										}
+										if(data.ServerPort!=null){
+											$('#key_port').val(data.ServerPort);
+										}
+										if(data.BaseDn!=null){
+											$('#key_base').val(data.BaseDn);
+										}
+										if(data.Entry!=null){
+											$('#key_entry').val(data.Entry);
+										}
+										AuthMode_9_UserObject=data.UserObject;
+										break;
+								}
+							}
+						});
+					} else {
+						_alert(1, '模块配置', result.ErrMsg);
+						return false;
+					}
+				}
+			});
+			if (type == 1){
+				authmodule_save.AuthModuleId = 0;
+				$('#auth-2').iCheck('check');
+				//$('#authmodule_check_z').trigger('ifChecked');
+			}else{
+			}
+		}
+		var old_userca_name=null;
+		function show_authmodule_num(type_id) {
+			var data = authmodule_array[type_id];
+			var form_item=$('#five').find('.form-item');
+			$('#five').hide();
+			$('#one').hide();
+			$('#two').hide();
+			$('#three').hide();
+			$('#four').hide();
+			$('#six').hide();
+			$('#seven').hide();
+			$('#eight').hide();
+			$('#nine').hide();
+			$('#ten').hide();
+			switch (parseInt(type_id)) {
+				case 1:
+				case 10:
+				case 11:
+				case 12:	
+					break;
+				case 2:
+					// if(parseInt(edit_item)!=0){
+					$('#five').show();
+					form_item.eq(0).find('.form-tag').html('<em class="imp">*</em>用户名：');
+					form_item.eq(1).find('.form-tag').html('<em class="imp">*</em>密码：');
+					form_item.eq(1).find('input').css('padding-right','8');
+					$('#test_name_p').text('仅支持英文、数字、下划线、横杠、小数点');
+					$('#test_pwd_p').remove();
+					$('#user').attr('maxlength','128').attr('onblur','regCheck(this,userReg);');
+					$('#pwd').attr('type','password').attr('onblur','');
+					// }
+					$('#four').show();
+					$('#four i.v-check').hide();
+					if(parseInt(edit_item)<=1000 && parseInt(edit_item)>0){
+						$('#four_ServerIp').val(data.ServerIp);
+						$('#four_ServerPort').val(data.ServerPort);
+						$('#four_BaseDn').val(data.BaseDn);
+					}
+					break;
+				case 3:
+					$('#three').show();
+					// if(parseInt(edit_item)!=0){
+					$('#five').show();
+					form_item.eq(0).find('.form-tag').html('<em class="imp">*</em>用户名：');
+					form_item.eq(1).find('.form-tag').html('<em class="imp">*</em>密码：');
+					form_item.eq(1).find('input').css('padding-right','8');
+					$('#test_name_p').text('仅支持英文、数字、下划线、横杠、小数点');
+					$('#test_pwd_p').remove();
+					$('#user').attr('maxlength','128').attr('onblur','regCheck(this,userReg);');
+					$('#pwd').attr('type','password').attr('onblur','');
+					// }
+					$('#three i.v-check').hide();
+					$('#IsSsl').iCheck('uncheck');
+					if(parseInt(edit_item)<=1000 && parseInt(edit_item)>0){
+						if (data.IsSsl) {
+							$('#IsSsl').iCheck('check');
+						}else{
+							$('#IsSsl').iCheck('uncheck');
+						}
+						$('#three_ServerIp').val(data.ServerIp);
+						$("#three_ServerPort").val(data.ServerPort);
+						$('#three_BaseDn').val(data.BaseDn);
+						$('#three_UserObject').val(data.UserObject);
+						$('#three_GroupObject').val(data.GroupObject);
+						$('#three_AuthUser').val(data.AuthUser);
+						$('#three_AuthPwd').val(data.AuthPwd);
+					}
+					break;
+				case 4:
+					$('#two').show();
+					// if(parseInt(edit_item)!=0){
+					$('#five').show();
+					form_item.eq(0).find('.form-tag').html('<em class="imp">*</em>用户名：');
+					form_item.eq(1).find('.form-tag').html('<em class="imp">*</em>密码：');
+					form_item.eq(1).find('input').css('padding-right','8');
+					$('#test_name_p').text('仅支持英文、数字、下划线、横杠、小数点');
+					$('#test_pwd_p').remove();
+					$('#user').attr('maxlength','128').attr('onblur','regCheck(this,userReg);');
+					$('#pwd').attr('type','password').attr('onblur','');
+					// }
+					if(parseInt(edit_item)<=1000 && parseInt(edit_item)>0){
+						$('#two_ServerIp').val(data.ServerIp);
+						$('#two_ServerPort').val(data.ServerPort);
+						$('#two_AuthPwd').val(data.AuthPwd);
+					}
+					$('#two i.v-check').hide();
+					break;
+				case 5:
+					$('#one').show();
+					// if(parseInt(edit_item)!=0){
+					$('#five').show();
+					form_item.eq(0).find('.form-tag').html('<em class="imp">*</em>用户名：');
+					form_item.eq(1).find('.form-tag').html('<em class="imp">*</em>密码：');
+					form_item.eq(1).find('input').css('padding-right','8');
+					$('#test_name_p').text('仅支持英文、数字、下划线、横杠、小数点');
+					$('#test_pwd_p').remove();
+					$('#user').attr('maxlength','128').attr('onblur','regCheck(this,userReg);');
+					$('#pwd').attr('type','password').attr('onblur','');
+					// }
+					if (data.IsDynamicAuth) {
+						$('#authtype-true').iCheck('check');
+					} else {
+						$('#authtype-false').iCheck('check');
+					}
+					$('#one i.v-check').hide();
+					break;
+				case 6:
+					// if(parseInt(edit_item)!=0){
+					//$('#five').show();
+					$('#five').hide();
+					form_item.eq(0).find('.form-tag').html('<em class="imp">*</em>令牌ID：');
+					form_item.eq(1).find('.form-tag').html('<em class="imp">*</em>令牌码：');
+					form_item.eq(1).find('input').css('padding-right','22');
+					$('#test_name_p').text('仅支持数字');
+					$('#test_pwd_p').remove();
+					form_item.eq(1).find('.form-c').append('<p id="test_pwd_p" class="form-tip" style="">仅支持字母、数字</p>');
+					$('#user').attr('maxlength','32').attr('onblur','regCheck(this,idReg);');
+					$('#pwd').attr('type','text').attr('onblur','regCheck(this,keyReg);');
+					// }
+					$('#six').show();
+					$('#six i.v-check').hide();
+					show_token_list(0);
+					break;
+				case 7:
+					$('#one').show();
+					// if(parseInt(edit_item)!=0){
+					$('#five').show();
+					form_item.eq(0).find('.form-tag').html('<em class="imp">*</em>用户名：');
+					form_item.eq(1).find('.form-tag').html('<em class="imp">*</em>密码：');
+					form_item.eq(1).find('input').css('padding-right','8');
+					$('#test_name_p').text('仅支持英文、数字、下划线、横杠、小数点');
+					$('#test_pwd_p').remove();
+					$('#user').attr('maxlength','128').attr('onblur','regCheck(this,userReg);');
+					$('#pwd').attr('type','password').attr('onblur','');
+					// }
+					if (data.IsDynamicAuth) {
+						$('#authtype-true').iCheck('check');
+					} else {
+						$('#authtype-false').iCheck('check');
+					}
+					$('#one i.v-check').hide();
+					break;
+				case 8:
+					$('#ten').show();
+					$('#userca_name').val(data.UserObject);
+					old_userca_name=data.UserObject;
+					break;
+				case 9:
+					$('#seven').show();
+					$('#eight').show();
+					$('#nine').show();
+					break;
+			}
+		}
+		String.prototype.ResetBlank=function(){
+		var regEx = /\s+/g; 
+		return this.replace(regEx, ' '); 
+	};
+		function _addFilter_token(obj,type,type_num) {
+			var select_input=$(obj).parent().children('input[type=text]');
+			var v2 = select_input.val().trim();
+			var v1 = $(obj).parent().children('select').children('option:selected').text();
+			var id = $(obj).parent().children('select').val();
+			if(id=='all'){
+				v1='';
+			}else{
+				v1=v1+'-';
+			}
+			v2=v2.ResetBlank();
+			if (v2 == '' && type_num!=1) {
+				select_input.blur();
+				_alert(2, '搜索', '请输入关键字', select_input);
+				return false;
+			}
+			// else
+			{
+				var Reg;
+				switch (id) {
+					case 'id':
+						Reg=/^[\d\s]+$/;
+						break;
+					case 'key':
+						Reg=/^[a-zA-Z\d\s]+$/;
+						break;
+					case 'user':
+						Reg=/^[a-zA-Z0-9_\-\.\s]+$/;
+						break;
+				}
+				if(id!='all' && !Reg.test(v2) && type_num!=1){
+					select_input.blur();
+					_alert(1,'搜索','关键字格式不正确', select_input);
+					return false;
+				}
+				if ($.inArray(id+'-'+v2,search_token_r)>=0 && type_num!=1) {
+					select_input.blur();
+					_alert(2, '搜索', '关键字重复', select_input);
+					return false;
+				}
+				if (type) {
+					search_token_r.push(id+'-'+v2); 
+					search_token_n = '';
+					$('#filterWW_token>ul').append('<li style="margin-left: -112px;line-height: unset;"><span style = "display:none">' + id+'-'+v2 + '</span><span class="ww" style="">' + v1+v2 + '</span><i class="del" style="" onclick="_delFilter_token(this);"></i></li>')
+					$('#token_text').val('');
+					$('#token_text_check').hide();
+					selView_token();
+				} else {
+					if(type_num!=1) search_token_n = id+'-'+v2;
+				}
+			}
+			show_token_list(0);
+		}
+		function _clearFilter_token(obj,num){
+			if(num==1){
+			$('#token_text').val('');
+			$('#token_text_check').hide();
+			search_token_n='';
+			show_token_list(0);
+			return;
+			}
+			$('#clearFilter_token').next().children('ul').empty();
+			$('#token_text').val('');
+			$('#token_text_check').hide();
+			$('#clearFilter_token').hide();
+			search_token_n='';
+			search_token_r=new Array();
+			selView_token();
+			show_token_list(0);
+		}
+		function selView_token(){
+			var $sel = $('#filterWW_token');
+			var len = $('li',$sel).length;
+
+			if(len == 0){
+				$sel.hide();
+				$('#clearFilter_token').hide();
+			}else{
+				$("#filterWW_token").show();
+				$('#clearFilter_token').show();
+				$('>span.ww',$sel).show();
+				$sel.addClass('selector-multiple');
+			}
+		}
+		function _delFilter_token(obj){
+			var id = $(obj).parent().find("span");
+			var ids=$(id).eq(0).text();
+			search_token_r.splice($.inArray(ids,search_token_r),1);
+			var token_text=$('#token_text').val().trim();
+			if(token_text==''){
+				search_token_n='';
+			}else{
+				search_token_n=token_text;
+			}
+			$(obj).parent().remove();
+			selView_token();
+			show_token_list(0);
+		}
+		function show_token_list(num){
+			var searchstring={
+				"TokenId":'',
+				"Key":'',
+				"UserSet":'',
+				"searchstring":''
+			};
+			$.each(search_token_r,function (i,item) {
+				if(item.indexOf('id')>=0){
+					searchstring.TokenId+=(item.substring(item.indexOf('id')+3)+'\n');
+				}else if (item.indexOf('key')>=0) {
+					searchstring.Key+=(item.substring(item.indexOf('key')+4)+'\n');
+				} else if(item.indexOf('user')>=0){
+					searchstring.UserSet+=(item.substring(item.indexOf('user')+5)+'\n');
+				}else if(item.indexOf('all')>=0){
+					searchstring.searchstring+=(item.substring(item.indexOf('all')+4)+'\n');
+				}
+			});
+			if(search_token_n!=''){
+				if(search_token_n.indexOf('id')>=0){
+					searchstring.TokenId+=(search_token_n.substring(search_token_n.indexOf('id')+3)+'\n');
+				}else if (search_token_n.indexOf('key')>=0) {
+					searchstring.Key+=(search_token_n.substring(search_token_n.indexOf('key')+4)+'\n');
+				} else if(search_token_n.indexOf('user')>=0){
+					searchstring.UserSet+=(search_token_n.substring(search_token_n.indexOf('user')+5)+'\n');
+				}else if(search_token_n.indexOf('all')>=0){
+					searchstring.searchstring+=(search_token_n.substring(search_token_n.indexOf('all')+4)+'\n');
+				}
+			}
+			if (num!=0){
+				var select_str=$('#token_list input:checked').map(function(item){return parseInt($(this).parents('tr').attr('id'))}).get();
+			}
+			$.ajax({
+				url: "/bhost/get_toten_list",
+				type: "POST",
+				async: true,
+				data: { a0: se,a5:JSON.stringify(searchstring),dsc:true},
+				success: function (result) {
+					var result=JSON.parse(result);
+					$('#token_list').empty();
+					if(result.Result){
+						var data_token=result.info.data;
+						var total_all_token=result.info.totalrow;
+						if(data_token instanceof Array){
+							$('#token_list').append(data_token.map(function (item) {
+								item.LastSuccValue=item.LastSuccValue==null?'':item.LastSuccValue;
+								item.LastDriftValue=item.LastDriftValue==null?'':item.LastDriftValue;
+								item.UserSet=item.UserSet||'';
+								item.Memo=item.Memo==null?'未检测':item.Memo;
+								return '<tr id="'+item.TokenId+'"><td width="5%" class="in"><input type="checkbox" '+(item.UserSet==''?'':'disabled')+' class="input_checkbox" /></td>'+
+								"<td width=\"12%\" title='"+item.TokenId+"'>"+item.TokenId+"</td>"+
+								"<td width=\"20%\" title='"+item.Key+"'>"+item.Key+"</td>"+
+								"<td width=\"10%\" title='"+item.LastSuccValue+"'>"+item.LastSuccValue+"</td>"+
+								"<td width=\"10%\" title='"+item.LastDriftValue+"'>"+item.LastDriftValue+"</td>"+
+								"<td width=\"20%\"  title='"+item.UserSet+"'>"+item.UserSet+"</td>"+
+								"<td width=\"10%\" title='"+item.Memo+"'>"+item.Memo+"</td>"+
+								"<td width='"+(perm==2?105:25)+"'><div class=\"tab-ctr\">"+
+								(perm==2?"<a href=\"javascript:;\" class=\"edit\" id=\"edit\" title='编辑'></a>":"<a href=\"javascript:;\" class=\"search_result\" id=\"edit\" title='查看'></a>")+
+								(perm==2?"<a href=\"javascript:;\" class=\"synchronization\" id=\"synchronization\" style=\"margin-right: 0px;margin-top: 2px;\" title='同步'></a>":"")+
+								(perm==2?"<a href=\"javascript:;\" class=\"test_icon\" id=\"\" title='测试' onclick=\"test_token("+item.TokenId+");\"></a>":"")+
+								(perm==2?"<a href=\"javascript:;\" class=\"del "+(item.UserSet==''?'':'disabled')+"\" id=\""+(item.UserSet==''?'del':'')+"\" title='删除'></a>":"")+
+								"</div></td></tr>"
+							}));
+							$(".input_checkbox","#token_list").iCheck({
+								checkboxClass: 'icheckbox_minimal-blue',
+								radioClass: 'iradio_minimal-blue',
+								increaseArea: '0' // optional
+							});
+							// if($("#token_list tr input:checked").length==$('#token_list tr input:not(:disabled)').length){
+							// 	$('#check_page').iCheck('check');
+							// }else{
+							// 	$('#check_page').iCheck('uncheck');
+							// }
+							if(num==0){
+								$("#token_list tr input").iCheck('uncheck');
+								$("#check_page").iCheck('uncheck');
+							}else{
+								$("#token_list tr input:not(:disabled)").each(function (item) {
+									var value_id=parseInt($(this).parents('tr').attr('id'));
+									if($.inArray(value_id,select_str)>=0){
+										$(this).iCheck('check');
+									}
+								});
+							}
+							
+						}
+					}
+				}
+			});
+		}
+		//选中字段存储
+		function delect_save_authmodule() {
+			$(">tr", "#authmodule_list").each(function () {
+				var input = $(this).find("input[type='checkbox']");
+				var delect_item = $(">td", this).eq(1).text()+'\t'+$(">td", this).eq(2).text();
+				var index = $.inArray(delect_item, delect_str_authmodule);
+				if ($(input).is(':checked')) {
+					if (index < 0) {
+						delect_str_authmodule.push(delect_item);
+					}
+				} else {
+					if (index >= 0) {
+						delect_str_authmodule.splice(index, 1);
+					}
+				}
+			});
+		}
+		//check显示
+		function check_show_authmodule() {
+			$(">tr", "#authmodule_list").each(function () {
+				var check_id = $(">td", this).eq(1).text()+'\t'+$(">td", this).eq(2).text();
+				if ($.inArray(check_id, delect_str_authmodule) >= 0) {
+					$(this).find("input[type='checkbox']").iCheck('check');
+				}
+			});
+		}
+		//input回车触发事件
+		function showMsg_authmodule() {
+			delect_save_authmodule();
+			var cur = $("#authmodule_page").val();
+			cur = cur.replace(/\D/g, "");
+			if (cur == '' || parseInt(cur) < 1) {
+				cur = 1;
+			}
+			if (parseInt(cur) == parseInt(frm_authmodule_paging)) {
+				$("#authmodule_page").val(cur);
+				return false;
+			}
+			frm_authmodule_paging = cur;
+			show_authmodule_list();
+		}
+		function update_array_authmodule() {
+			var b = search_typeall_r_authmodule + search_typeall_new_authmodule;
+			var a = 0;
+			$.ajax({
+				url: "/bhost/get_authmodule_list",
+				type: "POST",
+				async: false,
+				data: { a0: se, a2: b, a1: a ,dsc:true},
+				success: function (result) {
+					var authmodule_result = JSON.parse(result);
+					if (authmodule_result.Result) {
+						var authmodule_data = authmodule_result.info;
+						var delect_str_authmodule_old=delect_str_authmodule;
+						delect_str_authmodule=new Array();
+						authmodule_array = authmodule_data.data.filter(function (params) {
+							return params.AuthModuleId > 1000;
+						}).map(function (params) {
+							if($.inArray(params.AuthModuleId+'\t'+params.AuthModuleName,delect_str_authmodule_old)>=0){
+								delect_str_authmodule.push(params.AuthModuleId+'\t'+params.AuthModuleName);
+							}
+							return params.AuthModuleId+'\t'+params.AuthModuleName;
+						});
+					} else {
+						_alert(1, '模块配置', authmodule_result.ErrMsg); return false;
+					}
+				}
+			});
+		}
+		var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+		function _addFilter_authmodule(obj, type,type_num) {
+			var id = $(obj).parent().children('select').eq(0).children('option:selected').val();
+			var v1 = $(obj).parent().children('select').eq(0).children('option:selected').text();
+			var v2 = $(obj).parent().children('input[type=text]').val().trim();
+			var v3 =$(obj).parent().children('input[type=text]').val().trim();
+			if(id=='all'){
+				v1='';
+			}else{
+				if(id=='authmode'){
+					v2=$('#authmodule_check').children('option:selected').text();
+				}
+				v1=v1+'-';
+			}
+			// var v3 = $(obj).parent().children('select').eq(1).val();
+			// var v4 = $(obj).parent().children('select').eq(1).children('option:selected').text();
+			v2=v2.ResetBlank();
+			if (v2 == ''  && type_num!=1) {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+			var pass=false;
+			$.each(search_typeall_r_authmodule.split('\t'),function (i,item) {
+				if(item.indexOf('authmode')==0 && id=='authmode'){
+					_alert(2,'搜索','只能搜索一个类型');
+					pass=true;
+					return false;
+				}
+			});
+			if(pass){
+				return false;
+			}
+			if (v2 != '' && id!='all' && id!='authmode' ) {
+				reg_name=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				if (!reg_name.test(v2) && type_num!=1) {
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+			}
+			if ($.inArray(id + '-' + v2,search_typeall_r_authmodule.split('\t'))>= 0 && type_num!=1) {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '关键字重复', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+
+			if (type) {
+				search_typeall_r_authmodule = search_typeall_r_authmodule + id + '-' + v2 + '\t';
+				search_typeall_new_authmodule = '';
+				$('#filterWW_authmodule>ul').append('<li><span style = "display:none">' + id + '-' + v2 + '</span><span class="ww">' + v1 + v2 + '</span><i class="del" onclick="_delFilter_authmodule(this);"></i></li>')
+				$('#authmodule_text').val('');
+				$('#authmodule_text_check').hide();
+				selView_authmodule();
+			} else {
+				if(type_num!=1) search_typeall_new_authmodule = id + '-' + v2 + '\t';
+			}
+			delect_str_authmodule = new Array();
+			frm_authmodule_paging=1;
+			show_authmodule_list();
+		}
+		
+		var search_typeall_new_authmodule = '';
+		function _delFilter_authmodule(obj) {
+			var id = $(obj).parent().find("span");
+			var ids = $(id).eq(0).text();
+			var search_typeall_r_authmodule_arr=search_typeall_r_authmodule.split('\t');
+			search_typeall_r_authmodule_arr.splice(ids,1);
+			search_typeall_r_authmodule=search_typeall_r_authmodule_arr.join('\t');
+			// search_typeall_r_authmodule = search_typeall_r_authmodule.replace(ids + '\t', '');
+			$(obj).parent().remove();
+			selView_authmodule();
+			delect_str_authmodule = new Array();
+			frm_authmodule_paging=1;
+			show_authmodule_list();
+		}
+		function _clearFilter_authmodule(obj,num) {
+			if($('#authmodule_select option[value=authmode]').length==0){
+				$('#authmodule_select').append('<option value="authmode">类型</option>');
+			}
+			if(num==1){
+				$('#authmodule_text').val('');
+			$("#authmodule_text_check").hide();
+			search_typeall_new_authmodule = '';
+			delect_str_authmodule = new Array();
+			frm_authmodule_paging=1;
+			show_authmodule_list();
+				return;
+			}
+			$('#clearFilter').next().children('ul').empty();
+			$('#authmodule_text').val('');
+			$("#authmodule_text_check").hide();
+			$('#clearFilter').hide();
+			search_typeall_new_authmodule = '';
+			search_typeall_r_authmodule = '';
+			selView_authmodule();
+			delect_str_authmodule = new Array();
+			frm_authmodule_paging=1;
+			show_authmodule_list();
+		}
+		function selView_authmodule() {
+			var $sel = $('#filterWW_authmodule');
+			var len = $('li', $sel).length;
+			if (len == 0) {
+				$sel.hide();
+				$('#clearFilter').hide();
+			} else {
+				$("#filterWW_authmodule").show();
+				$('#clearFilter').show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			}
+		}
+		var AuthMode_edit_old=null;
+		//以每页显示数显示列表函数//认证配置list
+		function show_authmodule_list() {
+			update_array_authmodule();
+			var c = frm_authmodule_paging;
+			var page_num = MAX_PAGE;
+			var b = search_typeall_r_authmodule + search_typeall_new_authmodule;
+			var a = 0;
+			$.ajax({
+				url: "/bhost/get_authmodule_list",
+				type: "POST",
+				async: false,
+				data: { a0: se, a5: page_num, a4: c, a2: b, a1: a ,dsc:true},
+				success: function (result) {
+					var authmodule_result = JSON.parse(result);
+					if (authmodule_result.Result) {
+						var authmodule_data = authmodule_result.info;
+						var total_all = authmodule_data.totalrow;
+						if (total_all % MAX_PAGE == 0) {
+							fenye_r_authmodule = parseInt(total_all / MAX_PAGE);
+						} else {
+							fenye_r_authmodule = parseInt(total_all / MAX_PAGE) + 1;
+						}
+						if (authmodule_data.data == "" && c != "1") {
+							authmodule_page(0.9);
+						} else {
+							total_all_r_authmodule = total_all;
+							if (total_all) {
+								$("#authmodule_list").empty();
+								$.each(authmodule_data.data, function (i, item) {
+									if (item.AuthModuleName == null) {
+										item.AuthModuleName = "";
+									}
+									if (item.PwdLen == null) {
+										item.PwdLen = "";
+									}
+									var item_AuthMode;
+									switch (item.AuthMode) {
+										case 1:
+											item_AuthMode = '本地认证';
+											break;
+										case 2:
+											item_AuthMode = 'AD域';
+											break;
+										case 3:
+											item_AuthMode = 'LDAP';
+											break;
+										case 4:
+											item_AuthMode = 'RADIUS';
+											break;
+										case 5:
+											item_AuthMode = 'RSA';
+											break;
+										case 6:
+											item_AuthMode = '令牌';
+											break;
+										case 7:
+											item_AuthMode = '安盟';
+											break;
+										case 8:
+											item_AuthMode = 'BHost USBKey';
+											break;
+										case 9:
+											item_AuthMode = 'USBKey';
+											break;
+										case 10:
+											item_AuthMode = 'TOTP';
+											break;
+										case 11:
+											item_AuthMode = '短信认证';
+											break;
+										case 12:
+											item_AuthMode = '邮箱认证';
+											break;
+										case 13:
+											item_AuthMode = '指纹认证';
+											break;											
+										default:
+											item_AuthMode = '未知';
+											break;
+									}
+									$("#authmodule_list").append("<tr>" +
+										(perm==2?"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" id=\"in\" " + (item.AuthModuleId <= 1000 ? "disabled" : "") + "/></td>":"<td title='" + item.AuthModuleName + "'>" + item.AuthModuleName + "</td>") +
+										"<td style = \"display:none\">" + item.AuthModuleId + "</td>" +
+										(perm==2?"<td title='" + item.AuthModuleName + "'>" + item.AuthModuleName + "</td>":'') +
+										"<td value='"+item.AuthMode+"'>" + item_AuthMode + "</td>" +
+										//"<td>" + item.PwdLen + "</td>" +
+										// "<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\""+(item.AuthModuleId <= 1000 ? "icon3 " : "edit")+"\" id=\"edit\" title='编辑'></a>" +
+										"<td><div class=\"tab-ctr\">"+
+										((perm==2 && (item.AuthModuleId!=1 && item.AuthModuleId!=10))?"<a href=\"javascript:;\" class=\"edit\" id=\"edit\" title='编辑'></a>":"<a href=\"javascript:;\" class=\"search_result\" id=\"edit\" title='查看'></a>") +
+										(perm==2?"<a href=\"javascript:;\" class=\"icon5 "+((item.AuthMode == 1 ||  item.AuthMode == 8 || item.AuthMode == 10 || item.AuthMode ==11 || item.AuthMode ==9 || item.AuthMode ==12 || item.AuthMode ==13) ? "disabled " : "")+"\" id=\""+((item.AuthMode == 1 ||  item.AuthMode == 8 || item.AuthMode == 9 || item.AuthMode == 10 || item.AuthMode ==11 || item.AuthMode ==9 || item.AuthMode ==12 || item.AuthMode ==13) ? " " : "icon5")+"\" title='测试'></a>":"")+
+										(perm==2?"<a href=\"javascript:;\" class=\"synchronization "+((item.AuthMode==2 || item.AuthMode==3)?'':'disabled')+"\" id=\""+((item.AuthMode==2 || item.AuthMode==3)?'synchronization':'')+"\" title=\"同步\"></a>":"")+
+										(perm==2?"<a href=\"javascript:;\" class=\"del " + (item.AuthModuleId <= 1000 ? "disabled" : "") + "\" id=\"" + (item.AuthModuleId <= 1000 ? "" : "del") + "\" title='删除'></a>":"") +
+										"</div></td></tr>");
+								})
+								$(".input_checkbox", "#authmodule_list").iCheck({
+									checkboxClass: 'icheckbox_minimal-blue',
+									radioClass: 'iradio_minimal-blue',
+									increaseArea: '0' // optional
+								});
+								$("#authmodule_total").text(total_all);
+								if (c >= fenye_r_authmodule) {
+									c = fenye_r_authmodule;
+								}
+								frm_authmodule_paging = c;
+								document.getElementById("authmodule_page").value = c;
+								$("#authmodule_pages").text(fenye_r_authmodule);
+								$('#check_one_page_authmodule').iCheck('uncheck');
+								$("#authmodule_list tr input").iCheck('uncheck');
+								check_show_authmodule();
+								check_num_authmodule = delect_str_authmodule.length;
+								$("#authmodule_total").next().next("span.sum").text(check_num_authmodule);
+							} else {
+								$("#authmodule_total").next().next("span.sum").text(0);
+								$("#authmodule_list tr input").iCheck('uncheck');
+								$("#authmodule_list").empty();
+								$("#authmodule_total").text(total_all);
+								$("#authmodule_pages").text(1);
+								frm_authmodule_paging = 1;
+								fenye_r_authmodule = 1;
+								document.getElementById("authmodule_page").value = 1;
+							}
+						}
+					} else {
+						_alert(1, "模块配置", authmodule_result.ErrMsg);
+						$("#authmodule_list tr input").iCheck('uncheck');
+						$("#authmodule_total").next().next("span.sum").text(0);
+						$("#authmodule_total").text(0);
+						$("#authmodule_pages").text(1);
+						frm_authmodule_paging = 1;
+						fenye_r_authmodule = 1;
+						document.getElementById("authmodule_page").value = 1;
+						return false;
+					}
+				}
+			});
+		}
+		//分页 and 刷新
+		function authmodule_page(num) {
+			var c = parseInt(frm_authmodule_paging) + num;
+			if (c<1) {
+				c=1;
+			}
+			delect_save_authmodule();
+			if (num == 0.1) {
+				var c = 1;
+			} else if (num == 0.9) {
+				var c = fenye_r_authmodule;
+			}
+			// document.getElementById("authmodule_page").value = c;
+			frm_authmodule_paging = c;
+			show_authmodule_list();
+		}
+		//全选按钮
+		function click_all_list_authmodule() {
+			delect_save_authmodule();
+			if (delect_str_authmodule.length == authmodule_array.length) {
+				delect_str_authmodule = new Array();
+			} else {
+				delect_str_authmodule = authmodule_array;
+			}
+			show_authmodule_list();
+		}
+		//刷新
+		function clear_all_authmodule() {
+			delect_str_authmodule = new Array();
+			show_authmodule_list();
+		}
+		//删除函数
+		function delete_fun_authmodule(delect_str_1) {
+			$.ajax({
+				url: '/bhost/del_authmodule',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: delect_str_1 },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						authmodule_page(0);
+						// _alert(0, " 模块配置", "删除成功");
+						if(result.fail_num!=0){
+							if (result.success_num!=0)
+								_alert(0,"模块配置","成功："+result.success_num+'，失败：'+result.fail_num);
+							else
+								if ((result.fail_num+success_num)==1)
+									_alert(1,"模块配置",result.ErrMsg);
+								else
+									_alert(0,"模块配置",'失败：'+result.fail_num);
+						}else{
+							_alert(0,"模块配置","删除成功");
+						}
+					} else {
+						authmodule_page(0);
+						_alert(1, " 模块配置", result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+		//删除按钮
+		function delete_list_authmodule() {
+			delect_save_authmodule();
+			if (delect_str_authmodule.length == 0) {
+				_alert(2, " 模块配置", "请选择要删除的数据");
+				return false;
+			}
+			//利用对话框返回的值 （true 或者 false）  
+			$('.btn').blur(); parent.layer.open({
+				type: 1,
+				title: ' 模块配置',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+				btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+				btnAlign: 'c',
+				closeBtn: false,
+				skin: 'layer-custom',
+				area: ['380px', '310px'],
+				move: false,
+				resize: false,
+				yes: function (i) {
+					parent.layer.close(i);
+					delete_fun_authmodule(delect_str_authmodule.join(','));
+				}
+			});
+		}
+	
+	
+	//认证配置add
+	//var authmodule_array = null;
+	var id = '';
+	var ipReg=/(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+	var portReg = /(^[1-9]$)|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-5][0-9][0-9][0-9][0-9]$)|(^[6][0-5][0-5][0-3][0-4]$)/;
+	var domainReg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
+	
+	//认证配置add返回
+	function back(num, id) {
+		if (num == 1) {
+			$.ajax({
+				url: '/bhost/PGetRecordRownum',
+				type: "POST",
+				async: false,
+				data: { a0:se, a1: id, a2: 6 },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						if (result.info % MAX_PAGE == 0) {
+							frm_authmodule_paging = parseInt(result.info / MAX_PAGE);
+						} else {
+							frm_authmodule_paging = parseInt(result.info / MAX_PAGE) + 1;
+						}
+						show_authmodule_list();
+					}
+				}
+			});
+			
+		}
+		$('.authmodule_icon').prev('span').attr('onclick','test_button();');
+		$("#authmodule_change").hide();
+		$("#authmodule_btn").next().hide();
+		$("#authmodule").show();
+	}
+	var type_id;
+	var authmodule_save = {
+		"AuthModuleId": 0,
+		"AuthModuleName": null,
+		"AuthMode": 0,
+		"IsDynamicAuth": null,
+		"ServerIp": null,
+		"ServerPort": null,
+		"AuthUser": null,
+		"AuthPwd": null,
+		"BaseDn": null,
+		"UserObject": null,
+		"GroupObject":null,
+		"IsSsl": false,
+		"PwdLen": null,
+		"Csp": null,
+		"Entry": null
+	}
+	//保存认证配置
+	function savedata() {
+		authmodule_save.AuthModuleName=null;
+		authmodule_save.AuthMode=null;
+		authmodule_save.IsDynamicAuth=null;
+		authmodule_save.ServerIp=null;
+		authmodule_save.ServerPort=null;
+		authmodule_save.AuthUser=null;
+		authmodule_save.AuthPwd=null;
+		authmodule_save.BaseDn=null;
+		authmodule_save.UserObject=null;
+		authmodule_save.IsSsl=null;
+		authmodule_save.PwdLen=null;
+		authmodule_save.Csp=null;
+		authmodule_save.Entry=null;
+		authmodule_save.AuthMode = parseInt(type_id);
+		if(authmodule_save.AuthModuleId>=1000 && AuthMode_edit_old!=null && AuthMode_edit_old!=authmodule_save.AuthMode){
+			var pass=true;
+			$.ajax({
+				url: "/bhost/get_authtype_list",
+				type:"POST",
+				async:false,
+				data:{a0:$("input[name=se]").val(),a2:'',a1:0},
+				success:function(result){
+					var authtype_result = JSON.parse(result);
+					if (authtype_result.Result){
+						var authtype_data = authtype_result.info;
+						$.each(authtype_data,function(i,item){
+							if(item.Set!=null){
+								$.each(item.Set,function(i_set,item_set){
+									if(item_set.AuthModuleId==authmodule_save.AuthModuleId){
+										pass=false;
+										return false;
+									}
+								});
+								if(!pass){
+									return false;
+								}
+							}
+						});
+					}else{
+						_alert(1,'认证方式',authtype_result.ErrMsg);
+						return false;
+					}
+				}
+			});
+			if(!pass){
+				_alert(2, '模块配置', '认证模块已被使用，无法修改模块类型');
+				return false;
+			}
+		}
+		
+		var name = $("#name").val();
+		if (name == '') {  
+			_alert(2, '模块配置', '请输入名称', $("#name"));
+			return false;
+		} else if (!nameReg.test(name) && (authmodule_save.AuthModuleId==0 || authmodule_save.AuthModuleId>=1000)) {
+			_alert(1, '模块配置', '名称格式不正确', $("#name"));
+			return false;
+		} else if (name.length > 32) {
+			_alert(1, '模块配置', '名称长度不得超过32位字符', $("#name"));
+			return false;
+		}
+		
+		// var type_id = $("input:radio[name=auth]:checked").attr('id').split('-')[1];
+		
+		if (type_id == '') {
+			_alert(2, '模块配置', '请选择方式');
+			return false;
+		}
+		// var length_num = $('#authtype_length').val() == '' ? null : $('#authtype_length').val();
+		//var data = authmodule_array[type_id];
+		var userca_check=false;
+		switch (parseInt(type_id)) {
+			case 11:
+			case 1:
+				break;
+			case 2:
+				var four_ServerIp = $('#four_ServerIp').val();
+				var four_ServerIp_array = four_ServerIp.split(';');
+				four_ServerIp = '';
+				var pass = 1;
+				$.each(four_ServerIp_array, function (i, item) {
+					if (item != '') {
+						if (ipReg.test(item)) {
+							if (four_ServerIp.indexOf(item) >= 0) {
+								_alert(2, '模块配置', 'IP地址重复', $('#four_ServerIp'));
+								pass = 0;
+								return false;
+							} else {
+								four_ServerIp += (item + ';');
+							}
+						} else {
+							_alert(1, '模块配置', 'IP地址格式不正确', $('#four_ServerIp'));
+							pass = 0;
+							return false;
+						}
+					}
+				});
+				if (pass == 0) {
+					return false;
+				}
+				if (four_ServerIp == '') {
+					_alert(2, '模块配置', '请输入IP地址', $('#four_ServerIp'));
+					return false;
+				}
+				four_ServerIp = four_ServerIp.substr(0, four_ServerIp.length - 1)
+				var four_ServerPort = $('#four_ServerPort').val();
+				if (four_ServerPort == '') {
+					_alert(2, '模块配置', '请输入端口', $('#four_ServerPort'));
+					return false;
+				} else if (!portReg.test(four_ServerPort)) {
+					_alert(2, '模块配置', '请输入0-65535之间的数字', $('#four_ServerPort'));
+					return false;
+				}
+				var four_BaseDn = $('#four_BaseDn').val();
+				if (four_BaseDn == '') {
+					_alert(2, '模块配置', '请输入域名', $('#four_BaseDn'));
+					return false;
+				} else if (!domainReg.test(four_BaseDn)) {
+					_alert(2, '模块配置', '域名格式不正确', $('#four_BaseDn'));
+					return false;
+				}
+				authmodule_save.ServerIp = four_ServerIp;
+				authmodule_save.ServerPort = four_ServerPort;
+				authmodule_save.BaseDn = four_BaseDn;
+				break;
+			case 3:
+				var three_ServerIp = $('#three_ServerIp').val();
+				if (three_ServerIp == '') {
+					_alert(2, '模块配置', '请输入IP地址', $('#three_ServerIp'));
+					return false;
+				} else if (!ipReg.test(three_ServerIp)) {
+					_alert(1, '模块配置', 'IP地址不正确', $('#three_ServerIp'));
+					return false;
+				}
+				var three_ServerPort = $("#three_ServerPort").val();
+				if (three_ServerPort == '') {
+					_alert(2, '模块配置', '请输入端口', $('#three_ServerPort'));
+					return false;
+				} else if (!portReg.test(three_ServerPort)) {
+					_alert(2, '模块配置', '请输入0-65535之间的数字', $('#three_ServerPort'));
+					return false;
+				}
+				var three_BaseDn = $('#three_BaseDn').val();
+				if (three_BaseDn == '') {
+					_alert(2, '模块配置', '请输入Base_DN', $('#three_BaseDn'));
+					return false;
+				}
+				var three_UserObject = $('#three_UserObject').val();
+				if (three_UserObject == '') {
+					_alert(2, '模块配置', '用户标识不能为空', $('#three_UserObject'));
+					return false;
+				}
+				var three_GroupObject = $('#three_GroupObject').val();
+				if (three_GroupObject == '') {
+					_alert(2, '模块配置', '用户组标识不能为空', $('#three_GroupObject'));
+					return false;
+				}
+				
+				var three_AuthUser = $('#three_AuthUser').val();
+				if (three_AuthUser == '') {
+					three_AuthUser = null;
+				}
+				var three_AuthPwd = $('#three_AuthPwd').val();
+				if (three_AuthPwd == '') {
+					three_AuthPwd = null;
+				}
+				authmodule_save.IsSsl = $('#IsSsl').is(':checked');
+				authmodule_save.AuthUser = three_AuthUser;
+				authmodule_save.AuthPwd = three_AuthPwd;
+				authmodule_save.UserObject = three_UserObject;
+				authmodule_save.GroupObject = three_GroupObject
+				authmodule_save.BaseDn = three_BaseDn;
+				authmodule_save.ServerPort = three_ServerPort;
+				authmodule_save.ServerIp = three_ServerIp;
+				break;
+			case 4:
+				var two_ServerIp = $('#two_ServerIp').val();
+				var two_ServerPort = $('#two_ServerPort').val();
+				var two_AuthPwd = $('#two_AuthPwd').val();
+				if (two_ServerIp == '') {
+					_alert(2, '模块配置', 'IP不能为空', $('#two_ServerIp'));
+					return false;
+				} else if (!ipReg.test(two_ServerIp)) {
+					_alert(2, '模块配置', 'IP不符合要求', $('#two_ServerIp'));
+					return false;
+				}
+				if (two_ServerPort == '') {
+					_alert(2, '模块配置', '端口不能为空', $('#two_ServerPort'));
+					return false;
+				} else if (!portReg.test(two_ServerPort)) {
+					_alert(2, '模块配置', '请输入0-65535之间的数字', $('#two_ServerPort'));
+					return false;
+				}
+				if (two_AuthPwd == '') {
+					_alert(2, '模块配置', '认证密码不能为空', $('#two_AuthPwd'));
+					return false;
+				}
+				authmodule_save.ServerIp = two_ServerIp;
+				authmodule_save.ServerPort = two_ServerPort;
+				authmodule_save.AuthPwd = two_AuthPwd;
+				break;
+			case 5:
+				authmodule_save.IsDynamicAuth = $('#authtype-true').is(':checked');
+				break;
+			case 6:
+				break;
+			case 7:
+				authmodule_save.IsDynamicAuth = $('#authtype-true').is(':checked');
+				break;
+			case 8:
+				var userca_name=$('#userca_name').val();
+				if(userca_name==''){
+					_alert(2,'模块配置','请输入userca名称',$('#userca_name'));
+					return false;
+				}
+				userca_check=$('#userca_check').is(':checked');
+				if(!userca_check){
+					userca_name=old_userca_name;
+				}
+				authmodule_save.UserObject=userca_name;
+				break;
+			case 9:
+				var Csp_arr=new Array();
+				var pass=false;
+				$div_arr=$('#seven').find('div.csp_group');
+				$.each($div_arr,function(i,item){
+					var $input=$(item).find('input');
+					var input1=$input.eq(0).val();
+					var input2=$input.eq(1).val();
+					if($div_arr.length==1 && input1=='' && input2==''){
+						_alert(2,'模块配置','请输入USBKey配置',$input.eq(0));
+						pass=true;
+						return false;
+					}	
+					if(i==0 && input1=='' && input2==''){
+						return true;
+					}
+					if(input1==''){
+						_alert(2,'模块配置','请输入CSP',$input.eq(0));
+						pass=true;
+						return false;
+					}
+					if(input2==''){
+						_alert(2,'模块配置','请输入认证唯一标识对象',$input.eq(1));
+						pass=true;
+						return false;
+					}
+					$.each(Csp_arr,function(i1,item1){
+						if(item1.CSP==input1){
+							_alert(2,'模块配置','CSP重复',$input.eq(0));
+							pass=true;
+							return false;
+						}
+					});
+					if(pass){
+						return false;
+					}
+					var csp_item={"CSP":input1,"CN":input2};
+					Csp_arr.push(csp_item);
+				});
+				if(pass){
+					return false;
+				}
+				authmodule_save.Csp=JSON.stringify(Csp_arr);
+				/*
+				var key_ip=$('#key_ip').val();
+				if(key_ip!='' && !ipReg.test(key_ip)){
+					_alert(2,'模块配置','IP不符合要求',$('#key_ip'));
+					return false;
+				}
+				var key_port=$('#key_port').val();
+				if (key_port==''){
+					key_port=389;
+				}
+				else if(key_port!='' && !portReg.test(key_port)){
+					_alert(2,'模块配置','请输入0-65535之间的数字',$('#key_port'));
+					return false;
+				}
+				else{
+					key_port=parseInt(key_port);
+				}
+				var key_base=$('#key_base').val();
+				var key_entry=$('#key_entry').val();
+				*/
+				var file_v_1 = $("#file_v_1").val();
+				if (file_v_1 == "" && (AuthMode_9_UserObject==null)){
+					_alert(2,"模块配置","请选择文件");
+					return false;
+				}
+				authmodule_save.UserObject=AuthMode_9_UserObject;
+				
+				var file_v_1 = $("#file_v_1").val();
+				if (file_v_1.substr(file_v_1.length-4).toLowerCase() != ".crt"){
+					// _alert(1,"模块配置","文件格式不正确，只支持.crt格式文件");
+					// return false;
+				}
+				/*
+				authmodule_save.ServerIp=key_ip;
+				authmodule_save.ServerPort=key_port;
+				authmodule_save.BaseDn=key_base;
+				authmodule_save.Entry=key_entry;
+				*/
+				break;
+		}
+		authmodule_save.AuthModuleName = name;
+		// authmodule_save.PwdLen = length_num;
+		authmodule_save.AuthMode = parseInt(type_id);
+		var msstr = aceg(JSON.stringify(authmodule_save),se);
+		
+		
+		var formData_f = new FormData($("#uploadForm_1")[0]);
+		formData_f.append('a0',se);
+		formData_f.append('a1',JSON.stringify(authmodule_save));
+		formData_f.append('a2',userca_check);
+		formData_f.append('m1',msstr);
+		$.ajax({
+			url: '/bhost/update_authmodule',
+			type: "POST",
+			data:formData_f,
+			async: false,  
+			cache: false,
+			contentType: false,
+			processData: false,
+			success: function (result) {
+				var result = JSON.parse(result);
+				if (result.Result) {
+					$('.btn').blur(); parent.layer.open({
+						type: 1,
+						title: '模块配置',
+						content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+						btn: ['确&nbsp;&nbsp;定'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							parent.layer.close(i);
+							back(1, result.AuthModuleId);
+						}
+					});
+				} else {
+					_alert(1, '模块配置', result.ErrMsg, $("#name"));
+					return false;
+				}
+			}
+		});
+	}
+	///
+	function test_token(token_id){
+		$('#test_token_l').val('');
+		$('#test_token_l').next('i').attr('class','v-check');
+		var title='令牌测试';
+		var $dialogCont = $("#test_suspend_token").show();
+
+		var d = dialog({
+			title:title,
+			content:$dialogCont,
+			id:"test_suspend_token",
+			width:"800px"
+		});
+		d.addEventListener('close', function () {
+			$dialogCont.appendTo("body").hide();
+		});
+		d.showModal();
+		$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+			$('#test_token_l').val('');
+			$('#test_token_l').next('i').attr('class','v-check');
+		});
+		$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+			
+			var test_token_l=$('#test_token_l').val().trim();
+			if(test_token_l==''){
+				_alert(2, '令牌测试', '请输入令牌码',$('#test_user'));
+				return false;
+			}else if(!idReg.test(test_token_l)){
+				_alert(1, '令牌测试', '令牌码格式不正确',$('#test_user'));
+				return false;
+			}
+			_showLoading();
+			test_json = {"id":1,"user":""+token_id+"","pwd":test_token_l,"authmode":6}
+			$.ajax({
+				url: '/bhost/test_authmdule',
+				type: "POST",
+				async: true,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(test_json),a2:'AuthModuleTmp',a3:'令牌' },
+				success: function (result) {
+					var result=JSON.parse(result);
+					if(result.Result){
+						if(result.info==0){
+							_alert(0,'模块测试','测试成功');
+							status = "已检测";
+						}else{
+							_alert(2,'模块测试','测试失败');
+							status = "未检测";
+						}
+					}
+					_closeLoading();
+					global_token_id = token_id;
+					update_token_status(status);
+					d.close().remove();
+					return false;
+				},
+				error:function(){
+					_alert(2,'模块测试','连接失败');
+					_closeLoading();
+					
+					return false;
+				}
+			});
+			
+		})
+	}
+	</script>
+</body>
+
+</html>

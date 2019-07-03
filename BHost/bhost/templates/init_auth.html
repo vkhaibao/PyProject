@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Logbase运维安全管理系统</title>
+	<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+	<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />
+	<script src="/manage/js/base64.js"></script>
+	
+	<link rel="stylesheet" href="/manage/css/G-style.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+
+	<div class="page-wrap">
+		<div class="page-cont">
+		</div>
+	</div>
+	
+	<div class="dialog-cont" id="pwd_code_div" style="display:none;">
+		<div class="container">
+			<div class="c-cont1" style="min-height:320px;max-height:200px;overflow:hidden;">
+				<div class="c-form" style="padding: 0 0 90px; min-width: 460px;">
+					<div class="clearfix"></div>
+					<div class="c-table">
+						
+						<div class="form" id="div_pwd" style="margin-top: 22px;" >
+							<div class="form-item" style="float: left;">
+								<span class="form-tag" style=""><em class="imp">*</em>密&nbsp;&nbsp;码：</span>
+								<div class="form-c" style="">
+									<input type="password" class="form-text" id="sys_u_pwd_new" style="width: 150px;" tabindex="1" maxlength="64">
+								</div>
+							</div>
+							<div class="form-item" style="float: left;">
+								<span class="form-tag" style=""><em class="imp">*</em>确认密码：</span>
+								<div class="form-c" style="">
+									<input type="password" class="form-text" id="sys_u_pwd_tr" style="width: 150px;" tabindex="2" maxlength="64" >
+								</div>
+							</div>
+						</div>
+						<div class="form" style="    margin-top: 130px;">
+							<div class="form-item" style="">
+								<span class="form-tag" style="">将初始密码作为本地密码：</span>
+								<div class="form-c" style="">
+									<label class="form-label" style="margin-top: 4px;"><input class="form-checkbox" type ="checkbox" name="used_init_pwd" id="used_init_pwd"></label>
+								</div>
+							</div>
+						</div>
+						<div class="btns" style="">
+							<a href="javascript:;" class="btn btn-normal btn-submit" >确&nbsp;&nbsp;定</a>
+							<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="dialog-cont s-hide" id="qr_code_div" style="display:none;">
+		<div class="container">
+			<div class="c-cont1" style="min-height:320px;max-height:200px;overflow:hidden;">
+				<span style="margin-left: 132px;">请使用您的两步验证应用扫描二维码</span>
+				<div style="text-align:center;">
+					<img src="">
+				</div>
+				<div class="c-form" style="padding: 0 0 90px; min-width: 460px;">
+					<div class="clearfix"></div>
+					<div class="c-table">							
+						<div class="form" style="margin-top: -20px;" >
+							<div class="form-item" style="float: left;margin-left: -39px;">
+								<span class="form-tag" style=""><em class="imp">*</em>验证码：</span>
+								<div class="form-c" style="">
+									<input type="text" class="form-text" id="totp_v" style="width: 150px;" onkeydown="if (event.keyCode == 13){submit_totp();return false;} else return;" tabindex="1" maxlength="32">
+								</div>
+							</div>
+						</div>
+						<div class="btns" style="">
+							<a href="javascript:;" class="btn btn-normal btn-submit" onclick="submit_totp();">确&nbsp;&nbsp;定</a>
+							<a href="javascript:;" class="btn btn-normal btn-cancel" onclick="location.href='/';">取&nbsp;&nbsp;消</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="dialog-cont s-hide" id="token_code_div" style="display:none;max-height:300px">
+		<span style="margin-left: 72px;">请使用您的令牌码登录</span>
+		<div style="text-align:center;">
+			<img src="">
+		</div>
+		<div style="float:left;margin-left: 72px">
+			<input type="text" class="form-text" id="token_v" style="width:133px;" placeholder="输入令牌码" onkeydown="if (event.keyCode == 13){submit_token();return false;} else return;">
+		</div>
+		<div class="tab-t">
+			<div class="ctr">
+				<a class="btn" href="javascript:;" style="margin-left:16px;" onclick="submit_token();">确&nbsp&nbsp定</a>
+			</div>
+		</div>
+		<!--
+		<div class="ctr">
+			<a class="btn" href="javascript:;" style="float:left;margin-left:13px;;padding: 0 15px;line-height: 24px;color: #8D808A;border: 1px solid #8D808A;border-radius: 5px;transition: all 0.4s;" onclick="submit_totp();">验证</a>
+		</div>
+		-->
+	</div>
+	
+	<div class="dialog-cont" id="pin_code_div" style="display:none;">
+			<div class="container">
+				<div class="c-cont1" style="min-height:270px;max-height:200px;overflow:hidden;">
+					<div class="c-form" style="padding: 0 0 90px; min-width: 460px;">
+						<div class="clearfix"></div>
+						<div class="c-table">
+							
+							<div class="form" id="" style="margin-top: 22px;" >
+								<div class="form-item" style="float: left;">
+									<span class="form-tag" style=""><em class="imp">*</em>pin码：</span>
+									<div class="form-c" style="">
+										<input type="password" class="form-text" id="pin_v" style="width: 150px;" tabindex="1" >
+									</div>
+								</div>
+								<div class="form-item" style="float: left;">
+									<span class="form-tag" style=""><em class="imp">*</em>确认pin码：</span>
+									<div class="form-c" style="">
+										<input type="password" class="form-text" id="pin_v_sure" style="width: 150px;" tabindex="2"  >
+									</div>
+								</div>
+							</div>
+							<div class="btns" style="">
+								<a href="javascript:;" class="btn btn-normal btn-submit" >确&nbsp;&nbsp;定</a>
+								<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</div>
+	
+	<div class="dialog-cont" id="fp_div" style="display:none;">
+		<div class="container">
+			<div class="c-cont1" style="min-height:270px;max-height:200px;overflow:hidden;">
+				<div class="c-form" style="padding: 0 0 90px; min-width: 460px;">
+					<div class="clearfix"></div>
+					<div class="c-table">
+						<div class="form" id="" style="margin-top: 22px;" >
+							<div class="form-item" style="float: left;">
+								<span class="form-tag" style="float: initial; margin-left: 25%; text-align: center;">请录入指纹</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<form action="/" method="POST" name="frm">
+	</form>
+
+<style>
+	.h-content2{height: auto;}
+	.btns{
+		padding:20;
+		width: 107%;
+		margin-left: -18px;
+		margin-bottom: -18px;
+	}	
+</style>
+<!--script-->
+<script src="/manage/js/jquery.easing.js"></script>
+<script src="/manage/js/layer.js"></script>
+<script src="/manage/js/common.js"></script>
+
+<!--icheck-->
+<script src="/manage/js/icheck.min.js"></script>
+
+<script>
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+		radioClass: 'iradio_minimal-blue',
+		increaseArea: '0' // optional
+	});
+</script>
+
+<script>  
+
+var index_authtype = 0;
+var uCode = '{{uCode}}';
+var pW ='{{pW}}';
+var auth_type = [];
+var flag_local = -1;
+$(function(){
+	getPwdStrategy();
+	$('#used_init_pwd').on('ifChanged', function(event){
+		if($(this).prop('checked') == true){
+			$('#div_pwd input').attr("disabled",true);
+			flag_new_pwd = 1;
+		}else{
+			$('#div_pwd input').attr("disabled",false);
+			flag_new_pwd = 0;
+		}
+	})
+	
+	//查看用户的认证方式 是否存在 0   1->pin码 2->totp
+	$.ajax({
+		url:"/bhost/get_user_authtype",
+		async:false,
+		type:"POST",
+		data:{a0:uCode},
+		success:function(Result){
+			Result = JSON.parse(Result);
+			if(Result.result == false){ //获取失败
+				_alert(2,"密码初始化",Result.ErrMsg);
+			}else{
+				//是否存在 本地认证
+				auth_type = Result.info;
+				if(auth_type.length == 0){
+					_alert(2,"密码初始化","失败：认证方式异常");	
+					return false;
+				}
+				var flag_init_pwd = false;
+				flag_local = -1;
+				var local_list = '';
+				var tmp_list = [];
+				var flag_totp = false;
+				var flag_usbkey = false;
+				var flag_fp = false;
+				$(auth_type).each(function(i,item){
+					if(item.AuthModuleName == '本地认证'){
+						flag_local = i;
+						local_list = item;
+					}else{
+						if(item.AuthModuleName == 'TOTP') flag_totp = true;
+						if(item.AuthModuleName == '指纹认证' || item.AuthMode == '13'){
+							flag_fp = true;
+							if(item.PwdLen !=null && item.PwdLen >0) {
+								$('#pin_v').attr('maxlength',item.PwdLen);
+								$('#pin_v_sure').attr('maxlength',item.PwdLen);
+							}else{
+								$('#pin_v').removeAttr('maxlength');
+								$('#pin_v_sure').removeAttr('maxlength');
+							}
+						}
+						if(item.AuthModuleName == 'BHost Key') {
+							flag_usbkey= true; 
+							if(item.PwdLen !=null && item.PwdLen >0) {
+								$('#pin_v').attr('maxlength',item.PwdLen);
+								$('#pin_v_sure').attr('maxlength',item.PwdLen);
+							}else{
+								$('#pin_v').removeAttr('maxlength');
+								$('#pin_v_sure').removeAttr('maxlength');
+							}
+						}
+						tmp_list.push(item);
+					}
+				})				
+				if(local_list !='') tmp_list.unshift(local_list)
+				auth_type = tmp_list;
+				
+				if(flag_local >=0&& Result.initpwd == true && uCode != "admin" ) {
+					_getDialog_local();
+					return false;
+				}else{
+					init_new_pwd = pW;
+					flag_new_pwd = 1;
+					if((flag_totp == true || flag_usbkey == true || flag_fp == true)&& Result.initpwd == true && uCode != "admin"){
+						next_auth();
+						return false;
+					}
+				}			
+			}
+		}
+	})
+});
+var flag_new_pwd = 0;
+function next_auth(){
+	//console.log(auth_type);
+	//console.log("index_authtype =" + index_authtype);
+	$('.dialog-cont').hide();
+	if(index_authtype >= auth_type.length){
+		//提交 更改
+		var n = 0;
+		$.ajax({
+			url:"/bhost/update_pwd",
+			async:false,
+			type:"POST",
+			data:{a0:uCode,a1:encode64(init_new_pwd),a2:init_totp,a3:flag_new_pwd},
+			success:function(Result){
+				Result = JSON.parse(Result);
+				if(Result.result == false){ //获取失败
+					_alert(2,"密码初始化","失败：" +Result.ErrMsg);
+				}else{
+					layer.open({
+						type:1,
+						title:"密码初始化",
+						content:'<div class="layer-alert"><i class="alert succ"></i>初始化成功，请重新登录</div>',
+						btn:['确&nbsp;&nbsp;定'],
+						btnAlign:'c',
+						closeBtn: false,
+						skin:'layer-custom',
+						area:['380px','310px'],
+						move: false,
+						resize: false,
+						btn1:function(i){
+							document.frm.submit();
+						}
+					});
+					n =1;
+					return false;
+				}
+			}
+		})
+		
+	}
+	//console.log(auth_type[index_authtype]);
+	if(n) return false;
+	if(auth_type[index_authtype].AuthModuleName == "令牌"){
+		//$('#verificationFrom_token').show();
+		//$('#submit_btn').attr('onlick','submit_token();');
+		index_authtype +=1;
+		next_auth();
+	}else if(auth_type[index_authtype].AuthModuleName == "BHost Key"){
+		_getDialog_usbkey();
+		return false;
+	}else if(auth_type[index_authtype].AuthModuleName == "TOTP"){
+		_getDialog2();
+		return false;
+	}else if(auth_type[index_authtype].AuthModuleName == "指纹认证"  || auth_type[index_authtype].AuthMode == '13'){
+		_getDialog3();
+		return false;
+	}else{
+		index_authtype +=1;
+		next_auth();
+	}
+}
+var init_new_pwd = '';
+var init_token = '';
+var init_pin = '';
+var init_totp ='';
+function submit_local(){
+	init_new_pwd = $('#local_code').val();
+	index_authtype +=1;
+	next_auth();
+}
+function submit_token(){
+	init_token = $('#token_code').val();
+	next_auth();
+}
+function submit_pin(){
+	init_token = $('#pin_code').val();
+	next_auth();
+}
+function submit_tot(){
+	_getDialog2();
+}
+function check_init_pwd(){
+	$.ajax({
+		url:"/bhost/check_init_pwd",
+		async:false,
+		type:"POST",
+		data:{a0:uCode,a1:encode64(pW)},
+		success:function(Result){	
+			Result = JSON.parse(Result);
+			if(Result.result == false){
+				_alert(2,"密码初始化","失败：" + Result.ErrMsg);			
+			}
+		}
+	})
+}
+var PwdStrategy;
+function getPwdStrategy(){
+	$.ajax({
+		url:'/bhost/get_pwdstrategy',
+		type:"POST",
+		async:true,
+		data:{a0:''},
+		success: function(Result) {
+			data = JSON.parse(Result);
+			PwdStrategy = data.info;
+		}
+	})
+}
+function _getDialog_local(){
+	$("#pwd_code_div input").val('');
+	var $dialogCont = $("#pwd_code_div").show();
+	
+	d_qrcode = dialog({
+		title:"密码初始化 本地模块",
+		content:$dialogCont,
+		id:"pwd_code_div",
+		width:"500px",
+	}); 
+	
+	function addEventListener(ele,event,fn){
+		if(ele.addEventListener){
+			ele.addEventListener(event,fn,false);
+		}else{
+			ele.attachEvent('on'+event,fn.bind(ele));
+		}
+	}
+	addEventListener(d_qrcode,'close',function () {
+	   location.href = '/bhost/';
+	});
+	d_qrcode.showModal();
+	$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+		$("#pwd_code_div input").val('');
+	});
+	$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+		if($('#used_init_pwd').prop('checked') == false){
+			sys_u_pwd_new = $('#sys_u_pwd_new').val();
+			sys_u_pwd_tr = $('#sys_u_pwd_tr').val();
+			if(sys_u_pwd_new == ""){
+				_alert(2,"密码初始化 本地模块","请输入密码",$('#sys_u_pwd_new'));
+				return false;
+			}
+			if(sys_u_pwd_new != sys_u_pwd_tr){
+				_alert(1,"密码初始化 本地模块","两次密码不匹配",$('#sys_u_pwd_new'));
+				return false;
+			}
+
+			if (!PwdStrategy.PwdMinLen) PwdStrategy.PwdMinLen = 6;
+			if(sys_u_pwd_new.length<PwdStrategy.PwdMinLen){
+				_alert(1,"密码初始化 本地模块","密码长度必须大于或等于"+PwdStrategy.PwdMinLen+"位",$('#sys_u_pwd_new'));
+				return false;
+			}
+			if(sys_u_pwd_new.length > 64){
+				_alert(2, "密码初始化 本地模块", "密码不能超过系统限定64位", $("#sys_u_pwd_new"));
+				return false;
+			}
+			if(PwdStrategy.IfPwdComplex){
+				if(PwdStrategy.IfPwdIncLowerApha){
+					var now=sys_u_pwd_new.search(/[a-z]/);
+					if(now==-1){_alert(1,"密码初始化 本地模块","密码中请包含小写字母",$('#sys_u_pwd_new'));return false;}
+				}
+				if(PwdStrategy.IfPwdIncUpperApha){
+					var now=sys_u_pwd_new.search(/[A-Z]/);
+					if(now==-1){_alert(1,"密码初始化 本地模块","密码中请包含大写字母",$('#sys_u_pwd_new'));return false;}
+				}
+				if(PwdStrategy.IfPwdIncNumber){
+					var now=sys_u_pwd_new.search(/[0-9]/);
+					if(now==-1){_alert(1,"密码初始化","密码中请包含数字",$('#sys_u_pwd_new'));return false;}
+				}
+				if(PwdStrategy.IfPwdIncSpecialChar){
+					var now=sys_u_pwd_new.search(/[^A-Za-z0-9]/);
+					if(now==-1){_alert(1,"密码初始化 本地模块","密码中请包特殊字符",$('#sys_u_pwd_new'));return false;}
+				}
+			}
+			init_new_pwd = $('#sys_u_pwd_new').val();
+		}else{
+			init_new_pwd = pW;
+		}
+		d_qrcode.remove()
+		index_authtype +=1;
+		next_auth();
+		
+	})
+}
+
+var d_usbkey = 0;
+function _getDialog_usbkey(){
+	$("#pin_code_div input").val('');
+	var $dialogCont = $("#pin_code_div").show();
+	
+	d_usbkey = dialog({
+		title:"密码初始化 USBKEY模块",
+		content:$dialogCont,
+		id:"pin_code_div",
+		width:"500px",
+	}); 
+	
+	function addEventListener(ele,event,fn){
+		if(ele.addEventListener){
+			ele.addEventListener(event,fn,false);
+		}else{
+			ele.attachEvent('on'+event,fn.bind(ele));
+		}
+	}
+	addEventListener(d_usbkey,'close',function () {
+	   location.href = '/bhost/';
+	});
+	
+	d_usbkey.showModal();
+	$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+		$("#pin_code_div input").val('');
+	});
+	$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+		//分隔usbkey的密码 以及获取 证书信息
+		
+		if($('#pin_v').val() == ""){
+			_alert(2,"用户登录","请输入pin码",$('#pin_v_sure'));
+			return false;
+		}
+		if($('#pin_v').val() != $('#pin_v_sure').val()){
+			_alert(2,"用户登录","两次pin码不一致，请重新输入",$('#pin_v_sure'));
+			return false;
+		}
+		if($("#pin_v").attr('maxlength') > 0){
+			if($("#pin_v").val().length != parseInt($("#pin_v").attr('maxlength'))){
+				_alert(1,"用户登录","pin码长度不正确("+$("#pin_v").attr('maxlength')+"位)",$("#pin_v"));
+				return false;
+			}		
+		}
+		
+		usbkey = $('#pin_v').val();
+		$.ajax({
+			url:"/bhost/get_usbkey_cert",
+			async:false,
+			type:"POST",
+			data:{a0:uCode,a1:encode64(pW),a2:0,a4:1},
+			success:function(Result){
+				Result = JSON.parse(Result);
+				if(Result.result == false){ //获取失败
+					_alert(2,"用户登录",Result.ErrMsg);
+					return false;
+				}else{
+					Content = Result.Content;
+					UserId = Result.UserId;
+				}
+			}
+		})
+		sesstime = new Date().getTime()-1;
+		cmd_json ={
+			"type":"SetUser",
+			"sesstime": sesstime,//毫秒
+			"UrlIp":document.domain+ (location.port!=''?':'+location.port:''),
+			"IfUsbkey":true,
+			"certInfo":'',
+			"crlInfo":'',
+			"bhuser":uCode,
+			"password":usbkey
+		}
+		client_request(cmd_json,'SetUser',UserId,sesstime,Content);		
+	})
+}
+function client_request(cmd_json,type,UserId,sesstime,Content){
+	var if_html_client = false;
+	var base64_str = '';
+	var sesstimet = (new Date()).valueOf();
+	cmd_json['sesstimet'] =sesstimet; 
+	$.ajax({
+		url: "/bhost/get_base64",
+		type:"POST",
+		async:false,		
+		data:{z1:JSON.stringify(cmd_json)},
+		success:function(result){
+			var result=JSON.parse(result);
+			if(result.Result){
+				if_html_client = result.info;
+				base64_str = result.b64;
+			}else{
+				_alert(1,"用户登录",result.ErrMsg);
+			}
+		}
+	})
+	
+	//window.location.href = 'bhost://cmd&'+base64_str;
+	get_regedit('bhost','',uCode,sesstimet);
+	$('#YuFrame1').remove();
+	$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+	$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);	
+	
+	//插入数据库数据
+	$.ajax({
+		url: "/bhost/insert_usbkeys",
+		type:"POST",
+		async:false,		
+		data:{z1:sesstime,t1:type,u1:uCode,c1:Content,a10:"用户登录"},
+		success:function(result){
+			var result=JSON.parse(result);
+			if(result.Result){
+			}else{
+				_alert(1,"用户登录",result.ErrMsg);
+				return false;
+			}
+		}
+	})
+	
+	//循环获取 数据库状态
+	_showLoading("正在设置pin码......");
+	var c = 0;
+	
+	if_ok_down = setInterval(function(){
+		ret = repeat_get_usb_status(sesstime);
+		if(ret == 1){
+			clearInterval(if_ok_down);
+			_closeLoading();
+			layer.open({
+				type:1,
+				title:"用户登录",
+				content:'<div class="layer-alert"><i class="alert succ"></i>PIN码修改成功</div>',
+				btn:['确&nbsp;&nbsp;定'],
+				btnAlign:'c',
+				closeBtn: false,
+				skin:'layer-custom',
+				area:['380px','310px'],
+				move: false,
+				resize: false,
+				btn1:function(i){
+					layer.close(i);
+					d_usbkey.remove()
+					index_authtype +=1;
+					next_auth();
+					return 0;
+				}
+			})
+		}
+		if(ret == 2){
+			clearInterval(if_ok_down);
+			_closeLoading();
+			
+			return 0;				
+		}
+		if(c >=20){
+			clearInterval(if_ok_down);
+			_closeLoading();
+			_alert(1,"用户登录",'设置pin码超时');
+		}			
+		c = c + 1;				
+	},1000)
+}
+function repeat_get_usb_status(sesstime){
+	var st = 0;
+	$.ajax({
+		url: "/bhost/repeat_get_usb_status",
+		type:"POST",
+		async:false,		
+		data:{z1:sesstime},
+		success:function(result){
+			var result=JSON.parse(result);
+			if(result.Result){
+				st = result.info;
+			}else{
+				_alert(1,"用户登录",result.ErrMsg);
+				return false;
+			}
+		}
+	})
+	return st;
+}
+
+var loadLayer =0;
+function _showLoading(text){
+	var st = text || "正在设置pin码中，请稍后......";
+	loadLayer = layer.open({
+		title:false,
+		closeBtn:false,
+		content:'<div id="Loading">'+st+'</div>',
+		btn:false,
+		skin:'loadingbar',
+		area:['150px','180px'],
+		move:false,
+		isOutAnim: false,
+		resize:false,
+		shade:[0.1,'#000']
+	})
+}
+
+function _closeLoading(){
+layer.close(loadLayer);
+}
+var secret='';
+function _getDialog2(){
+	$.ajax({
+		url: "/bhost/get_qrcode_img",
+		type: "POST",
+		async: true,
+		data: {z1:uCode},
+		success: function (result) {
+			var result = JSON.parse(result);
+			secret = result.secret;
+			$("#qr_code_div").find('img').attr('src',result.img +'?m='+Math.floor(1000*Math.random()));
+		}
+	});
+	var $dialogCont = $("#qr_code_div").show();
+	
+	d_qrcode = dialog({
+		title:"密码初始化 TOTP模块",
+		content:$dialogCont,
+		id:"qr_code_div",
+		width:"500px",
+	}); 
+	function addEventListener(ele,event,fn){
+		if(ele.addEventListener){
+			ele.addEventListener(event,fn,false);
+		}else{
+			ele.attachEvent('on'+event,fn.bind(ele));
+		}
+	}
+	addEventListener(d_qrcode,'close',function () {
+	   location.href = '/bhost/';
+	});
+	d_qrcode.showModal();
+	//$("#qr_code_div").parents(".ui-dialog-body").css("padding","20px 0px 20px 0px");
+	$("#totp_v").val('');
+	var iWidth=390; //弹出窗口的宽度;
+ 	var iHeight=367; //弹出窗口的高度;
+   	var iTop = (document.documentElement.clientHeight-iHeight)/2; //获得窗口的垂直位置;
+	var iLeft = (document.documentElement.clientWidth-iWidth)/2; //获得窗口的水平位置;
+	//$(".ui-popup.ui-popup-modal.ui-popup-show.ui-popup-focus").css("top",iTop).css("left",iLeft)
+	//$('.ui-popup.ui-popup-modal.ui-popup-show.ui-popup-focus').css("top","216px").css("left","526px");
+}
+function submit_totp(){
+	var totp_v = $("#totp_v").val();
+	if (totp_v == ""){
+		$(".btn").blur();
+		_alert(1,"密码初始化 TOTP模块","请输入验证码",$("#totp_v"));
+		return false;
+	}
+	$.ajax({
+		url: "/bhost/test_qrcode",
+		type: "POST",
+		async: true,
+		data: {z1:totp_v,z2:secret},
+		success: function (result) {
+			if (result == "true"){
+				$(".btn").blur();
+				d_qrcode.remove();
+				init_totp = secret;
+				index_authtype +=1;
+				next_auth();
+				return false;
+			}else{
+				$(".btn").blur();
+				_alert(1,"密码初始化 TOTP模块","验证失败",$("#totp_v"));
+				return false;
+			}
+		}
+	});
+}
+
+var d_fprint = 0;
+function _getDialog3(){
+	var $dialogCont = $("#fp_div").show();
+	
+	d_fprint = dialog({
+		title:"密码初始化 指纹模块",
+		content:$dialogCont,
+		id:"fp_div",
+		width:"500px",
+	}); 
+	
+	function addEventListener(ele,event,fn){
+		if(ele.addEventListener){
+			ele.addEventListener(event,fn,false);
+		}else{
+			ele.attachEvent('on'+event,fn.bind(ele));
+		}
+	}
+	addEventListener(d_fprint,'close',function () {
+		location.href = '/bhost/';
+	});
+	
+	d_fprint.showModal();
+	setFinP();
+}
+
+var FP_SET = false;		//是否配置指纹
+var FP_TMP = "";
+var if_ok;
+function IfSaveSuccess(sesstime){
+	$.ajax({
+		url: "/bhost/get_fpResult",
+		type:"POST",
+		async: true,
+		data:{a0:uCode,a1:sesstime},
+		success:function(result){
+			//{\"Result\":true,\"status\":\"%s\",\"finger\":\"%s\"}
+			var result=JSON.parse(result);
+			if(result.Result){
+				if(result.status == 1){
+					_closeLoading();
+					clearInterval(if_ok);
+					FP_SET = true;
+					name_index = 1;
+					name_index = getNameIndex(1);
+					var fp_name = "指纹"+name_index;
+					if(FP_TMP == ""){
+						FP_TMP = fp_name + '\t' + result.finger;
+					}else{
+						FP_TMP = FP_TMP + '\n' + fp_name + '\t' + result.finger;
+					}
+					//插入数据库数据
+					$.ajax({
+						url: "/bhost/insert_fp1",
+						type:"POST",
+						async:false,		
+						data:{z1:FP_TMP,u1:uCode},
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+							}else{
+								_alert(1,"用户登录",result.ErrMsg);
+								return false;
+							}
+						}
+					})					
+					
+					index_authtype +=1;
+					next_auth();
+				}else if(result.status == 3){
+					_closeLoading();
+					clearInterval(if_ok);
+				}
+			}else{
+				_alert(1,"用户登录",result.ErrMsg);
+				return false;
+			}
+		}
+	})
+}
+function getNameIndex(name_index) {
+	var flag4 = true;
+	function innerFunc1(name_index) {
+		flag4 = true;
+		$.each($("#auth_div").find('li'),function(i,item){
+			if($(item).children('input').val() == "指纹"+name_index){
+				name_index++;
+				flag4 = false;
+				innerFunc1(name_index);
+				return false;
+			}
+		})
+	}	
+	innerFunc1(name_index);
+	if(flag4 == true){
+		return name_index;
+	}
+}
+//指纹
+var re_5;
+function setFinP() {
+	var sesstime = new Date().getTime();
+	//type -> 录入 Register    验证 Verify
+	json_data = {
+		"type": "Register",
+		"UrlIp": document.domain+ (location.port!=''?':'+location.port:''), 
+		"sesstimet": sesstime, 
+		"User": uCode, 
+		"Id": "",
+		"Ifzkfp": 1
+	}
+	_showLoading("正在录入指纹......");
+	$.ajax({
+		url: "/bhost/insert_fp",
+		type:"POST",
+		async: false,
+		data:{a0:uCode, a1:sesstime},
+		success:function(result){
+			var result=JSON.parse(result);
+			if(result.Result){
+				$.ajax({
+					url: "/bhost/get_base64",
+					type:"POST",
+					async: true,
+					data:{z1:JSON.stringify(json_data)},
+					success:function(result){
+						var result=JSON.parse(result);
+						if(result.Result){
+							base64_str = result.b64;
+							$('#YuFrame1').remove();
+							$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+							$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+ base64_str);
+							//每5秒刷新录入结果
+							var c = 0;
+							var if_ok_down_other = setInterval(function(){
+								var se = se || ' ';
+								var ret = repeat_get_path_other(sesstime,se);
+								if(ret[0] == 1 && ret[1].toLowerCase() == 'true' ){
+									if(window.parent.parent.document.frm.use_BH!=undefined)window.parent.parent.document.frm.use_BH.value='1';
+									clearInterval(if_ok_down_other);
+									re_5 = function(){
+										if_ok = setInterval(function(){
+											IfSaveSuccess(sesstime);
+										},1000)}
+									re_5();
+									return 0;
+								}
+								if(c >= 10){
+									if(window.parent.parent.document.frm.use_BH!=undefined)window.parent.parent.document.frm.use_BH.value='0';
+									clearInterval(if_ok_down_other);
+									alertError('bhost',se,uCode);
+									_closeLoading();
+									return 0;
+								}
+								c = c + 1;
+							},500)
+						}else{
+							_alert(1,"用户登录",result.ErrMsg);
+							return false;
+						}
+					}
+				})
+			}else{
+				_alert(1,"用户登录",result.ErrMsg);
+				return false;
+			}
+		}
+	})
+}
+</script>
+</body>
+</html>

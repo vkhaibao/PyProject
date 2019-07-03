@@ -1,0 +1,565 @@
+
+.mmGrid{
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.mmGrid table{
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+
+}
+
+.mmGrid input[type="radio"],
+.mmGrid input[type="checkbox"]{
+    margin: 0;
+}
+
+/* 遮罩 */
+.mmGrid .mmg-mask{
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: #ddd;
+
+
+}
+
+/* 半透明 */
+.mmGrid .mmg-transparent{
+    /* IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    /* IE 5-7 */
+    filter: alpha(opacity=50);
+    /* Netscape */
+    -moz-opacity: 0.5;
+    /* Safari 1.x */
+    -khtml-opacity: 0.5;
+    /* Good browsers */
+    opacity: 0.5;
+}
+
+/* loading */
+.mmGrid .mmg-loading{
+    position: absolute;
+    display: none;
+    text-align: center;
+
+}
+
+.mmGrid .mmg-loading .mmg-loadingImg{
+    margin: 5px auto;
+    width: 32px;
+    height: 32px;
+    background: url(../images/loading.gif) no-repeat center center;
+}
+
+.mmGrid .mmg-loading .mmg-loadingText{
+
+}
+
+/* 标题包装 */
+.mmGrid .mmg-headWrapper{
+    position: relative;
+    overflow: hidden;
+    width: 9999px;
+    background: #e5e4e9; /* Old browsers */
+    box-shadow: 0 0px 2px #bbb;
+    z-index: 1;
+
+}
+
+/* 标题 */
+.mmGrid .mmg-headWrapper .mmg-head{
+    position: relative;
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th{
+    position: relative;
+    padding: 0 5px;
+    overflow: hidden;
+    font-weight: normal;
+    line-height: 36px;
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th.mmg-groupCol{
+    /* 分组列 */
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th input{
+    height: 2em;
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper{
+    position: relative;
+    height: 36px;
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-colResize{
+    position: absolute;
+    top: 0;
+    right: -6px;
+    _right: -4px;
+    width: 4px;
+    height: 100%;
+    cursor: col-resize;
+    display: none;
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-title{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    height: 36px;
+    line-height: 36px;
+    vertical-align: top;
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-canSort{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-sort{
+    overflow: hidden;
+    display: none;
+    width: 7px;
+    height: 2em;
+    margin-left: 2px;
+    vertical-align: top;
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-asc{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    background: url(../images/sort-asc.png) no-repeat center center;
+}
+
+.mmGrid .mmg-headWrapper .mmg-head th .mmg-titleWrapper .mmg-desc{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    background: url(../images/sort-desc.png) no-repeat center center;
+}
+
+.mmGrid  .mmg-colResizePointer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 1px;
+    height: 100%;
+    background: #999;
+    cursor: col-resize;
+    z-index: 1;
+}
+
+.mmGrid  .mmg-colResizePointer-before{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 1px;
+    height: 100%;
+    background: #999;
+    cursor: col-resize;
+    z-index: 1;
+}
+
+/* 背板 */
+.mmGrid .mmg-backboard{
+    position: absolute;
+    width: 100%;
+    display: none;
+    background-color: rgba(255,255,255,0.9);
+    text-align: left;
+    box-shadow: rgba(0,0,0,0.2) 0 0 7px;
+    z-index: 99;
+    padding: 10px 20px 30px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+.mmGrid .mmg-backboard h1{
+    margin: 0 10px 5px 10px;
+    padding: 10px 0 5px 0;
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1.8;
+    border-bottom: 1px solid #ccc;
+    display: none;
+}
+
+.mmGrid .mmg-backboard label{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    width: 130px;
+    font-size: 13px;
+    line-height: 2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+    padding: 4px 10px 4px 0;
+}
+
+.mmGrid .mmg-backboard label input{
+    margin: 0 5px 0 10px;
+    padding: 0px;
+    border: 0px;
+}
+
+/* 内容包装器 */
+.mmGrid .mmg-bodyWrapper{
+    position: relative;
+    overflow: auto;
+    width: 9999px;
+    min-height: 0%; /* fix IE9 hover bug see: http://jsfiddle.net/pjkix/86Lfv/ */
+}
+
+/* 内容 */
+.mmGrid .mmg-bodyWrapper .mmg-body{
+    table-layout: automatic;
+}
+
+.mmGrid .mmg-bodyWrapper .mmg-body tr{
+
+}
+
+.mmGrid .mmg-bodyWrapper .mmg-body tr.even{
+    background: #fafafa;
+}
+.mmGrid .mmg-headWrapper .mmg-head th{
+    border: 0;
+}
+.mmGrid .mmg-bodyWrapper .mmg-body td{
+    padding: 0 5px;
+    line-height: 34px;
+    border: 0;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    transition: background-color 0.4s;
+    color: #969595;
+}
+.mmGrid .mmg-bodyWrapper .mmg-body tr.even td{
+    border-color: #fafafa;
+}
+.mmGrid .mmg-bodyWrapper .mmg-body tr.selected td{
+    border-color:#f1f0f5;
+}
+.mmGrid .mmg-bodyWrapper .mmg-body td.colSelected{
+    background: #f7f7f7;
+}
+
+.mmGrid .mmg-bodyWrapper .mmg-body td.colSelectedEven{
+    background: #f5f5f5;
+}
+
+.mmGrid .mmg-bodyWrapper .mmg-body tr.hover td{
+    background: #e1eff8;
+}
+
+.mmGrid .mmg-bodyWrapper .mmg-body tr:hover td{
+    background: #f1f0f5;
+}
+
+.mmGrid .mmg-bodyWrapper .mmg-body tr.selected td{
+    background: #f1f0f5;
+    border-top: 1px solid #e5e4e9;
+    border-bottom: 1px solid #e5e4e9;
+    color: #000;
+}
+
+.mmGrid .mmg-bodyWrapper .mmg-body td .mmg-index{
+    color: #555;
+}
+
+.mmGrid .nowrap{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+}
+
+/* 消息 */
+.mmGrid .mmg-message{
+    position: absolute;
+    display: none;
+    text-align: center;
+}
+
+.mmGrid .mmg-btnBackboardDn{
+    position: absolute;
+    top: 0;
+    right: 20px;
+    display: block;
+    width: 45px;
+    height: 26px;
+    background: #62c3d9 url(../images/mmg-down.png) no-repeat center center;
+    border-radius: 0 0 5px 5px;
+    box-shadow:rgba(0,0,0,0.15) 0 0 7px;
+    cursor: pointer;
+}
+
+.mmGrid .mmg-backboard .mmg-btnBackboardUp{
+    position: absolute;
+    right: 20px;
+    bottom: 0;
+    display: block;
+    width: 45px;
+    height: 26px;
+    background: #62c3d9 url(../images/mmg-up.png) no-repeat center center;
+    border-radius: 5px 5px 0 0;
+    box-shadow:rgba(0,0,0,0.15) 0 0 7px;
+    cursor: pointer;
+}
+
+
+/**/
+.mmg .tab-ctr{
+    position: absolute;
+    top:1px;
+    left: 0;
+    background-color: #62c3d9;
+    height: 16px;
+    padding: 9px;
+    display: block;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+.mmg tr{
+    display: block;
+    position: relative;
+}
+.mmg tr:hover .tab-ctr{
+    opacity: 1;
+}
+.mmGrid .mmg-backboard label input{
+    margin: 0;
+    padding: 0px;
+    border: 0px;
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-right: 5px;
+    margin-top: 5px;
+    opacity: 0.01;
+}
+.mmGrid .mmg-backboard label span.checkfix{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    margin-left: -25px;
+    margin-top: 5px;
+    background: url(../images/check-blue.png) no-repeat 0 0;
+}
+.mmGrid .mmg-backboard label span.checkfix:hover{
+    background-position: -20px 0;
+}
+.mmGrid .mmg-backboard label input:checked + span.checkfix{
+    background-position: -40px 0;
+}
+.mmGrid .mmg-backboard label input:disabled + span.checkfix{
+    background-color: #E3E3E3;
+    -webkit-filter: grayscale(100%); 
+    filter: grayscale(100%);
+}
+.mmPaginator {
+    margin: 15px 0;
+    white-space: nowrap;
+}
+
+.mmPaginator .totalCountLabel{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    margin: 0 5px 0 0;
+    padding: 1px 0 0 0;
+    line-height: 1.5;
+    vertical-align: top;
+    float: left;
+    font-size: 12px;
+}
+.mmPaginator .totalCountLabel span{
+    color: #969595;
+}
+
+.mmPaginator .pageList{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    margin: 0 5px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mmPaginator .pageList li{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    width: auto;
+    line-height: 18px;
+    padding: 0 7px;
+    border: 1px solid #bcbcbc;
+    border-radius: 5px;
+    margin-left: 4px;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+
+
+.mmPaginator .pageList li.disable a{
+    color: #969595;
+    cursor: default;
+}
+
+.mmPaginator .pageList li.disable{
+    background: #efefef;
+}
+
+.mmPaginator .pageList li.disable a{
+    color: #969595;
+    cursor: default;
+}
+
+.mmPaginator .pageList li a{
+    color: #969595;
+    text-align: center;
+    cursor: pointer;
+}
+.mmPaginator .pageList li.active{
+    background: #a9a9a9;
+    color: #fff;
+    border-color: #a9a9a9;
+}
+.mmPaginator .pageList li.active a{
+    color: #fff;
+}
+.mmPaginator .pageList li a.head{
+
+}
+
+.mmPaginator .pageList li a.headDisable{
+
+}
+
+.mmPaginator .pageList li a.prev{
+
+}
+
+.mmPaginator .pageList li a.prevDisable{
+
+}
+
+.mmPaginator .pageList li a.next{
+
+}
+
+.mmPaginator .pageList li a.nextDisable{
+
+}
+
+.mmPaginator .pageList li a.tail{
+
+}
+
+.mmPaginator .pageList li a.tailDisable{
+
+}
+
+.mmPaginator .pageList li a.current{
+
+}
+
+.mmPaginator .pageList li a.skip{
+
+}
+
+.mmPaginator .pageList li i{
+    display: inline-block;
+    width: 5px;
+    height: 9px;
+    overflow: hidden;
+    background: url(../images/page-nav.png) no-repeat 0 0;
+}
+
+.mmPaginator .pageList li.prev i {
+    background-position: 0 0;
+}
+
+.mmPaginator .pageList li.next i {
+    background-position: -5px 0;
+}
+
+.mmPaginator .pageList li.first i {
+    width: 8px;
+    background-image: url(../images/page-nav2.png);
+    background-position: 0 0;
+}
+
+.mmPaginator .pageList li.last i {
+    width: 8px;
+    background-image: url(../images/page-nav2.png);
+    background-position: -8px 0;
+}
+
+.mmPaginator .pageList li:hover{
+    background-color: #f2f2f2;
+}
+
+.mmPaginator .pageList li.jump{
+    border: 0;
+    padding: 0;
+    font-size: 12px;
+    line-height: 20px;
+}
+.mmPaginator .pageList li.jump:hover{
+    background-color: transparent;
+}
+.mmPaginator .pageList li input {
+    display: inline-block;
+    width: 3em;
+    height: 16px;
+    border: 1px solid #bcbcbc;
+    border-radius: 5px;
+    margin-left: 10px;
+    margin-right: 4px;
+    text-align: center;
+    vertical-align: top;
+}
+
+.mmPaginator .limit{
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    line-height: 1.5;
+    vertical-align: top;
+}
+
+.mmPaginator .limit select{
+    border: 1px solid #ccc;
+    padding: 1px;
+    width: auto;
+    height: auto;
+    margin: 0;
+    line-height: 1.5;
+    font-size: 1em;
+}
+.mmGrid table{
+    width: auto;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0;
+}

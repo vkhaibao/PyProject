@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<script src="/manage/js/jquery.datepick.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3 onclick="parent.reload();">账号</h3>
+				-->
+				<div class="manual-head" style="width:100px;float:left;">
+					<div class="manual-title">
+						<span id="account_reload" style="cursor: pointer;">账号</span>
+						<i class="account_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-form" style="padding-bottom:10px;">
+						<div class="form">
+							<div id="first_div"></div>
+							<div id="luo0" style="float:left;width:100%;">
+								<div class="form-item" style="width:50%;float:left;">
+									<span class="form-tag" style="width:60px"><em class="imp">*</em>账号：</span>
+									<div class="form-c sel-type1" id = "account_name" style="margin-bottom: 15px;width: 300px;float: left;padding: 1px 10px 10px 10px;">
+											<input type="text" class="form-text" id="Name0" onblur="NameCheck(this)" maxlength="127"><i class="v-check" id="check0"></i>
+										<p class="form-tip" id="prompt0" style="padding-left: 0px;">特殊字符仅支持@(仅可用1次)、下划线、横杠、小数点</p>
+									</div>
+								</div>
+								<div class="form-item" style="width:50%;float:left;">
+									<span class="form-tag" style="width:70px">AD域：</span>
+											
+									<div  class="form-c sel-type1" style="float:left;width: 300px;padding-left:15px;">
+										<li id="add_AD0">
+											<select name="" id="ADregion0" class="type-select" style="width:250px">
+											</select>
+											<i class="ctrl add" id="edit_hide" onclick="addinput(this)"></i>
+										</li>
+									</div>
+								</div>
+							</div>
+						</div>
+						{%if 14 in manage_power_id %}
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-submit btn-normal" onclick="save()">保&nbsp;&nbsp;存</a>
+							<!--
+							<a href="javascript:;" class="btn btn-cancel btn-normal" onclick="back(1);">取&nbsp;&nbsp;消</a>
+							-->
+						</div>
+						{%endif%}
+					</div>
+				</div>
+			</div>
+			<div id="bBtn" style="position: fixed;z-index:5;">
+				<a href="javascript:;" class="btn" style="float: right;" onclick="back(1);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+			</div>
+		</div>	
+
+
+	<form action="/bhost/account_list" method="POST" name="frm_accountlist" id="frm_accountlist">
+		<input type="hidden" name="a0" id = "a0" value="" />
+		<input type="hidden" name="z1" id = "z1" value="" />
+		<input type="hidden" name="z2" id = "z2" value="" />
+		<input type="hidden" name="z3" id = "z3" value="" />
+		<input type="hidden" name="z4" id = "z4" value="" />
+		<input type="hidden" name="z5" id = "z5" value="" />
+		<input type="hidden" name="z6" id = "z6" value="" />
+		<input type="hidden" name="z7" id = "z7" value="" />
+	</form>
+<script>
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+		radioClass: 'iradio_minimal-blue',
+		increaseArea: '0' // optional
+	});
+	var $a = $("#Account_list").clone();
+</script>
+<script>
+$('.type-select').select2();
+</script>
+
+<script>
+var accountType = "{{AccountType}}";
+var Name = "{{AccountName}}";
+var accountid = "{{accountid}}";
+var account_list = "";
+var page="{{page}}";
+var ipage="{{ipage}}";
+var keyword_re = {{keyword|safe}};
+var filter_flag = {{filter_flag}};
+var selectid = {{selectid|safe}};
+var number=0;
+var id_list=[];
+//var test=[];
+//var test_name=[];
+
+/*/名称发生改变
+function Name_change(num,obj){
+	var changename=$("#Name"+num+"").val().trim();
+	var changeDomainId=$("#ADregion"+num+"").val();
+	var flag=true;
+	if(num<number){
+		if (changename == ""){
+			flag=false;
+			$("#Name"+num+"").val(test_name[num]);
+			_alert(2,"警告","账号不能为空",$("#Name"+num+""));
+			return false;
+		}
+		if (!nameReg.test(changename)){
+			flag=false;
+			$("#Name"+num+"").val(test_name[num]);
+			_alert(2,"警告","账号格式不符合要求",$("#Name"+num+""));
+			return false;
+		}
+		$.each(account_all.data,function(i1,item1){
+			if ((changename == item1.Name && changeDomainId == item1.DomainId)||(changename == item1.Name &&changeDomainId==0&&item1.DomainId==null)){
+				flag=false;
+				$("#Name"+num+"").val(test_name[num]);
+				_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+				return ;
+			}
+		});
+		if(id_list.length>1&&flag){
+			for(var i=0;i<id_list.length;i++){
+				if(changename==$("#Name"+id_list[i]+"").val().trim() && changeDomainId == $("#ADregion"+id_list[i]+"").val() && id_list[i]!=num){	
+					flag=false;
+					$("#Name"+num+"").val(test_name[num]);
+					_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+					return ;
+				}
+			}
+		}
+		if(flag){
+			test_name[num]=changename;
+		}
+	}
+	if(num==number){
+		if (!nameReg.test(changename)&&changename!=""){
+			flag=false;
+			$("#Name"+num+"").val(test_name[num]);
+			_alert(2,"警告","账号格式不符合要求",$("#Name"+num+""));
+			return false;
+		}
+		$.each(account_all.data,function(i1,item1){
+			if (changename == item1.Name && changeDomainId == item1.DomainId){
+				flag=false;
+				$("#Name"+num+"").val(test_name[num]);
+				_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+				return ;
+			}
+		});
+		if(id_list.length>1&&flag){
+			for(var i=0;i<id_list.length-1;i++){
+				if(changename==$("#Name"+id_list[i]+"").val().trim() && changeDomainId == $("#ADregion"+id_list[i]+"").val()&&changeDomainId!=0){	
+					flag=false;
+					$("#Name"+num+"").val(test_name[num]);
+					_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+					return ;
+				}
+			}
+		}
+		if(flag){
+			test_name[num]=changename;
+		}
+	}
+	if(test_name[num]=="")
+	{
+		test_name[num]=changename;
+	}
+}
+
+//AD域再次变化判断
+function AD_change(num,obj){
+	var changeName = $("#Name"+num+"").val().trim();
+	var changeDomainId=$("#ADregion"+num+"").val();
+	var flag=true;
+	if(num==0&&test.length==1&&accountid==0){
+		$.each(account_all.data,function(i1,item1){
+			if (changeName == item1.Name && changeDomainId == item1.DomainId){
+				$("#ADregion"+num+"").val(test[num]).trigger('change');
+				flag=false;
+				_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+				return false;
+			}
+		});
+		if(flag){
+			test[num]=changeDomainId;
+		}
+	}
+	if(num==0&&test.length==1&&accountid!=0){
+		$.each(account_all.data,function(i1,item1){
+			if (changeName == item1.Name && changeDomainId == item1.DomainId&&changeDomainId!=tag){
+				flag=false;
+				$("#ADregion"+num+"").val(test[num]).trigger('change');
+				_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+				return false;
+			}
+		});
+		if(flag){
+			test[num]=changeDomainId;
+		}
+	}
+	if(num<number){
+		$.each(account_all.data,function(i1,item1){
+			if ((changeName == item1.Name && changeDomainId == item1.DomainId)||(changeName == item1.Name &&changeDomainId==0&&item1.DomainId==null)){
+				flag=false;
+				if(test[num]==0){
+					$("#ADregion"+num+"").empty();
+					AD_add(num);
+					_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+					return false;
+				}else{
+					$("#ADregion"+num+"").val(test[num]).trigger('change');
+					_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+					return false;
+				}
+			}
+		});
+		if(id_list.length>1&&flag){
+			for(var i=0;i<id_list.length;i++)
+			{
+				if(changeName==$("#Name"+id_list[i]+"").val().trim() && changeDomainId == $("#ADregion"+id_list[i]+"").val() && id_list[i]!=num)
+				{	
+					flag=false;
+					if(test[num]==0){
+						$("#ADregion"+num+"").empty();
+						AD_add(num);
+						_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+						return false;
+					}else{
+						$("#ADregion"+num+"").val(test[num]).trigger('change');
+						_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+						return false;
+					}
+				}
+			}
+		}
+		if(flag){
+			test[num]=changeDomainId;
+		}
+	}	
+	if(num==number&&num>0){
+		$.each(account_all.data,function(i1,item1){
+			if (changeName == item1.Name && changeDomainId == item1.DomainId){
+				flag=false;
+				if(test[num]==0){
+					$("#ADregion"+num+"").empty();
+					AD_add(num);
+					_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+					return false;
+				}else{
+					$("#ADregion"+num+"").val(test[num]).trigger('change');
+					_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+					return false;
+				}
+			}
+		});
+		if(id_list.length>1&&flag){
+			for(var i=0;i<id_list.length-1;i++)
+			{
+				if(changeName==$("#Name"+id_list[i]+"").val().trim() && changeDomainId == $("#ADregion"+id_list[i]+"").val()){
+					flag=false;
+					if(test[num]==0){
+						$("#ADregion"+num+"").empty();
+						AD_add(num);
+						_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+						return false;
+					}else{
+						$("#ADregion"+num+"").val(test[num]).trigger('change');
+						_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+						return false;
+					}
+				}
+			}
+		}
+		if(flag){
+			test[num]=changeDomainId;
+		}
+	}
+}*/
+
+var edit_DomainId;
+//全局
+$(function(){
+	se = window.parent.document.frm.se.value;
+	
+	$("#account_reload").on("click",function(){
+		document.frm_accountlist.action = '/bhost/create_account';
+		document.frm_accountlist.a0.value = se;
+		if (accountid == 0){
+			document.frm_accountlist.z1.value = 0;
+		}else{
+			document.frm_accountlist.z1.value = 1;
+		}
+		document.frm_accountlist.z2.value = accountid;
+		document.frm_accountlist.z4.value = ipage;
+		document.frm_accountlist.z5.value = JSON.stringify(keyword_re);
+		document.frm_accountlist.z6.value = filter_flag;
+		document.frm_accountlist.z7.value = JSON.stringify(selectid);
+		document.frm_accountlist.submit();
+	});
+	
+	parent._switchBtn(0);//隐藏按钮
+	all_account();
+	AD_add(number);
+	id_list.push(number);
+	//var changename=$("#Name"+number+"").val();
+	//test_name.push(changename);
+	if (parseInt(accountid) != 0){
+		$("#edit_hide").hide();
+		$("#check"+number+"").remove();
+		$.each(account_all.data,function(i1,item1){
+			if (accountid == item1.AccountId){
+				$("#Name0").val(item1.Name);
+				if(item1.DomainId == null){
+					edit_DomainId=0;
+				}else{
+					edit_DomainId=item1.DomainId;
+					$("#ADregion0").val(item1.DomainId).trigger('change');
+				}
+			}
+		});
+		if(accountid >0 && accountid <8){
+			$("#ADregion0").prop("disabled","true");
+		}
+		$("#Name0").prop("disabled","true");
+	}
+	/*var DomainId=$("#ADregion"+number+"").val();
+	tag=DomainId;
+	test.push(DomainId);*/
+})
+//检查数据完整性
+function check_data(num){
+	var DomainId=$("#ADregion"+num+"").val();
+	var Name=$("#Name"+num+"").val();
+	var add=1;
+	var flag=true;
+	if (Name == ""){
+		_alert(2,"账号","请输入账号",$("#Name"+num+""));
+		add=0;
+		return false;
+	}
+	if(patch(Name,"@") <= 1){
+		if(!nameReg.test(Name)){
+			_alert(1, "主机账号","账号格式不正确",$("#Name"+num+""));
+			add=0;
+			return false;
+		}
+	}else{
+		_alert(1, "主机账号","账号格式不正确",$("#Name"+num+""));
+		add=0;
+		return false;
+	}
+	$.each(account_all.data,function(i1,item1){
+		if ((Name == item1.Name && DomainId == item1.DomainId)||(Name == item1.Name &&DomainId==0&&item1.DomainId==null)){
+			add = 0;
+			flag=false;
+			_alert(2,"账号","已存在相同的账号",$("#Name"+num+""));
+			return false;
+		}
+	});
+	if(id_list.length>1&&flag){
+		for(var i=0;i<id_list.length;i++){
+			if(Name==$("#Name"+id_list[i]+"").val().trim() && DomainId == $("#ADregion"+id_list[i]+"").val() && id_list[i]!=num){
+				add=0;
+				_alert(2,"账号","已存在相同的账号",$("#Name"+num+""));
+				return false;
+			}
+		}
+	}
+	if(add==1){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+//添加AD域
+function AD_add(num){
+	$("#ADregion"+num+"").append("<option value=\"0\" >请选择AD域</option>");
+	$.ajax({
+		url:'/bhost/get_ADregion',
+		type:'post',
+		async:false,
+		data:{a0:se},
+		success:function(result){
+			domian_data=JSON.parse(result);
+			$.each(domian_data.data,function(i,item){
+				$("#ADregion"+num+"").append("<option value=\""+item.DomainId+"\" >"+item.DomainName+"</option>");
+			});
+		}
+	});
+}
+
+//检查数据的格式
+var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.@]+$/;
+function NameCheck(obj){
+	var name = $(obj).val();
+	var $i = $(obj).next('i.v-check');
+	if(patch(name,"@") <= 1){
+		if (!nameReg.test(name)){
+			$i.show().attr('class','v-check v-wrong');
+		}else{
+			$i.show().attr('class','v-check v-right');
+		}
+	}else{
+		$i.show().attr('class','v-check v-wrong');
+	}
+}
+function patch(s, re) {
+	re = eval("/" + re + "/ig")
+	return s.match(re) ? s.match(re).length : 0;
+}
+//返回账号列表界面 tasktype:z1,c_page:z2,c_ipage:z3
+function back(type){
+	if (type == 2){ //保存
+		keyword_re = [];
+		if (parseInt(accountid) != 0){
+			$.ajax({
+				url:'/bhost/get_index',
+				type:'post',
+				async:false,
+				data:{a0:se,z1:accountid,z2:4},
+				success:function(result){
+					ipage = Math.ceil(parseInt(result)/MAX_PAGE);
+				}
+			});
+		}else{
+			$.ajax({ 
+				url:'/bhost/get_account_list',
+				type:"post",
+				async:false,
+				data:{a0:se,z5:"null",z6:"null",z7:JSON.stringify(keyword_re)},
+				success:function(result){
+					var result = JSON.parse(result);
+					var remain = parseInt(result.totalrow) % MAX_PAGE;
+					if (account_list.length <= remain){
+						ipage = Math.ceil(parseInt(result.totalrow)/MAX_PAGE);
+					}else{
+						ipage_r = Math.ceil((account_list.length - remain)/MAX_PAGE); //需要增加的页数
+						ipage = Math.ceil(parseInt(result.totalrow)/MAX_PAGE) + ipage_r;
+					}
+				}
+			});
+		}
+		
+	}
+	document.frm_accountlist.a0.value = se;
+	document.frm_accountlist.z2.value = page;
+	document.frm_accountlist.z3.value = ipage;
+	document.frm_accountlist.z4.value = JSON.stringify(keyword_re);
+	document.frm_accountlist.z5.value = filter_flag;
+	document.frm_accountlist.z6.value = JSON.stringify(selectid);
+	document.frm_accountlist.action='/bhost/account_list';
+	document.frm_accountlist.submit();
+}
+
+//获取全部账号信息
+var account_all;
+function all_account(){
+	$.ajax({
+		url:'/bhost/select_account_all',
+		type:'post',
+		async:false,
+		data:{a0:se,z11:-1},
+		success:function(result){
+			account_all = JSON.parse(result);
+		}
+	});
+}
+
+//保存数据
+function save(){
+	var account_list = [];
+	var flag=true;
+	var endid=number;
+	var id_length=id_list.length;
+	if($("#Name"+number+"").val() == "" && id_list.length>1){	
+		id_length=id_list.length-1;
+	}
+	for(var i=id_length-1;i>-1;i--){
+		var DomainId=parseInt($("#ADregion"+id_list[i]+"").val());
+		var Name=$("#Name"+id_list[i]+"").val().trim();
+		if(accountid!=0){
+			$.each(account_all.data,function(i1,item1){
+				if ((Name == item1.Name && DomainId == item1.DomainId&&DomainId!=edit_DomainId)||(Name == item1.Name &&DomainId==0&&item1.DomainId==null&&DomainId!=edit_DomainId)){
+					_alert(2,"账号","已存在相同的账号",$("#Name"+number+""));
+					flag=false;
+					return false;
+				}
+			});
+		}else{
+			flag=check_data(id_list[i]);
+		}
+		if(flag==false){
+			return false;
+		}
+		if(DomainId == 0){
+			DomainId=null;
+			var Account_data = '{"AccountId":'+accountid+',"Name":"'+Name+'","DomainId":'+DomainId+',"AccountType":1}';
+		}else{
+			accountid=parseInt(accountid);
+			var Account_data = '{"AccountId":'+accountid+',"Name":"'+Name+'","DomainId":'+DomainId+',"AccountType":1}';
+		}
+		account_list.push(Account_data);
+	}
+	var msstr = aceg(JSON.stringify(account_list),se);
+	$.ajax({
+		url:'/bhost/save_account',
+		type: "post",
+		async:false,
+		data: {a0:se,d5:JSON.stringify(account_list),m1:msstr},
+		success: function(Result) {
+			data = JSON.parse(Result);
+			if(data.Result){
+				$('.btn').blur();
+				parent.layer.open({
+					type:1,
+					title:"账号",
+					content:'<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn:'确定',
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					btn1:function(i){
+						parent.layer.close(i);
+						accountid = data.AccountId;
+						back(2);
+					}
+				});
+				return ;
+			}else{
+				_alert(1,"账号","执行失败："+data.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+
+//删除添加列表按钮实现
+function _delinput(obj){
+	var $del_div = $(obj).parent().parent().parent().parent();
+	var num=$(obj).attr("value");
+	$del_div.remove();
+	for(var i=0;i<id_list.length;i++){
+		if(id_list[i]==num){
+			id_list.splice(i,1);
+			break;
+		}
+	}
+}
+
+//向前加入一个input框 和一个X按钮
+function addinput(obj){
+	var flag=true;
+	flag=check_data(number);
+	if(flag==false){
+		return ;
+	}
+	if(flag){
+		id_list.push(number+1);
+		//$("#prompt"+number+"").hide();
+		//$("#check"+number+"").hide();
+		//$("#Name"+number+"").attr("disabled",true);
+		if(number==0){
+			$("#add_AD"+number+"").append('<i class="ctrl del" id = "del_'+number+'" value="'+number+'"  onclick="_delinput(this)"></i>').children('i.add').remove();
+		}else{
+			$("#add_AD"+number+"").append('<i class="ctrl del" id = "del_'+number+'" value="'+number+'" style="margin-left:10px" onclick="_delinput(this)"></i>').children('i.add').remove();
+		}
+		number=number+1;
+		$("#first_div").after('<div id="luo'+number+'" style="float:left;width:100%;">');
+		$("#luo"+number+"").append('<div class="form-item" style="width:50%;float:left;"><span class="form-tag" style="width:60px"><em class="imp">*</em>账号：</span>'+
+									'<div class="form-c sel-type1" id = "account_name" style="margin-bottom: 15px;width: 300px;float: left;padding: 1px 10px 10px 10px;">'+
+									'<input type="text" class="form-text" id="Name'+number+'" onblur="NameCheck(this)" maxlength="127"><i class="v-check" id="check'+number+'"></i>'+
+									'<p class="form-tip" id="prompt'+number+'" style="padding-left: 0px;"特殊字符仅支持@(仅可用1次)、下划线、横杠、小数点</p></div></div>');
+		$("#luo"+number+"").append('<div class="form-item" style="width:50%;float:left;"><span class="form-tag" style="width:70px">AD域：</span>'+		
+									'<div  class="form-c sel-type1" style="float:left;width: 300px;padding-left:15px;"><li id="add_AD'+number+'">'+
+									'<select name="" id="ADregion'+number+'" class="type-select" style="width:250px"></select>'+
+									'<i class="ctrl add" style="margin-left:10px" onclick="addinput(this)"></i></li></div></div>');
+		$('.type-select').select2({minimumResultsForSearch: -1});
+		AD_add(number);
+		/*var DomainId=$("#ADregion"+number+"").val();
+		test.push(DomainId);
+		var Name=$("#Name"+number+"").val();
+		test_name.push(Name);*/
+	}
+}
+
+</script>
+</body>
+：</html>

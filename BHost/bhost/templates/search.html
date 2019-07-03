@@ -1,0 +1,1993 @@
+{% extends  "index.html" %}
+{% block head %}
+	<script src="/manage/js/jquery.jedate.min.js"></script>
+    <link rel="stylesheet" href="/manage/css/jedate.css">
+	<script src="/manage/js/xSelect.js"></script>
+{% endblock  %}
+
+<!-- 继承 html-->
+{% block main %}
+	<div id="viewWrap">
+		 <div class="srWrap">
+			<div class="srSel">
+				
+				<!--<select name="" id="template_list" class="srSelect2" onchange="change_template(this);">
+					<option value="0">请选择</option>
+				</select>-->
+				<!--
+				<span class="g-tsel" id="strategy_icon" style="cursor: pointer;">
+					<input id="template_list" type="text" style="width: 160px" class="form-text " placeholder="请选择" onkeyup="_autoView(this,0,0)"
+				 onfocus="_autoView(this,0,0)" onblur="_hideView(0);">
+				</span>
+				
+				<input type="text" class="form-text forName" id="template_list_input" style="display: none;width: 160px;">
+				-->
+				<div style="float:left;margin-top:6px;">导入模板：</div>
+				<div class="" id="template_list" style="float:right;"></div>
+				<input type="text" class="form-text forName" id="template_list_input" style="display: none;width: 160px;">
+				
+			</div>
+			<div class="clearfix"></div>
+			<div class="srCont">
+				<div class="srItem">
+					<div class="label"><span>类型</span></div>
+					<span class="srFix"></span>
+					<div class="c">				   
+						<select name="" id="logtype" class="srSelect2" onchange="change_type(this);">
+							<option id="logtype1" value="NORMAL" selected>操作</option>
+							<option id="logtype2" value="SESSION">会话</option>
+							<option id="logtype3" value="SYSTEM">系统</option>
+						</select>
+					</div>
+				</div>
+				<!--load area-->
+				<div id="srArea">
+				</div>
+			</div>
+		</div>
+    </div>
+    <div class="btns s-hide" id="div_save" style="display:none;" >
+        <a href="javascript:;" class="btn btn-normal" onclick="search_action(0);" >检&nbsp;&nbsp;索</a>
+        <a href="javascript:;" class="btn btn-normal" onclick="_save();">保&nbsp;&nbsp;存</a>
+		<!--<a href="javascript:;" class="btn btn-normal" onclick="parent.parent.location.href='/bhost/index?tasktype=2&se={{se}}';return true;">返&nbsp;&nbsp;回</a>-->
+    </div>
+    <div id="saveLayer" style="display: none;">
+        <i class="bigicon"></i>
+        <div class="sel">
+            <div class="cc">
+                <input id="input_template" type="text" value="" placeholder="请输入模板名称">
+                <i class="del" onclick="_clearVal(this)"></i>
+                <span class="arr"></span>
+            </div>
+            <p id="p_template" class="tip" style="">已存在的模板,是否替换！</p>
+        </div>
+        <div class="btns">
+            <a href="javascript:;" class="btn btn-normal s-hide" onclick="search_action(1);">确&nbsp;&nbsp;定</a>
+            <a href="javascript:;" class="btn btn-normal" onclick="_cancel(this)">重&nbsp;&nbsp;置</a>
+        </div>
+    </div>
+    <!---->
+    <div class="srItem" id="areaTemp" style="display: none;">
+        <div class="label" onclick="_getSubSel(this)">
+            <span>入库时间</span><i class="arrCtl"></i>
+            <div class="subSel">
+				<ul>
+					<li data-type="blank_0">请选择</li>
+					<li data-type="xtime_00">编号</li>
+					<li class="active" data-type="xtime_01">入库时间</li>
+					<li data-type="xtime_02">发生时间</li>
+					<li data-type="xtime_03">会话标识</li>
+					<li data-type="xtime_04">起始时间</li>
+					<!--<li data-type="int08_00">日志属性</li>-->
+					<li data-type="int08_11">告警处理</li>
+					<li data-type="int08_14">告警类型</li>
+					<li data-type="int08_15">告警等级</li>
+					<li data-type="int16_00">客户端端口</li>
+					<li data-type="int16_01">服务器端口</li>
+					<li data-type="int32_01">日志类型</li>
+					<li data-type="ip_00">发生地址</li>
+					<li data-type="ip_01">服务端地址</li>
+					<li data-type="ip_02">客户端地址</li>
+					<li data-type="int64_15">告警动作</li>
+					<li data-type="str32_00">服务器用户</li>
+					<li data-type="str32_01">操作</li>
+					<li data-type="str32_02">信息</li>
+					<li data-type="str32_05">客户端工具</li>
+					<li data-type="str32_08">数据库名</li>
+					<li data-type="str32_20">运维访问策略</li>
+					<li data-type="str32_21">运维操作备注</li>
+					<li data-type="str32_22">运维用户帐号</li>
+					<li data-type="str32_23">运维用户姓名</li>
+					<li data-type="str32_24">审批用户帐号</li>
+					<li data-type="str32_25">审批用户姓名</li>
+					<li data-type="str32_28">回放文件</li>
+					<li data-type="str32_29">策略名称</li>
+					<li data-type="str32_30">事件信息</li>
+					<li data-type="str32_31">告警对象</li>
+				</ul>
+            </div>
+        </div>
+        <span class="srFix"></span>
+        <div class="c">
+            <div class="srCtrl">
+                <div class="a">
+                    <a href="javascript:;" onclick="_reloadItem(this)" title="初始化条件"><i class="re"></i></a>
+                    <a href="javascript:;" onclick="_delItem(this)" class="disable" title="删除条件"><i class="del"></i></a>
+                    <a href="javascript:;" onclick="_addItem(this)" title="添加条件" ><i class="add"  ></i></a>
+                </div>
+                <a href="javascript:;" class="b1" onclick="_hideCtrl(this);" title="收拢条件" ><i class="vv"></i></a>
+                <a href="javascript:;" class="b2" onclick="_showCtrl(this);" onmouseover="_showBtns(this);" title="展开条件" ><i class="vh" ></i></a>
+            </div>
+        </div>
+        <div class="c2">
+        </div>
+    </div>
+    <!--number-->
+    <div class="srSort" id="srTemp-int" style="display: none;">
+        <select name="_action" id="" class="srSelect" style="width: 80px" onchange="srSelType(this,1)">
+            <option value="equal">=</option>
+            <option value="between">区间</option>
+            <option value="high">&gt;</option>
+            <option value="ehigh">&gt;=</option>
+            <option value="low">&lt;</option>
+            <option value="elow">&lt;=</option>
+            <option value="not equal">不等于</option>
+        </select>
+        <input type="text" value="" class="search_input">
+        <span class="srTip" style="display: none;">至</span>
+        <input type="text" value="" class="search_input" style="display: none;">
+        <span class="srsCtl">
+            <a href="javascript:;" class="add" title="添加条件" onclick="_itemAdd(this)"></a>
+            <a href="javascript:;" class="del" title="删除条件" onclick="_itemDel(this)"></a>
+        </span>
+    </div>
+    <!--time-->
+    <div class="srSort" id="srTemp-xtime" style="display: none;">
+        <select name="_action" id="" class="srSelect" style="width: 80px" onchange="srSelType(this,2)">
+            <option value="between">区间</option>
+            <option value="equal">=</option>
+            <option value="ehigh">&gt;=</option>
+            <option value="elow">&lt;=</option>
+        </select>
+        <span class="stwrap">
+            <input type="text" value="" placeholder="日期" class="datepicker" readonly>
+            <input type="text" value="" placeholder="时" class="timeinput" min="00" max="23">
+            <span class="srTip">:</span>
+            <input type="text" value="" placeholder="分" class="timeinput" min="00" max="59">
+            <span class="srTip">:</span>
+            <input type="text" value="" placeholder="秒" class="timeinput" min="00" max="59">
+        </span>
+        <span class="srTip">至</span>
+         <span class="stwrap">
+            <input type="text" value="" placeholder="日期" class="datepicker" readonly>
+            <input type="text" value="" placeholder="时" class="timeinput" min="00" max="23">
+            <span class="srTip">:</span>
+            <input type="text" value="" placeholder="分" class="timeinput" min="00" max="59">
+            <span class="srTip">:</span>
+            <input type="text" value="" placeholder="秒" class="timeinput" min="00" max="59">
+        </span>
+        <span class="srsCtl">
+            <a href="javascript:;" class="add" title="添加条件" onclick="_itemAdd(this)"></a>
+            <a href="javascript:;" class="del" title="删除条件" onclick="_itemDel(this)"></a>
+        </span>
+    </div>
+    <!--port-->
+    <div class="srSort" id="srTemp-port" style="display: none;">
+        <select name="_action" id="" class="srSelect" style="width: 80px" onchange="srSelType(this,1)">
+            <option value="equal">=</option>
+            <option value="between">区间</option>
+            <option value="high">&gt;</option>
+            <option value="ehigh">&gt;=</option>
+            <option value="low">&lt;</option>
+            <option value="elow">&lt;=</option>
+            <option value="not equal">不等于</option>
+        </select>
+        <input type="text" value="" style="width: 5em">
+        <span class="srTip" style="display: none;">至</span>
+        <input type="text" value="" style="width: 5em;display: none;">
+        <span class="srsCtl">
+            <a href="javascript:;" class="add" title="添加条件" onclick="_itemAdd(this)"></a>
+            <a href="javascript:;" class="del" title="删除条件" onclick="_itemDel(this)"></a>
+        </span>
+    </div>
+    <!--select-->
+    <div class="srSort" id="srTemp-select" style="display: none;">
+        <select name="_action" id="" class="srSelect" style="width: 80px" onchange="srSelType(this,3)">
+            <option value="equal">等于</option>
+            <option value="not equal">不等于</option>
+        </select>
+		<!--告警处理-->
+        <select style="width:215px; " id="" name="" class="srSelect">
+        </select>
+        <span class="srsCtl">
+            <a href="javascript:;" class="add" title="添加条件" onclick="_itemAdd(this)"></a>
+            <a href="javascript:;" class="del" title="删除条件" onclick="_itemDel(this)"></a>
+        </span>
+    </div>
+    <!--ip-->
+    <div class="srSort srSort-ip" id="srTemp-ip" style="display: none;">
+        <select name="_action" id="" class="srSelect" style="width: 72px" onchange="srSelType(this,4)">
+            <option value="equal">等于</option>
+            <option value="between">区间</option>
+            <option value="not equal">不等于</option>
+            <option value="group">主机组</option>
+        </select>
+        <!--主机-->
+        <select name="_host" id="_host" class="srSelect" style="width: 120px" onchange="srSelType(this,5)">
+            <option value="-1">其他</option>
+        </select>
+        <input name="" class="" type="text" value="" />
+        <span class="srTip" style="display: none;">至</span>
+        <input name="" class="" type="text" value="" style="display: none;" />
+        <!--主机组-->
+		<!--
+        <select name="_group" id="" class="srSelect" style="width: 120px;">
+            <option value="2">xx</option>
+        </select>-->
+		<div class="forgroup" "group"="" onclick="_getHostGroup(this)"></div>
+		
+        <span class="srsCtl">
+            <a href="javascript:;" class="add" title="添加条件" onclick="_itemAdd(this)"></a>
+            <a href="javascript:;" class="del" title="删除条件" onclick="_itemDel(this)"></a>
+        </span>
+    </div>
+    <!--string-->
+    <div class="srSort" id="srTemp-str32" style="display: none;">
+        <select name="_action" id="" class="srSelect" style="width: 170px" onchange="srSelType(this,6)">
+			<option value="include">包含</option>
+			<option value="not include">不包含</option>
+            <option value="begin">开始</option>
+            <option value="end">结束</option>                     
+			<option value="regx">正则匹配（忽略大小写）</option>
+			<option value="not regx">正则不匹配（忽略大小写）</option>
+			<option value="ncregx">正则匹配（区分大小写）</option>
+			<option value="not ncregx">正则不匹配（区分大小写）</option>
+			<option value="match">通配符</option>
+			
+        </select>
+        <input type="text" value="">
+        <span class="srsCtl">
+            <a href="javascript:;" class="add" onclick="_itemAdd(this)"></a>
+            <a href="javascript:;" class="del" onclick="_itemDel(this)"></a>
+        </span>
+    </div>
+	<!--int64_15-->
+    <div class="srSort" id="srTemp-int64_15" style="display: none;">
+        <select name="_action" id="" class="srSelect" onchange="srSelType(this,6)">			
+			<option value="equal">等于</option>
+            <option value="not equal">不等于</option>
+			<option value="include">包含</option>
+			<option value="not include">不包含</option>
+			
+        </select>
+        <select style="width:150px; " id="" name="" class="srSelect">
+        </select>
+        <span class="srsCtl">
+            <a href="javascript:;" class="add" onclick="_itemAdd(this)"></a>
+            <a href="javascript:;" class="del" onclick="_itemDel(this)"></a>
+        </span>
+    </div>
+	<form name="frm" method="post" action='/bhost/search_action'>
+		<input name="session" id = "session" value="{{se}}" type="hidden">
+		<input name="session" id = "taskid" value="{{taskid}}" type="hidden">			
+		<!--操作-->
+		<input name="service_1" id="service_1" value="{{service_1}}"  type="hidden">
+		<!--会话-->
+		<input name="service_2" id="service_2" value="{{service_2}}"  type="hidden">
+		<!--系统-->
+		<input name="service_3" id="service_3" value="{{service_3}}" type="hidden">
+		
+	</form>
+{% endblock  %}
+
+<!-- 继承 js-->
+{% block script %}
+<style>
+.subSel{
+    max-height: 284px;
+}
+</style>
+<script>
+	$('#bBtn',parent.parent.document).show();
+	$('.form-select').select2();
+	$('.srSelect2').select2({ minimumResultsForSearch: -1 });
+	var if_disable = '1-1-1-1';
+	var if_disable_list = [];
+	$(function() {
+		document.onkeydown = function() {
+            if (event.keyCode == 9) {  //如果是其它键，换上相应在ascii 码即可。
+                return false; //非常重要
+            }
+        }
+	
+		if_disable = $('#nav-s1 li[data-modeid=2]',parent.parent.parent.document).attr('_if_disable');
+		//console.log(if_disable);
+		if_disable_list = if_disable.split('-');
+		
+		if(parseInt($('#taskid').val()) <= 0 ){ //回显任务条件
+			// 三权分立 8->运维操作(操作、会话) 9->运维管理(系统日志-运维部分) 11->系统日志(系统日志-非运维用户部分)
+			if(if_disable_list[0] != '0' && (if_disable_list[1] != '0' || if_disable_list[2] != '0')){
+				$('#div_save').show();
+				//$('.s-hide').remove();
+			}else if (if_disable_list[0] == '0' && (if_disable_list[1] != '0' || if_disable_list[2] != '0')){
+				$('#div_save').show();
+				//$('#logtype').empty().append('<option id="logtype3" value="SYSTEM">系统</option>');
+				$('#logtype1').remove();
+				$('#logtype2').remove();
+			}else if (if_disable_list[0] != '0' && (if_disable_list[1] == '0' && if_disable_list[2] == '0')){
+				$('#div_save').show();
+				$('#logtype3').remove();
+			}else if (if_disable_list[0] == '1' && (if_disable_list[1] == '1' && if_disable_list[2] == '1')){
+				//$('#div_save').show();
+				$('.s-hide').remove();
+			}
+		}
+		$('#logtype').select2('destroy').select2({ minimumResultsForSearch: -1 });
+		//初始化 资源 主机 主机组 协议 基本信息
+		_initData();		
+        _initArea();
+        _getDate('#srTemp-time');
+		 var bh = $(window).height();
+        $('#viewWrap').height(bh - 89);
+		//
+		show_template_list();
+		
+		//$('#taskid').val(31);
+		
+		//
+		if(parseInt($('#taskid').val()) >0 ){ //回显任务条件
+			$.ajax({
+				url:'/bhost/search_task_condition',
+				type:'post',
+				async:false,
+				data:{a0:{{se}},t1:$('#taskid').val()},
+				success:function(result){
+					result = JSON.parse(result); 
+					if(result.Result == true){
+						condition_json = result.info;
+						//回显条件
+						show_condition(condition_json);
+						return false;
+					}else{
+						_alert(1,'检索',result.ErrMsg);
+					}
+				}
+			})
+		}else{
+			change_type($('#logtype'));
+		}
+		$("input.search_input").bind('keydown', function(e){
+			DigitInput(e);
+		});
+		
+		
+    })
+	var t_xSelect;
+	/*
+	[
+		{
+			"HostIP": "192.168.7.1",
+			"HostId": 30,
+			"HostName": "ddd"
+		}
+	]
+	*/
+	var proto_list = [];
+	var hostip=[];
+	function _initData(){
+		//获取 所有主机
+		$.ajax({
+			url:'/bhost/get_search_host',
+			type:'post',
+			async:false,
+			data:{a0:{{se}}},
+			success:function(result){
+				result = JSON.parse(result); 
+				$('#_host').empty().append('<option value="-1">其他</option>');
+				$(result).each(function(i,item){
+					$('#_host').append('<option value="'+item.HostIP+'">'+item.HostName+'</option>');
+					hostip.push(item.HostIP);
+				})
+			}
+		})
+		//获取 所有协议
+		$.ajax({
+			url:'/bhost/get_search_proto',
+			type:'post',
+			async:false,
+			data:{a0:{{se}}},
+			success:function(result){
+				result = JSON.parse(result); 
+				proto_list = result.data;
+			}
+		})
+		
+	}
+	function show_template_list(){
+		//获取 模板
+		$.ajax({
+			url:'/bhost/search_show_condition',
+			type:'post',
+			async:true,
+			data:{a0:{{se}},t1:-1},
+			success:function(result){
+				result = JSON.parse(result); 
+				//$('#template_list').empty().append('<option value="0">请选择</option>');
+				$('#tempList ul',parent.document).empty();
+				$(result).each(function(i,item){
+					//$('#template_list').append('<option value="'+item.Id+'">'+item.Name+'</option>');
+					$('#tempList ul',parent.document).append('<li li_id="'+item.Id+'" >'+item.Name+'</li>');
+				});
+				//模板记住
+				var search_array = [];
+				$.ajax({
+					url: "/bhost/search_show_condition",
+					type: "POST",
+					async: false,
+					data:{a0:{{se}},t1:-1},
+					success: function (result) {
+						var result = JSON.parse(result);
+						var data = result;
+						temple_List = new Array();
+						$.each(data, function (i, item) {
+							temple_List[item.Id] = item;
+							if(if_disable.split('-')[0] != '2' && item.Condition.indexOf('"type":"NORMAL"')>=0) return true;
+							if(if_disable.split('-')[0] != '2' && item.Condition.indexOf('"type":"SESSION"')>=0) return true;
+							if((if_disable.split('-')[1] != '2' && if_disable.split('-')[2] != '2') && item.Condition.indexOf('"type":"SYSTEM"')>=0) return true;
+							/*
+							if(if_disable.split('-')[0] == '2' || if_disable.split('-')[1]== '2' || if_disable.split('-')[2]== '2'){
+								var select_data_json = {
+									'value':1,
+									'name':'admin2',
+									'type':'delete'
+								};
+							}else{
+								var select_data_json = {
+									'value':1,
+									'name':'admin2',
+									'type':''
+								};
+							}*/
+							var select_data_json = {
+									'value':1,
+									'name':'admin2',
+									'type':'delete'
+								};
+							select_data_json.value = item.Id;
+							select_data_json.name = item.Name;
+							search_array.push(select_data_json);
+						});
+					}
+				});
+				var template_text = $('#EventAlarmInfoId').find('span').text();
+				$("div[data-id=xSelect-template]").remove();
+				$("#template_list").empty().data('xSelect','');
+				t_xSelect = $("#template_list").xSelect({
+					width: 192,
+					defaultText: '请选择',
+					items:search_array,
+					module_type:'template',
+					delete: function(item,obj){
+						_delNode(obj,t_xSelect);
+					},
+					setval:function(item,obj){
+						//console.log('setval');
+						//console.log(item);
+						//console.log(obj);
+						//console.log($(obj).find('span').data('value'));
+						_setVal(obj);
+					}
+				});
+				$('#EventAlarmInfoId').find('span').text(template_text);
+			}
+		});
+	}
+	var rsout;
+	$(window).resize(function(){
+		clearTimeout(rsout);
+		rsout = setTimeout(function(){
+			var bh = $(window).height();
+			$('#viewWrap').height(bh - 89);
+		},200);
+	})
+    function _getDate(obj) {
+        var now = new Date();
+        var setDate = now.getTime();
+        setDate = new Date(setDate);
+        var month = (setDate.getMonth() + 1).toString();
+        var day =  setDate.getDate().toString();
+
+        if(month.length == 1){
+            month = '0' + month;
+        }
+
+        if(day.length == 1){
+            day = '0' + day;
+        }
+        setDate = {
+            year: setDate.getFullYear(),
+            month: month,
+            day: day
+        }
+        setDate = setDate.year + '-' + setDate.month + '-' + setDate.day;
+        $('input.datepicker', obj).each(function(i,item){
+            if(i==0){
+                $(item).val(setDate);
+                $(item).parent().find('input.timeinput').val('00');
+            }else if(i==1){
+                $(item).val(setDate);
+                $(item).parent().find('input.timeinput').each(function(i){
+                    if(i == 0){
+                        $(this).val('23');
+                    }else{
+                        $(this).val('59');
+                    }
+                })
+            }
+            
+        });
+    }
+
+    function _showBtns(obj) {
+        var $obj = $(obj).parent();
+        var sout;
+        $obj.addClass('on2').unbind().hover(function() {
+            clearTimeout(sout);
+        }, function() {
+            var $_this = $(this);
+            sout = setTimeout(function() {
+                $_this.removeClass('on2');
+            }, 100);
+        });
+    }
+
+    function _hideCtrl(obj) {
+        var $c = $(obj).parent().parent();
+        var $c2 = $c.next();
+
+        var type = $c.parent().data('type').split('_')[0];
+        if(type == 'blank'){
+            return;
+        }
+
+        //$('.srSort', $c).show();
+        $c2.slideUp(200);
+        $(obj).parent().addClass('on');
+
+        var $_obj = $c.parent();
+        var len = 2;
+        var type = $_obj.data('type').split('_');
+        if (type[0] == 'port') {
+            len = 5;
+        } else if (type[0] == 'int08' ||  type[0] == 'int16' ||  type[0] == 'int32' ||  type[0] == 'int64' ||  type[0] == 'str32' || $_obj.data('type') == 'xtime_00' || $_obj.data('type') == 'xtime_03') {
+            len = 4;
+        } else if (type[0] == 'select') {
+            len = 5; 
+        } else if (type[0] == 'xtime') {
+            len = 2;
+        } else if (type[0] == 'ip') {
+            $('.srSort', $c2).each(function(i, item) {
+                var tv = $('select:first', item).val();
+                if (tv != 'group') {
+                    //$('.select2-container:eq(2)', item).hide();
+					$('.forgroup', item).hide();
+                }else {
+					$('.forgroup', item).show();
+				}
+            });
+
+        }
+
+        $('.srSort', $c2).each(function(i, item) {
+            if (i < len) {
+                var $_item = $(item).clone();
+                $c.append($_item).append('<span class="srFix" />');
+            }
+        });
+
+        $('span.srFix:last', $c).remove();
+        $('.srSort input', $c).prop('readonly', true);
+    }
+
+    function _showCtrl(obj) {
+        var $c = $(obj).parent().parent();
+        var $c2 = $c.next();
+
+        $('.srSort,.srFix', $c).remove();
+        $c2.slideDown(200);
+        $(obj).parent().removeClass('on');
+    }
+    function _save() {
+		var name = $('#template_list').attr('_name');
+		var id =  $('#template_list').attr('_id');
+		if(name == undefined || name ==''){
+			name = "";
+			id = 0;
+			parent._clearVal();
+		}
+        parent._getSaveLayer(name,id);
+    }
+
+    function _itemDel(obj) {
+        var $_obj = $(obj).parent().parent()
+        $_obj.fadeOut(function() {
+            $_obj.remove();
+        })
+    }
+	var IPReg =/(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;	
+    var numberReg = /^[0-9]*$/;
+	function compareIP(ipBegin, ipEnd)  
+    {  
+        var ipBegin = ipBegin.split(".");
+		var ipEnd = ipEnd.split(".");
+		for (var i = 0; i < 4; i++) {
+			if (parseInt(ipBegin[i]) > parseInt(ipEnd[i])) {
+				return 1
+			} else if (parseInt(ipBegin[i]) < parseInt(ipEnd[i])) {
+				break;
+			}
+		}  
+        return 0;     
+    }  
+	function compareTime(begin,end){
+		 var d1 = new Date(begin.replace(/\-/g, "\/"));  
+		 var d2 = new Date(end.replace(/\-/g, "\/"));  
+
+		 if(d1 >d2){  
+			return 1;
+		 }
+		 return 0;
+	}
+	function check_value(_parent_srSort,enalert){
+		
+		_type = $(_parent_srSort).parent().siblings('div.label').children('div.subSel').children('ul').children('li.active').attr('data-type');
+		_type_txt = $(_parent_srSort).parent().siblings('div.label').children('div.subSel').children('ul').children('li.active').text();
+		////console.log(_type);
+		//1空值 判断
+		_input = _parent_srSort.find('input:visible');
+		_action = $('select[name=_action]',_parent_srSort).val();
+		////console.log(_type);
+		if(_input.length == 0){
+			if(_action == "group") {
+				v = $('div.forgroup',_parent_srSort).attr('group');
+				//console.log(v);
+				if((v == "" || v == undefined)&& enalert){
+					_alert(1,'检索','请选择主机组');
+					return false;
+				}
+			}
+			else v = $('select:eq(1)',_parent_srSort).val();
+		}
+		else if(_input.length == 1){ //非区间
+			v = $(_input).val();
+			if( v == "" && enalert ){
+				_alert(1,'检索','请输入检索条件',$(_input));
+				return false;
+			}
+			if(_type.indexOf('ip')>=0){
+				if (!IPReg.test(v) && enalert ) {
+					_alert(1,'检索','请输入正确的检索条件',$(_input));
+					return false;
+				}
+			}else if(_type.indexOf('xtime')>=0 && _type!="xtime_00" && _type!='xtime_03'){ //时间 除去 编号和会话标志 因为是时间控件 不需要判断格式
+				;
+			}else{
+				if(_type.indexOf('str32')>=0){;} //字符串的先不限制条件
+				else{
+					if (!numberReg.test(v) && enalert){ //限制数字
+						_alert(1,'检索','请输入正确的检索条件',$(_input));
+						return false;
+					}
+				}
+			}
+			
+		}else if(_input.length == 2){ //区间
+			start = $(_input).eq(0).val();
+			end = $(_input).eq(1).val();
+			if(start == ""&& enalert){
+				_alert(1,'检索','请输入检索条件',$(_input).eq(0));
+				return false;
+			}
+			if(end == "" && enalert){
+				_alert(1,'检索','请输入检索条件',$(_input).eq(1));
+				return false;
+			}
+			
+			if(_type.indexOf('ip')>=0){
+				if (!IPReg.test(start) && enalert ) {
+					_alert(1,'检索','请输入正确的检索条件',$(_input).eq(0));
+					return false;
+				}
+				if (!IPReg.test(end) && enalert) {
+					_alert(1,'检索','请输入正确的检索条件',$(_input).eq(1));
+					return false;
+				}
+				ret  = compareIP(start,end);
+				if(ret == 1 && enalert){
+					_alert(1,'检索','起始地址不能大于结束地址',$(_input).eq(0));
+					return false;
+				}
+			}else{
+				if(_type.indexOf('str32')>=0){;} //字符串的先不限制条件
+				else{
+					
+					if (!numberReg.test(start) && enalert){ //限制数字
+						_alert(1,'检索','请输入正确的检索条件',$(_input).eq(0));
+						return false;
+					}
+					if (!numberReg.test(end) && enalert&& enalert){ //限制数字
+						_alert(1,'检索','请输入正确的检索条件',$(_input).eq(1));
+						return false;
+					}
+					if(parseInt(start) > parseInt(end) && enalert){				
+						_alert(1,'检索','起始'+_type_txt+'不能大于结束'+_type_txt+'',$(_input).eq(0));
+						return false;						
+					}
+				}
+			}
+			v = start +";"+end;
+		}else{		
+			if(_action == 'between'){
+				ymd = $(_input).eq(0).val();
+				h = $(_input).eq(1).val();
+				f = $(_input).eq(2).val();
+				s = $(_input).eq(3).val();
+				start =  ymd +" " + h +":"+ f + ":" + s ;
+				
+				ymd = $(_input).eq(4).val();
+				h = $(_input).eq(5).val();
+				f = $(_input).eq(6).val();
+				s = $(_input).eq(7).val();
+				end = ymd +" " + h +":"+ f + ":" + s ;
+				
+				if(_type.indexOf('xtime')>=0 && _type!="xtime_00" && _type!='xtime_03'){ //时间 除去 编号和会话标志 因为是时间控件 不需要判断格式
+					ret = compareTime(start,end);
+					if(ret == 1 && enalert){
+						_alert(1,'检索','起始时间不能大于结束时间',$(_input).eq(0));
+						return false;
+					}
+				}
+				v = start +";"+end;
+			}else{
+				ymd = $(_input).eq(0).val();
+				h = $(_input).eq(1).val();
+				f = $(_input).eq(2).val();
+				s = $(_input).eq(3).val();
+				v =  ymd +" " + h +":"+ f + ":" + s ;
+				
+			}
+		}
+		return (_action + "	" + v);
+	}
+	//between	2017-10-19 00:00:00;2017-10-19 23:59:59
+	function _itemAdd(obj) {
+		
+		_parent_srSort = $(obj).parent().parent();
+		value_first = check_value(_parent_srSort,true);
+		//console.log(value_first);
+		if(value_first == false) return false;
+		//查看是否存在 相同的配置
+		_parent_c2 = _parent_srSort.parent();
+		var n = 0;
+		$("div.srSort",$(_parent_c2)).each(function(i,item){
+			if(i == 0) return true;
+			if((check_value($(item),false)) == value_first){
+				n =1;
+				_alert(1,'检索','与第'+(i+1)+'个子条件相同');
+				return false;
+			}
+		})
+		if(n) return false;
+			
+        var $_obj = $(obj).parent().parent();
+        $_obj.children('select').select2('destroy')
+        var $_obj2 = $_obj.clone()
+        $_obj.before($_obj2);
+        $('input', $_obj2).val('');
+		$('div.forgroup', $_obj2).attr('group','').text('');
+		
+        var $_p = $_obj.parents('.srItem');
+        var type = $_p.data('type').split('_');
+        var ov = $_obj.children('select').eq(0).val();
+        if(type[0] == 'ip' && (ov == 'equal' || ov == 'not equal')){
+            $_obj.children('select').select2({ theme: 'default srSelect2' }).trigger('change');
+        }else if(type[0] == 'ip' && ov == 'between'){
+            $_obj.children('select').select2({ theme: 'default srSelect2' });
+            $_obj.find('.select2').eq(1).hide();
+        }else if(type[0] == 'ip' && ov == 'group'){
+            $_obj.children('select').select2({ theme: 'default srSelect2' }).trigger('change');
+            $_obj.children('input').eq(0).hide();
+        }else{
+			if($_p.data('type') == "int32_01") $_obj.children('select').trigger('change').select2({ theme: 'default srSelect2' });
+			else $_obj.children('select').trigger('change').select2({ minimumResultsForSearch: -1, theme: 'default srSelect2' });
+        }
+        if(type[0] == 'ip' || $_p.data('type') == "int32_01" ) $_obj2.children('select').trigger('change').select2({ theme: 'default srSelect2' });
+		else  $_obj2.children('select').trigger('change').select2({ minimumResultsForSearch: -1, theme: 'default srSelect2' });
+        
+        _getDate($_obj2);
+		
+		
+		
+        var now = new Date();
+        var setDate = {
+            year: now.getFullYear(),
+            month: now.getMonth() + 1,
+            day: now.getDate()
+        }
+
+        $('input.datepicker',$_obj2).each(function(){
+            $(this).jeDate({
+                format:"YYYY-MM-DD",
+                isTime:true,
+                maxDate:setDate.year + "-" + setDate.month + "-" + setDate.day
+            });
+        })
+    }
+
+    function _getSubSel(obj) {
+        var $_obj = $(obj);
+        var offset = $_obj.offset(),wh=$(window).height();
+        var st = $("#viewWrap").scrollTop();
+        if(offset.top-st>wh - 390){
+            $('.subSel', $_obj).css('margin-top',-317);
+        }else{
+            $('.subSel', $_obj).css('margin-top',0);
+        }
+		
+		var $sel = $('.select2-container--open').prev('select');
+        $sel.select2('destroy').select2({minimumResultsForSearch: -1});
+		
+        var ctype = $_obj.parent().data('type').split('_');
+        var $c2 = $_obj.siblings('.c2');
+        if ($c2.is(':hidden') && ctype[0] != 'blank') {
+            return;
+        }
+
+        var c = $_obj.attr('class').split(' ');
+        var b = $.inArray('on', c);
+        if (b < 0) {
+            $_obj.addClass('on').parent().siblings().children('div.label').removeClass('on');
+            $_obj.hover(function() {
+                document.onclick = null;
+            }, function() {
+                document.onclick = function() {
+                    $_obj.removeClass('on');
+                }
+            });
+        } else {
+            $_obj.removeClass('on');
+        }
+        $('.subSel', $_obj).unbind().on('click', 'li', function() {
+            var type = $(this).data('type'),
+                name = $(this).text();
+            $(this).addClass('active').siblings().removeClass('active');
+            setTimeout(function() {
+                $_obj.removeClass('on');
+            }, 100);
+            $_obj.children('span').text(name);
+            _loadTemp($_obj.parent(), type);
+
+            var nType = type.split('_');
+            if (nType[0] == 'blank') {
+                $c2.hide().siblings('.c').find('.srCtrl').addClass('on3');
+                $_obj.parent().find('a.b1').addClass('disable');
+            } else {
+                $c2.show().siblings('.c').find('.srCtrl').removeClass('on3');
+                $_obj.parent().find('a.b1').removeClass('disable');
+            }
+        });
+    }
+
+    function _initArea(i) {
+        var $c = $('#areaTemp').clone().attr('id', '').show();
+        $('#srArea').append($c);
+		
+        if(i == 1){
+            _loadTemp($c, 'blank_0');
+            $c.find('.label span').text('请选择');
+            $c.find('div.c2').hide();
+            $c.find('.subSel>ul').children('li:first').addClass('active').siblings().removeClass('active');
+            $c.find('a.b1').addClass('disable');
+            $('div.srCtrl a:eq(1)',$c).removeClass('disable');
+            $('div.srCtrl a:eq(1)').removeClass('disable');
+        }else{
+			if($('#logtype').val()=='SYSTEM') _loadTemp($c, 'xtime_02');
+			else _loadTemp($c, 'xtime_01');
+            _getDate($c);
+        }
+        
+    }
+
+    function _loadTemp(obj, type) {
+        var $_obj = $(obj);
+        var $c2 = $_obj.children('.c2');
+
+        var oldType = $_obj.data('type');
+        if (oldType && oldType == type) {
+            return;
+        }
+        var nType = type.split('_');
+        $_obj.data('type', type);
+		if(type =="int08_11" || type =="int08_14" || type =="int08_15" || type =="int32_01"  || type =="int08_03" || type =="int08_12") {
+			nType[0] = "select";
+			$('#srTemp-select select:eq(1)').empty();
+			if(type =="int08_11" ){	//告警处理
+				$('#srTemp-select select:eq(1)').append('<option value="0">未处理</option><option value="1">已处理</option>');
+			}else if(type =="int08_14"){ //告警类型
+				$('#srTemp-select select:eq(1)').append('<option value="0">无</option><option value="1">违规操作</option><option value="2">高危操作</option><option value="3">登录异常</option>');
+			}else if(type =="int08_15"){ //告警等级
+				$('#srTemp-select select:eq(1)').append('<option value="0">无</option><option value="1">低</option><option value="2">中</option><option value="3">高</option>');
+			}else if(type =="int32_01"){ //所有协议
+				if($('#logtype').val()=='SYSTEM'){
+						$('#srTemp-select select:eq(1)').append('<option value="1">用户操作</option><option value="2">系统管理</option>');
+				}else{
+					$(proto_list).each(function(i,item){
+						$('#srTemp-select select:eq(1)').append('<option value="'+item.ProtocolId+'">'+item.ProtocolName+'</option>');
+					})
+				}
+				
+			}else if(type =="int08_03"){ //会话状态
+				//$('#srTemp-select select:eq(1)').append('<option value="0">连接中</option><option value="1">正常退出</option><option value="2">异常退出</option><option value="3">用户退出</option><option value="4">用户阻断</option><option value="5">超时退出</option><option value="6">指令阻断</option><option value="7">访问审批拒绝</option><option value="8">SQL超时阻断</option><option value="9">工单未审批</option>');
+				$('#srTemp-select select:eq(1)').append('<option value="0">连接中</option><option value="1">正常退出</option><option value="2">异常退出</option>');
+			}else if(type =="int08_12"){ //是否告警
+				//$('#srTemp-select select:eq(1)').append('<option value="0">连接中</option><option value="1">正常退出</option><option value="2">异常退出</option><option value="3">用户退出</option><option value="4">用户阻断</option><option value="5">超时退出</option><option value="6">指令阻断</option><option value="7">访问审批拒绝</option><option value="8">SQL超时阻断</option><option value="9">工单未审批</option>');
+				$('#srTemp-select select:eq(1)').append('<option value="0">无</option><option value="1">告警</option>');
+			}
+		}else if(type == "int64_15"){//告警动作			
+			$('#srTemp-int64_15 select:eq(1)').append('<option value="80">邮件</option><option value="100">短信</option><option value="2000">阻断</option><option value="4000">SYSLOG</option><option value="8000">SNMP</option><option value="10000">忽略</option>');	
+			nType[0] = "int64_15";
+		}else if(type == "xtime_00" || type == "xtime_03" ||  nType[0].indexOf('int')>=0 ) nType[0] = "int";
+		
+        $c2.html($('#srTemp-' + nType[0]).clone().attr('id', '').show());
+
+        if (nType[0] == 'blank') {
+            $c2.siblings('.c').find('.srCtrl').addClass('on3');
+        }
+		//
+		if(type.indexOf('ip') >=0 ) {
+			$('.srSelect', $c2).eq(0).select2({ minimumResultsForSearch: -1, theme: 'default srSelect2' });
+			$('.srSelect', $c2).eq(1).select2({ theme: 'default srSelect2' });
+		}else if(type == 'int32_01'){
+			$('.srSelect', $c2).eq(0).select2({ minimumResultsForSearch: -1, theme: 'default srSelect2' });
+			$('.srSelect', $c2).eq(1).select2({ theme: 'default srSelect2' });
+		}
+		else $('.srSelect', $c2).select2({ minimumResultsForSearch: -1, theme: 'default srSelect2' });
+		
+        $('.srSelect:first', $c2).trigger('change');
+		
+		//绑定 int  input 只能输入数字
+		$("input.search_input",$c2).bind('keydown', function(e){
+			DigitInput(e);
+		});
+		
+        var now = new Date();
+        var setDate = {
+            year: now.getFullYear(),
+            month: now.getMonth() + 1,
+            day: now.getDate()
+        }
+		//console.log($c2);
+
+        $('input.datepicker',$c2).each(function(){
+            $(this).jeDate({
+                format:"YYYY-MM-DD",
+                isTime:true,
+                maxDate:setDate.year + "-" + setDate.month + "-" + setDate.day
+            });
+        })
+		_getDate($c2);
+    }
+
+    //重载
+    function _reloadItem(obj) {
+		$(obj).blur();
+        parent.layer.open({
+            type: 1,
+            title: '初始化确认',
+            content: '<div class="layer-alert"><i class="alert warning"></i>是否初始化此索引条件？</div>',
+            btn: ['确&nbsp;&nbsp;定', '取&nbsp;&nbsp;消'],
+            btnAlign: 'c',
+            area: ['380px','310px'],
+            yes: function(i) {
+                var $c = $(obj).parents('.srItem');
+                var type = $c.data('type');
+                $c.data('type', 0);
+                _loadTemp($c, type);
+                parent.layer.close(i);
+            },
+            skin:'layer-custom'
+        });
+    }
+
+    //删除
+    function _delItem(obj) {
+        var len = $('#srArea>div.srItem').length;
+
+        if (len == 1) {
+            return;
+        }
+		$(obj).blur();
+        parent.layer.open({
+            type: 1,
+            title: '删除确认',
+            content: '<div class="layer-alert"><i class="alert warning"></i>是否删除此索引条件？</div>',
+            btn: ['确&nbsp;&nbsp;定', '取&nbsp;&nbsp;消'],
+            btnAlign: 'c',
+            area: ['380px','310px'],
+            yes: function(i) {
+                var $_obj = $(obj).parents('.srItem')
+                $_obj.fadeOut(function() {
+                    $_obj.remove();
+                    var len2 = $('#srArea>div.srItem').length;
+                    if(len2 == 1){
+                        $('div.srCtrl a:eq(1)').addClass('disable');
+                    }else{
+                        $('div.srCtrl a:eq(1)').removeClass('disable');
+                    }
+                });
+               parent.layer.close(i);
+            },
+            skin:'layer-custom'
+        });
+    }
+
+    //添加
+    function _addItem(obj) {
+        _initArea(1);
+    }
+
+    //
+    function srSelType(obj, i) {
+        var v = $(obj).val();
+        var $_obj = $(obj).parents('.srSort');
+        if (i == 1) {
+            if (v == 'between') {
+                $('input:eq(1),span.srTip', $_obj).show();
+            } else {
+                $('input:eq(1),span.srTip', $_obj).hide();
+            }
+        } else if (i == 2) {
+			if (v == 'between') {
+                $('.stwrap:eq(1),>span.srTip', $_obj).show();
+            } else {
+                $('.stwrap:eq(1),>span.srTip', $_obj).hide();
+            }
+        } else if (i == 4) {
+            $_obj.children('input,.select2-container,span.srTip').hide();
+            $('.select2-container:eq(0)', $_obj).show();
+			 $('.forgroup', $_obj).hide();
+            if (v == 'between') {
+                $('input:eq(0),input:eq(1),span.srTip', $_obj).show();
+            } else if (v == 'group') {
+               // $('.select2-container:eq(2)', $_obj).show();
+			    $('.forgroup', $_obj).show();
+            } else {
+                $('.select2-container:eq(1),input:eq(0)', $_obj).show();
+                $_obj.find('select').eq(1).trigger('change');
+            }
+        } else if (i == 5) {
+            if (v == '-1') {
+                $('input:eq(0)', $_obj).show();
+                $('.select2-container:eq(1)', $_obj).removeClass('selon');
+            } else {
+                $('input:eq(0)', $_obj).hide();
+                $('.select2-container:eq(1)', $_obj).addClass('selon');
+            }
+        }
+    }
+
+    //
+    /*
+    function _getHostGroup(obj){
+        hglayer = layer.open({
+            type:2,
+            title:'选择主机组',
+            content:'hostgroup.html',
+            area:['640px','480px'],
+            btn:false
+        });
+
+        $_hostGroupObj = $(obj);
+    }
+
+    function _closeHgLayer(){
+        layer.close(hglayer);
+    }
+    */
+    function _getHostGroup(obj){
+        parent.__getHostGroup(obj);
+    }
+
+    function _setHostGroup(data,obj){
+		
+        var $_p = obj.parents('div.c2');
+		
+        var hgIds = new Array();
+        $('div.forgroup:visible',$_p).each(function(){
+            var hgid = parseInt($(this).attr('group'));
+
+            if(hgid){
+                hgIds.push(hgid);
+            }
+        })
+
+        //console.log(hgIds);
+		//加一层判断
+		
+        $.each(data,function(i,item){
+            if($.inArray(item.id,hgIds) < 0){				
+                var $_c = $('#srTemp-ip').clone().attr('id', '').show();
+                $_c.children('select:first').val('group');
+                $_c.children('select').select2({ minimumResultsForSearch: -1, theme: 'default srSelect2' });
+                $_c.children('select:first').trigger('change');
+                $_p.append($_c);
+                $_c.children('div.forgroup').text(item.name);
+				$_c.children('div.forgroup').attr('group',item.id).attr('path',item.path).show();
+            }
+        })
+
+        parent._closeHgLayer();
+
+        $('div.srSort:first',$_p).remove();
+        var $_defaultTemp = $('#srTemp-ip').clone().attr('id', '').show();
+        $_p.prepend($_defaultTemp);
+		//$('div.srSort:first',$_p).remove();
+        $('.srSelect', $_defaultTemp).select2({ minimumResultsForSearch: -1, theme: 'default srSelect2' });
+        $('.srSelect:first', $_defaultTemp).trigger('change');
+    }
+	
+	//改变类型
+	function change_type(obj){
+		type = $(obj).val();
+		
+		if(type == 'NORMAL' || type == 'SESSION'){
+			if(if_disable_list[0] == '2') $('.s-hide').show();
+			else  $('.s-hide').hide();
+		}else{
+			if(if_disable_list[1] == '2' || if_disable_list[2] == '2') $('.s-hide').show();
+			else  $('.s-hide').hide();
+		}
+		_obj = $("#srArea>div.srItem").eq(0);
+		$("div.subSel>ul",_obj).empty().append('<li data-type="blank_0">请选择</li>');
+		/*<input name="service_1" id="service_1" value="xtime_00,编号;xtime_01,入库时间;xtime_02,发生时间;xtime_03,会话标识;xtime_04,起始时间;int08_00,日志属性;int08_11,告警处理;int08_14,告警类型;int08_15,告警等级;int16_00,客户端端口;int16_01,服务器端口;int32_01,日志类型;ip_00,发生地址;ip_01,服务端地址;ip_02,客户端地址;int64_15,告警动作;str32_00,用户;str32_01,操作;str32_02,信息;str32_05,客户端工具;str32_20,运维访问策略;str32_21,运维操作备注;str32_22,运维用户帐号;str32_23,运维用户姓名;str32_24,审批用户帐号;str32_25,审批用户姓名;str32_28,回放文件;str32_29,策略名称;str32_30,事件信息;str32_31,告警对象"  type="hidden">*/
+		var fieldlist = [];
+		if(type == "NORMAL"){ //操作 
+			fieldlist = $('#service_1').val().split(';');
+		}else if(type == "SESSION"){
+			fieldlist = $('#service_2').val().split(';');
+		}else if(type == "SYSTEM"){
+			fieldlist = $('#service_3').val().split(';');
+		}
+		$('#areaTemp div.subSel>ul').empty();
+		$(fieldlist).each(function(i,item){
+			tmp = item.split(',');
+			if(tmp[0] == 'int08_00') return true;
+			$("div.subSel>ul",_obj).append("<li data-type=\""+tmp[0]+"\" >"+tmp[1]+"</li>");
+			$('#areaTemp div.subSel>ul').append("<li data-type=\""+tmp[0]+"\" >"+tmp[1]+"</li>");
+		})
+		$("#srArea>div.srItem").each(function(i,item){
+			if(i == 0){
+				if( $('div.c>div.srCtrl',$(item)).attr('class').indexOf('on') >=0) $('div.c>div.srCtrl a.b2',$(item)).click();
+				if(type == 'SYSTEM') $('div.subSel>ul',$(item)).find('li[data-type=xtime_02]').click().addClass('active');
+				else $('div.subSel>ul',$(item)).find('li').eq(2).click().addClass('active');
+				$('div.srCtrl>div.a a:eq(1)',$(item)).addClass('disable');
+				$('div.c2 div.srSort span.srsCtl>a.del',$(item)).each(function(i1,item1){
+					if(i1 == 0) return true;
+					$(item1).click();
+				})
+			}else{
+				$(item).remove();
+			}
+		})
+		if(type == 'SYSTEM') $('#srArea>div.srItem div.subSel>ul').find('li[data-type=xtime_02]').click().addClass('active');
+		else $('#srArea>div.srItem div.subSel>ul').find('li').eq(2).click().addClass('active');
+		
+		if($('#logtype').val()=='SYSTEM') typ = 'xtime_02';
+		else typ = 'xtime_01';
+		var nType = typ.split('_');
+		$c2 = $('#srArea div.c2');
+		$c2.html($('#srTemp-' + nType[0]).clone().attr('id', '').show());
+
+        if (nType[0] == 'blank') {
+            $c2.siblings('.c').find('.srCtrl').addClass('on3');
+        }
+		//
+		$('.srSelect', $c2).select2({ minimumResultsForSearch: -1, theme: 'default srSelect2' });		
+        $('.srSelect:first', $c2).trigger('change');
+		
+		//绑定 int  input 只能输入数字
+		$("input.search_input",$c2).bind('keydown', function(e){
+			DigitInput(e);
+		});
+		
+        var now = new Date();
+        var setDate = {
+            year: now.getFullYear(),
+            month: now.getMonth() + 1,
+            day: now.getDate()
+        }
+		//console.log($c2);
+
+        $('input.datepicker',$c2).each(function(){
+            $(this).jeDate({
+                format:"YYYY-MM-DD",
+                isTime:true,
+                maxDate:setDate.year + "-" + setDate.month + "-" + setDate.day
+            });
+        })
+		_getDate($c2);
+		
+	}
+	var loadLayer;
+	function search_action(tasktype,edit){
+		//获取 检索条件
+		logtype =$('#logtype').val(); 
+		
+		/*
+		var json_condition ={
+			"type":logtype,
+			"data":[
+				{
+					"operate":"xtime_00",
+					"translate:"编号",
+					"condition":[
+						{
+							"action":"between",
+							"value":"2017-10-9 00:00:00;2017-10-9 23:59:59"
+						}
+					]
+					
+				}
+			]
+		}*/
+		var json_condition ={
+			"type":logtype,
+			"data":[]
+		};
+		var check_p = 0;
+		var oper = '';
+		$("#srArea>div.srItem").each(function(i,item){
+			one_condition ={};
+			operate = $("div.subSel>ul>li.active",$(item)).data('type');
+			translate = $("div.subSel>ul>li.active",$(item)).text();
+			one_condition.operate = operate;
+			one_condition.translate = translate;
+			one_condition.condition = [];
+			
+			//获取条件
+			//ip
+			value = "";
+			var check = 0;
+			var son_oper ='';
+			$("div.c2 div.srSort",$(item)).each(function(i1,item1){
+				
+				////console.log(item1);
+				//获取 单个条件
+				//action
+				action = $("select[name=_action]",$(item1)).val();
+				action_trans = $("select[name=_action] option:selected",$(item1)).text();
+				
+				if(operate.indexOf('ip') >=0 ){
+					if(action == "between"){ //区间
+						start = $("input:eq(0)",$(item1)).val();
+						end = $("input:eq(1)",$(item1)).val();
+						if(start == "") {		
+							if(i1 == 0) return true;
+							check = 1;
+							_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 不能为空',$("input:eq(0)",$(item1)));
+							return false; 
+						}
+						if(end == "") {	
+							if(i1 == 0) return true;
+							check = 1;
+							_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 不能为空',$("input:eq(1)",$(item1)));
+							return false; 
+						}
+						if (!IPReg.test(start)) {
+							check = 1;
+							_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 IP格式错误',$("input:eq(0)",$(item1)));
+							return false;
+						}if (!IPReg.test(end)) {
+							check = 1;
+							_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 IP格式错误',$("input:eq(1)",$(item1)));
+							return false;
+						}
+						ret = compareIP(start,end);
+						if(ret == 1){
+							check = 1;
+							_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 起始地址不能大于结束地址',$("input:eq(0)",$(item1)));
+							return false; 
+						}
+						value = start + ";" + end;
+						son_oper = son_oper+''+action_trans + ' '+ value;
+					}else if(action == "group"){
+						value = $("div.forgroup",$(item1)).attr('group');
+						son_oper = son_oper+''+action_trans + ' '+ value;
+					}else{
+						if($("select[name='_host']",$(item1)).val() == -1){ //其他
+							value = $("input:eq(0)",$(item1)).val();
+							value_trans = value;
+							if(value == "") {		
+								if(i1 == 0) return true;
+								check = 1;
+								_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 不能为空',$("input:eq(0)",$(item1)));
+								return false; 
+							}
+							if (!IPReg.test(value)) {
+								check = 1;
+								_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 IP格式错误',$("input:eq(0)",$(item1)));
+								return false; 
+							}
+						}else{
+							value = $("select[name='_host']",$(item1)).val();
+							value_trans = $("select[name='_host'] option:selected",$(item1)).text();
+						}
+						son_oper = son_oper+''+action_trans + ' '+ value_trans;
+					}
+				//type =="int08_11" || type =="int08_14" || type =="int08_15" || type =="int32_01" || type =="int64_15" || type =="int08_03"
+				}else if(operate.indexOf('int08') >=0 ||  operate == 'int32_01' || operate == 'int64_15'){ //下拉 select的值
+					value = $("select:eq(1)",$(item1)).val();
+					value_trans = $("select:eq(1) option:selected",$(item1)).text()
+					son_oper = son_oper+''+action_trans + ' '+ value_trans;
+				}else{
+					if(action == "between"){ //区间
+						start = $("input:eq(0)",$(item1)).val();
+						end = $("input:eq(1)",$(item1)).val();
+						if(start == "") {		
+							if(i1 == 0) return true;
+							check = 1;
+							_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 不能为空',$("input:eq(0)",$(item1)));
+							return false; 
+						}
+						if(end == "") {	
+							if(i1 == 0) return true;
+							check = 1;
+							_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 不能为空',$("input:eq(1)",$(item1)));
+							return false; 
+						}
+						
+						if(operate.indexOf('xtime')>=0 && operate!="xtime_00" && operate!='xtime_03'){ //时间 除去 编号和会话标志 因为是时间控件 不需要判断格式
+							//现在 有 8个input
+							ymd = $("input:eq(0)",$(item1)).val();
+							h = $("input:eq(1)",$(item1)).val();
+							f = $("input:eq(2)",$(item1)).val();
+							s = $("input:eq(3)",$(item1)).val();
+							start =  ymd +" " + h +":"+ f + ":" + s ;
+							
+							ymd = $("input:eq(4)",$(item1)).val();
+							h = $("input:eq(5)",$(item1)).val();
+							f = $("input:eq(6)",$(item1)).val();
+							s = $("input:eq(7)",$(item1)).val();
+							end = ymd +" " + h +":"+ f + ":" + s ;
+							
+							
+							ret = compareTime(start,end);
+							if(ret == 1){	
+								check = 1;
+								_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 起始时间不能大于结束时间',$("input:eq(0)",$(item1)));
+								return false; 
+							}
+						}else{
+							if(operate.indexOf('str32')>=0){;} //字符串的先不限制条件
+							else{
+								
+								if (!numberReg.test(start)){ //限制数字
+									check = 1;
+									_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 格式不正确',$("input:eq(0)",$(item1)));
+									return false;
+								}
+								if (!numberReg.test(end)){ //限制数字
+									check = 1;
+									_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 格式不正确',$("input:eq(0)",$(item1)));
+									return false;
+								}
+								if(parseInt(start) > parseInt(end)){	
+									check = 1;
+									_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 起始'+translate+'不能大于结束'+translate+'',$("input:eq(0)",$(item1)));
+									return false;					
+								}
+							}
+						}
+						value = start + ";" + end;
+						son_oper = son_oper+''+action_trans + ' '+ value;
+						
+						
+					}else{
+						value = $("input:eq(0)",$(item1)).val();
+						
+						if(value == "") {		
+							if(i1 == 0) return true;
+							check = 1;
+							_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 不能为空',$("input:eq(0)",$(item1)));
+							return false; 
+						}
+						if(operate.indexOf('xtime')>=0 && operate!="xtime_00" && operate!='xtime_03'){ //时间 除去 编号和会话标志 因为是时间控件 不需要判断格式
+							ymd = $("input:eq(0)",$(item1)).val();
+							h = $("input:eq(1)",$(item1)).val();
+							f = $("input:eq(2)",$(item1)).val();
+							s = $("input:eq(3)",$(item1)).val();
+							value =  ymd +" " + h +":"+ f + ":" + s ;
+							;
+						}else{
+							if(operate.indexOf('str32')>=0){;} //字符串的先不限制条件
+							else{
+								
+								if (!numberReg.test(value)){ //限制数字
+									check = 1;
+									_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件 格式错误',$("input:eq(0)",$(item1)));
+									return false;
+								}
+								
+							}
+						
+						}
+						son_oper = son_oper+''+action_trans + ' '+ value;
+					}
+					
+					
+				}
+				condition = JSON.parse("{\"action\":\""+action+"\",\"value\":\""+value.replace(/&/g,'&amp;').replace(/\"/g,'&quot;').replace(/\'/g,'&apos;').replace(/>/g,'&gt;').replace(/</g,'&lt;').replace(/\\/g,'\\\\')+"\"}");
+				
+				//console.log("con="+JSON.stringify(condition))
+				//console.log("one="+JSON.stringify(one_condition.condition))
+				var n = 0;
+				var ind = 0;
+				$(one_condition.condition).each(function(ind,itemj){
+					if(JSON.stringify(condition) == JSON.stringify(itemj)){
+						n =1;						
+						return false;
+					}
+				})
+				if(n){
+					check = 1;
+					_alert(1,'检索','第' + (i+1) +"个条件的第" + (i1+1) +'个子条件与第'+(ind+1)+'个子条件相同');
+					return false;
+				}
+				one_condition.condition.push(condition);
+				//console.log(JSON.stringify(one_condition));
+				if(i1 == $("div.c2 div.srSort",$(item)).length -1){
+					//son_oper = '(' +son_oper+ ')';
+				}else{
+					son_oper = son_oper+ ' 或 ';
+				}
+					
+			})		
+			if(check){
+				check_p = 1;
+				return false;
+			}
+			n=0;
+			var iind = 0;
+			$(json_condition.data).each(function(iind,itemk){
+				if(JSON.stringify(one_condition) == JSON.stringify(itemk)){
+					n =1;						
+					return false;
+				}
+			})
+			if(n){
+				check_p = 1;
+				_alert(1,'检索','第' + (i+1) +'个条件与第'+(iind+1)+'个条件相同');
+				return false;
+			}
+			if(one_condition.condition.length == 0){
+				check_p = 1;
+				_alert(1,'检索','第' + (i+1) +'个条件为空');
+				return false;
+			}
+			oper = oper + translate + '(' + son_oper +") 并且 ";
+			json_condition.data.push(one_condition);			
+		})
+		if(check_p) return false;
+		oper = oper.substring(0,oper.length-4);
+		oper = "日志属性("+ $('#logtype option:selected').text()+') 并且 '+oper
+		if(tasktype == 0){
+			oper = '检索：'+oper ;
+		}else{
+			oper = '保存模板：'+$('#input_template',parent.document).val()+"("+oper+")" ;
+		}
+		//console.log(oper);
+		
+		//return false;
+		msstr = aceg(JSON.stringify(json_condition),{{se}});
+		$.ajax({
+			url:'/bhost/search_action',
+			type:'post',
+			async:true,
+			data:{a0:{{se}},s1:$('#taskid').val(),s2:JSON.stringify(json_condition),s3:tasktype,s4:$('#input_template',parent.document).val(),s5:$('#input_template',parent.document).attr('_id'),s6:$('#input_template',parent.document).text(),s7:edit,s8:oper,s9:if_disable,m1:msstr},
+			success:function(result){
+				result = JSON.parse(result);
+				if(result.Result == true){
+					if(tasktype == 0){
+						if(result.jump == true){
+							$.ajax({
+								url:'/bhost/get_totalrow',
+								type:'post',
+								data:{a0:{{se}},t1:result.TaskId},
+								success:function(result1){
+									result1 = JSON.parse(result1);
+									if(result1.Result){
+										totalrow = result1.Count;
+										Status =  result1.Status;
+										if(totalrow >0 )location.href = '/bhost/search_result?a0={{se}}&f1=search&t1='+result.TaskId;
+										else if(Status >1 )  _alert(1,'检索','查询结果为空');
+										else parent.__doSearch(result.TaskId);
+									}else{
+										_alert(1,'检索结果',result.ErrMsg);
+									}
+								}
+							})
+							return false;
+						}else{
+							parent.__doSearch(result.TaskId);
+						}
+					}
+					else if(tasktype == 1){
+						parent._cancelSave();
+						parent._succSave();
+						show_template_list();
+						return false;
+					}
+				}else{
+					if(tasktype == 0){
+						_alert(1,"检索",result.ErrMsg);
+					}
+					else if(tasktype == 1){
+						_alert(1,'模板',result.ErrMsg);
+					}
+				}
+			}
+		})
+	}
+	function change_template(obj){
+		$('#logtype').val('NORMAL').trigger('change');
+		template_id = $(obj).val();
+		//获取
+		$.ajax({
+			url:'/bhost/search_show_condition',
+			type:'post',
+			async:true,
+			data:{a0:{{se}},t1:template_id},
+			success:function(result){
+				result = JSON.parse(result); 
+				if(result.length == 0){
+					$('#logtype').val('NORMAL').trigger('change');
+				}else{
+					condition_json =JSON.parse(result[0].Condition);
+					//回显条件
+					show_condition(condition_json);
+				}
+				
+			}
+		});
+		////console.log($("#input_template",parent.document));
+		//parent._getSaveLayer($("option:selected",$(obj)).text(),template_id);
+	}
+	function show_condition(json_list){
+		/*
+		{"Result":true,
+		"info":{
+				"type":NORMAL,
+				"data":[
+					{"operate":xtime_01,"condition":[{"action":between,"value":"2017-10-11 00:00:00;2017-10-11 23:59:59"}]},
+					{"operate":int16_01,"condition":[{"action":high,"value":"21"}]},
+					{"operate":str32_22,"condition":[{"action":begin,"value":"yt"}]},
+					{"operate":ip_00,"condition":[{"action":equal,"value":"3.3.3.3"}]},
+					{"operate":ip_01,"condition":[{"action":equal,"value":"192.168.0.46"}]}
+				]
+			}
+
+		}
+		*/
+		logtype = json_list.type;
+		
+		// 三权分立 8->运维操作(操作、会话) 9->运维管理(系统日志-运维部分) 11->系统日志(系统日志-非运维用户部分)
+		if (if_disable_list[0] == '0' && (if_disable_list[1] != '0' || if_disable_list[2] != '0')){
+			$('#div_save').show();
+			//$('#logtype').empty('<option id="logtype1" value="NORMAL">操作</option><option id="logtype2" value="SESSION">会话</option><option id="logtype3" value="SYSTEM">系统</option>');
+			
+			if(logtype == 'NORMAL'){
+				$('#logtype').empty().append('<option id="logtype1" value="NORMAL">操作</option><option id="logtype3" value="SYSTEM">系统</option>');
+			}else if(logtype == 'SESSION'){
+				$('#logtype').empty().append('<option id="logtype2" value="SESSION">会话</option><option id="logtype3" value="SYSTEM">系统</option>');
+			}else{
+				$('#logtype').empty().append('<option id="logtype3" value="SYSTEM">系统</option>');
+			}
+			//$('#logtype1').remove();
+			//$('#logtype2').remove();
+		}else if (if_disable_list[0] != '0' && (if_disable_list[1] == '0' && if_disable_list[2] == '0')){
+			$('#div_save').show();
+			if(logtype == 'SYSTEM'){
+				$('#logtype').empty().append('<option id="logtype1" value="NORMAL">操作</option><option id="logtype2" value="SESSION">会话</option><option id="logtype3" value="SYSTEM">系统</option>');
+			}else{
+				$('#logtype').empty().append('<option id="logtype1" value="NORMAL">操作</option><option id="logtype2" value="SESSION">会话</option>');
+			}
+			//$('#logtype3').remove();
+		}
+		$('#logtype').select2('destroy').select2({ minimumResultsForSearch: -1 });
+		/*
+		if(logtype == 'NORMAL' || logtype == 'SESSION'){
+			if(if_disable_list[0] == '2') $('.s-hide').show();
+			else  $('.s-hide').hide();
+		}else{
+			if(if_disable_list[1] == '2' || if_disable_list[2] == '2') $('.s-hide').show();
+			else  $('.s-hide').hide();
+		}*/
+		
+		$('#logtype').val(logtype).trigger('change');
+		data = json_list.data;
+		$.each(data,function(i,item){
+			//console.log($("#srArea").attr('id'))
+			//console.log($("#srArea").find('.arrCtl').length)
+			operate = item.operate;
+			//console.log(operate)
+			_srItem = $("#srArea>div.srItem:eq("+i+")");
+			//console.log(_srItem)
+			
+			li_obj = $("div.subSel>ul>li[data-type="+operate+"]",$(_srItem));
+		//console.log('ss')
+		//console.log(li_obj)	
+			var type =operate,
+                name = $(li_obj).text();
+            $(li_obj).addClass('active').siblings().removeClass('active');
+			$_obj = $("div.label",$(_srItem));
+			var $c2 = $_obj.siblings('.c2');
+            setTimeout(function() {
+                $_obj.removeClass('on');
+            }, 100);
+            $_obj.children('span').text(name);
+            _loadTemp($_obj.parent(), type);
+
+            var nType = type.split('_');
+            if (nType[0] == 'blank') {
+                $c2.hide().siblings('.c').find('.srCtrl').addClass('on3');
+                $_obj.parent().find('a.b1').addClass('disable');
+            } else {
+                $c2.show().siblings('.c').find('.srCtrl').removeClass('on3');
+                $_obj.parent().find('a.b1').removeClass('disable');
+            }
+			
+			$(item.condition).each(function(i1,item1){		
+				_srSort = $("div.srSort:eq(0)",$(_srItem));
+				//console.log(_srSort);
+				$(_srSort).find('select[name=_action]').val(item1.action).trigger('change');
+				if(operate.indexOf('ip') >=0 ){
+					if(item1.action == "between"){ //区间
+						$("input:eq(0)",$(_srSort)).val(item1.value.split(';')[0]);
+						$("input:eq(1)",$(_srSort)).val(item1.value.split(';')[1]);	
+					}else if(item1.action == "group"){						
+						$("div.forgroup",$(_srSort)).attr('group',item1.value).text(get_host_name(item1.value));
+					}else{						
+						if(hostip.indexOf(item1.value) < 0){ //其他
+							$("select[name='_host']",$(_srSort)).val(-1).trigger('change');
+							$("input:eq(0)",$(_srSort)).val(item1.value);
+						}else{							
+							$("select[name='_host']",$(_srSort)).val(item1.value).trigger('change');
+						}
+					}
+				//type =="int08_11" || type =="int08_14" || type =="int08_15" || type =="int32_01" || type =="int64_15" || type =="int08_03"
+				}else if(operate.indexOf('int08') >=0 ||  operate == 'int32_01' || operate == 'int64_15'){ //下拉 select的值
+					if(operate != 'int32_01'){
+						$("select:eq(1) option",$(_srSort)).each(function(){
+							if($(this).text() == item1.value){  
+								$(this).attr("selected","selected").trigger('change');  
+							}  
+						})
+					}else 
+						$("select:eq(1)",$(_srSort)).val(item1.value).trigger('change');
+				}else{
+					if(item1.action == "between"){ //区间
+						if(operate.indexOf('xtime')>=0 && operate!="xtime_00" && operate!='xtime_03'){
+							start = item1.value.split(';')[0];
+							end = item1.value.split(';')[1];
+							ymd = start.split(' ')[0];
+							h =  start.split(' ')[1].split(':')[0];
+							f =  start.split(' ')[1].split(':')[1];
+							s =  start.split(' ')[1].split(':')[2];
+							//8 个 input 
+							$("input:eq(0)",$(_srSort)).val(ymd);
+							$("input:eq(1)",$(_srSort)).val(h);
+							$("input:eq(2)",$(_srSort)).val(f);
+							$("input:eq(3)",$(_srSort)).val(s);
+							//
+							ymd = end.split(' ')[0];
+							h =  end.split(' ')[1].split(':')[0];
+							f =  end.split(' ')[1].split(':')[1];
+							s =  end.split(' ')[1].split(':')[2];
+							$("input:eq(4)",$(_srSort)).val(ymd);
+							$("input:eq(5)",$(_srSort)).val(h);
+							$("input:eq(6)",$(_srSort)).val(f);
+							$("input:eq(7)",$(_srSort)).val(s);
+						}else{
+							$("input:eq(0)",$(_srSort)).val(item1.value.split(';')[0]);
+							$("input:eq(1)",$(_srSort)).val(item1.value.split(';')[1]);
+						}
+					}else{
+						if(operate.indexOf('xtime')>=0 && operate!="xtime_00" && operate!='xtime_03'){
+							ymd = item1.value.split(' ')[0];
+							h =  item1.value.split(' ')[1].split(':')[0];
+							f =  item1.value.split(' ')[1].split(':')[1];
+							s =  item1.value.split(' ')[1].split(':')[2];
+							$("input:eq(0)",$(_srSort)).val(ymd);
+							$("input:eq(1)",$(_srSort)).val(h);
+							$("input:eq(2)",$(_srSort)).val(f);
+							$("input:eq(3)",$(_srSort)).val(s);
+						}else{
+							$("input:eq(0)",$(_srSort)).val(item1.value.replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&apos;/g,'\'').replace(/&gt;/g,'>').replace(/&lt;/g,'<'));
+						}
+					}
+				}
+				//添加
+				if( i1 < (item.condition.length -1)){
+					$('span.srsCtl a.add',$(_srSort)).click();
+				}
+				
+			})
+			//添加
+			if( i <= (data.length -1))
+				$("#srArea>div.srItem:eq("+i+") div.c>div.srCtrl>div.a>a:eq(2)").click();
+		})
+		$('#srArea div.srItem:last-child').remove();
+		if($('#srArea div.srItem').length == 1){
+			$('#srArea div.srItem').eq(0).find('i.del').parent('a').attr('class','disable');
+		} 
+	}
+	function get_host_name(grp_id){
+		var grp_name = "";
+		$.ajax({
+			url:'/bhost/get_host_name',
+			type:'post',
+			async:false,
+			data:{a0:{{se}},g1:grp_id},
+			success:function(result){
+				result = JSON.parse(result); 
+				if(result.Result == true){
+					grp_name = result.info;				
+				}
+			}
+		})
+		return grp_name;
+	}
+	function show_from_task_condition(taskid){
+		$.ajax({
+				url:'/bhost/search_task_condition',
+				type:'post',
+				async:true,
+				data:{a0:{{se}},t1:taskid},
+				success:function(result){
+					result = JSON.parse(result); 
+					if(result.Result == true){
+						condition_json = result.info;
+						//回显条件
+						show_condition(condition_json);
+						return false;
+					}else{
+						_alert(1,'检索',result.ErrMsg);
+					}
+				}
+			})
+	}
+    
+	var $focusObj;
+	var temple_List = [];
+	function _autoView(obj) {
+		$(document)[0].onclick = null;
+		$focusObj = $(obj);
+		var v = $.trim($(obj).val());
+		var id = $(obj).attr('id');
+		var $view;
+		if ($('#autoView').length == 0) {
+			$('body').append('<div id="autoView" />');
+		}
+		$view = $('#autoView');
+		var c = '';
+		$.ajax({
+			url: "/bhost/search_show_condition",
+			type: "POST",
+			async: false,
+			data:{a0:{{se}},t1:-1},
+			success: function (result) {
+				var result = JSON.parse(result);
+				var data = result;
+				temple_List = new Array();
+				$.each(data, function (i, item) {
+					temple_List[item.Id] = item;
+					if (v == '') {
+						c += '<li><i class="del" onclick="_delNode(this)" /><a href="javascript:;" style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;" onclick="_setVal(this)" id="template-' + item.Id + '">' + item.Name + '</a></li>';
+					} else if (item.Name.indexOf(v) >= 0) {
+						c += '<li><i class="del" onclick="_delNode(this)" /><a href="javascript:;" style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;" onclick="_setVal(this)" id="template-' + item.Id + '">' + item.Name + '</a></li>';
+					}
+				});
+				$view.html('<ul>' + c + '</ul>');
+			}
+		});
+		
+		var offset = $(obj).offset();
+		var w = $(obj).outerWidth();
+		$view.css({
+			top: offset.top + 24,
+			left: offset.left,
+			width: w - 12
+		}).show();
+
+		$(obj).parents('.g-tsel').addClass('on');
+	}
+	function _setVal(t) {
+		input_check = 0;
+		//var val = $(t).text();
+		//var value = $(t).attr('id');
+		//var id = $focusObj.attr('id');
+		//$($focusObj).val(val);
+		
+		//回显条件
+		//$('#logtype').val('NORMAL').trigger('change');
+		//template_id = value.split('template-')[1];
+		//console.log($(t));
+		template_id = $(t).find('span').data('value');
+		//console.log("template_id:"+template_id);
+		$('#srArea').empty();
+		_initArea()
+		//获取
+		$.ajax({
+			url:'/bhost/search_show_condition',
+			type:'post',
+			async:false,
+			data:{a0:{{se}},t1:template_id},
+			success:function(result){
+				result = JSON.parse(result); 
+				if(result.length == 0){
+					$('#logtype').val('NORMAL').trigger('change');
+				}else{
+					
+					condition_json =JSON.parse(result[0].Condition);
+					//回显条件
+					show_condition(condition_json);
+				}
+				
+			}
+		});
+		//$view = $('#autoView');
+		//$view.hide();
+		input_check = 1;
+		//$('#template_list').attr('_id',template_id);
+		//$('#template_list').attr('_name',val);
+	}
+	//下拉框删除函数
+	function _delNode(obj) {
+		//var $p = $(obj).parent();
+		//var v = $(obj).next().text();
+		
+		//var value = $(obj).next().attr('id');
+		//template_id = value.split('template-')[1];
+		template_id = $(obj).find('span').data('value');
+		tem_name = $(obj).find('span').text();
+		$('.btn').blur(); parent.layer.open({
+			type: 1,
+			title: "删除模板",
+			content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+			btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+			btnAlign: 'c',
+			closeBtn: false,
+			skin: 'layer-custom',
+			area: ['380px', '310px'],
+			move: false,
+			resize: false,
+			yes: function (i) {
+				parent.layer.close(i);
+				oper = '删除检索模板：' +tem_name;
+				//删除
+				$.ajax({
+					url:'/bhost/delete_template',
+					type:'post',
+					async:false,
+					data:{a0:{{se}},t1:template_id,o1:oper},
+					success:function(result){
+						result = JSON.parse(result); 
+						if(result.Result == true){
+							_alert(0,'删除模板','删除成功');
+							show_template_list();
+						}else{
+							_alert(1,'删除模板',result.ErrMsg);
+						}
+					}
+				});
+				//$focusObj.val('');
+				//$p.remove();
+				t_xSelect._setPosition();
+				$(obj).remove();
+				$(document)[0].onclick = null;
+			}
+		});
+	}
+	function _hideView(t) {
+	
+		$(document)[0].onclick = function () {
+			$('#autoView').hide();
+			$('.g-tsel').removeClass('on');
+		}
+		if ($focusObj == undefined) {
+			return false;
+		}
+		//console.log($('#template_list').val());
+		//console.log($('#template_list').text());
+		//$('#template_list').attr('_id',template_id);
+		//$('#template_list').attr('_name',val);
+		if($('#template_list').val() ==""){
+			$('#template_list').attr('_id','');
+			$('#template_list').attr('_name','');
+		}
+		/*
+		var id = $focusObj.attr('id');
+		var get_name = temple_List.map(function (index) {
+			return index.name;
+		})
+		var name = $focusObj.val().trim();
+		var val = $.inArray(name, get_name);
+		var old_id = $focusObj.attr('name');
+		if (!$('#template_list_input').is(':hidden')) {
+			$('#template_list_input').focus();
+		} else {
+			if (val >= 0) {
+				$focusObj.attr('name', val);
+				$focusObj.val(temple_List[val].template_list_input);
+				name_pwd = temple_List[val].Name;
+				item_pwd = temple_List[val];
+				//PwdModStrategy();
+			} else if (val < 0) {
+				if (old_id != 'PwdModStrategy' && old_id != '0') {
+					item_pwd = temple_List[old_id];
+					$focusObj.val(temple_List[old_id].Name);
+					//PwdModStrategy();
+				} else {
+					$focusObj.val('');
+				}
+			}
+		}*/
+	}
+	
+	
+	/// 1207 修改
+	$(document).on('keydown','input.timeinput',function(){
+        var i = $(this).index();        
+        var v = $(this).val();
+        v = v.replace(/[^\d]/g,'');
+        $(this).val(v);
+    }).on('keyup','input.timeinput',function(e){
+        var i = $(this).index();
+        var v = $(this).val();    
+        var max = 23;
+        if(i>1){
+            max = 59;
+        }
+
+        if(v > max){
+            v = max;
+        }
+
+        $(this).val(v);
+
+        v = v.toString();
+        if(v.length >= 2){
+            $(this).val(v.substring(0,2));
+
+            var keycode = e.keyCode;
+            if(keycode != 9){
+                $(this).next().next().focus();
+            }
+        }
+    }).on('focus','input.timeinput',function(){
+        $(this).select();
+    }).on('blur','input.timeinput',function(){
+        var v = $(this).val();
+        v = v.toString();
+
+        if(v == ''){
+            v = '00';
+        }else if(v.length == 1){
+            v = '0' + v;
+        }
+
+        $(this).val(v);
+    });
+</script>
+
+{% endblock  %}

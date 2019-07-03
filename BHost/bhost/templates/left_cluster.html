@@ -1,0 +1,905 @@
+{% extends "index.html" %}
+{% block head %}
+<script src="/manage/js/xSelect.js"></script>
+<script src="/manage/js/jquery.jedate.min.js"></script>
+<script src="/manage/js/underscore-1.8.2.min.js"></script>
+<script src="/manage/js/base64.js"></script>
+
+<link rel="stylesheet" href="/manage/css/jedate.css">
+<link rel="stylesheet" href="/manage/css/G-style.css">
+{% endblock %}
+{% block main %}
+<!--left-->
+<div class="sider">
+	<div class="top-logo">
+		<img src="/manage/images/logo-top.png" alt="">
+	</div>
+
+	<nav class="nav-s nav-s1" id="nav-s1" style="">
+		<ul>
+			<li data-modeid="1"><a class="active" href="javascript:;" data-url="/bhost/cluster_info?tasktype=0&a0={{se}}"><i class="icon6"></i></a></li>
+		</ul>
+	</nav>
+</div>
+
+<div class="rwrap1">
+	<!---->
+	<div class="header-s">
+		<!-- this is logout -->
+		<a class="header-lock" href="javascript:;" onclick="logout();" title="退出"><i></i>退出</a>
+		<div class="user-i">
+			<a class="s" href="javascript:;" id="u_i" style="cursor: auto;" onClick="user_info('{{us}}')"></a>
+			<a class="s" href="javascript:;" id="MonitorStyle" value="1" style="display: none;"></a>
+		</div>
+	</div>
+	<!---->
+	<div class="mainer" id="detail">
+		<iframe src="/bhost/cluster_info?tasktype=0&a0={{se}}" frameborder="0" width="100%" height="100%" name="mainFrame"
+		 id="mainFrame"></iframe>
+	</div>
+	
+	<!--基本信息-->
+	<div class="mainer" id="info" style="display: none">
+		<div class="container">
+			<div class="c-top">
+				<div class="c-title">
+					<div class="manual-head" style="float:left;width:100px">
+						<div class="manual-title">
+							<span id="user_top_btn" onclick="reload(1)" style="cursor: pointer;">基本信息</span>
+							<i class="userm_icon"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="c-cont">
+				<div class="c-wrap" style="padding: 10px 0 0;min-width:1177px;">
+					<div class="c-exp" style="margin: -1px auto;">
+
+						<div class="h-explorer">
+							<div class="G-top">
+								<div class="G-box1"></div><strong>&nbsp;基本信息</strong>
+							</div>
+
+							<div class="h-content2" style="min-height:210px;height:auto;width: 100%;overflow: hidden;padding: 14px 0 0;">
+
+								<div class="form-item for-avatar" style="width: 180px;">
+									<div id="tAvatar" onclick="_getAvatarList(this)"><img src="/manage/images/avatar1.jpg"></div>
+								</div>
+
+								<div class="col3">
+									<div class="form-item">
+										<span class="form-tag" style=""><em class="imp">*</em>账&nbsp;&nbsp;号：</span>
+										<div class="form-c" style="">
+											<input type="text" class="form-text" id="sys_u_name" maxlength="31" style="" onblur="IDCheck(this)" tabindex="1"><i
+											 class="v-check"></i>
+											<p class="form-tip">仅支持英文、数字、下划线、横杠、小数点</p>
+										</div>
+										<div class="tab-t" style=" width: 9%; position: absolute; margin-left: 290px; margin-top: -27px">
+											<div class="ctr">
+												<a href="javascript:;" id="changePwd" class="btn btn-default btn-normal" onclick="change_Pwd();">修改密码</a>
+											</div>
+										</div>
+									</div>
+									<div class="form-item">
+										<span class="form-tag"><em class="imp">*</em>姓&nbsp;&nbsp;名：</span>
+										<div class="form-c">
+											<input type="text" class="form-text" id="user_name" maxlength="127" onblur="nameCheck(this)" tabindex="2"><i
+											 class="v-check"></i>
+											<p class="form-tip">特殊字符仅支持下划线、横杠、小数点</p>
+										</div>
+									</div>
+
+									<!-- <div class="form-item" style="display:none;">
+											<span class="form-tag"><em class="imp">*</em>认证方式：</span>
+											<div class="form-c">
+												<select class="form-select" name="" id="sys_u_authtype" style="width:234px" >
+													<option value="null" >默认</option>
+												</select>
+											</div>
+										</div> -->
+
+									<div class="form-item">
+										<span class="form-tag"><em class="imp" id="phone_em">*</em>手&nbsp;&nbsp;机：</span>
+										<div class="form-c">
+											<input type="text" class="form-text" id="sys_u_phone" onblur="phoneCheck(this)" maxlength="11" tabindex="3"><i
+											 class="v-check"></i>
+										</div>
+									</div>
+
+									<div class="form-item" id="pwd1" style="display:none;">
+										<span class="form-tag"><em class="imp">*</em>当前密码：</span>
+										<div class="form-c">
+											<input type="password" class="form-text" id="sys_u_pwd_old" maxlength="64" tabindex="7"><i class="v-check"></i>
+										</div>
+									</div>
+
+									<div class="form-item" id="pwd2" style="display:none;">
+										<span class="form-tag"><em class="imp">*</em>新密码：</span>
+										<div class="form-c">
+											<input type="password" class="form-text" id="sys_u_pwd_new" maxlength="64" tabindex="8"><i class="v-check"></i>
+										</div>
+									</div>
+
+									<div class="form-item" id="pwd3" style="display:none;">
+										<span class="form-tag"><em class="imp">*</em>确认密码：</span>
+										<div class="form-c">
+											<input type="password" class="form-text" id="sys_u_pwd_tr" maxlength="64" tabindex="9"><i class="v-check"></i>
+										</div>
+									</div>
+
+									<div class="form-item">
+										<span class="form-tag">描&nbsp;&nbsp;述：</span>
+										<div class="form-c">
+											<input type="text" class="form-text" id="sys_u_descr" maxlength="2047" tabindex="4"><i class="v-check"></i>
+										</div>
+									</div>
+
+									<div class="form-item">
+										<span class="form-tag"><em class="imp" id="mail_em">*</em>邮&nbsp;&nbsp;箱：</span>
+										<div class="form-c">
+											<input type="text" class="form-text" id="sys_u_email" onblur="emailCheck(this)" maxlength="127" tabindex="5"><i
+											 class="v-check"></i>
+										</div>
+									</div>
+
+									<div class="form-item">
+										<span class="form-tag">部&nbsp;&nbsp;门：</span>
+										<div class="form-c">
+											<input type="text" class="form-text" id="sys_u_depart" maxlength="127" tabindex="6"><i class="v-check"></i>
+										</div>
+									</div>
+
+									<div class="form-item" style="width:100%;display:none;">
+										<span class="form-tag" style=""><em class="imp">*</em>角色：</span>
+										<div class="h-content3" id="select_r" style="margin-top: -19px; width:80%;padding: 10px 20px 0px 19px;">
+
+										</div>
+									</div>
+
+									<div class="form-item" style="width: 100%;margin-bottom: 15px;display:none;">
+										<span class="form-tag" style=""><em class="imp">*</em>管理员：</span>
+										<div class="h-content3" id="select_u" style="margin-top: -19px; width:80%;padding: 10px 20px 0px 19px;">
+
+										</div>
+									</div>
+									<div class="form-item" style="width: 33.3%; height: 35px;display:none;">
+										<span class="form-tag">认证方式：</span>
+										<!--<div class="form-c" style="width: 20%; position: absolute;margin-left: 80px">
+											<select class="form-select" name="" id="sys_u_authtype" style="width:202px" tabindex="4">
+												<option value="null" >默认</option>
+											</select>
+										</div>-->
+										<div class="g-cont">
+											<div class="sel-type1" id="authtype_list_select" style="width:330px">
+												<div class="xSelect xSelect_aythtypeList" id="sys_u_authtype"></div>
+											</div>
+										</div>																			
+									</div>
+									
+									<div class="form-item" style="width: 33.3%;height: 37px;display:none;" id="totp_div">
+										<span class="form-tag" style="width: 112px;margin-left: -32px;">TOTP：</span>
+										<div class="form-c" style="">
+											<label class="tab-t" style="position: absolute;width: 60px;">
+												<div class="ctr">
+													<a href="javascript:;" class="btn btn-default btn-normal" onclick="qr_code_show();">重置</a>
+												</div>
+											</label>
+										</div>
+									</div>
+									<div class="form-item" id="usbkey_div" style="width: 33.3%;display:none;">
+										<span class="form-tag">USBKEY：</span>
+										<div class="form-c">
+											<a href="javascript:;" id="changePIN" class="btn btn-default btn-normal" onclick="change_PIN()">修改pin码</a>
+										</div>
+									</div>
+									<div class="form-item" id="tokenid_div" style="width:33.3%; display: none;">
+										<span class="form-tag">令牌：</span>
+										<div class="h-content3" id="TokenID" style="padding: 0; margin-left: -16px">
+										</div>
+									</div>
+									<div class="form-item" id="CertCn_div" style="width: 33.3%;display:none;">
+										<span class="form-tag" style="    width: 105px;margin-left: -24px;"><em class="imp">*</em>认证唯一标识：</span>
+										<div class="form-c">
+											<input type="text" class="form-text" id = "CertCn" maxlength="127" tabindex="10"></i>
+										</div>
+									</div>
+									<div class="form-item" id="fprint_div" style="width: 33.3%;display:none;">
+										<span class="form-tag">指纹：</span>
+										<div class="form-c">
+											<a href="javascript:;" id="setFinP" class="btn btn-default btn-normal" onclick="setFinP()">重置指纹</a>
+										</div>
+									</div>									
+									<div class="dialog-cont s-hide" id="qr_code" style="display:none;max-height:500px">
+										<span style="margin-left: 68px;">请使用您的 TOTP 应用扫描二维码</span>
+										<div style="text-align:center;">
+											<img src="">
+										</div>
+										<div style="text-align: center;height: 34px;">
+											<span>请在下方输入应用中的验证码进行测试。
+											</span>
+										</div>
+										<div style="float:left;margin-left: 57px">
+											<input type="text" class="form-text" id="totp_v" style="width:133px;" placeholder="输入验证码" onkeydown="if (event.keyCode == 13){submit_totp();return false;} else return;">
+										</div>
+										<div class="tab-t">
+											<div class="ctr">
+												<a class="btn" href="javascript:;" style="margin-left:16px;" onclick="submit_totp();">验证</a>
+											</div>
+										</div>
+										<!--
+											<div class="ctr">
+												<a class="btn" href="javascript:;" style="float:left;margin-left:13px;;padding: 0 15px;line-height: 24px;color: #8D808A;border: 1px solid #8D808A;border-radius: 5px;transition: all 0.4s;" onclick="submit_totp();">验证</a>
+											</div>
+											-->
+									</div>
+
+
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="clearfix"></div>
+					<div id="bBtn" style="z-index: 5; position: fixed;">
+						<a href="javascript:;" class="btn btn-cancel"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- -->
+<div id="avatars" class="avatars">
+	<ul>
+		<li><a href="javascript:;" class="active" onclick="_setAvatar(this)"><img alt="" src="/manage/images/avatar1.jpg"></a></li>
+		<li><a href="javascript:;" onclick="_setAvatar(this)"><img alt="" src="/manage/images/avatar2.jpg"></a></li>
+		<li><a href="javascript:;" onclick="_setAvatar(this)"><img alt="" src="/manage/images/avatar3.jpg"></a></li>
+		<li><a href="javascript:;" onclick="_setAvatar(this)"><img alt="" src="/manage/images/avatar4.jpg"></a></li>
+		<li><a href="javascript:;" onclick="_setAvatar(this)"><img alt="" src="/manage/images/avatar5.jpg"></a></li>
+		<li><a href="javascript:;" onclick="_setAvatar(this)"><img alt="" src="/manage/images/avatar6.jpg"></a></li>
+	</ul>
+</div>
+<!--验证码-->
+<div class="dialog-cont" id="code_suspend" style="display:none;">
+	<div class="container" style="">
+		<div class="c-cont" style="min-height: 200px; max-height: 200px; overflow: auto; height: 332px;">
+			<div class="c-form " style="width: auto;">
+				<div class="form" sytle="width: auto;">
+					<div class="form-item" style="padding: 10px 0;" id="code_form" name="code_form">
+						<span class="form-tag" style="width: 170px;">
+							<em class="imp">*</em>验证码：</span>
+						<div class="form-c" style="padding-left: 178px;">
+							<input style="width:135px;padding-right: 8px;" type="text" class="form-text" id="code_name" name="code_name"
+							 onkeydown=" if (event.keyCode == 13){$('#code_suspend .btn-submit').click;return false;} else return; ">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+	<div class="btns" style="padding: 10px 0 10px;/*margin-bottom: -20px;margin-left:-20px;width:840px;*/">
+		<a href="javascript:;" class="btn btn-normal btn-submit perm_1_disabled">确&nbsp;&nbsp;定</a>
+		<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+	</div>
+</div>
+<!-- 修改PIN浮层 -->
+<div class="dialog-cont" id="PINDialog" style="display:none;">
+	<div class="container">
+		<div class="c-cont" style="min-height:250px;max-height:200px;overflow:auto;">
+			<div class="c-form c-form-host" style="padding: 0 0 90px;min-width: 800px;">
+				<div class="clearfix"></div>
+				<div class="c-table">
+					<div class="form" style="width: 300px;margin-left: 200px;">
+						<div class="form-item" style="width: 100%;">
+							<span class="form-tag" style="width: 8em;"><em class="imp">*</em>原pin码：</span>
+							<div class="form-c" style="">
+								<input type="password" class="form-text" id="pin_input1_old" style="width: 100%;" tabindex="1">
+							</div>
+						</div>
+						<div class="form-item" style="width: 100%;">
+							<span class="form-tag" style="width: 8em;"><em class="imp">*</em>新pin码：</span>
+							<div class="form-c" style="">
+								<input type="password" class="form-text" id="pin_input1" style="width: 100%;" tabindex="1">
+							</div>
+						</div>
+						<div class="form-item" style="width: 100%;">
+							<span class="form-tag" style="width: 8em;"><em class="imp">*</em>确认pin码：</span>
+							<div class="form-c" style="">
+								<input type="password" class="form-text" id="pin_input2" style="width: 100%;" tabindex="1">
+							</div>
+						</div>
+					</div>
+					<div class="btns" style="padding: 10px 0 10px;">
+						<a href="javascript:;" class="btn btn-normal btn-submit">保&nbsp;&nbsp;存</a>
+						<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 认证方式浮层 -->
+<div class="dialog-cont" id="authtype_suspend" style="display:none;max-height:500px;min-height:500px;scrolling:yes">
+<iframe src="" width="100%" height="100%" frameborder="0" name="mframe1" id="mframe1" style="    height: 521px;margin-top: -21px;"></iframe>
+<div class="clearfix"></div>
+</div>
+</body>
+<style>
+	#panel-shell {
+	display: block;
+	width: 96%;
+	height: 100%;
+	background-color: #26292C;
+	opacity: 0.9;
+	color: #00fe00;
+	position: relative;
+	padding: 20px;
+	top: 0;
+	left: 0;
+	font-family: 'Source Code Pro', sans-serif;
+	font-size: 14px;
+	overflow: auto;
+	margin: 10px;
+	}
+	.blink {
+		background-color: #00fe00;
+		color: #000;
+	}
+	.output.error {
+		color: white;
+	}
+
+    .contain_top{
+        width: 100%;
+        height: 400px;
+        border-bottom: 1px solid #dedede;
+        position: relative;
+    }
+    .topcontent{
+        width: auto;
+        height: 360px;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        /*margin: auto;*/
+    }
+    .topcontent ul{
+        width: auto;
+		height: 360px;
+    }
+    .content_item{
+        width: 200px;
+		height: 140px;
+		float: left;
+		padding-left: 90px;
+		padding-bottom: 10px;
+    }
+    .imgbox{
+        width: 180px;
+        height: 140px;
+        display: inline-block;
+    }
+    .contain_bottom{
+        width: 100%;
+    }
+    .bottomCon{
+        width: 600px;
+        margin: 30px auto;
+        /* padding-left: 260px; */
+        padding-left: 442px;
+    }
+    .bottomCon_item{
+        width: 160px;
+        height: 36px;
+        border: 1px solid #8d808a;
+        border-radius: 18px;
+        margin-right: 20px;
+        display: block;
+        float: left;
+        text-align: center;
+        line-height: 34px;
+        color: #8d808a;
+        font-size: 16px;
+        position: relative;
+        padding: 0 0px 0 40px;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+    .bottomCon_item:hover{
+        background-color: #8D808A;
+        color: #fff;
+    }
+	.default{
+		height: 140px;
+	}
+	.default a{
+		height: 100px;
+		margin-bottom: 9px;
+	}
+	span.default_span{
+		position: relative;
+		width: 180px;
+		text-align: center;
+		word-wrap: break-word;
+		font-size: 13px;
+		display: block;
+	}
+
+	.c-table table tr:hover .last_td,
+	.xTable table tr:hover .last_td {
+		background-color: #63c3d9
+	}
+	.progress{
+		height: 15px;
+		/*background: #262626;*/
+		padding: 5px;
+		overflow: visible;
+		border-radius: 20px;
+		border-top: 1px solid #7992a8;
+		border-bottom: 1px solid #7992a8;
+		margin-top: 50px;
+	}
+	.progress .progress-bar{
+		border-radius: 20px;
+		position: relative;
+		animation: animate-positive 2s;
+	}
+	.progress .progress-value{
+		display: block;
+		padding: 3px 7px;
+		font-size: 13px;
+		color: #fff;
+		border-radius: 4px;
+		background: #191919;
+		border: 1px solid #000;
+		position: absolute;
+		top: -40px;
+		right: -10px;
+	}
+	.progress .progress-value:after{
+		content: "";
+		border-top: 10px solid #191919;
+		border-left: 10px solid transparent;
+		border-right: 10px solid transparent;
+		position: absolute;
+		bottom: -6px;
+		left: 26%;
+	}
+	.progress-bar.active{
+		animation: reverse progress-bar-stripes 0.40s linear infinite, animate-positive 2s;
+	}
+	@-webkit-keyframes animate-positive{
+		0% { width: 0; }
+	}
+	@keyframes animate-positive{
+		0% { width: 0; }
+	}
+
+	#changePwd:hover {
+		background-color: #8D808A;
+		border-color: #8D808A;
+		color: #fff;
+	}
+	#changePwd{
+		float: left;
+		padding: 0px 5px;
+		line-height: 24px;
+		color: #8D808A;
+		border: 1px solid #8D808A;
+		margin-right: 12px;
+		border-radius: 5px;
+		transition: all 0.4s;
+	}
+	#lockPage {
+		outline: none;
+	}
+	#createMsg {
+		outline: none;
+	}	
+	.h-catelog2 ul {
+		padding-left: 0;
+		margin-top: 0px;
+	}
+	.h-catelog {
+		float: left;
+		overflow: auto;
+		background-color: #f5f5f5;
+		border-right: 0px solid #CCC;
+		padding: 0 16px;
+	}
+
+	.h-content2 .form-item {
+		height: auto;
+		padding: 20px 0 10px;
+		min-height: 38px;
+		padding: 5px;
+		width: 380px;
+		float: left;
+	}
+	.h-content2 .form-tag {
+		float: left;
+		width: 80px;
+		text-align: right;
+		color: #000;
+		line-height: 28px;
+	}
+	.h-content2 .form-c {
+		padding-left: 0px;
+		position: relative;
+	}
+	.h-content2 .form-text {
+	    width: 170px;
+	}
+	.h-content2 .rzj {
+		float: right;
+		margin-right: 40px;
+		color: #000;
+	}
+	.h-content2 .form-tip {
+		padding-left: 48px;
+	}
+	a.btn-normal1{
+		display: inline-block;
+		width: 90px;
+		height: 30px;
+		border: 1px solid #DDD;
+		text-align: center;
+		line-height: 32px;
+		border-radius: 18px;
+		margin: 0 10px;
+		background-color: #fff;
+		transition: background-color 0.4s;
+		color: #7c7c7c;
+	}
+	a.btn-normal1:hover{
+		background-color: #8d808a;
+		color: #fff;
+	}
+	.for-avatar {
+		margin-top: -13px;
+		margin-left: 5px;
+	}
+	.col3{
+		padding-left: 108px;
+		height: auto;
+		overflow: hidden;
+	}
+	.col3 .form-item{
+		width: 33.3%;
+		padding: 16px 0px 0px 0px;
+	}
+	.h-content2 .form-tip{
+		padding-left: 80px;
+	}
+	.input-group{
+		display: inline-block;
+		width: 200px;
+		border: 1px solid #b2b2b2;
+		border-radius: 5px;
+		overflow: hidden;
+		vertical-align: middle;
+	}
+
+	.input-group input {
+		border: 0;
+		text-align: center;
+		background: transparent;
+	}
+
+	.input-group input:first-child {
+		border-right: 1px solid #CCC;
+	}
+
+	.h-blank {
+		width: 12px;
+	}
+
+	.c-table table th,
+	.xTable table th {
+		text-align: center;
+		background: #EAEAEB;
+		color: #979799;
+		font-weight: normal;
+	}
+
+	.c-table table tr {
+		text-align: center;
+	}
+
+	.ui-dialog-body {
+		padding: 20px 0 0 0;
+		text-align: center;
+	}
+
+	#changePIN {
+		outline: none;
+	}
+
+	#changePIN:hover {
+		background-color: #8D808A;
+		border-color: #8D808A;
+		color: #fff;
+	}
+
+	#changePIN {
+		float: left;
+		padding: 0px 2px;
+		line-height: 24px;
+		color: #8D808A;
+		border: 1px solid #8D808A;
+		margin-right: 12px;
+		border-radius: 5px;
+		transition: all 0.4s;
+		width: 80px;
+		text-align: center;
+	}
+	#setFinP {
+		outline: none;
+	}
+
+	#setFinP:hover {
+		background-color: #8D808A;
+		border-color: #8D808A;
+		color: #fff;
+	}
+
+	#setFinP {
+		float: left;
+		padding: 0px 2px;
+		line-height: 24px;
+		color: #8D808A;
+		border: 1px solid #8D808A;
+		margin-right: 12px;
+		border-radius: 5px;
+		transition: all 0.4s;
+		width: 80px;
+		text-align: center;
+	}
+</style>
+{% endblock  %}
+
+
+{% block script %}
+<script>
+	$(window).resize(function () {
+		_initSize();
+	});
+	function _initSize(){
+		var h = $(window).height();
+		$(".c-cont:first").height(h-164);
+	}
+	var u_id = "";
+	var user_ugroup = "";
+	function logout() {
+		document.frm.action = '/bhost/cluster_logout';
+		document.frm.submit();
+	}
+	function user_info(){
+		//$("#info").show();
+		// _get_userid(obj);	
+	}
+	var t_get_msg;
+	
+	$(function(){
+		_initSize();
+		$("#code_name").bind('keydown', function (e) {
+			DigitInput(e);
+		}).on("input propertychange", function () {				//防止在输入法开启的情况下输入非数字
+			this.value = this.value.replace(/\D/g, "").trim();
+		});
+		
+		$('.nav-s a').on('click',function(event){
+			$('#info').hide();
+			$('#msg_manage_1').hide();
+			$('#msg_manage_2').hide();
+			$('#related_downloads_show').hide();
+			$('#terminal_show').hide();
+			$('#msg_manage_4').hide();
+			$('#msg_manage_5').hide();
+			$('#msg_manage_6').hide();
+			$('#detail').show();
+		})
+		$("input.datepicker").datepick();
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+		    radioClass: 'iradio_minimal-blue',
+		    increaseArea: '0' // optional
+		});
+		
+		$('.form-time').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+		//get_msg();
+		$('.nav-s li').show();
+		var user = "{{us}}";
+		show_list();
+		//$("#u_i").text('{{us}}');
+		//_get_userid(user);
+		
+		//$('#tAvatar>img').attr('src','/manage/images/avatar1.jpg');
+		//$("#u_i").append('<img src="/manage/images/avatar1.jpg" alt="">');
+		//$("#nav-s1>ul>li>a").eq(0).click();
+	})
+	function reload(type){
+		if(type == 1){
+			//user_info('{{us}}');
+		}
+	}
+	
+	//显示列表
+	var authDefault_flag=0;
+	function show_list(){
+		//表单清空
+		$("#sys_u_name").val("");
+		$("#user_name").val("");
+		$("#sys_u_pwd_old").val("");		
+		$("#sys_u_pwd_new").val("");
+		$("#sys_u_pwd_tr").val("");
+		$("#thirduser").val("");
+		$("#sys_u_depart").val("");
+		$("#sys_u_phone").val("");
+		$("#sys_u_email").val("");
+		$("#sys_u_descr").val("");
+		$("#sys_u_authtype").val(1).trigger("change");
+		$("#datepicker").val("");
+		$("#shour").val("");
+		$("#smin").val("");
+		$("#ssec").val("");
+		$(".v-check").hide();
+		$("#un").empty();
+		$("#rn").empty();
+		$("#pu_id").empty();
+		$("#pwd1").hide();
+		$("#pwd2").hide();
+		$("#pwd3").hide();
+		$("#change_Pwd").show();	
+		new_pin = '';		
+		// $(".c-cont input:checked").each(function(i,item){
+		// 	$(this).iCheck('uncheck');
+		// })
+		// $("#select_r").children().last().prevAll().remove()
+		// $("#select_r select").val(0).trigger("change");
+		$('#tAvatar>img').attr('src','/manage/images/avatar1.jpg');
+		$("#sys_u_name").val("super");
+		$("#user_name").val("super");
+		$("#u_i").text("super");
+		$("#u_i").append('<img src="/manage/images/avatar1.jpg" alt="">');
+		// <span class="s">split118<img src="/manage/images/avatar3.jpg" alt=""></span>
+		
+		var ph = "avatar1.jpg";
+		ph = "/manage/images/" +ph;
+		$('#tAvatar>img').attr('src' ,ph);
+		$('#status').iCheck('check')
+		
+	}
+	
+	//获取头像列表
+	function _getAvatarList(obj){
+		var offset = $(obj).offset();
+		$('#avatars').css({
+			top:offset.top -5,
+			left:offset.left -5
+		}).show();
+
+		document.onclick = null;
+
+		$('#avatars').hover(function(){
+			document.onclick = null;
+		},function(){
+			document.onclick = function(){
+				$('#avatars').fadeOut();
+			}
+		})
+	}
+
+	//设置头像
+	function _setAvatar(obj){
+		var src = $(obj).children('img').attr('src');
+		$(obj).addClass('active').parent().siblings('li').children('a').removeClass('active');
+		$('#tAvatar>img').attr('src',src);
+		$('#avatars').fadeOut();
+		photo = src.split('/')[3];
+	}
+
+	$(window).resize(function(){
+		if($('#avatars').is(':visible')){
+			var offset = $('#tAvatar').offset();
+			$('#avatars').css({
+				top:offset.top -5,
+				left:offset.left -5
+			});
+		}
+	})
+	var photo = "avatar1.jpg";
+
+	function dataCheck(obj, min, max){
+		obj.value = obj.value.replace(/\D/g, "");
+		if(min){
+			if(parseInt(obj.value, 10) < parseInt(min, 10)) obj.value = min;
+		}
+		if(max){
+			if(parseInt(obj.value, 10) > parseInt(max, 10)) obj.value = max;
+		}
+	}
+	function IDCheck(obj){
+		var IDReg = /^[a-zA-Z0-9_.-]+[a-zA-Z0-9_.-]$/;
+		var val = $(obj).val();
+		var $i = $(obj).next('i.v-check');
+
+		if(IDReg.test(val) && val.length > 1){
+			$i.show().attr('class','v-check v-right');
+		}else{
+			$i.show().attr('class','v-check v-wrong');
+		}
+	}
+	function nameCheck(obj){
+		var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+		var val = $(obj).val();
+		var $i = $(obj).next('i.v-check');
+
+		if(nameReg.test(val)){
+			$i.show().attr('class','v-check v-right');
+		}else{
+			$i.show().attr('class','v-check v-wrong');
+		}
+	}
+	function phoneCheck(obj){
+		var phoneReg = /^[0-9]{11}$/;
+		var val = $(obj).val();
+		var $i = $(obj).next('i.v-check')
+
+		if(phoneReg.test(val) || val == ""){
+			$i.show().attr('class','v-check v-right');
+		}else{
+			$i.show().attr('class','v-check v-wrong');
+		}
+	}
+	function emailCheck(obj){
+		var emailReg = /^([a-zA-Z0-9_\.\-])+@(([a-zA-Z0-9_\-])+\.)+([a-zA-Z0-9])+$/;
+		var val = $(obj).val();
+		var $i = $(obj).next('i.v-check')
+
+		if(emailReg.test(val) || val == ""){
+			$i.show().attr('class','v-check v-right');
+		}else{
+			$i.show().attr('class','v-check v-wrong');
+		}
+	}
+	var oldPwd_check;
+	function get_msg(){
+		clearTimeout(t_get_msg);
+		var n=0;
+		$.ajax({
+			url: '/bhost/get_msg',
+			type: "post",
+			async: true,
+			data: {a0:$("input[name=se]").val()},
+			success: function(result) {
+				var result=JSON.parse(result);
+				////////console.log('get_msg---------------------------------------------------------');
+				if(result.Result == false){
+					n = 1;
+					if(result.info.indexOf('系统异常')>=0 || result.info.indexOf('非法访问')>=0 || result.info.indexOf('系统超时') >=0 ){
+						_alert(2,'系统',result.info);
+					}else{
+						_alert(2,'系统',result.info);
+					}
+				}
+				else{
+					t_get_msg=setTimeout(function(){get_msg();},8000);
+				}
+				return false;
+			},
+			error:function(){
+				t_get_msg=setTimeout(function(){get_msg();},8000);
+			}
+		})	
+	}
+</script>
+{% endblock  %}

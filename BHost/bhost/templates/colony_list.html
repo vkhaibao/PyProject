@@ -1,0 +1,1993 @@
+{% extends "left.html" %}
+<!---->
+{% block main %}
+<!---->
+<style>
+    .jq-sitem .item .jq-status1 {
+        position: absolute;
+        top: -2px;
+        right: 28px;
+    }
+    .jq-sitem .item {
+        width: 158px;
+    }
+    .jq-sitem .item-acc {
+        width: 190px;
+    }
+    .jq-sitem .c .c1{
+        width:100%;
+        float:left;
+    }
+    .jq-sitem .c .c2{
+        width:100%;
+        float:left;
+    }
+    .jq-disks .item p{
+	line-height: 8px;
+    }
+</style>
+<style>
+	.filter-select2 + .select2-container--default >.selection > .select2-selection--single{
+		border-bottom-left-radius: 0;
+		border-top-left-radius: 0;
+		margin-left: -1px;
+	}
+	.filter-select2 + .select2-container--default{
+		display: none;
+	}
+</style>
+<div class="mainer">
+    <div class="container">
+        <div class="c-top">
+            <div class="c-title">
+                <div class="manual-head" style="">
+                    <div class="manual-title" id="jq_manager_icon" style="" onclick="list_show();">
+                        <span>集群管理</span>
+                        <i class="jq_manager_icon" style=""></i>
+                    </div>
+                </div>
+            </div>
+            <!---->
+            <div class="c-cont" id="list_html" style="display:none;">
+                <div class="c-wrap">
+                    <div class="c-table">
+                        <div class="tab-t">
+                            <div class="ctr" style="width:288px;"> 
+                                <!-- <a href="javascript:;" class="btn btn-default" onclick="delete_list();" class="_power_disabled">删除</a> -->
+                                <!-- <a href="javascript:;" class="btn btn-default" onclick="click_all_list();" class="_power_disabled">全选</a> -->
+                                <a href="javascript:;" class="btn btn-default" onclick="colony_page(0);clear_all();">刷新</a>
+                            </div>
+
+                            <div class="filter">
+                                <div class="search">
+                                    <select name="keyword_select" id="keyword_select" class="filter-select">
+                                        <option value="all" selected>所有</option>
+                                        <option value="serverid">服务器</option>
+                                        <option value="ip">IP</option>
+                                        <option value="type">类型</option>
+                                        <option value="cpu">CPU</option>
+                                    </select>
+                                    <!-- <input type="text"  -->
+									<!-- class="filter-text" maxlength="128"  -->
+                                    <!-- placeholder="输入关键字" id="keyword" style="border-left:0"  -->
+                                    <!-- onchange="if($('#keyword').val()==''){$('#keyword_check').hide();}else{$('#keyword_check').show();}" -->
+                                    <!-- onkeyup="if($('#keyword').val()==''){$('#keyword_check').hide();}else{$('#keyword_check').show();}" -->
+                                    <!-- onblur="if($('#keyword').val()=='' && search_all_new!=''){search_all_new='';_addFilter(this,false,1);}" -->
+                                    <!-- onkeydown="if($('#keyword').val()==''){$('#keyword_check').hide();}else{$('#keyword_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return;"> -->
+									<input type="text" style="/*display:none;*/padding-right: 22px;"
+									class="filter-text" placeholder="输入关键字" 
+									name="keyword" id="keyword" maxlength="128" 
+									onchange="if($('#keyword').val()==''){$('#keyword_check').hide();}else{$('#keyword_check').show();}"
+									onkeyup="if($('#keyword').val()==''){$('#keyword_check').hide();}else{$('#keyword_check').show();}"
+									onblur="if($('#keyword').val()=='' && search_all_new!=''){search_all_new='';_addFilter(this,false,1);}"
+									onkeydown="if($('#keyword').val()==''){$('#keyword_check').hide();}else{$('#keyword_check').show();}; if (event.keyCode == 13){_addFilter(this,false);return false;} else return; ">
+                                    <i class="v-check v-wrong" id="keyword_check" 
+										onclick="_clearFilter(this,1)" 
+										style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<select name="type_result" id="type_result" style="" class="filter-select filter-select2">
+											<option value="master backup app database" selected>所有</option>
+											<option value="master">主服务器</option>
+											<option value="backup">备服务器</option>
+											<option value="app">应用</option>
+											<option value="database">数据库</option>
+										</select>
+                                    <button class="btn filter-btn" onclick="_addFilter(this,false)">
+                                        <i class="add-filter"></i>
+                                    </button>
+                                    <button class="btn filter-btn" onclick="_addFilter(this,true)">
+                                        <i class="append-filter"></i>
+                                    </button>
+                                </div>
+                                <div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+                                    <button class="filter-btn" onclick="_clearFilter(this)">
+                                        <i class="clear-filter"></i>
+                                    </button>
+                                </div>
+                                <div class="selector selector-multiple" id="filterWW" style="display: none;">
+                                    <span class="ww">搜索条件</span>
+                                    <ul></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!---->
+                        <div class="box-table">
+                            <table cellpadding="0" cellspacing="0" id="colony_table">
+                                <thead>
+                                    <tr>
+                                        <!-- <th width="50" class="_power_disabled">
+                                            <input type="checkbox" class="form-checkbox" id="check_one_page" />
+                                        </th> -->
+                                        <th width="60" style="text-align: center;">服务器</th>
+                                        <th>IP</th>
+                                        <th>类型</th>
+                                        <th>CPU</th>
+                                        <th>状态</th>
+                                        <th width="25"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="colony_tbody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tab-i">
+                            <div class="il">
+                                每页显示
+                                <span id="page_nums">10</span>条 总数：
+                                <span id="colony_total">28</span> 选中：
+                                <span class="sum">0</span>
+                            </div>
+
+                            <div class="ipage">
+                                <a href="javascript:;" class="nav2 begin" onclick="colony_page(0.1)">
+                                    <i></i>
+                                </a>
+                                <a href="javascript:;" class="nav prev" onclick="colony_page(-1)">
+                                    <i></i>
+                                </a>
+                                <input type="text" value="1" id="colony_page" onchange="colony_page()" onblur="showMsg();" onchange="showMsg();">/&nbsp;
+                                <span id="colony_pages">3</span>
+                                <a href="javascript:;" class="nav next" onclick="colony_page(1)">
+                                    <i></i>
+                                </a>
+                                <a href="javascript:;" class="nav2 end" onclick="colony_page(0.9)">
+                                    <i></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="c-cont jq-cc" id="add_html" style="padding-bottom: 15px;display:none;">
+                <div class="jq-top">
+                    <div class="jq-w">
+                        <i class="jq-icon-host"></i>
+                        <span id="server_id_value">服务器：1</span>
+                        <span id="type_value" style="padding-left: 40px">类型：应用/数据库</span>
+                        <!-- <i id="server_i" style="margin-left: -24px;margin-top: -3px;" class="jq-status jq-status-1"></i> -->
+                    </div>
+                </div>
+                
+                <!---->
+                <div class="jq-w">
+                    <div class="jq-title">
+                        <h3>硬件</h3>
+                    </div>
+
+                    <div class="jq-cont jq-hardware">
+                        <div class="item-list">
+                            <div class="item">
+                                <i class="icon-hdw icon-cpu"></i>
+                                <div class="c">
+                                    <p id="cpu_value">CPU类型：intel</p>
+                                    <p id='core_value'>核心数：16</p>
+                                    <p id='CpuUsed_value'>负载：0.2%</p>
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <i class="icon-hdw icon-memory"></i>
+                                <div class="c">
+                                    <p id="phymem_value">内存：15872M</p>
+                                    <p id="MemUsed_value_1">负载：11%</p>
+                                    <p style="padding-left: 42px;font-size: 12px" id="MemUsed_value_2">1883M/16007M
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item-list item-list2" id="Net_list">
+                        </div>
+                    </div>
+                </div>
+                <!---->
+				{% if flag_cloud == 0 %}
+				
+                <div class="jq-w">
+                    <div class="jq-disks">
+                        <div class="jq-title">
+                            <h3>磁盘</h3>
+                            <ul class="jq-switch">
+                                <li><a href="javascript:;" onclick="update_disk();" class="_power_disabled">更换</a></li>
+                                <li><a href="javascript:;" onclick="delect_disk();" class="_power_disabled">删除</a></li>
+                                <li><a href="javascript:;" onclick="add_disk();" class="_power_disabled">增加</a></li>
+                                <li><a href="javascript:;" onclick="_flash(1,this)" class="_power_disabled">开始闪烁</a></li>
+                                <li><a href="javascript:;" onclick="_flash(0,this)" class="_power_disabled">停止闪烁</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="jq-cont2" id="diskNode">
+                            
+                        </div>
+                    </div>
+                </div>
+				{% endif %}
+                <!---->
+                <div class="jq-w">
+                    <div class="jq-title">
+                        <!-- <h3>服务</h3> -->
+                        <h3>应用</h3>
+                    </div>
+
+                    <div class="jq-cont">
+                        <!-- 前置机 -->
+                        <div class="jq-sitem jq-sitem7">
+                            <!-- <h5><i class="jq-service jq-s1"></i>存储服务</h5> -->
+                            <h5><i class="jq-service jq-s7"></i>应用发布</h5>
+                            
+                            <div class="c">
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- 系统 -->
+                        <div class="jq-sitem">
+                            <!-- <h5><i class="jq-service jq-s1"></i>存储服务</h5> -->
+                            <h5><i class="jq-service jq-s1"></i>系统类</h5>
+                            
+                            <div class="c">
+                                <div class='c1'>
+                                </div>
+                                <div class='c2'>
+
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- 数据库 -->
+                        <div class="jq-sitem">
+                            <!-- <h5><i class="jq-service jq-s3"></i>服务3</h5> -->
+                            <h5><i class="jq-service jq-s3"></i>数据库</h5>
+                            
+                            <div class="c">
+                                <!-- <div class='c1'>
+                                </div>
+                                <div class='c2'>
+                                </div> -->
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- 代理 -->
+                        <div class="jq-sitem">
+                            <!-- <h5><i class="jq-service jq-s5"></i>服务5</h5> -->
+                            <h5><i class="jq-service jq-s5"></i>代理</h5>
+                            
+                            <div class="c">
+                                <div class='c1'>
+                                </div>
+                                <div class='c2'>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- 链接关联 -->
+                        <div class="jq-sitem" style="display: none;">
+                            <h5><i class="jq-service jq-s4"></i>链接关联</h5>
+                            
+                            <div class="c">
+                                <div class='c1'>
+                                </div>
+                                <div class='c2'>
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+		{% if system_type == 'double' %}
+
+                                <div class="jq-w">
+                    <div class="jq-title">
+                        <!-- <h3>服务</h3> -->
+                        <h3>集群状态</h3>
+                    </div>
+
+                    <div class="jq-cont" style="">
+
+                       <div class="jq-sitem jq-sitem8">
+                            <h5><i class="jq-service jq-s8"></i>DRBD</h5>
+
+                            <div class="c">
+								<span id="drbd_status0" ></span>
+								<span id="drbd_status1" ></span>
+                            </div>
+
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                                </div>
+                                {% endif %}
+                <div id="bBtn" style="position: fixed;z-index:5;">
+                    <a href="javascript:;" class="btn" style="float: right;" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form action="/bhost/colony_list" method="POST" name="frm_colony">
+    <input type="hidden" name="tasktype" id="tasktype" value="{{tasktype}}" />
+    <input type="hidden" name="se" id="" value="{{se}}" />
+    <input type="hidden" name="us" id="" value="{{us}}" />
+    <input type="hidden" name="perm" id="" value="{{perm}}" />
+    <input type="hidden" name="flag" id="" value="{{flag}}" />
+    <input type="hidden" name="first" id="" value="{{first}}" />
+    <!--页码-->
+</form>
+{% endblock %} {% block script %}
+<script>
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+<script>
+$('#keyword_select').parents('div.search').hide();
+$('.filter-select').select2({minimumResultsForSearch: -1});
+$('#keyword_select').on('change',function () {
+	var keyword_select=$('#keyword_select').val();
+	switch (keyword_select) {
+		case 'type':
+			$('#keyword').hide();
+			$('#type_result').next('.select2').show();
+			break;
+		default:
+			$('#keyword').show();
+			$('#type_result').next('.select2').hide();
+			break;
+	}
+});
+$('#keyword_select').val('all').trigger('change');
+$('#keyword_select').parents('div.search').show();
+</script>
+<script>
+    //$('.filter-select').select2({minimumResultsForSearch: -1});
+    var paging = 1;
+    var _power={{_power|safe}};
+    var power_mode=2;
+    //////console.log(_power);
+    $.each(_power,function (i,item) {
+        if(item.SubMenuId==23 && item.SystemMenuId==5){
+            power_mode=item.Mode;
+            if(item.Mode==1){
+                $('._power_disabled').remove();
+                $('#colony_table').find('th').eq(5).attr('width',25);
+            }           
+        }
+    });
+    var search_all = new Array();
+    var delect_str = new Array();
+    var search_all_new='';
+    var server_id;
+	var search_typeall_r = "";
+    //页码显示
+    function autoSize(){
+        var w = $(window).width(),h = $(window).height();
+        $('.c-cont').height(h-55);
+    }
+    $(function () {
+        autoSize();
+        $('#colony_tbody').on('dblclick', 'tr', function (e) {
+            //双击事件的执行代码
+            x = e.target;
+            var id = $(this).find("td");
+            if (x.nodeName != 'A' && x.nodeName != 'INS' && $(this).find('span.jq-tab-status-1').length==1) {
+                // server_id= $(this).find("td").eq(1).text();
+                // if(power_mode!=2){
+                //     server_id= $(this).find("td").eq(0).text();
+                // }
+                server_id= $(this).find("td").eq(0).text();
+		if($(this).find("td").eq(2).text().indexOf('主服务器')<0 && $(this).find("td").eq(2).text().indexOf('备服务器')<0){
+                        $('i.jq-service.jq-s3').parents('.jq-sitem').hide();    
+                }else{
+                        $('i.jq-service.jq-s3').parents('.jq-sitem').show();
+                }
+                add_show();
+            }
+        }).on("click", "tr", function (e) {
+            x = e.target;
+            //编辑按钮
+            if (x.id == 'search_result') {
+                // server_id= $(this).find("td").eq(1).text();
+                // if(power_mode!=2){
+                //     server_id= $(this).find("td").eq(0).text();
+                // }
+                server_id= $(this).find("td").eq(0).text();
+		if($(this).find("td").eq(2).text().indexOf('主服务器')<0 && $(this).find("td").eq(2).text().indexOf('备服务器')<0){
+			$('i.jq-service.jq-s3').parents('.jq-sitem').hide();	
+		}else{
+			$('i.jq-service.jq-s3').parents('.jq-sitem').show();
+		}
+                add_show();
+            }
+            //删除按钮
+            else if (x.id == 'del') {
+                server_id= $(this).find("td").eq(1).text();
+                $('.btn').blur();parent.layer.open({
+                    type:1,
+                    title: ' 集群管理',
+                    content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+                    btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+                    btnAlign:'c',
+                    closeBtn: false,
+                    skin:'layer-custom',
+                    area:['380px','310px'],
+                    move: false,
+                    resize: false,
+                    yes:function(i){
+                        parent.layer.close(i);
+                        delete_fun(server_id);
+                    }
+                });
+            }
+        });
+        $('#check_one_page').on(' ifClicked', function (e) {
+            if (!$('#check_one_page').is(':checked')) {
+                $('#colony_tbody tr input').iCheck('check');
+            } else {
+                $('#colony_tbody tr input').iCheck('uncheck');
+            }
+        });
+        $("#colony_tbody").on("ifChecked", function (e) {
+            var check_num = parseInt($('#colony_total').next("span.sum").text());
+            check_num++;
+            $('#colony_total').next("span.sum").text(check_num);
+            if ($("#colony_tbody tr input:checked").length == $("#colony_tbody tr input").length) {
+                $('#check_one_page').iCheck('check');
+            }
+        }).on("ifUnchecked", function (e) {
+            var check_num = parseInt($('#colony_total').next("span.sum").text());
+            check_num--;
+            $('#colony_total').next("span.sum").text(check_num);
+            $('#check_one_page').iCheck('uncheck');
+        });
+        $("#page_nums").val(MAX_PAGE);
+        var get_server_global_json = {
+            "serverid": null,       		                    //--搜索条件，id
+            "searchstring": null,//search_all.join('\n')+'\n'+search_all_new,         	//--模糊搜索条件，搜索ip、type、cpu
+            "ip":null,
+            "type":null,
+            "cpu": null,
+            "limitrow": null,                            //--返回多少条记录
+            "offsetrow": null                 //--返回记录前忽略多少条记录 
+        };
+        $.ajax({
+            url: "/bhost/get_server_global",
+            type: "POST",
+            async: false,
+            data: { a0: $("input[name=se]").val(), a1: JSON.stringify(get_server_global_json) },
+            success: function (result) {
+                var result = JSON.parse(result);
+                if (result.Result) {
+                    if (result.info.totalrow==1){
+                        server_id= result.info.data[0].server_id;
+                        $('#bBtn').remove();
+                        $('#server_id_value').after('<i id="server_i" style="margin-left: -24px;margin-top: 10px;float: left;" class="jq-status"></i>');
+                        add_show();
+                    }else{
+                        $('#list_html').show();
+                        $('#add_html').hide();
+                        show_server_global_list();
+                    }
+                }
+            }
+        });
+
+        //show_server_global_list();
+    });
+    function delect_disk() {
+        var diskNode_input_checked=$('#diskNode').find('input:checked');
+        //////console.log('diskNode_input_checked.length:'+diskNode_input_checked.length);
+        if(diskNode_input_checked.length==0){
+            _alert(2,'集群管理','请选择异常磁盘');
+            return false;
+        }
+        $('.btn').blur(); $('.a').blur();parent.layer.open({
+            type:1,
+            title: ' 集群管理',
+            content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+            btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+            btnAlign:'c',
+            closeBtn: false,
+            skin:'layer-custom',
+            area:['380px','310px'],
+            move: false,
+            resize: false,
+            yes:function(i){
+                parent.layer.close(i);
+                var checked_div_disk_stat=diskNode_input_checked.parents('div.item').map(function (params) {
+                    return $(this).find('i.jq-status').attr('class');
+                }).get();
+                if($.inArray('jq-status jq-status-1',checked_div_disk_stat)>=0){
+                    _alert(2,'集群管理','不能删除正常磁盘');
+                    return false;
+                }
+                var disk_id_arr=diskNode_input_checked.parents('div.item').map(function(){
+                    return $(this).attr('disk_sn');
+                }).get();
+                //////console.log(disk_id_arr);
+                $.ajax({
+                    url: "/bhost/delect_disk",
+                    type: "POST",
+                    async: false,
+                    data: { a0: $("input[name=se]").val(), a1:disk_id_arr.join(','),a2:server_id },
+                    success: function (result) {
+                        var result=JSON.parse(result);
+                        if(result.Result){
+                            $.each(disk_id_arr,function (i,params) {
+                                $('div[disk_sn='+params+']').remove();
+                                $('#diskNode').append('<div class="item offline"><label><i class="jq-status jq-status-off"></i><input type="checkbox" name="" id="" disabled></label><span class="fix"></span></div>');
+                            });
+                            up_date();
+                            _alert(0,'集群管理','删除成功');
+                            return false;
+                        }else{
+                            _alert(2,'集群管理',result.ErrMsg);
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
+        
+    }
+    function add_disk() {
+        var diskNode_input_checked=$('#diskNode').find('input:checked');
+        //////console.log('diskNode_input_checked.length:'+diskNode_input_checked.length);
+        if(diskNode_input_checked.length==0){
+            _alert(2,'集群管理','请选择预备磁盘');
+            return false;
+        }
+        
+        $('.btn').blur(); $('.a').blur();parent.layer.open({
+            type:1,
+            title: ' 集群管理',
+            content: '<div class="layer-alert"><i class="alert warning"></i>是否增加</div>',
+            btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+            btnAlign:'c',
+            closeBtn: false,
+            skin:'layer-custom',
+            area:['380px','310px'],
+            move: false,
+            resize: false,
+            yes:function(i){
+                parent.layer.close(i);
+                var pass=1;
+                var disk_id_arr=new Array();
+                diskNode_input_checked.parents('div.item').each(function (params) {
+                    var disk_stat=$(this).attr('disk_stat');
+                    if (disk_stat!='1'){
+                        pass=0;
+                        _alert(2,'集群管理','只能增加预备磁盘');
+                        return false;
+                    }
+                    disk_id_arr.push($(this).attr('disk_sn'));
+                });
+                if(pass==0){
+                    return false;
+                }
+                //////console.log(disk_id_arr);
+                $.ajax({
+                    url: "/bhost/add_disk",
+                    type: "POST",
+                    async: false,
+                    data: { a0: $("input[name=se]").val(), a1:disk_id_arr.join(','),a2:server_id },
+                    success: function (result) {
+                        var result=JSON.parse(result);
+                        if(result.Result){
+                            $.each(disk_id_arr,function (i,item) {
+                                $('div[disk_sn='+item+']').remove();
+                                $('#diskNode').append('<div class="item offline"><label><i class="jq-status jq-status-off"></i><input type="checkbox" name="" id="" disabled></label><span class="fix"></span></div>');
+                            });
+                            up_date();
+                            _alert(0,'集群管理','增加成功');
+                            return false;
+                        }else{
+                            _alert(2,'集群管理',result.ErrMsg);
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
+    }
+    function update_disk() {
+        var diskNode_input_checked=$('#diskNode').find('input:checked');
+        //////console.log('diskNode_input_checked.length:'+diskNode_input_checked.length);
+        if(diskNode_input_checked.length==0){
+            _alert(2,'集群管理','请选择磁盘');
+            return false;
+        }
+        var count=0;
+        var count_w=0;
+        var wrong='';
+        var ready='';
+        var pass=1;
+        $('.btn').blur(); $('.a').blur();parent.layer.open({
+            type:1,
+            title: ' 集群管理',
+            content: '<div class="layer-alert"><i class="alert warning"></i>是否更换</div>',
+            btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+            btnAlign:'c',
+            closeBtn: false,
+            skin:'layer-custom',
+            area:['380px','310px'],
+            move: false,
+            resize: false,
+            yes:function(i){
+                parent.layer.close(i);
+                diskNode_input_checked.parents('div.item').each(function (params) {
+                    var i_class=$(this).find('i.jq-status').attr('class');
+                    if(i_class.indexOf('jq-status-0')>=0){
+                        count_w++;
+                        if(count_w>1){
+                            _alert(2,'集群管理','至多选择1个要更换的异常磁盘或者离线磁盘');
+                            pass=0;
+                            return false;
+                        }
+                        wrong=$(this).attr('id').split('-')[1];
+                        return true;
+                    }
+                    var disk_stat=$(this).attr('disk_stat');
+                    if(disk_stat=='1'){
+                        count++;
+                        if(count>1){
+                            _alert(2,'集群管理','至多选择1个要更换的预备磁盘');
+                            pass=0;
+                            return false;
+                        }
+                        ready=$(this).attr('disk_sn');
+                        return true;
+                    }
+                    if(disk_stat=='0'){
+                        _alert(2,'集群管理','只能更换异常磁盘');
+                        pass=0;
+                        return false;
+                    }
+                });
+                if(pass==0){
+                    return false;
+                }
+                /*
+                $('#div_disk_id-'+wrong).remove();
+                $('#diskNode').append('<div class="item offline"><label><i class="jq-status jq-status-off"></i><input type="checkbox" name="" id="" disabled></label><span class="fix"></span></div>');
+                $('div[disk_sn='+ready+']').remove();
+                $('#diskNode').append('<div class="item offline"><label><i class="jq-status jq-status-off"></i><input type="checkbox" name="" id="" disabled></label><span class="fix"></span></div>');
+                */
+                $.ajax({
+                    url: "/bhost/update_disk",
+                    type: "POST",
+                    async: false,
+                    data: { a0: $("input[name=se]").val(), a1:wrong,a2:ready,a3:server_id },
+                    success: function (result) {
+                        var result=JSON.parse(result);
+                        if(result.Result){
+                            $('#div_disk_id-'+wrong).remove();
+                            $('#diskNode').append('<div class="item offline"><label><i class="jq-status jq-status-off"></i><input type="checkbox" name="" id="" disabled></label><span class="fix"></span></div>');
+                            $('div[disk_sn='+ready+']').remove();
+                            $('#diskNode').append('<div class="item offline"><label><i class="jq-status jq-status-off"></i><input type="checkbox" name="" id="" disabled></label><span class="fix"></span></div>');
+                            up_date();
+                            _alert(0,'集群管理','更换成功');
+                            return false;
+                        }else{
+                            _alert(2,'集群管理',result.ErrMsg);
+                            return false;
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    var colony_all_data;
+    function showMsg() {
+        delect_save();
+        var cur = $("#colony_page").val();
+        cur = cur.replace(/\D/g, "");
+        var fenye = parseInt($('#colony_pages').text());
+        if (cur == '' || parseInt(cur) < 1) {
+            cur = 1;
+        } else if (parseInt(cur) > fenye) {
+            cur = fenye;
+        }
+        paging = cur;
+        show_server_global_list();
+    }
+    function back() {
+        $('#add_html').hide();
+        $('#list_html').show();
+        $('#jq_manager_icon').attr('onclick','list_show();');
+        clearTimeout(t_time);
+        show_server_global_list();
+    }
+    var t_time;
+    function add_show() {
+        $('#list_html').hide();
+        $('#add_html').show();
+        $('#jq_manager_icon').attr('onclick','add_show();');
+        clearTimeout(t_time);
+	var IsTunnel_gs=false;
+	$.ajax({
+            url: "/bhost/get_globalstrategy",
+            type: "POST",
+            async: false,
+            data: { a0: $("input[name=se]").val() },
+	    success: function (result) {
+		var result=JSON.parse(result);
+		IsTunnel_gs=result.IsTunnel;	
+	    }
+	});
+    if($('#server_i').length>0){
+        $.ajax({
+            url: "/bhost/get_server_HstGet",
+            type: "POST",
+            async: false,
+            data: { a0: $("input[name=se]").val(), a1: server_id },
+            success: function (result) {
+                var result = JSON.parse(result);
+                if (result.Result) {
+                    server_HstGet = result.info;
+                } else {
+                    server_HstGet = '0';
+                }
+                if(server_HstGet=='1'){
+                    $('#server_i').removeClass('jq-status-0').removeClass('jq-status-1').removeClass('jq-status-2').addClass('jq-status-1');
+                }else{
+                    $('#server_i').removeClass('jq-status-0').removeClass('jq-status-1').removeClass('jq-status-2').addClass('jq-status-0');
+                }
+            }
+        });
+    }
+        $.ajax({
+            url: "/bhost/get_server_all_data",
+            type: "POST",
+            async: false,
+            data: { a0: $("input[name=se]").val(), a1: server_id },
+            success: function (result) {
+                var result=JSON.parse(result);
+                if(result.Result){
+                    var data=result.info;
+                    var serverglobal=data.serverglobal;
+                    $('#server_id_value').text('服务器：'+serverglobal.server_id);
+                    $('#type_value').text('类型：'+serverglobal.type.replace(/\n/g, '/').replace(/app/g, '代理').replace(/database/g, '数据库').replace(/master/g, '主服务器').replace(/backup/g, '备服务器').replace(/data/g, '数据').replace(/lvs-/g, ''));
+                    $('#cpu_value').text('CPU类型：'+serverglobal.cpu);
+                    $('#core_value').text('核心数：'+serverglobal.core);
+                    $('#phymem_value').text('内存：'+serverglobal.phymem+'M');
+                    data.CpuUsed=JSON.parse(data.CpuUsed.replace(/L/g,''))[0];
+                    $('#CpuUsed_value').text('负载：'+(data.CpuUsed||0)+'%');
+                    data.MemUsed=JSON.parse(data.MemUsed.replace(/ /g,'').replace(/'/g,'"').replace(/\t/g,'').replace(/L/g,''))[0];
+                    data.MemUsed=data.MemUsed.split('\t');
+                    $('#MemUsed_value_1').text('负载：'+data.MemUsed[0]);
+                    $('#MemUsed_value_2').text(data.MemUsed[1]);
+                   
+					if(data.drbd_status1.length > 0){
+						 $('#drbd_status0').html("drbd0:	"+data.drbd_status0);
+						$('#drbd_status1').show().html("</br></br>drbd1:	"+data.drbd_status1);
+					}else{
+						 $('#drbd_status0').html("</br>drbd0:	"+data.drbd_status0);
+						$('#drbd_status1').hide().html("");
+					}
+					$('#Net_list').empty();
+                    $('#Net_list').append(data.eth_list.filter(function (params) {
+                        if(params.f_display_none==0){
+                            return true;
+                        }
+                        return false;
+                    }).map(function (params) {
+                        var p_str='';
+                        //////console.log(params.str_tmp);
+                        var p_json=JSON.parse(params.str_tmp.replace(/'/g,'"'));
+                        for (var index in p_json){
+                            //////console.log(index);
+                            p_str+=('<p>'+index+': '+p_json[index]+'</p>');
+                        }
+                        return  '<div class="item" id="ether-'+params.ether_id+'">'+
+                                    '<i class="icon-hdw icon-network"></i>'+
+                                    '<div class="c">'+
+                                        '<p>网卡：'+params.ether_name+' <i class="'+((params.eth_stat && params.isrun && params.isup)?'jq-status jq-status-1':(params.ip_addr=='' && params.bond_include==0)?'jq-status jq-status-off':'jq-status jq-status-0')+'"></i></p>'+
+                                        '<p>IP：'+params.ip_addr+'</p>'+
+                                        '<p>MAC：'+params.mac_addr.toLowerCase()+'</p>'+
+                                        '<p>MASK：'+params.mask_addr+'</p>'+
+                                    '</div>'+
+                                    '<div class="jq-tip">'+
+                                            p_str+
+                                    '</div>'+
+                                '</div>';
+                    }));
+					{% if flag_cloud ==0 %}
+						var $_d = $('#diskNode');
+						$_d.empty();
+						var len_=(parseInt(data.disk.length/6)+1)*6;
+						for(var i=0;i<18;i++){
+							$_d.append('<div class="item offline"><label><i class="jq-status jq-status-off"></i><input type="checkbox" name="" id="" disabled></label><span class="fix"></span></div>');
+						}
+						$.each(data.disk,function(i,item){
+							var _p = item.xy.split(',');
+							_p = parseInt(_p[0])*6 + parseInt(_p[1]);
+
+							var $_node = $_d.children('div.item').eq(_p);
+							$_node.removeClass('offline').children('label').append('<p>'+(item.disk_sn.indexOf('-')>=0?item.disk_sn.split('-')[1]:item.disk_sn)+'</p><p style="padding-top: 14px;">'+item.disk_size+'G</p>').children('input').prop('disabled',false).attr('id','disk-'+item.disk_id).attr('name','disk-'+item.disk_id).siblings('i.jq-status').removeClass('jq-status-off').addClass('jq-status-'+(item.diskstat==1?(item.disk_stat==0?'1':'2'):'0'));
+							$_node.attr('id','div_disk_id-'+item.disk_id).attr('disk_stat',item.disk_stat).attr('disk_sn',item.disk_sn);
+						});
+					{%endif%}
+                    $('.jq-sitem .c .c1').empty();
+                    $('.jq-sitem .c .c2').empty();
+                    $.each(data.app,function (i,item) {
+						if(item.ApplicationName=='回放'){
+							var $sitem=$('i.jq-service.jq-s1').parents('.jq-sitem');
+							var port_stat='off';
+							item.PORT=1;
+							if(!isNaN(item.PORT)){
+								port_stat=item.PORT;	
+							}
+							if(!isNaN(item.SOCK)){
+								if (IsTunnel_gs)port_stat=0;
+								if(!isNaN(port_stat)) port_stat+=item.SOCK;
+								else port_stat=item.SOCK;
+							}
+							switch(port_stat){
+								case 2:
+									port_stat=1;
+									break;
+								case 1:
+									 if(!isNaN(item.PORT) && !isNaN(item.SOCK)) port_stat=2;		
+									 if (IsTunnel_gs) port_stat=1;
+									 break;
+							}
+							if(data.gluster_type=='gluster'){
+								//console.log(data.GlsterPeer);
+								//console.log(data.GlsterInfo);
+								var p_str='';
+								$.each(data.GlsterPeer.split('\n'),function(i,item){
+									if(item=='')return true;
+									p_str=p_str+'<p style="width:290px;float:left;">'+item+'</p>';
+								})
+								$.each(data.GlsterInfo.split('\n'),function(i,item){
+									if(item=='')return true;
+									p_str=p_str+'<p style="width:290px;float:left;">'+item+'</p>';
+								})
+								$sitem.find('div.c1').append('<div class="item" id="app_port_gluster">'+
+									'GLUSTER服务'+
+									'<i class="jq-status jq-status-1" ></i>'+
+									'<div class="jq-tip" style="display:none;">'+p_str+'</div>'+
+								'</div>');
+								_TipView_GLUSTER();
+							}
+							$sitem.find('div.c1').append('<div class="item" id="app_port_'+item.ApplicationConfigId+'">'+
+									// item1+'状态'+
+									item.ApplicationName+'服务'+
+									'<i class="jq-status jq-status-'+port_stat+'" ></i>'+
+								'</div>');
+							/*
+										$sitem.find('div.c2').append('<div class="item" id="app_sock_'+item.ApplicationConfigId+'">'+
+																		// item1+'状态'+
+																		item.ApplicationName+'映射'+
+																		'<i class="jq-status jq-status-'+item.SOCK+'" ></i>'+
+																	'</div>');
+							*/
+                        }else{
+                            var ApplicationName_top='';
+                            if(item.ApplicationName.indexOf('菜单')>=0){
+                                ApplicationName_top='菜单'
+                            }
+                            item.ApplicationName=item.ApplicationName.replace(/菜单/g,'').split('|');
+                            $.each(item.ApplicationName,function (j,item1) {
+								var port_stat='off';
+								if(!isNaN(item.PORT)){
+										port_stat=item.PORT;
+								}
+								if(!isNaN(item.SOCK)){
+									if (IsTunnel_gs)port_stat=0;
+									if(!isNaN(port_stat)) port_stat+=item.SOCK;
+									else port_stat=item.SOCK;
+								}
+								switch(port_stat){
+									case 2:
+										port_stat=1;
+									break;
+									case 1:
+										if(!isNaN(item.PORT) && !isNaN(item.SOCK)) port_stat=2;
+										if (IsTunnel_gs) port_stat=1;
+									break;
+								}
+								var $sitem=$('i.jq-service.jq-s5').parents('.jq-sitem');
+								$sitem.find('div.c1').append('<div class="item" id="app_port_'+item.ApplicationConfigId+'">'+
+									// item1+'状态'+
+									ApplicationName_top+item1+'服务'+
+									'<i class="jq-status jq-status-'+port_stat+'" ></i>'+
+								'</div>');
+							});
+						}
+                    });
+                    $('.jq-sitem7 .c').empty();
+                    $.each(data.acc,function (i,item) {
+                        var $sitem=$('i.jq-service.jq-s7').parents('.jq-sitem'); 
+                        $sitem.find('div.c').append('<div class="item item-acc" id="acc-'+item.AccIPId+'">'+
+                                                            // item1+'状态'+
+                                                            (item.IsBuildin=='1'?'内置':'外置')+item.AccIP+
+                                                            '<i class="jq-status jq-status-'+item.stat+'" ></i>'+
+                                                        '</div>');
+                    });
+                    var $sitem=$('i.jq-service.jq-s3').parents('.jq-sitem'); 
+                    $sitem.find('div.c').empty().append('<div class="item" id="base">'+
+						'数据库'+
+						'<i class="jq-status jq-status-'+data.DATABASE+'" ></i>'+
+					'</div>');
+					if(data.gluster_type=='gluster' || data.gluster_type=='double'){
+						$.each(data.replication_slots,function(i,item){
+							if(data.is_server_master){
+								$sitem.find('div.c').append('<div class="item" id="base_synchro'+item.node+'">'+
+									'同步接口'+(data.gluster_type=='gluster'?item.node:'')+
+									'<i class="jq-status jq-status-'+((item.active && item.value<3000000 && item.value>0)?'1':'0')+'" ></i>'+
+								'</div>');
+							}
+							if(!data.is_server_master && item.node==server_id){
+								$sitem.find('div.c').append('<div class="item" id="base_synchro'+item.node+'">'+
+									'同步接口'+(data.gluster_type=='gluster'?item.node:'')+
+									'<i class="jq-status jq-status-'+((item.active && item.value<3000000 && item.value>0)?'1':'0')+'" ></i>'+
+								'</div>');
+								return false;
+							}
+						})
+					}
+					
+                }
+                // else {
+                //     _alert(1, '集群管理', result.ErrMsg);
+                //     return false;
+                // }
+                t_time=setTimeout(function(){up_date();},10000);
+            }
+        });
+        
+    }
+    function up_date(){
+        clearTimeout(t_time);
+	var IsTunnel_gs=false;
+        $.ajax({
+            url: "/bhost/get_globalstrategy",
+            type: "POST",
+            async: false,
+            data: { a0: $("input[name=se]").val() },
+            success: function (result) {
+                var result=JSON.parse(result);
+                IsTunnel_gs=result.IsTunnel;
+            }
+        });
+        if($('#server_i').length>0){
+            $.ajax({
+                url: "/bhost/get_server_HstGet",
+                type: "POST",
+                async: false,
+                data: { a0: $("input[name=se]").val(), a1: server_id },
+                success: function (result) {
+                    var result = JSON.parse(result);
+                    if (result.Result) {
+                        server_HstGet = result.info;
+                    } else {
+                        server_HstGet = '0';
+                    }
+                    if(server_HstGet=='1'){
+                        $('#server_i').removeClass('jq-status-0').removeClass('jq-status-1').removeClass('jq-status-2').addClass('jq-status-1');
+                    }else{
+                        $('#server_i').removeClass('jq-status-0').removeClass('jq-status-1').removeClass('jq-status-2').addClass('jq-status-0');
+                    }
+                }
+            });
+        }
+        $.ajax({
+            url: "/bhost/get_server_all_data",
+            type: "POST",
+            async: true,
+            data: { a0: $("input[name=se]").val(), a1: server_id },
+            success: function (result) {
+                var result=JSON.parse(result);
+                if(result.Result){
+                    var data=result.info;
+                    var serverglobal=data.serverglobal;
+                    $('#server_id_value').text('服务器：'+serverglobal.server_id);
+                    $('#type_value').text('类型：'+serverglobal.type.replace(/\n/g, '/').replace(/app/g, '代理').replace(/database/g, '数据库').replace(/master/g, '主服务器').replace(/backup/g, '备服务器').replace(/data/g, '数据').replace(/lvs-/g, ''));
+                    $('#cpu_value').text('CPU类型：'+serverglobal.cpu);
+                    $('#core_value').text('核心数：'+serverglobal.core);
+                    $('#phymem_value').text('内存：'+serverglobal.phymem+'M');
+                    data.CpuUsed=JSON.parse(data.CpuUsed.replace(/L/g,''))[0];
+                    $('#CpuUsed_value').text('负载：'+(data.CpuUsed||0)+'%');
+                    data.MemUsed=JSON.parse(data.MemUsed.replace(/ /g,'').replace(/'/g,'"').replace(/\t/g,'').replace(/L/g,''))[0];
+                    data.MemUsed=data.MemUsed.split('\t');
+                    $('#MemUsed_value_1').text('负载：'+data.MemUsed[0]);
+                    $('#MemUsed_value_2').text(data.MemUsed[1]);
+                    $.each(data.eth_list,function (i,item) {
+                        if(item.f_display_none!=0){
+                            return true;
+                        }
+			var p_str='';
+                        var p_json=JSON.parse(item.str_tmp.replace(/'/g,'"'));
+                        for (var index in p_json){
+                            //////console.log(index);
+                            p_str+=('<p>'+index+': '+p_json[index]+'</p>');
+                        }
+                        if($('#ether-'+item.ether_id).length==0){
+                            if(i==0){
+                                $('#Net_list').prepend('<div class="item" id="ether-'+item.ether_id+'">'+
+                                    '<i class="icon-hdw icon-network"></i>'+
+                                    '<div class="c">'+
+                                        '<p>网卡：'+item.ether_name+' <i class="'+((item.eth_stat && item.isrun && item.isup)?'jq-status jq-status-1':(item.ip_addr=='')?'jq-status jq-status-off':'jq-status jq-status-0')+'"></i></p>'+
+                                        '<p>IP：'+item.ip_addr+'</p>'+
+                                        '<p>MAC：'+item.mac_addr.toLowerCase()+'</p>'+
+                                        '<p>MASK：'+item.mask_addr+'</p>'+
+                                    '</div>'+
+				    '<div class="jq-tip">'+
+                                            p_str+
+                                    '</div>'+
+                                '</div>');
+                            }else{
+                                $('#ether-'+data.eth_list[i-1].ether_id).after('<div class="item" id="ether-'+item.ether_id+'">'+
+                                    '<i class="icon-hdw icon-network"></i>'+
+                                    '<div class="c">'+
+                                        '<p>网卡：'+item.ether_name+' <i class="'+((item.eth_stat && item.isrun && item.isup)?'jq-status jq-status-1':(item.ip_addr=='')?'jq-status jq-status-off':'jq-status jq-status-0')+'"></i></p>'+
+                                        '<p>IP：'+item.ip_addr+'</p>'+
+                                        '<p>MAC：'+item.mac_addr.toLowerCase()+'</p>'+
+                                        '<p>MASK：'+item.mask_addr+'</p>'+
+                                    '</div>'+
+				    '<div class="jq-tip">'+
+                                            p_str+
+                                    '</div>'+
+                                '</div>');
+                            }
+                        }else{
+                            var $_p=$('#ether-'+item.ether_id).find('p');
+                            $_p.eq(0).html('网卡：'+item.ether_name+' <i class="'+((item.eth_stat && item.isrun && item.isup)?'jq-status jq-status-1':(item.ip_addr=='')?'jq-status jq-status-off':'jq-status jq-status-0')+'"></i>');
+                            $_p.eq(1).html('IP：'+item.ip_addr);
+                            $_p.eq(2).html('MAC：'+item.mac_addr.toLowerCase());
+                            $_p.eq(3).html('MASK：'+item.mask_addr);
+			    $('#ether-'+item.ether_id).find('.jq-tip').html(p_str);
+                        }
+                    });
+					{% if flag_cloud == 0 %}
+                    var $_d = $('#diskNode');
+                    var _p;
+                    var _d_children=$_d.children('div.item');
+                    $.each(data.disk,function(i,item){
+                        var _p1 = item.xy.split(',');
+                        _p = parseInt(_p1[0])*6 + parseInt(_p1[1]);
+                        var $_node = _d_children.eq(_p);
+                        if($('#div_disk_id-'+item.disk_id).length==0){
+                            $_node.html('<label><i class="jq-status jq-status-off"></i><input type="checkbox" name="" id="" disabled></label><span class="fix"></span>');
+                            $_node.removeClass('offline').children('label').append('<p>'+(item.disk_sn.indexOf('-')>=0?item.disk_sn.split('-')[1]:item.disk_sn)+'</p><p style="padding-top: 14px;">'+item.disk_size+'G</p>').children('input').prop('disabled',false).attr('id','disk-'+item.disk_id).attr('name','disk-'+item.disk_id).siblings('i.jq-status').removeClass('jq-status-off').addClass('jq-status-'+(item.diskstat==1?(item.disk_stat==0?'1':'2'):'0'));
+                            $_node.attr('id','div_disk_id-'+item.disk_id).attr('disk_stat',item.disk_stat).attr('disk_sn',item.disk_sn);
+                        }else{
+                            $('i.jq-status',$_node).attr('class','jq-status').addClass('jq-status-'+(item.diskstat==1?(item.disk_stat==0?'1':'2'):'0'));
+                            var $_p=$_node.find('p');
+                            $_p.eq(0).html((item.disk_sn.indexOf('-')>=0?item.disk_sn.split('-')[1]:item.disk_sn));
+                            $_p.eq(1).html(item.disk_size+'G');
+                            $_node.attr('disk_stat',item.disk_stat).attr('disk_sn',item.disk_sn);
+                        }
+                    });
+                    //////console.log(_p+1);
+                    for(var i=_p+1;i<_d_children.length;i++){
+                        var $_node = _d_children.eq(i);
+                        if($_node.attr('id')!=undefined){
+                            $_node.remove();
+                            $_d.append('<div class="item offline"><label><i class="jq-status jq-status-off"></i><input type="checkbox" name="" id="" disabled></label><span class="fix"></span></div>');
+                            _d_children=$_d.children('div.item');
+                        }else{
+                            break;
+                        }
+                        i--;
+                    }
+					{%endif%}
+                    $.each(data.app,function (i,item) {
+			if(item.ApplicationName=='回放'){
+				item.PORT=1;
+			}
+			var port_stat='off';
+                                if(!isNaN(item.PORT)){
+                                        port_stat=item.PORT;
+                                }
+                                if(!isNaN(item.SOCK)){
+					if(IsTunnel_gs)port_stat=0;
+                                        if(!isNaN(port_stat)) port_stat+=item.SOCK;
+                                        else port_stat=item.SOCK;
+                                }
+                                switch(port_stat){
+									case 2:
+										port_stat=1;
+										break;
+									case 1:
+						
+										 if(!isNaN(item.PORT) && !isNaN(item.SOCK)) port_stat=2;
+										if (IsTunnel_gs) port_stat=1;
+										break;
+                              	}
+								$('div.item[id=app_port_'+item.ApplicationConfigId+']').find('i.jq-status').removeClass('jq-status-1').removeClass('jq-status-2').removeClass('jq-status-0').removeClass('jq-status-off').addClass('jq-status-'+port_stat);
+								$('div.item[id=app_sock_'+item.ApplicationConfigId+']').find('i.jq-status').removeClass('jq-status-1').removeClass('jq-status-2').removeClass('jq-status-0').removeClass('jq-status-off').addClass('jq-status-'+item.SOCK);
+								if(data.gluster_type=='gluster'){
+									var p_str='';
+									$.each(data.GlsterPeer.split('\n'),function(i,item){
+										if(item=='')return true;
+										p_str=p_str+'<p style="width:290px;float:left;">'+item+'</p>';
+									})
+									$.each(data.GlsterInfo.split('\n'),function(i,item){
+										if(item=='')return true;
+										p_str=p_str+'<p style="width:290px;float:left;">'+item+'</p>';
+									})
+									$('div.item[id=app_port_gluster]').find('div.jq-tip').html(p_str);
+									_TipView_GLUSTER();
+								}
+                    });
+                    $.each(data.acc,function (i,item) {
+                        //////console.log(item.IsBuildin);
+                        //////console.log(item.IsBuildin=='1');
+                        if($('#acc-'+item.AccIPId).length==0){
+                            if(i==0){
+                                var $sitem=$('i.jq-service.jq-s7').parents('.jq-sitem'); 
+                                $sitem.find('div.c').prepend('<div class="item item-acc" id="acc-'+item.AccIPId+'">'+
+                                                            // item1+'状态'+
+                                                            (item.IsBuildin=='1'?'内置':'外置')+item.AccIP+
+                                                            '<i class="jq-status jq-status-'+item.stat+'" ></i>'+
+                                                        '</div>');
+                            }else{
+                                $('#acc-'+data.acc[i-1].AccIPId).after('<div class="item item-acc" id="acc-'+item.AccIPId+'">'+
+                                                            // item1+'状态'+
+                                                            (item.IsBuildin=='1'?'内置':'外置')+item.AccIP+
+                                                            '<i class="jq-status jq-status-'+item.stat+'" ></i>'+
+                                                        '</div>');
+                            }
+                        }else{
+                            $('#acc-'+item.AccIPId).html((item.IsBuildin=='1'?'内置':'外置')+item.AccIP+'<i class="jq-status jq-status-'+item.stat+'" ></i>');
+                        }
+                    });
+					if(data.gluster_type=='gluster' || data.gluster_type=='double'){
+						var base_synchroa_arr=[];
+						$('i.jq-service.jq-s3').parents('.jq-sitem').find('div.c').find('div.item').each(function(i,item){
+							base_synchroa_arr.push($(item).attr('id'));
+						});
+						$.each(data.replication_slots,function(i,item){
+							if((!data.is_server_master && item.node==server_id) || (data.is_server_master)){
+								var index=$.inArray('base_synchro'+item.node,base_synchroa_arr);
+								if(index>=0){
+									$('#base_synchro'+item.node).find('i.jq-status').removeClass('jq-status-1').removeClass('jq-status-0').addClass('jq-status-'+((item.active && item.value<3000000 && item.value>0)?'1':'0'));
+									base_synchroa_arr.splice(index, 1);
+								}else{
+									if (i==0){
+										$('#base').after('<div class="item" id="base_synchro'+item.node+'">'+
+											'同步接口'+(data.gluster_type=='gluster'?item.node:'')+
+											'<i class="jq-status jq-status-'+((item.active && item.value<3000000 && item.value>0)?'1':'0')+'" ></i>'+
+										'</div>');
+									}else{
+										$('#base_synchro'+data.replication_slots[i-1].node).after('<div class="item" id="base_synchro'+item.node+'">'+
+											'同步接口'+(data.gluster_type=='gluster'?item.node:'')+
+											'<i class="jq-status jq-status-'+((item.active && item.value<3000000 && item.value>0)?'1':'0')+'" ></i>'+
+										'</div>');
+									}
+								}
+								if(!data.is_server_master && item.node==server_id){
+									return false;
+								}
+							}
+						});
+						$.each(base_synchroa_arr,function(i,item){
+							if(item!='base') $('#'+item).remove();
+						});
+					}
+                    $('#base').find('i.jq-status').removeClass('jq-status-1').removeClass('jq-status-0').addClass('jq-status-'+data.DATABASE);
+                    t_time=setTimeout(function(){up_date();},10000);
+                }
+                // else {
+                //     _alert(1, '集群管理', result.ErrMsg);
+                //     return false;
+                // }
+            }
+        });
+        
+    }
+    function list_show() {
+        document.frm_colony.tasktype.value=5;
+        document.frm_colony.action = '/bhost/index';
+        document.frm_colony.submit();
+    }
+    String.prototype.ResetBlank=function(){
+		var regEx = /\s+/g; 
+		return this.replace(regEx, ' '); 
+	};
+    function _addFilter(obj,type,type_num){
+        // <option value="all" selected>所有</option>
+        // <option value="serverid">服务器</option>
+        // <option value="ip">IP</option>
+        // <option value="type">类型</option>
+        // <option value="cpu">CPU</option>
+        var id = $(obj).parent().children('select').eq(0).children('option:selected').val();
+        var v1 = $(obj).parent().children('select').eq(0).children('option:selected').text();
+		var v2 = $(obj).parent().children('input[type=text]').val().trim();
+		////console.log("abcde2"+v2)
+	//v2=v2.ResetBlank();
+        if(id=='all'){
+            v1='';
+        }else{
+            v1=v1+'-';
+        }
+		switch (id) {
+			case 'type':
+				var v4 = $('#'+id+'_result').children('option:selected').text();
+				var v3 = $('#'+id+'_result').children('option:selected').val();
+				v2=v3;
+				break;
+		}
+		//////console.log("abcde1"+id)
+		//////console.log("abcde1"+v2)
+		//////console.log("abcde1"+v3)
+        if(v2 == '' && type_num!=1){
+            $(obj).parent().children('input[type=text]').blur();
+            _alert(2,'搜索','请输入关键字', $(obj).parent().children('input[type=text]'));
+            return false;
+        }
+        // else
+        {
+            switch(id){
+                case 'ip':
+                    var Reg=/^[0-9\.\s]+$/;
+                    break;
+                case 'serverid':
+                    var Reg=/^[0-9\s]+$/;
+                    break;
+                case 'type':
+					var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+                   // var Reg=/^[\u4e00-\u9fa5\/\s]+$/;
+                    break;
+                case 'cpu':
+                    var Reg=/^[a-zA-Z\s]+$/;
+                    break;
+            }
+            if (id!='all' && !Reg.test(v2) && type_num!=1) {
+                $(obj).parent().children('input[type=text]').blur();
+                _alert(2, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+                return false;
+            }
+            if($.inArray(id+'-'+v2,search_all)>=0 && type_num!=1){
+                $(obj).parent().children('input[type=text]').blur();
+                _alert(2,'搜索','关键字重复', $(obj).parent().children('input[type=text]'));
+                return false;
+            }
+			var r = /\s+/g;
+            v2 = v2.replace(r,' ');
+            if(type){
+                search_all.push(id+'-'+v2);
+                search_all_new='';
+				$(obj).parent().children('input[type=text]').val('');
+				////console.log("id="+id)
+				if(id=='type'){
+					$('#filterWW>ul').append('<li><span style = "display:none">'+id+'-'+v4+'</span><span class="ww">'+v1+v4+'</span><i class="del" onclick="_delFilter(this);"></i></li>');
+				}else{
+					$('#filterWW>ul').append('<li><span style = "display:none">'+id+'-'+v2+'</span><span class="ww">'+v1+v2+'</span><i class="del" onclick="_delFilter(this);"></i></li>');
+				}
+			    $('#keyword_check').hide();
+				switch (id) {
+					case 'type':
+                        var qwq = $('#type_result').val()
+						$('#type_result').val(qwq).trigger('change');
+						break;
+				} 
+                selView();
+            }else{
+                if(type_num!=1)search_all_new=id+'-'+v2;
+            }
+
+        }
+        $("#colony_tbody tr input").iCheck('uncheck');
+        delect_str=new Array();
+        colony_page(0.1);
+    }
+    function _delFilter(obj){
+        var id = $(obj).parent().find("span");
+        var ids=$(id).eq(0).text();
+        search_all.splice($.inArray(ids,search_all),1);
+        var keyword=$('#keyword').val().trim();
+        if(keyword==''){
+            search_all_new=='';
+        }else{
+            search_all_new=keyword;
+        }
+        $(obj).parent().remove();
+        selView();
+        delect_str=new Array();
+        colony_page(0.1);
+    }
+    function selView(){
+        var $sel = $('#filterWW');
+        var len = $('li',$sel).length;
+        if(len == 0){
+            $sel.hide();
+            $('#clearFilter').hide();
+        }else{
+            $("#filterWW").show();
+            $('#clearFilter').show();
+            $('>span.ww',$sel).show();
+            $sel.addClass('selector-multiple');
+        }
+    }
+    function _clearFilter(obj,num){
+	if(num==1){
+        $('#keyword').val('');
+        $('#keyword_check').hide();
+        search_all_new='';
+        $("#colony_tbody tr input").iCheck('uncheck');
+        delect_str=new Array();
+        colony_page(0.1);
+		return;
+	}
+        $('#clearFilter').next().children('ul').empty();
+        $('#keyword').val('');
+        $('#clearFilter').hide();
+        $('#keyword_check').hide();
+        search_all_new='';
+        search_all=new Array();
+        selView();
+        $("#colony_tbody tr input").iCheck('uncheck');
+        delect_str=new Array();
+        colony_page(0.1);
+    }
+    //全选按钮
+    function click_all_list() {
+        delect_save();
+        if (colony_all_data.length == delect_str.length) {
+            delect_str = new Array();
+        } else {
+            delect_str = colony_all_data;
+        }
+        show_server_global_list();
+    }
+    function colony_page(num) {
+        paging = paging + num;
+        var fenye = parseInt($('#colony_pages').text());
+        if (paging == 0) {
+            paging = 1;
+        } else if (paging == fenye + 1) {
+            paging = fenye;
+        }
+        delect_save();
+        if (num == 0.1) {
+            paging = 1;
+        } else if (num == 0.9) {
+            paging = fenye;
+        }
+        show_server_global_list();
+    }
+    //选中字段存储
+    function delect_save() {
+        $(">tr", "#colony_tbody").each(function () {
+            var input = $(this).find("input[type='checkbox']");
+            var delect_item = $(">td", this).eq(1).text();
+            var index = $.inArray(delect_item, delect_str);
+            if ($(input).is(':checked')) {
+                if (index < 0) {
+                    delect_str.push(delect_item);
+                }
+            } else {
+                if (index >= 0) {
+                    delect_str.splice(index, 1);
+                }
+            }
+        });
+    }
+    //刷新
+    function clear_all() {
+        $("#colony_tbody tr input").iCheck('uncheck');
+        delect_str = new Array();
+        $("#colony_total").next('span.sum').text(delect_str.length);
+    }
+    function update_all_list() {
+        var get_server_global_json = {
+            "serverid": null,       		                    //--搜索条件，id
+            "searchstring": null,//search_all.join('\n')+'\n'+search_all_new,         	//--模糊搜索条件，搜索ip、type、cpu
+            "ip":null,
+            "type":null,
+            "cpu": null,
+            "limitrow": null,                            //--返回多少条记录
+            "offsetrow": null                 //--返回记录前忽略多少条记录 
+        };
+        get_server_global_json.serverid=new Array();
+        get_server_global_json.type=new Array();
+        get_server_global_json.searchstring=new Array();
+        get_server_global_json.ip=new Array();
+        get_server_global_json.cpu=new Array();
+        $.each(search_all,function (i,item) {
+                var index=item.indexOf('-')
+                var search_type=item.substring(0,index);
+                var search_value=item.substring(index+1);
+                switch (search_type) {
+                    case 'serverid':
+                        get_server_global_json.serverid.push(search_value);
+                        break;
+                    case 'all':
+                        get_server_global_json.searchstring.push(search_value);
+                        break;
+                    case 'ip':
+                        get_server_global_json.ip.push(search_value);
+                        break;
+                    case 'cpu':
+                        get_server_global_json.cpu.push(search_value);
+                        break;
+                    case 'type':
+                        get_server_global_json.type.push(search_value);
+                        break;
+                }
+        });
+        if(search_all_new!=''){
+            var index=search_all_new.indexOf('-')
+            var search_type=search_all_new.substring(0,index);
+            var search_value=search_all_new.substring(index+1);
+            switch (search_type) {
+                case 'serverid':
+                    get_server_global_json.serverid.push(search_value);
+                    break;
+                case 'all':
+                    get_server_global_json.searchstring.push(search_value);
+                    break;
+                case 'ip':
+                    get_server_global_json.ip.push(search_value);
+                    break;
+                case 'cpu':
+                    get_server_global_json.cpu.push(search_value);
+                    break;
+                case 'type':
+                    get_server_global_json.type.push(search_value);
+                    break;
+            }
+        }
+        if(get_server_global_json.type.length>0){
+            get_server_global_json.type=get_server_global_json.type.join('\n');
+        }else{
+            get_server_global_json.type=null;
+        }
+        if(get_server_global_json.serverid.length>0){
+            get_server_global_json.serverid=get_server_global_json.serverid.join('\n');
+        }else{
+            get_server_global_json.serverid=null;
+        }
+        if(get_server_global_json.searchstring.length>0){
+            get_server_global_json.searchstring=get_server_global_json.searchstring.join('\n');
+        }else{
+            get_server_global_json.searchstring=null;
+        }
+        if(get_server_global_json.ip.length>0){
+            get_server_global_json.ip=get_server_global_json.ip.join('\n');
+        }else{
+            get_server_global_json.ip=null;
+        }
+        if(get_server_global_json.cpu.length>0){
+            get_server_global_json.cpu=get_server_global_json.cpu.join('\n');
+        }else{
+            get_server_global_json.cpu=null;
+        }
+        $.ajax({
+            url: "/bhost/get_server_global",
+            type: "POST",
+            async: false,
+            data: { a0: $("input[name=se]").val(), a1: JSON.stringify(get_server_global_json) },
+            success: function (result) {
+                var result = JSON.parse(result);
+                if (result.Result) {
+                    colony_all_data = result.info.data.map(function (params) {
+                        var server_HstGet;
+                        $.ajax({
+                            url: "/bhost/get_server_HstGet",
+                            type: "POST",
+                            async: false,
+                            data: { a0: $("input[name=se]").val(), a1: params.server_id },
+                            success: function (result) {
+                                var result = JSON.parse(result);
+                                if (result.Result) {
+                                    server_HstGet = result.info;
+                                } else {
+                                    server_HstGet = '0';
+                                }
+                            }
+                        });
+                        if(server_HstGet=='0' && $.inArray(params.server_id + '',delect_str)>=0){
+                                delect_str.splice($.inArray(params.server_id + '',delect_str),1);
+                        }
+                        return params.server_id + '';
+                    });
+                }
+            }
+        });
+    }
+    function show_server_global_list() {
+        //update_all_list();
+        var get_server_global_json = {
+            "serverid": null,       		                    //--搜索条件，id
+            "searchstring": null,//search_all.join('\n')+'\n'+search_all_new,         	//--模糊搜索条件，搜索ip、type、cpu
+            "ip":null,
+            "type":null,
+            "cpu": null,
+            "limitrow": null,                            //--返回多少条记录
+            "offsetrow": null                 //--返回记录前忽略多少条记录 
+        };
+        get_server_global_json.serverid=new Array();
+        get_server_global_json.type=new Array();
+        get_server_global_json.searchstring=new Array();
+        get_server_global_json.ip=new Array();
+        get_server_global_json.cpu=new Array();
+        $.each(search_all,function (i,item) {
+                var index=item.indexOf('-')
+                var search_type=item.substring(0,index);
+                var search_value=item.substring(index+1);
+                switch (search_type) {
+                    case 'serverid':
+                        get_server_global_json.serverid.push(search_value);
+                        break;
+                    case 'all':
+                        get_server_global_json.searchstring.push(search_value);
+                        break;
+                    case 'ip':
+                        get_server_global_json.ip.push(search_value);
+                        break;
+                    case 'cpu':
+                        get_server_global_json.cpu.push(search_value);
+                        break;
+                    case 'type':
+                        get_server_global_json.type.push(search_value);
+                        break;
+                }
+        });
+        if(search_all_new!=''){
+            var index=search_all_new.indexOf('-')
+            var search_type=search_all_new.substring(0,index);
+            var search_value=search_all_new.substring(index+1);
+            switch (search_type) {
+                case 'serverid':
+                    get_server_global_json.serverid.push(search_value);
+                    break;
+                case 'all':
+                    get_server_global_json.searchstring.push(search_value);
+                    break;
+                case 'ip':
+                    get_server_global_json.ip.push(search_value);
+                    break;
+                case 'cpu':
+                    get_server_global_json.cpu.push(search_value);
+                    break;
+                case 'type':
+                    get_server_global_json.type.push(search_value);
+                    break;
+            }
+        }
+        if(get_server_global_json.type.length>0){
+            get_server_global_json.type=get_server_global_json.type.join('\n');
+        }else{
+            get_server_global_json.type=null;
+        }
+        if(get_server_global_json.serverid.length>0){
+            get_server_global_json.serverid=get_server_global_json.serverid.join('\n');
+        }else{
+            get_server_global_json.serverid=null;
+        }
+        if(get_server_global_json.searchstring.length>0){
+            get_server_global_json.searchstring=get_server_global_json.searchstring.join('\n');
+        }else{
+            get_server_global_json.searchstring=null;
+        }
+        if(get_server_global_json.ip.length>0){
+            get_server_global_json.ip=get_server_global_json.ip.join('\n');
+        }else{
+            get_server_global_json.ip=null;
+        }
+        if(get_server_global_json.cpu.length>0){
+            get_server_global_json.cpu=get_server_global_json.cpu.join('\n');
+        }else{
+            get_server_global_json.cpu=null;
+        }
+        $.ajax({
+            url: "/bhost/get_server_global",
+            type: "POST",
+            async: false,
+            data: { a0: $("input[name=se]").val(), a1: JSON.stringify(get_server_global_json) },
+            success: function (result) {
+                var result = JSON.parse(result);
+                $('#colony_tbody').empty();
+                $('#colony_total').val('0');
+                $('#colony_total').next('span.sum').text('0');
+                $('#colony_pages').text('1');
+                $('#colony_page').val(paging);
+                $('#page_nums').text(MAX_PAGE);
+                if (result.Result) {
+                    var data = result.info.data;
+                    var total_all = result.info.totalrow;
+                    var fenye;
+                    if (total_all % MAX_PAGE == 0) {
+                        fenye = parseInt(total_all / MAX_PAGE);
+                    } else {
+                        fenye = parseInt(total_all / MAX_PAGE) + 1;
+                    }
+		    if(fenye==0){
+			fenye=1;
+		    }
+                    $('#colony_pages').text(fenye);
+                    if (data == '' && paging != 1) {
+                        colony_page(0.9);
+                        return false;
+                    }
+                    $('#colony_total').text(total_all);
+                    if (total_all) {
+                        $('#colony_tbody').append(data.map(function (params) {
+                            params.type = params.type.replace(/\n/g, '/').replace(/app/g, '代理').replace(/database/g, '数据库').replace(/master/g, '主服务器').replace(/backup/g, '备服务器').replace(/data/g, '数据').replace(/lvs-/g, '');
+                            var server_HstGet;
+                            $.ajax({
+                                url: "/bhost/get_server_HstGet",
+                                type: "POST",
+                                async: false,
+                                data: { a0: $("input[name=se]").val(), a1: params.server_id },
+                                success: function (result) {
+                                    var result = JSON.parse(result);
+                                    if (result.Result) {
+                                        server_HstGet = result.info;
+                                    } else {
+                                        server_HstGet = '0';
+                                    }
+                                }
+                            });
+                            // server_HstGet = '1';
+                            return '<tr>'+
+                                // (power_mode==2?('<td class="in"><input type="checkbox" class="input_checkbox" ' + (server_HstGet=='1' ? 'disabled' : '') + '/></td>'):'') +
+                                '<td style="text-align: center;" title="' + params.server_id + '">' + params.server_id + '</td>' +
+                                '<td title="' + params.ip + '">' + params.ip + '</td>' +
+                                '<td title="' + params.type + '">' + params.type + '</td>' +
+                                '<td title="' + params.cpu + '">' + params.cpu + '</td>' +
+                                '<td><span class="jq-tab-status-'+server_HstGet+'"><i></i>' + (server_HstGet=='1' ? '正常' : '失联') + '</span></td>'+
+                                '<td><div class="tab-ctr"><a href="javascript:;" class="search_result ' + (server_HstGet=='1' ? '' : 'disabled') + '" ' + (server_HstGet=='1' ? 'id="search_result"' : '') + ' title="查询结果" style=""></a>' +
+                                // (power_mode==2?'<a href="javascript:;" class="del ' + (server_HstGet=='1' ? 'disabled' : '') + '" id="' + (server_HstGet=='1' ? '' : 'del') + '" title="删除"></a>':'')+
+                                '</div></td></tr>'
+                        }));
+                        $(".input_checkbox", "#colony_tbody").iCheck({
+                            checkboxClass: 'icheckbox_minimal-blue',
+                            radioClass: 'iradio_minimal-blue',
+                            increaseArea: '0' // optional
+                        });
+                        $('#check_one_page').iCheck('uncheck');
+                        $("#colony_tbody tr input").iCheck('uncheck');
+                        check_show();
+                        $('#colony_total').next('span.sum').text(delect_str.length);
+                        $('#colony_page').val(paging);
+                    } else {
+
+                    }
+                } 
+                else {
+                    _alert(1, '集群管理', result.ErrMsg);
+                    return false;
+                }
+            }
+        });
+    }
+    //删除函数
+    function delete_fun(delect_str_1){
+        $.ajax({
+            url: '/bhost/del_manageauth',
+            type: "POST",
+            async:false,
+            data: {a0:$("input[name=se]").val(),a1:delect_str_1},
+            success: function(result) {
+                var result = JSON.parse(result);
+                if(result.Result == true){
+                    manageauth_page(0);
+                    // _alert(0,"管理授权","删除成功");
+                    if(result.fail_num!=0){
+                        if (result.success_num!=0)
+                            _alert(0,"管理授权","成功："+result.success_num+'，失败：'+result.fail_num);
+                        else
+                            if ((result.fail_num+success_num)==1)
+                                _alert(1,"管理授权",result.ErrMsg);
+                            else
+                                _alert(0,"管理授权",'失败：'+result.fail_num);
+                    }else{
+                        _alert(0,"管理授权","删除成功");
+                    }
+                }else{
+                    manageauth_page(0);
+                    _alert(1,"管理授权",result.ErrMsg);
+                    return false;
+                }	
+            }
+        });
+    }
+    //删除按钮
+    function delete_list(){
+        delect_save();
+        if(delect_str.length == 0){
+            _alert(2,"集群管理","请选择要删除的数据");
+            return false;
+        }
+        //利用对话框返回的值 （true 或者 false） 
+        $('.btn').blur();parent.layer.open({
+            type:1,
+            title: ' 集群管理',
+            content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+            btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+            btnAlign:'c',
+            closeBtn: false,
+            skin:'layer-custom',
+            area:['380px','310px'],
+            move: false,
+            resize: false,
+            yes:function(i){
+                parent.layer.close(i);
+                delete_fun(delect_str.join(',')); 
+                delect_str=new Array();
+                $('#colony_total').next('span.sum').text(delect_str.length);
+            }
+        });
+    }
+    //check显示
+    function check_show() {
+        $(">tr", "#colony_tbody").each(function () {
+            var input = $(this).find("input[type='checkbox']");
+            var check_id = $(">td", this).eq(1).text();
+            if ($.inArray(check_id, delect_str) >= 0) {
+                $(input).iCheck('check');
+            }
+        });
+    }
+    $(function(){
+        _diskNode();
+        _TipView();
+		_TipView_GLUSTER();
+    });
+
+    var nodeData = [
+        {
+            id: 1,
+            position:[ 0,0 ],//位置
+            name: ' 磁盘1',
+            storage: '1000G',
+            status: '1'//状态
+        },
+        {
+            id: 2,
+            position:[ 0,1 ],
+            name: ' 磁盘2',
+            storage: '1000G',
+            status: '1'
+        },
+        {
+            id: 3,
+            position:[ 0,2 ],
+            name: ' 磁盘3',
+            storage: '1000G',
+            status: '0'
+        },
+        {
+            id: 4,
+            position:[ 1,2 ],
+            name: ' 磁盘4',
+            storage: '1000G',
+            status: '1'
+        },
+        {
+            id: 5,
+            position:[ 2,0 ],
+            name: ' 磁盘5',
+            storage: '1000G',
+            status: '1'
+        },
+        {
+            id: 6,
+            position:[ 2,4 ],
+            name: ' 磁盘6',
+            storage: '1000G',
+            status: '0'
+        }
+    ]
+
+    function _diskNode(){
+        var $_d = $('#diskNode');
+        $_d.on('change','input:checkbox',function(){
+            var v = $(this).prop('checked');
+            if(v){
+                $(this).parent().parent().addClass('disk-on');
+            }else{
+                $(this).parent().parent().removeClass('disk-on');
+            }
+        })
+    }
+
+    function _flash(i,obj){
+        _showLoading();
+        // $(obj).addClass('active').parent().siblings().children().removeClass('active');
+        var diskNode_input_check=$('#diskNode').find('input:checked');
+        ////////console.log("diskNode_input_check:"+diskNode_input_check.length);
+        if(diskNode_input_check.length==0){
+            _closeLoading();
+            _alert(2,'集群管理','请选择磁盘');
+            return false;
+        }
+        var diskNode_input_check_div=diskNode_input_check.parents('div.item');
+        var stat_arr=diskNode_input_check_div.map(function (params) {
+            return $(this).find('i.jq-status').attr('class');
+        }).get();
+        var stat_arr=new Array();
+        var sn_arr=new Array();
+        var id_arr=new Array();
+        diskNode_input_check_div.each(function (params) {
+            stat_arr.push($(this).find('i.jq-status').attr('class'));
+            sn_arr.push($(this).attr('disk_sn'));
+            id_arr.push($(this).attr('id').split('-')[1]);
+        });
+        ////////console.log('stat_arr');
+        ////////console.log(stat_arr);
+        if($.inArray('jq-status jq-status-0',stat_arr)>=0){
+            if(i==1){
+                _closeLoading();
+                _alert(2,'集群管理','不能亮起异常磁盘');
+                return false;
+            }else{
+                _closeLoading();
+                _alert(2,'集群管理','不能熄灭异常磁盘');
+                return false;
+            }
+        }
+        
+        $.ajax({//
+            url: '/bhost/flash_disk',
+            type: "post",
+            async:false,
+            data: {a0:$("input[name=se]").val(),a4:i,a1:sn_arr.join(','),a2:id_arr.join(','),a3:server_id},
+            success: function(result) {
+                var result = JSON.parse(result);
+                if(result.Result == false){
+                    _closeLoading();
+                    _alert(2,'集群管理',result.ErrMsg);
+                    n = 1;
+                    return false;
+                }else{
+                    if(i==1){
+                        diskNode_input_check_div.addClass('disk-flash');
+                        _closeLoading();
+                        _alert(0,'集群管理','闪烁成功');
+                    }else{
+                        diskNode_input_check_div.removeClass('disk-flash');
+                        _closeLoading();
+                        _alert(0,'集群管理','熄灭成功');
+                    }
+                }
+            }
+        });
+       
+        /*
+        $('#diskNode>div.item').each(function(n,item){
+            var c = $(item).find('input:checkbox').prop('checked');
+            if(c){
+                if(i == 1){
+                    $(item).addClass('disk-flash');
+                }else if( i == 0){
+                    $(item).removeClass('disk-flash');
+                }
+            }else{
+                // $(item).removeClass('disk-flash');
+            }
+        });
+        */
+    }
+	function _TipView_GLUSTER(){
+		$('#app_port_gluster').unbind().on('mouseover',function(e){
+			//console.log('app_port_gluster mouseover');
+            var $tip = $(this).children('div.jq-tip');
+
+            if($tip.length == 0 || $tip.text() == ''){
+                return;
+            }
+            if($('#markView').length == 0){
+                $('body').append('<div id="markView" style="width:870px;"/>');
+            }
+
+            var $mark = $('#markView');
+            var $cont = $tip.html();
+
+            $mark.html($cont);
+        }).on('mouseout',function(){
+			//console.log('app_port_gluster mouseout');
+            $('#markView').remove();
+        }).on('mousemove',function(e){
+			//console.log('app_port_gluster mousemove');
+            var e = e || window.e;
+
+            var x = e.clientX+12,
+                y = e.clientY+12;
+			//console.log(x+':'+y);
+            var $mark = $('#markView').show();
+
+            var w = document.documentElement.clientWidth || document.body.clientWidth,
+                h = document.documentElement.clientHeight || document.body.clientHeight
+			//console.log(w+':'+h);
+            var mw = $mark.outerWidth(),
+                mh = $mark.outerHeight();
+			y=y-(mh/2);
+			//console.log(mw+':'+mh);
+			//console.log(x + mw > w)
+            if(x + mw > w){
+                x -= mw - 24;
+            }
+			//console.log(y + (mh) > h);
+			//console.log(y<0);
+			if(y + (mh) > h-12){
+                y -= (mh/2);
+            }else if (y<12){
+				y += (mh/2);
+			}
+			//console.log(x+':'+y);
+            $mark.css({
+                top: y,
+                left: x
+            });
+        });
+	}
+    function _TipView(){
+        $('#Net_list').on('mouseover','div.item',function(e){
+            var $tip = $(this).children('div.jq-tip');
+
+            if($tip.length == 0 || $tip.text() == ''){
+                return;
+            }
+
+            if($('#markView').length == 0){
+                $('body').append('<div id="markView" />');
+            }
+
+            var $mark = $('#markView');
+            var $cont = $tip.html();
+
+            $mark.html($cont);
+        }).on('mouseout',function(){
+            $('#markView').remove();
+        }).on('mousemove',function(e){
+            var e = e || window.e;
+
+            var x = e.clientX + 12,
+                y = e.clientY + 12;
+
+            var $mark = $('#markView').show();
+
+            var w = document.documentElement.clientWidth || document.body.clientWidth,
+                h = document.documentElement.clientHeight || document.body.clientHeight
+
+            var mw = $mark.outerWidth(),
+                mh = $mark.outerHeight();
+
+            if(x + mw > w){
+                x -= mw + 24;
+            }
+
+            if(y + mh > h){
+                y -= mh + 24;
+            }
+
+            $mark.css({
+                top: y,
+                left: x
+            });
+        });
+    }
+
+</script> {% endblock %}

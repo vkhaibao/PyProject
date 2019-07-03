@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+		<link rel="stylesheet" href="/manage/css/select2.min.css">
+		<link rel="stylesheet" href="/manage/css/style.css">
+		<link rel="stylesheet" href="/manage/css/info-detail.css">
+		<!--script-->
+		<script src="/manage/js/jquery.min.js"></script>
+		<script src="/manage/js/jquery.easing.js"></script>
+		<script src="/manage/js/layer.js"></script>
+		<script src="/manage/js/common.js"></script>
+		<script src="/manage/js/common_e.js"></script>
+		<!--icheck-->
+		<script src="/manage/js/icheck.min.js"></script>
+		<!--select2-->
+		<script src="/manage/js/select2.full.min.js"></script>
+	</head>
+	<style>
+		a.disabled {
+			opacity:0.4;
+		}
+		.btn-item:hover {
+    			background-color: #fff;
+    			color: #8D808A;
+		}
+		textarea {
+			outline: 0 none;
+			border:none;
+			display: block;
+			overflow: auto; 
+			height: 24px;
+			resize:none;
+			width: 100%; 
+			background: none;
+			min-height: 24px;
+			max-height: 100px;
+			color: #717171;
+			line-height: 24px;
+		}
+		.layui-layer-ico {
+    			background: url(/manage/images/icon_close.png) no-repeat 0 0;
+		}
+		.layui-layer-setwin .layui-layer-close1 {
+			background-position: 0;
+		}	
+	</style>
+	<body style="overflow: hidden;" class="bg-white">
+		<div class="c-cont c-cont4">
+			<div class="info-wrap" style="min-width:1160px;">
+				<div class="info-head">
+					<div class="title-wrap">
+					<div class="left-title">
+						<div class="icon"></div>
+						<strong class="title">&nbsp;日志详情</strong>
+					</div>
+					<div class="btn-list">
+						<a class="check btn-item" data-name="check" onclick="file_check();" style="display:none;">
+							查看
+							<i class="icon-check"></i>
+						</a>
+						<a class="reverse btn-item" data-name="reverse" onclick="_playback();" style="display:none;">回放
+							<i class="icon-reverse" style="background-position: -40px 0px;"></i>
+						</a>
+						<a class="link btn-item" data-name="link" onclick="_analysis();" style="width: 120px;display:none;" >关联分析
+							<i class="icon-link"></i>
+						</a>
+						<a class="file_down btn-item" data-name="file_down" onclick="file_down();" style="display:none;" >下载
+							<i class="icon-file_down"></i>
+						</a>
+						<a class="block btn-item" data-name="block" onclick="block();" style="display:none;" >阻断
+							<i class="icon-block"></i>
+						</a>
+						<a class="monitor btn-item" data-name="monitor" onclick="monitor();" style="display:none;" >监控
+							<i class="icon-monitor"></i>
+						</a>
+						<a class="confirm btn-item" data-name="confirm" onclick="confirm();" style="display:none;" >确认
+							<i class="icon-confirm"></i>
+						</a>
+						<a class="file_del btn-item" data-name="file_del" onclick="file_del();" style="display:none;" >删除
+							<i class="icon-file_del"></i>
+						</a>
+						
+						<!-- <a class="derive btn-item" data-name="derive" style="display:none;">
+							导出
+							<i class="icon-export"></i>
+						</a> -->
+						<a class="btn-item half-btn" data-name="return" >&nbsp;
+							<i class="icon-return"></i>
+						</a>
+						<a class="btn-item half-btn right-btn" data-name="next" >&nbsp;
+							<i class="icon-next"></i>
+						</a>
+					</div>
+				</div>
+				
+			</div>
+			<div class="content-wrapper">
+				<div id="info-content">
+					<table style="overflow: auto;">
+						<tbody>
+						</tbody>
+						</table>
+					</div>
+					<!-- <div class="btns">
+						<a href="javascript:;" class="btn btn-normal" onclick="back();">返&nbsp;&nbsp;回</a>
+					</div> -->
+					<div id="bBtn" style="position: fixed;z-index:5;">
+						<a href="javascript:;" class="btn" style="float: right;" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<form action="/bhost/search_log" method="POST" name="frm_search_log">
+			<input type="hidden" name="a0"  value="{{se}}" />
+			<input type="hidden" name="us"  value="{{us}}" />
+			<input type="hidden" name="tp1"  value="{{tp1}}" />
+			<input type="hidden" name="p1"  value="{{p1}}" />
+			<input type="hidden" name="i1"  value="{{i1}}" />
+			<input type="hidden" name="a1"  value="{{taskid}}" />
+			<input type="hidden" name="a2"  value="{{logtype}}" />
+			<input type="hidden" name="t1"  value="{{t1}}" />
+			<input type="hidden" name="f1"  value="{{f1}}" />
+			<input type="hidden" name="a4"  value="{{btn_status}}" />
+			<input type="hidden" name="tasktype"  value="{{tasktype}}" />
+			<input type="hidden" name="a5"  value="{{name}}" />
+			<input type="hidden" name="s1"  value="" />
+			<input type="hidden" name="v1"  value="{{v1}}" />
+		</form>
+		<!-- <form action="/bhost/analysis_index" method="get" name="frm_analysis">
+			<input type="hidden" name="a0"  value="{{se}}" />
+			<input type="hidden" name="us"  value="{{us}}" />
+			<input type="hidden" name="tp1"  value="{{tp1}}" />
+			<input type="hidden" name="p1"  value="{{p1}}" />
+			<input type="hidden" name="i1"  value="{{i1}}" />
+			<input type="hidden" name="a1"  value="{{taskid}}" />
+			<input type="hidden" name="a2"  value="{{logtype}}" />
+			<input type="hidden" name="t1"  value="{{t1}}" />
+			<input type="hidden" name="f1"  value="{{f1}}" />
+			<input type="hidden" name="a4"  value="{{btn_status}}" />
+			<input type="hidden" name="tasktype"  value="{{tasktype}}" />
+			<input type="hidden" name="a5"  value="{{name}}" />
+			<input type="hidden" name="s1"  value="" />
+			<input type="hidden" name="st"  value="" />
+			<input type="hidden" name="et"  value="" />
+			<input type="hidden" name="stat"  value="" />
+			<input type="hidden" name="tp"  value="" />
+			<input type="hidden" name="su"  value="" />
+			<input type="hidden" name="si"  value="" />
+			<input type="hidden" name="lo"  value="" />
+		</form> -->
+		<!-- <form action="/bhost/playback_index" method="get" name="frm_playback">
+            <input type="hidden" name="a0"  value="{{se}}" />
+            <input type="hidden" name="us"  value="{{us}}" />
+            <input type="hidden" name="tp1"  value="{{tp1}}" />
+            <input type="hidden" name="p1"  value="{{p1}}" />
+            <input type="hidden" name="i1"  value="{{i1}}" />
+            <input type="hidden" name="a1"  value="{{taskid}}" />
+            <input type="hidden" name="a2"  value="{{logtype}}" />
+            <input type="hidden" name="t1"  value="{{t1}}" />
+            <input type="hidden" name="f1"  value="{{f1}}" />
+            <input type="hidden" name="a4"  value="{{btn_status}}" />
+            <input type="hidden" name="tasktype"  value="{{tasktype}}" />
+            <input type="hidden" name="a5"  value="{{name}}" />
+            <input type="hidden" name="s1"  value="" />
+			<input type="hidden" name="st"  value="" />
+			<input type="hidden" name="et"  value="" />
+			<input type="hidden" name="stat"  value="" />
+			<input type="hidden" name="tp"  value="" />
+            <input type="hidden" name="su"  value="" />
+            <input type="hidden" name="si"  value="" />
+            <input type="hidden" name="lo"  value="" />
+		</form> -->
+		<form action="/bhost/playback_index" method="get" name="frm_playback">
+			<input type="hidden" name="a0"  value="{{se}}" />
+			<input type="hidden" name="s1"  value="" />
+			<input type="hidden" name="st"  value="" />
+			<input type="hidden" name="et"  value="" />
+			<input type="hidden" name="stat"  value="" />
+			<input type="hidden" name="tp"  value="" />
+			<input type="hidden" name="su"  value="" />
+			<input type="hidden" name="si"  value="" />
+			<input type="hidden" name="lo"  value="" />
+		</form>
+		<form action="/bhost/analysis_index" method="get" name="frm_analysis">
+			<input type="hidden" name="a0"  value="{{se}}" />
+			<input type="hidden" name="s1"  value="" />
+			<input type="hidden" name="st"  value="" />
+			<input type="hidden" name="et"  value="" />
+			<input type="hidden" name="stat"  value="" />
+			<input type="hidden" name="tp"  value="" />
+			<input type="hidden" name="su"  value="" />
+			<input type="hidden" name="yu"  value="" />
+			<input type="hidden" name="si"  value="" />
+			<input type="hidden" name="lo"  value="" />
+			<input type="hidden" name="ot"  value="" />
+		</form>
+	</body>
+	
+	<script type="text/javascript">
+		
+		var config={{config|safe}};
+		var config_short=new Array();
+		var detail={{detail|safe}};
+		// console.log(detail);
+		var protocol={{protocol|safe}};
+		var f1='{{f1}}';
+		var i1="{{i1}}";
+		var t_id="{{taskid}}";
+		var perm={{perm}};
+		var type_g;
+		var s_id_g;
+		if (perm!=2){
+			$('.file_del.btn-item').remove();
+			$('.reverse.btn-item').remove();
+			$('.link.btn-item').remove();
+			$('.check.btn-item').remove();
+			$('.file_down.btn-item').remove();
+			$('.monitor.btn-item').remove();
+		}
+		if("{{f1}}"=='task'){
+			$('.monitor.btn-item').remove();
+			$('.block.btn-item').remove();
+		}
+		$(function(){
+			document.onkeydown = function() {
+				if (event.keyCode == 9) {  //如果是其它键，换上相应在ascii 码即可。
+					return false; //非常重要
+				}
+			}
+		
+			//console.log(config);
+			for(var i=0;i<config.length;i++){
+				if(config[i].Translation=='发生时间' || config[i].Translation=='起始时间'
+				|| config[i].Translation=='编号' || config[i].Translation=='入库时间'
+				|| config[i].Translation=='会话标识' 
+				|| config[i].Translation=='结束时间' || config[i].Translation=='日志属性'
+				|| config[i].Translation=='会话状态' || config[i].Translation=='告警类型'
+				|| config[i].Translation=='告警等级' || config[i].Translation=='客户端端口'
+				|| config[i].Translation=='服务器端口' || config[i].Translation=='日志类型'
+				|| config[i].Translation=='发生地址' || config[i].Translation=='服务端地址'
+				|| config[i].Translation=='客户端地址' || config[i].Translation=='操作个数'
+				){
+					config_short.push(config[i]);
+					config.splice(i,1);
+					i--;
+				}
+			}
+			//console.log(config_short);
+			//console.log(config);
+			var i1_arr=i1.split(',');
+			//location.href='/bhost/search_result?a0={{se}}&f1={{f1}}&t1={{t1}}&t2={{btn_status}}&t3={{tasktype}}&t4={{name}}&p={{p}}';
+			var index=$.inArray(t_id,i1_arr);
+			if(index!=0){
+				$('.icon-return').parent().on('click',function(){
+					if('{{f1}}' == 'monitor_' || '{{f1}}' == 'more_ses_info_'){
+						location.href="/bhost/log_detail_route?a0={{se}}&m1={{m1}}&m2={{m2}}&m3={{m3}}&m4={{m4}}&m5={{m5}}&m6={{m6}}&m7="+i1_arr[index-1]+"&m8={{i1}}&m9={{p1}}&m10={{logtype}}";	
+					}else{
+						//location.href='/bhost/search_log?a0={{se}}&tasktype={{tasktype}}&a1='+i1_arr[index-1]+'&a2={{logtype}}&&a4={{btn_status}}&a5={{name}}&f1={{f1}}&t1={{t1}}&i1={{i1}}&p1={{p1}}&tp1={{tp1}}';
+						document.frm_search_log.a1.value=i1_arr[index-1];
+						document.frm_search_log.submit();										
+					}
+				});
+			}else{
+				$('.icon-return').parent().addClass('disabled');
+			}
+			if(index!=i1_arr.length-1){
+				$('.icon-next').parent().on('click',function(){
+					if('{{f1}}' == 'monitor_' || '{{f1}}' == 'more_ses_info_'){
+						location.href="/bhost/log_detail_route?a0={{se}}&m1={{m1}}&m2={{m2}}&m3={{m3}}&m4={{m4}}&m5={{m5}}&m6={{m6}}&m7="+i1_arr[index+1]+"&m8={{i1}}&m9={{p1}}&m10={{logtype}}";
+					}else{	
+						//location.href='/bhost/search_log?a0={{se}}&tasktype={{tasktype}}&a1='+i1_arr[index+1]+'&a2={{logtype}}&&a4={{btn_status}}&a5={{name}}&f1={{f1}}&t1={{t1}}&i1={{i1}}&p1={{p1}}&tp1={{tp1}}';
+						document.frm_search_log.a1.value=i1_arr[index+1];
+						document.frm_search_log.submit();
+					}
+				});
+			}else{
+				$('.icon-next').parent().addClass('disabled');
+			}
+			//console.log(detail.DownloadEnable);
+			//console.log(detail.DeleteEnable);
+			//console.log(detail.str32_01);
+			//console.log(detail.int32_01);
+			if(detail.int08_11==null){
+				detail.int08_11='';
+			}
+			// console.log(detail.int08_11=='' && detail.int08_12=='告警');
+			// console.log(detail.int08_11);
+			// console.log(detail.int08_12);
+			if(detail.int08_11=='未处理'){
+				$('.confirm.btn-item').show();
+			}else if(detail.int08_11=='' && detail.int08_12=='告警'){
+				// console.log('111');
+				$('.confirm.btn-item').show();
+			}
+			type_g=detail.int08_00;
+			switch (detail.int08_00) {
+				case 1:
+					detail.int08_00='操作';	
+					$('.reverse.btn-item').show();
+					$('.link.btn-item').show();
+					$('.check.btn-item').hide();
+					if(detail.DownloadEnable){
+						$('.file_down.btn-item').show();	
+					}
+					if(detail.DeleteEnable){
+						$('.file_del.btn-item').show();	
+					}
+					$('.derive.btn-item').hide();
+					break;
+				case 2:
+					detail.int08_00='会话';
+					$('.reverse.btn-item').show();
+					$('.link.btn-item').hide();
+					$('.check.btn-item').show();
+					if(detail.DownloadEnable){
+						$('.file_down.btn-item').show();        
+						if(detail.int08_03==0 || detail.int08_03=='连接中'){
+								$('.file_down.btn-item').hide();
+								$('.reverse.btn-item').hide();
+								$('.block.btn-item').show();
+								$('.monitor.btn-item').show();
+						}
+					}
+					//if(detail.int08_03==0 || detail.int08_03=='连接中'){
+					//	$('.file_down.btn-item').hide();
+					//}else{
+					//	$('.file_down.btn-item').show();
+					//}
+					//$('.file_down.btn-item').show();
+					$('.file_del.btn-item').hide();
+					$('.derive.btn-item').show();
+					break;
+				case 3:
+					detail.int08_00='系统日志';
+					$('.reverse.btn-item').hide();
+					$('.link.btn-item').hide();
+					$('.check.btn-item').hide();
+					$('.file_down.btn-item').hide();
+					$('.file_del.btn-item').hide();
+					$('.derive.btn-item').hide();
+					break;
+			}
+			switch (detail.int08_03) {
+				case 0:
+					detail.int08_03='连接中';	
+					break;
+				case 1:
+					detail.int08_03='正常退出';
+					break;
+				case 2:
+					detail.int08_03='异常退出';
+					break;
+			}
+			switch(detail.int08_15){
+				case 0:
+					detail.int08_15='无';
+					break;
+				case 1:
+					detail.int08_15='低';
+					break;
+				case 2:
+					detail.int08_15='中';
+					break;
+				case 3:
+					detail.int08_15='高';
+					break;
+			}
+			switch(detail.int08_14){
+				case 0:
+					detail.int08_14='无';
+					break;
+				case 1:
+					detail.int08_14='违规操作';
+					break;
+				case 2:
+					detail.int08_14='高危操作';
+					break;
+				case 3:
+					detail.int08_14='登录异常';
+					break;
+			}
+			// if(detail.str32_02!=null){
+			// 	detail.str32_02=detail.str32_02.replace(/\n/gm,'<br>');
+			// }
+			// if(detail.int08_00!='系统日志'){
+			// 	$.each(protocol.data,function (i,item) {
+			// 		if(item.ProtocolId==detail.int32_01){
+			// 			detail.int32_01=item.ProtocolName;
+			// 			return false;
+			// 		}
+			// 	});
+			// }
+			
+			if(detail.xtime_01!=undefined){
+				detail.xtime_01=detail.xtime_01.replace(/\+08:00/g,'').replace(/T/g,' ');
+			}
+			if(detail.xtime_02!=undefined){
+				detail.xtime_02=detail.xtime_02.replace(/\+08:00/g,'').replace(/T/g,' ');
+			}
+			if(detail.xtime_04!=undefined){
+				detail.xtime_04=detail.xtime_04.replace(/\+08:00/g,'').replace(/T/g,' ');
+			}
+			if(detail.xtime_05!=undefined){
+				detail.xtime_05=detail.xtime_05.replace(/\+08:00/g,'').replace(/T/g,' ');
+			}
+			$('#bBtn', window.parent.document).hide();
+			var currentBtn,leaveBtn;
+			$('.btn-item:not(.disabled)').on('mouseover',function(){
+				$(this).css({'background-color':'rgb(138,138,138)','color':'#fff'});
+				currentBtn = $(this).attr('data-name');
+				switch (currentBtn) {
+					case 'reverse':
+						$(this).find('.icon-reverse').css("background-position",'-40px -20px');
+						break;
+					case 'link':
+						$(this).find('.icon-link').css("background-position",'-0 -20px');
+						break;
+					case 'check':
+						$(this).find('.icon-check').css("background-position",'-20px -20px');
+						break;
+					case 'derive':
+						$(this).find('.icon-export').css("background-position",'-60px -20px');
+						break;
+					case 'return':
+						$(this).find('.icon-return').css("background-position",'-80px -20px');
+						break;
+					case 'next':
+						$(this).find('.icon-next').css("background-position",'-100px -20px');
+						break;
+					case 'file_down':
+						$(this).find('.icon-file_down').css("background-position",'-140px -20px');
+						break;
+					case 'file_del':
+						$(this).find('.icon-file_del').css("background-position",'-120px -20px');	
+						break;
+					case 'block':
+						$(this).find('.icon-block').css("background-position",'0px -22px');
+						break;
+					case 'monitor':
+						$(this).find('.icon-monitor').css("background-position",'-20px -22px');
+						break;
+					case 'confirm':
+						$(this).find('.icon-confirm').css("background-position",'-40px -22px');
+						break;
+				}
+				
+			}).on('mouseleave',function(){
+				$(this).css({'background-color':'#fff','color':'#8D808A'});
+				leaveBtn = $(this).attr('data-name');
+				switch (currentBtn) {
+					case 'reverse':
+					$(this).find('.icon-reverse').css("background-position",'-40px 0');
+						break;
+					case 'link':
+						$(this).find('.icon-link').css("background-position",'-0 0');
+						break;
+					case 'check':
+						$(this).find('.icon-check').css("background-position",'-20px 0');
+						break;
+					case 'derive':
+						$(this).find('.icon-export').css("background-position",'-60px 0');
+						break;
+					case 'return':
+						$(this).find('.icon-return').css("background-position",'-80px 0');
+						break;
+					case 'next':
+						$(this).find('.icon-next').css("background-position",'-100px 0');
+						break;
+					case 'file_down':
+						$(this).find('.icon-file_down').css("background-position",'-140px 0');
+						break;
+					case 'file_del':
+						$(this).find('.icon-file_del').css("background-position",'-120px 0');	
+						break;
+					case 'block':
+						$(this).find('.icon-block').css("background-position",'0px -2px');
+						break;
+					case 'monitor':
+						$(this).find('.icon-monitor').css("background-position",'-20px -2px');
+						break;
+					case 'confirm':
+						$(this).find('.icon-confirm').css("background-position",'-40px -2px');
+						break;
+				}
+			});
+			$('.btn-item:not(.disabled)').css('cursor','pointer');
+			$('#info-content tbody').empty();
+			for (var i=0;i<config_short.length;i+=2){
+				var $H=$('<tr class="info-item"></tr>');
+				var $H1='<td class="info-title" _index="'+config_short[i].Content+'" >'+config_short[i].Translation+'&nbsp;:</td><td class="info-content" colspan="3">'+(detail[config_short[i].Content]||'')+'</td>';
+				if((i+1)<config_short.length){
+					var $H1='<td class="info-title" _index="'+config_short[i].Content+'" >'+config_short[i].Translation+'&nbsp;:</td><td class="info-content">'+(detail[config_short[i].Content]||'')+'</td>';
+					var $H2='<td class="info-title" _index="'+config_short[i+1].Content+'" >'+config_short[i+1].Translation+'&nbsp;:</td><td class="info-content">'+(detail[config_short[i+1].Content]||'')+'</td>';
+				}else{
+					var $H1='<td class="info-title" _index="'+config_short[i].Content+'" >'+config_short[i].Translation+'&nbsp;:</td><td class="info-content" colspan="3">'+(detail[config_short[i].Content]||'')+'</td>';
+					var $H2='';
+				}
+				//var $H2='<td class="info-title" _index="'+config_short[i].Content+'" >'+config_short[i+1].Translation+'&nbsp;:</td><td class="info-content">'+(detail[config_short[i+1].Content]||'')+'</td>';
+				$H.html($H1+$H2);
+				$('#info-content tbody').append($H);
+			}
+			var $ta=$("td[_index=str32_02]").next().children("textarea");
+            		$.fn.scrollUnique = function() {
+                		return $(this).each(function() {
+                 			var eventType = 'mousewheel';
+                    			if (document.mozHidden !== undefined) {
+                        			eventType = 'DOMMouseScroll';
+                    			}
+                    			$(this).on(eventType, function(event) {
+                        			// 一些数据
+                        			var scrollTop = this.scrollTop,
+                            			scrollHeight = this.scrollHeight,
+                            			height = this.clientHeight;
+	
+        	                		var delta = (event.originalEvent.wheelDelta) ? event.originalEvent.wheelDelta : -(event.originalEvent.detail || 0);
+	
+        	                		if ((delta > 0 && scrollTop <= delta) || (delta < 0 && scrollHeight - height - scrollTop <= -1 * delta)) {
+                	            			// IE浏览器下滚动会跨越边界直接影响父级滚动，因此，临界时候手动边界滚动定位
+                        	    			this.scrollTop = delta > 0? 0: scrollHeight;
+                            				// 向上滚 || 向下滚
+                            				event.preventDefault();
+                        			}
+                    			});
+                		});
+            		};
+
+            		$ta.scrollUnique();
+			for(var i=0;i<config.length;i++){
+				var $H=$('<tr class="info-item"></tr>');
+				detail[config[i].Content]=detail[config[i].Content]||'';
+				var strarr=(detail[config[i].Content]+'').split('\n');
+				var _strlen=0;
+				//console.log(strarr);
+				for(var j=0;j<strarr.length;j++){
+					if(j!=strarr.length-1){
+						if(strlen(strarr[j])%150==0){
+							_strlen+=(150*parseInt(strlen(strarr[j])/150));
+						}else{
+							_strlen+=(150*(parseInt(strlen(strarr[j])/150)+1));
+						}
+					}else{
+						if(strarr[j]!='')
+							_strlen+=(strlen(strarr[j]));
+						else
+							strarr.splice(j, 1);
+							//_strlen+=(150);
+					}
+					if(_strlen>625){
+						break;
+					}
+				}
+				detail[config[i].Content]=strarr.join('\n')
+				if(_strlen%150==0){
+					var _height=parseInt(_strlen/150)*24;
+				}else{
+					var _height=(parseInt(_strlen/150)+1)*24;
+				}
+				var $H1='<td class="info-title" _index="'+config[i].Content+'" >'+config[i].Translation+'&nbsp;:</td><td class="info-content" colspan="3"><textarea id="textarea" class="" readonly style="height:'+_height+'px">'+(detail[config[i].Content])+'</textarea></td>';
+				$H.html($H1);
+				$('#info-content tbody').append($H);
+			}
+			var text = document.getElementById("textarea");
+			autoTextarea(text);// 调用
+		});
+		function file_down() {
+			if (clicktag == 0) {
+				clicktag = 1;
+				setTimeout(function () {clicktag = 0}, 1000);
+			 }else return false;
+			 
+			var log_id=detail.xtime_00;
+                        var log_name = detail.str32_28;
+						var DownloadType = 0; //1->回放文件  2->传输文件；
+                        if(log_name==''){
+							if(detail.str32_28 == "" && detail.int32_01 == 'SFTP' || detail.int32_01 == 'FTP' || detail.int32_01 == 'SSH'){
+								if(detail.str32_01.indexOf('Save') >= 0){
+									DownloadType = 2;
+									log_id = detail.xtime_00;
+									log_name = detail.str32_01.replace('Save ','',1);
+								}
+							}
+                        }else{
+							DownloadType = 1;
+						}
+						if(log_name==''){
+							return false;
+						}      
+                        $.ajax({
+                                url: "/bhost/download_fileCheck",
+                                type:"POST",
+                                async:true,
+                                data:{a0:$("input[name=a0]").val(),a1:log_id,a2:log_name,a3:DownloadType,a10:'日志详情>日志详情'},
+                                success:function(result){
+                                        var result=JSON.parse(result);
+                                        if(result.Result){
+                                                var referer_tmp = document.referrer.toString();
+                                                var referer_array_tmp = referer_tmp.split('/');
+                                                referer_array_tmp.pop();
+                                                var referer_new = referer_array_tmp.join('/');
+												if(DownloadType == 1){
+                                                        var index_tmp = detail.str32_28.split('/').length;
+                                                        log_name = detail.str32_28.split('/')[index_tmp-1]
+                                                }
+												var sesstimet = (new Date()).valueOf();
+                                                var json_download = {
+                                                        "Type": "Download",
+                                                        "Url": referer_new,
+                                                        "Path": result.Path,
+                                                        "Filename": log_name.split('/').pop(),
+                                                        "Session": $("input[name=a0]").val(),
+														"sesstimet":sesstimet
+                                                }
+                                                var if_html_client = false;
+                                                var base64_str = '';
+                                                $.ajax({
+                                                        url: "/bhost/get_base64",
+                                                        type:"POST",
+                                                        async:false,
+                                                        data:{a0:window.parent.document.frm.se.value,z1:JSON.stringify(json_download)},
+                                                        success:function(result){
+                                                                var result=JSON.parse(result);
+                                                                if(result.Result){
+                                                                        if_html_client = result.info;
+                                                                        base64_str = result.b64;
+                                                                }else{
+                                                                        _alert(1,"日志详情",result.ErrMsg);
+                                                                }
+                                                        }
+                                                })
+                                                if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(json_download));
+                                                else{
+                                                       // window.location.href = 'bhost://cmd&'+base64_str;
+														get_regedit('bhost', window.parent.document.frm.se.value,'',sesstimet);
+														$('#YuFrame1').remove();
+														$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+														$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+												}
+                                        }else{
+                                                _alert(1,"日志详情",result.ErrMsg);
+                                        }
+                                }
+                        })	
+			/*
+			var DownloadType = 0;           //1->回放文件  2->传输文件；
+			var log_id,log_name;
+			if(detail.str32_28 != ""){
+					DownloadType = 1;
+					log_id = detail.xtime_00;
+					log_name = detail.str32_28;
+			}else{
+					if(detail.str32_28 == "" && (detail.int32_01 == 'SFTP' || detail.int32_01 == 'RDP' || detail.int32_01 == 'FTP' || detail.int32_01 == 'SSH')){
+							if(detail.str32_01.indexOf('Save') >= 0){
+									DownloadType = 2;
+									log_id = detail.xtime_00;
+									log_name = detail.str32_01.replace('Save ','',1);
+							}
+					}
+			}
+			if(log_name != ""){
+				$.ajax({
+					url: "/bhost/download_fileCheck",
+					type:"POST",
+					async:true,
+					data:{a0:$("input[name=a0]").val(),a1:log_id,a2:log_name,a3:DownloadType,a10:'日志详情>日志详情'},
+					success:function(result){
+						var result=JSON.parse(result);
+						if(result.Result){
+							//console.log(document.referrer);
+							var referer_tmp = document.referrer.toString();
+							var referer_array_tmp = referer_tmp.split('/');
+							referer_array_tmp.pop();
+							var referer_new = referer_array_tmp.join('/');
+							//console.log(referer_new);
+							if(DownloadType == 1){
+									var index_tmp = detail.str32_28.split('/').length;
+									log_name = detail.str32_28.split('/')[index_tmp-1]
+							}
+							var json_download = {
+									"Type": "Download",
+									"Url": referer_new,
+									"Path": result.Path,
+									"Filename": log_name,
+									"Session": $("input[name=a0]").val()
+							}
+							cmd_str = JSON.stringify(json_download);
+							var evt = document.createEvent("CustomEvent");
+							evt.initCustomEvent('LocalEvent', true, false, cmd_str);
+							document.dispatchEvent(evt);
+							window.open('https://'+window.location.host+'/bhost/test_html?se={{se}}&z1='+cmd_str);
+							// var form = $("<form></form>").attr("action", '/bhost/download_file_log').attr("method", "post").attr('enctype','multipart/form-data');
+							// form.append($("<input></input>").attr("type", "hidden").attr("name", "a3").attr("value", DownloadType));
+							// form.append($("<input></input>").attr("type", "hidden").attr("name", "a2").attr("value", log_name));
+							// form.append($("<input></input>").attr("type", "hidden").attr("name", "a1").attr("value", log_id));
+							// form.append($("<input></input>").attr("type", "hidden").attr("name", "a0").attr("value", sess));
+							// form.appendTo('body').submit().remove();
+						}else{
+							_alert(1,'日志详情',result.ErrMsg);
+							return false;
+						}
+					}
+				})
+			}
+			*/
+		}
+		var autoTextarea = function (elem, extra, maxHeight) {
+			extra = extra || 0;
+			var isFirefox = !!document.getBoxObjectFor || 'mozInnerScreenX' in window,
+			isOpera = !!window.opera && !!window.opera.toString().indexOf('Opera'),
+					addEvent = function (type, callback) {
+							elem.addEventListener ?
+									elem.addEventListener(type, callback, false) :
+									elem.attachEvent('on' + type, callback);
+					},
+					getStyle = elem.currentStyle ? function (name) {
+							var val = elem.currentStyle[name];
+							
+							if (name === 'height' && val.search(/px/i) !== 1) {
+									var rect = elem.getBoundingClientRect();
+									return rect.bottom - rect.top -
+											parseFloat(getStyle('paddingTop')) -
+											parseFloat(getStyle('paddingBottom')) + 'px';        
+							};
+							
+							return val;
+					} : function (name) {
+									return getComputedStyle(elem, null)[name];
+					},
+					minHeight = parseFloat(getStyle('height'));
+			
+			
+			elem.style.resize = 'none';
+			
+			var change = function () {
+					var scrollTop, height,
+							padding = 0,
+							style = elem.style;
+					
+					if (elem._length === elem.value.length) return;
+					elem._length = elem.value.length;
+					
+					if (!isFirefox && !isOpera) {
+							padding = parseInt(getStyle('paddingTop')) + parseInt(getStyle('paddingBottom'));
+					};
+					scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+					
+					elem.style.height = minHeight + 'px';
+					if (elem.scrollHeight > minHeight) {
+							if (maxHeight && elem.scrollHeight > maxHeight) {
+									height = maxHeight - padding;
+									style.overflowY = 'auto';
+							} else {
+									height = elem.scrollHeight - padding;
+									style.overflowY = 'hidden';
+							};
+							style.height = height + extra + 'px';
+							scrollTop += parseInt(style.height) - elem.currHeight;
+							document.body.scrollTop = scrollTop;
+							document.documentElement.scrollTop = scrollTop;
+							elem.currHeight = parseInt(style.height);
+					};
+			};
+			
+			addEvent('propertychange', change);
+			addEvent('input', change);
+			addEvent('focus', change);
+			change();
+		};
+		/*
+		判断长度
+		pStr：字符串
+		return： true：全角
+				false：半角
+		*/
+		function strlen(pStr){
+			var _lenCount = 0;
+			for(var i=0;i<pStr.length;i++){
+				if(isFull(pStr.charAt(i))){
+					_lenCount+=2;
+				}else{
+					_lenCount++;
+				}
+			}
+			return _lenCount;
+		}
+		/* 
+		* 判断是否为全角 
+		*  
+		* pChar:长度为1的字符串 
+		* return: true:全角 
+		*          false:半角 
+		*/
+		function isFull(pChar) {
+			if ((pChar.charCodeAt(0) > 128)) {
+				return true;
+			} else {
+				return false;
+			}
+		};
+		function back(){
+			$('#bBtn', window.parent.document).show();
+			if("{{f1}}" == "monitor_"){
+				location.href='/bhost/log_detail_route?a0={{se}}&m1={{m1}}&m2={{m2}}&m3={{m3}}&m4={{m4}}&m5={{m5}}&m6={{m6}}&m9={{p1}}&tasktype=2';
+			}else if("{{f1}}" == "more_ses_info_"){
+				location.href='/bhost/log_detail_route?a0={{se}}&m1={{m1}}&m2={{m2}}&m3={{m3}}&m4={{m4}}&m5={{m5}}&m6={{m6}}&m9={{p1}}&tasktype=3';
+			}else{
+				location.href='/bhost/search_result?a0={{se}}&f1={{f1}}&t1={{t1}}&t2={{btn_status}}&t3={{tasktype}}&t4={{name}}&p1={{p1}}&tp1={{tp1}}';
+			}
+		}
+		function _analysis(){
+			var sessid = "";
+			var stime="";
+			var etime="";
+			var statue=1;
+			var type = "";
+			var server_user = "";
+			var server_ip = "";
+			$('#info-content td.info-title').each(function(i,item){
+				if($(this).attr('_index').indexOf('xtime_03') >=0){
+					sessid = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('xtime_04') >=0){
+					stime = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('xtime_05') >=0){
+					etime = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('int08_03') >=0){
+					s = $(this).next('td').text();
+					if(s == '连接中') statue = 0;
+					else if (s == '异常退出') statue = 2;
+					else statue = 1;
+				}
+				if($(this).attr('_index').indexOf('int32_01') >=0){
+					type = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('str32_00') >=0){
+					server_user = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('ip_01') >=0){
+					server_ip = $(this).next('td').text();
+				}
+			})
+			IfReplay = detail['IfReplay'];//ir
+			IfReplayDrawing = detail['IfReplayDrawing'];//ird			
+			document.frm_analysis.ot.value = IfReplay+"@"+IfReplayDrawing;
+			//console.log(sessid);
+		/*起始时间：2017-12-07 14:01:12 结束时间：2017-12-07 14:02:04 会话类型：SSH 运维用户：yyt 服务器IP：192.168.0.82 服务器用户名：root*/
+			$('form[name=frm_analysis]').attr('target','_blank');
+			$('form[name=frm_analysis]').attr('method','get');
+			document.frm_analysis.s1.value = sessid;
+			document.frm_analysis.st.value = stime;
+			document.frm_analysis.et.value = etime;
+			document.frm_analysis.stat.value = statue;
+			document.frm_analysis.tp.value = type;
+			document.frm_analysis.su.value = server_user;
+			document.frm_analysis.yu.value = detail['str32_22']==null?"":detail['str32_22'];;
+			document.frm_analysis.si.value = server_ip;
+			document.frm_analysis.lo.value = {{logtype}};			
+			document.frm_analysis.submit();
+			//location.href='/bhost/analysis_index?a0={{se}}';
+		}
+		/*
+		function _playback(){
+			var sessid = "";
+            var stime="";
+            var etime="";
+            var statue=1;
+            var type = "";
+            var server_user = "";
+            var server_ip = "";
+            $('#info-content td.info-title').each(function(i,item){
+				if($(this).attr('_index').indexOf('xtime_03') >=0){
+                    sessid = $(this).next('td').text();
+                }
+                if($(this).attr('_index').indexOf('xtime_04') >=0){
+                    stime = $(this).next('td').text();
+                }
+                if($(this).attr('_index').indexOf('xtime_05') >=0){
+                    etime = $(this).next('td').text();
+                }
+                if($(this).attr('_index').indexOf('int08_03') >=0){
+                    s = $(this).next('td').text();
+                    if(s == '连接中') statue = 0;
+                    else if (s == '异常退出') statue = 2;
+                    else statue = 1;
+                }
+                if($(this).attr('_index').indexOf('int32_01') >=0){
+                    type = $(this).next('td').text();
+                }
+                if($(this).attr('_index').indexOf('str32_00') >=0){
+                    server_user = $(this).next('td').text();
+                }
+                if($(this).attr('_index').indexOf('ip_01') >=0){
+                    server_ip = $(this).next('td').text();
+                }
+            })
+			//console.log(sessid);
+			$('form[name=frm_playback]').attr('target','_blank');
+			$('form[name=frm_playback]').attr('method','get');
+			document.frm_playback.s1.value = sessid;
+            document.frm_playback.st.value = stime;
+            document.frm_playback.et.value = etime;
+            document.frm_playback.stat.value = statue;
+			document.frm_playback.tp.value = type;
+            document.frm_playback.su.value = server_user;
+            document.frm_playback.si.value = server_ip;
+            document.frm_playback.lo.value = {{logtype}};
+            document.frm_playback.submit();
+		}
+		*/
+		function file_check() {
+			var sessid = "";
+			var stime="";
+			var etime="";
+			var statue=1;
+			var type = "";
+			var server_user = "";
+			var server_ip = "";
+			$('#info-content td.info-title').each(function(i,item){
+				if($(this).attr('_index').indexOf('xtime_03') >=0){
+					sessid = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('xtime_04') >=0){
+					stime = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('xtime_05') >=0){
+					etime = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('int08_03') >=0){
+					s = $(this).next('td').text();
+					if(s == '连接中') statue = 0;
+					else if (s == '异常退出') statue = 2;
+					else statue = 1;
+				}
+				if($(this).attr('_index').indexOf('int32_01') >=0){
+					type = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('str32_00') >=0){
+					server_user = $(this).next('td').text();
+				}
+				if($(this).attr('_index').indexOf('ip_01') >=0){
+					server_ip = $(this).next('td').text();
+				}
+			})
+			IfReplay = detail['IfReplay'];//ir
+			IfReplayDrawing = detail['IfReplayDrawing'];//ird			
+			document.frm_analysis.ot.value = IfReplay+"@"+IfReplayDrawing;
+			//console.log(sessid);
+			/*起始时间：2017-12-07 14:01:12 结束时间：2017-12-07 14:02:04 会话类型：SSH 运维用户：yyt 服务器IP：192.168.0.82 服务器用户名：root*/
+			$('form[name=frm_analysis]').attr('target','_blank');
+			$('form[name=frm_analysis]').attr('method','get');
+			document.frm_analysis.s1.value = sessid;
+			document.frm_analysis.st.value = stime;
+			document.frm_analysis.et.value = etime;
+			document.frm_analysis.stat.value = statue;
+			document.frm_analysis.tp.value = type;
+			document.frm_analysis.su.value = server_user;
+			document.frm_analysis.si.value = server_ip;
+			document.frm_analysis.lo.value = {{logtype}};			
+			document.frm_analysis.submit();
+		}
+		
+		var clicktag = 0;	
+		function _playback(){
+			if (clicktag == 0) {
+				clicktag = 1;
+				setTimeout(function () {clicktag = 0}, 1000);
+			}else return false;
+			//console.log(detail);
+			if(detail['IfReplay'] == true){
+					MapPort = '8080';
+					$.ajax({
+						url: "/bhost/get_MapPort",
+						type:"POST",
+						async:false,		
+						data:{a0:$("input[name=a0]").val()},
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+								MapPort = result.info;
+							}else{
+								_alert(1,"日志详情",result.ErrMsg);
+							}
+						}
+					})
+					var sesstimet = (new Date()).valueOf();
+					cmd_json ={
+							"Cmd":"",
+							"Protocol":detail['int32_01']==null?"":detail['int32_01'],
+							"ReplayPath":detail['str32_28']==null?"":detail['str32_28'],
+							"UrlIp":document.domain+ (location.port!=''?':'+location.port:''),
+							"ClientIp":detail['ip_02']==null?"":detail['ip_02'],
+							"ServerIp":detail['ip_01']==null?"":detail['ip_01'],
+							"StartTime":detail['xtime_04']==null?"":((new Date(detail['xtime_04']).valueOf())/1000),
+							"File":"123",//SlasEncode 加密？？？
+							"Sessid":detail['xtime_03'],
+							"Usercode":detail['str32_22']==null?"":detail['str32_22'],
+							"Username":detail['str32_23']==null?"":detail['str32_23'],
+							"IfReplay":true,
+							"IfReplayDrawing":detail['IfReplayDrawing'],
+							"MapPort":MapPort,
+							"sesstimet":sesstimet,
+							"sess":$("input[name=a0]").val()
+					}
+			
+					var if_html_client = false;
+					var base64_str = '';
+					$.ajax({
+						url: "/bhost/get_base64",
+						type:"POST",
+						async:false,		
+						data:{a0:$("input[name=a0]").val(),z1:JSON.stringify(cmd_json)},
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+								if_html_client = result.info;
+								base64_str = result.b64;
+							}else{
+								_alert(1,"数据检索",result.ErrMsg);
+							}
+						}
+					})
+					if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+$("input[name=a0]").val()+'&z1='+JSON.stringify(cmd_json));
+					else{
+						//window.location.href = 'bhost://cmd&'+base64_str;
+						get_regedit('bhost', $("input[name=a0]").val(),'',sesstimet);
+						$('#YuFrame1').remove();
+						$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+						$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+					}
+					
+			
+					return false;
+			}
+			sessid = detail['xtime_03'];
+			stime = detail['xtime_04']==null?"":detail['xtime_04'];
+			etime = detail['xtime_05']==null?"":detail['xtime_05'];
+			s =detail['int08_03'] ;
+			if(s == '连接中') statue = 0;
+			else if (s == '异常退出') statue = 2;
+			else statue = 1;
+
+			typ = detail['int32_01'] ;
+			server_user = detail['str32_00']==null?"":detail['str32_00'];
+			server_ip = detail['ip_01']==null?"":detail['ip_01'];  
+			$('form[name=frm_playback]').attr('target','_blank');
+			$('form[name=frm_playback]').attr('method','get');
+			document.frm_playback.s1.value = sessid;
+			document.frm_playback.st.value = stime.replace('T','  ').replace('+08:00','');;
+			document.frm_playback.et.value = etime.replace('T','  ').replace('+08:00','');;
+			document.frm_playback.stat.value = statue;
+			document.frm_playback.tp.value = typ;
+			document.frm_playback.su.value = server_user;
+			document.frm_playback.si.value = server_ip;
+			lo=detail['int08_00'];
+			// if (logtype == 'NORMAL') lo = 1;
+			// else if(logtype == 'SESSION') lo = 2;
+			// else lo = 3;
+			document.frm_playback.lo.value = lo;
+			document.frm_playback.submit();
+			//console.log(detail);
+		}
+		function file_del() {
+			
+			//利用对话框返回的值 （true 或者 false） 
+			$('.btn').blur(); parent.layer.open({
+				type: 1,
+				title: '日志详情',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+				btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+				btnAlign: 'c',
+				closeBtn: false,
+				skin: 'layer-custom',
+				area: ['380px', '310px'],
+				move: false,
+				resize: false,
+				yes: function (i) {
+					parent.layer.close(i);
+					//传输文件；
+					var log_id = detail.xtime_00;
+					var log_name = detail.str32_01.replace('Save ','',1);
+					$.ajax({
+						url: "/bhost/delete_file_log",
+						type:"POST",
+						async:true,
+						data:{a0:$("input[name=a0]").val(),a1:log_id,a2:log_name,a10:'日志详情>日志详情'},
+						success:function(result){
+								var re = JSON.parse(result);
+								if(re.Result == false){
+										_alert(1,"日志详情",re.ErrMsg);
+								}else{
+										//_alert(0,"日志详情","删除成功");
+										//利用对话框返回的值 （true 或者 false）
+                        							$('.btn').blur(); parent.layer.open({
+                                							type: 1,
+                                							title: '日志详情',
+                                							content: '<div class="layer-alert"><i class="alert succ"></i>删除成功</div>',
+                                							btn: ['确&nbsp;&nbsp;定'],
+                                							btnAlign: 'c',
+                                							closeBtn: false,
+                                							skin: 'layer-custom',
+                                							area: ['380px', '310px'],
+                                							move: false,
+                                							resize: false,
+                                							yes: function (i) {
+												parent.layer.close(i);
+												location.reload();
+											}
+										});
+								}
+						}
+					});
+				}
+			});
+		}
+		
+		function confirm(){
+			s_id_g = detail.xtime_00;
+			hglayer = layer.open({
+				type:2,
+				title:'确认备注',
+				content:'/bhost/mark_layer?a0={{se}}&a1='+s_id_g+'&a2='+type_g+'&a3=日志详情',
+				area:['650px','350px'],
+				btn:false,
+				shade:0.7
+			});
+		}
+
+		function _closeHgLayer(flag,content){
+			if(flag == 0){
+			//1-操作，2-会话，3-系统
+				$.ajax({
+					url: "/bhost/set_logstat",
+					type:"POST",
+					async:false,
+					data:{a0:$("input[name=a0]").val(),a1:type_g,a2:s_id_g,a3:content,a10:"日志详情"},
+					success:function(result){
+						var result = JSON.parse(result);
+						if(result.Result == true){
+							_alert(0,"日志详情","操作成功");
+							$('#info-content').find('td[_index="int08_11"]').next('td').find('textarea').text("已处理");
+							$('#info-content').find('td[_index="str32_16"]').next('td').find('textarea').text(result.UserCode);
+							$('#info-content').find('td[_index="str32_17"]').next('td').find('textarea').text(result.UserName);
+							$('#info-content').find('td[_index="str32_18"]').next('td').find('textarea').text(content);
+							$('.confirm.btn-item').remove();
+						}else{
+							_alert(1,"日志详情","操作失败");
+						}
+					}
+				})
+			}else{
+
+			}
+			layer.close(hglayer);
+		}
+		function monitor(){
+			ifacc = false;
+				if(detail.str32_28.indexOf('acc') != -1){
+					ifacc = true;
+				}
+				_cowork(detail.str32_22,detail.int32_14,detail.int32_01,type_g,detail.ip_01,detail.int16_01,detail.int16_02,detail.str32_00,ifacc,detail.xtime_03,detail.int32_15);
+		}
+		var url_str = "https://" + document.domain + ':8443';
+		function _cowork(bhname,pid,protoname,Type,ip,port1,port2,sername,ifacc,se_old,int32_15) {
+			var ip_domain='';
+			var getdomainpass=true;
+			$.ajax({
+				url: "/bhost/getdomain",
+				type:"POST",
+				async:false,
+				data:{a0:$("input[name=a0]").val(),a1:int32_15},
+				success:function(result){
+					var result = JSON.parse(result);
+					if(result.Result == true){
+						if(result.ip!=''){
+							ip_domain=result.ip
+						}
+					}else{
+						_alert(1,"日志详情",result.ErrMsg);
+						getdomainpass=false;
+						return false;
+					}
+				}
+			});
+			if(!getdomainpass){
+				return false;
+			}
+			if(ip_domain!=''){
+				url_str = "https://"+ip_domain+':8443';
+			}
+			var timestamp = new Date().getTime();
+			var username1 = $("input[name=a0]").val() + '@' + timestamp;
+			var param_host = '{"name":"hostname","value":"127.0.0.1"}';
+			var username;
+			var paramStr = "";
+			$.ajax({
+				url:'/bhost/get_user_name',
+				type:'post',
+				async:false,
+				data:{a0:$("input[name=a0]").val()},
+				success:function(result){
+					var re_result = JSON.parse(result);
+					username = re_result.info;
+				}
+			});	
+			var param_port;
+			var param_port1;
+			$.ajax({
+				url:'/bhost/module_app_set_list',
+				type:'post',
+				async:false,
+				data:{a0:$("input[name=a0]").val()},
+				success:function(result){
+					var re_result = JSON.parse(result);
+					$.each(re_result.data,function(i,item){
+						if (item.ApplicationName == 'TELNET'){
+							param_port = '{"name":"port","value":"'+item.ServicePort+'"}';
+							return false;
+						}else if(item.ApplicationName == 'RDP|VNC|X11'){
+							param_port1 = '{"name":"port","value":"'+item.ServicePort+'"}';
+						}
+					});
+				}
+			});
+			$.ajax({
+				url:'/bhost/get_Param',
+				type:'post',
+				async:false,
+				data:{a0:$("input[name=a0]").val(),a1:bhname,a2:ip,a3:protoname,a4:sername},
+				success:function(result){
+					var re_result = JSON.parse(result);
+					paramStr = '\\t'+re_result.ServiceName+'\\t'+re_result.ConnMode+'\\t'+re_result.ConnParam+'\\t'+re_result.ClientName;
+				}
+			});
+			var username0 = "";
+			var Type1 = 0;
+			var param_array = [];
+			if(Type == 2){
+				if(protoname == "RDP" || ifacc==true || protoname == "VNC" || protoname == "X11"){
+					Type1 = 1;
+					username0 = bhname+'@'+sername+'@'+ip+':'+port1+':'+protoname+':'+port2+'@h5:1:'+se_old+':'+'{{us}}'+':'+username;
+								if(ifacc == true){
+										username0 += ':1';
+								}else{
+										username0 += ':0';
+								}
+					param_array.push(JSON.parse(param_port1));
+					var pwd_str = parent.client_ip+':0@'+'d106f6959747';
+					param_password = '{"name":"password","value":"'+pwd_str+'"}';
+				}else{
+					username0 = '+'+'{{us}}'+'@'+username+'@'+pid+':'+protoname+'@ad';
+					param_array.push(JSON.parse(param_port));
+					param_password = '{"name":"password","value":"'+$("input[name=a0]").val()+'"}';
+				}
+			}
+			if(protoname == "SSH" || protoname == "TELNET" || protoname == "RLOGIN"){
+			}else{
+				username0 += paramStr;
+			}
+			var param_username = '{"name":"username","value":"'+username0+'"}';
+			param_array.push(JSON.parse(param_host));
+			param_array.push(JSON.parse(param_username.replace("\\","\\\\")));
+			param_array.push(JSON.parse(param_password));
+			var pwd = $("input[name=a0]").val();
+			$.ajax({
+				url: "/bhost/get_token_remote_Monitor",
+				type:"POST",
+				async:false,
+				data:{a0:$("input[name=a0]").val(),a1:url_str,a2:bhname,a3:pid,a4:protoname,a5:username1,a6:pwd,a7:JSON.stringify(param_array),a8:Type,a9:Type1},
+				success:function(result){
+					var result=JSON.parse(result);
+					$.ajax({
+						url: "/bhost/RealIPGet",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val(), a1: document.domain},
+						success: function (result) {
+							var result = JSON.parse(result);
+							if(result.result == true){
+								if(result.dev_type == "gluster"){
+									document_domain = result.info;
+								}else{
+									document_domain = document.domain;
+								}
+							}else{
+								document_domain = document.domain;
+							}
+						}
+					})
+					var url_addr = 'https://'+(ip_domain==''?document_domain:ip_domain)+':8443/bhremote/?token='+result.authToken;
+					window.open(url_addr);
+				}
+			});
+		}
+		function block(){
+			$.ajax({
+				url: "/bhost/block_session",
+				type:"POST",
+				async:true,		
+				data:{a0:$("input[name=a0]").val(),p1:detail.int32_14,s1:detail.int32_15,s2:detail.xtime_03},
+				success:function(result){
+					var result=JSON.parse(result);
+					if(result.Result){
+						// _alert(0,"日志详情","操作成功");
+						parent.parent.layer.open({
+							type:1,
+							title:'日志详情',
+							content:'<div class="layer-alert"><i class="alert succ"></i>操作成功</div>',
+							btn:['确&nbsp;&nbsp;定'],
+							btnAlign:'c',
+							/*closeBtn: false,*/
+							skin:'layer-custom',
+							area:['380px','310px'],
+							move: false,
+							resize: false,
+							btn1:function(i){
+								parent.parent.layer.close(i);
+								location.reload('f5');
+							},
+							cancel: function(i){
+								parent.parent.layer.close(i);
+							}
+						});
+					}else{
+						_alert(1,"日志详情",result.ErrMsg);
+					}
+				}
+			})
+		}
+	</script>
+</html>

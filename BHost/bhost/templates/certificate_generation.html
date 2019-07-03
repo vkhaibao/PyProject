@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<script src="/manage/js/jquery.datepick.js"></script>
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<style>
+		.c-form-host {
+			width: 800px;
+			min-width: 800px;
+			height: auto;
+			overflow: hidden;
+			margin: 0 auto;
+			background-color: #fff;
+			padding: 30px 0 0;
+			font-size: 16px;
+			box-shadow: rgba(0,0,0,0.1) 0 2px 5px;
+		}
+		.c-form-host .form-item {
+			float: none;
+			width: 100%;
+			padding: 20px 0 10px;
+		}
+		.c-form-host .form-item .form-tag {
+			width: 192px;
+		}
+		.c-form-host .form-item {
+			width: 100%;
+			height: auto;
+			padding: 20px 0 10px;
+			min-height: 28px;
+		}
+		.c-form-host span.ss {
+			float: left;
+			width: 195px;
+			line-height: 28px;
+			 position: relative; 
+		}
+	</style>
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<!--证书生成-->
+		<div class="rwrap">
+		<div class="c-top">
+						<div class="c-title">
+							<!--<h3 onclick="parent.reload();">证书生成</h3> -->
+							<div class="manual-head" style="width:100px;float:left;" >
+    							<div class="manual-title" >
+       								 <span id="certificate_generation" style ="cursor: pointer;">证书生成</span>
+        							 <i class="certificate_generation_icon"></i>
+   								</div>
+							</div>
+							<div class="ctr">
+								<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+							</div>
+						</div>
+					</div>
+		<div class="mainer">
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-form c-form-host" style="">
+						<div class="form">	
+							<div class="form-item" >
+								<span class="form-tag"><em class="imp">*</em>IP/域名：</span>
+								<div id="ip_n" name='ip_n' class="form-c" style="float: left;width: 578px;padding-left: 10px;">
+									<span class='ss ss-add'>
+										<input style="width:150px;padding-right:8px;" name="t_d" id="t_d" type="text" class="form-text" placeholder="" value="">
+										<i class="ctr ctr-add" onclick="_addIp(this)" style="margin-top: 9px;    margin-left: 3px;"></i>
+									</span>
+								</div>
+								
+							</div>
+						</div>
+                    </div>
+                    <div class="btns s-hide" >
+						<a href="javascript:;" class="btn btn-normal" onclick="time_add();">确&nbsp;&nbsp;定</a>
+						<!--
+						<a href="javascript:;" class="btn btn-normal" onclick="back();">取&nbsp;&nbsp;消</a> 
+						-->
+					</div>
+					<div id="bBtn" style="position: fixed;z-index:5;">
+						<a href="javascript:;" class="btn" style="float: right;" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<form action="/bhost/time_handle" method="POST" name="frm_time_add" id="frm_time_add">
+        <input type="hidden" name="a0" id = "" value="" />
+    </form>
+
+
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+$('.form-select').select2({minimumResultsForSearch: -1});
+$("input.datepicker").datepick();
+</script>
+
+<!--select2-->
+
+<script>
+$(function(){
+	
+	$("#certificate_generation").on("click",function(){
+		parent.reload();
+	});
+        });
+
+</script>
+<script>
+var ipReg = /^((?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-5][0-5])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9])))$/;
+var urlReg=/[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
+var _if_disable ='2';
+$(function(){
+	parent._switchBtn(1);//显示按钮
+	_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+	if(_if_disable == '1'){
+		$('.s-hide').remove();
+	}
+	document.frm_time_add.a0.value=window.parent.document.frm.se.value;
+	showWebCertConfig()
+});
+//显示列表页面
+function back(){
+	window.parent._closePage(null); 
+}
+//加入IP/域名
+function _addIp(obj){
+	var pass =1;
+	var v = $(obj).prev('input').val().trim();
+	if($(">span[class='ss']","#ip_n").length >=6){
+		_alert(2,'证书生成','IP/域名不能超过6个');
+		return false;
+	}
+	if(v==''){
+		_alert(2,'证书生成','请输入IP/域名',$(obj).prev('input'));
+		//$(obj).prev('input').val("");
+		return false;
+	}else if(!ipReg.test(v) && !urlReg.test(v)){
+		_alert(1,'证书生成','IP/域名格式不正确',$(obj).prev('input'));
+		//$(obj).prev('input').val("");
+		return false;
+	}else{
+		$(">span[class='ss']","#ip_n").each(function(){
+			ip_str=$(this).find("input").val();
+			if (ip_str==v){
+				_alert(2,'证书生成','IP/域名重复',$(obj).prev('input'));
+				pass=0;
+				return false;
+			}
+		});
+	}
+	if(pass==1){
+		var $c = $('<span class="ss"  style="padding: 0 0 10px 0;"/>');
+		$c.html('<input type="text" class="form-text form-text2" value="'+v+'" disabled="true" style="width:150px;padding-right:8px;"><i class="ctr ctr-del" style="margin-top: 6px;margin-left: -5px;" onclick="_delIp(this)"></i>');
+		$(obj).parent().after($c);
+		$(obj).prev('input').val("");
+		$(obj).prev('input').focus();
+	}
+}
+//删除IP/域名
+function _delIp(obj){
+	var $c = $(obj).parent();
+	$c.fadeOut(function(){
+		$c.remove();
+	});
+}
+function createIPTag(ipAddr){
+	var contentBuf = [];
+	contentBuf.push('<span class="ss" style="padding: 0 0 10px 0;">');
+	contentBuf.push('<input type="text" style="width:134px;" class="form-text" value="' + ipAddr + '">');
+	contentBuf.push('<i class="ctr ctr-del" onclick="_delIp(this)" style="margin-top: 5px;margin-left: -3px;"></i>');
+	contentBuf.push('</span>');
+	return contentBuf.join('');
+}
+function showWebCertConfig() {
+	$.ajax({
+		url: "/bhost/get_web_cert_config",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=a0]").val()},
+		success:function(result){
+			var web_result = JSON.parse(result);
+			if (web_result.Result==true){
+				ServerIP = web_result.ServerIP;
+				var inputArea = $("#ip_n").find("span[class='ss ss-add']");
+				if (ServerIP != ''){
+					var time_data_ip = ServerIP.split(" ");
+					$.each(time_data_ip,function(i,item){
+						if(i!=time_data_ip.length-1){
+							inputArea.after( createIPTag(item));
+						}else{
+							$('#t_d').val(item);
+						}
+						
+					});					
+				}
+			}else{
+				_alert(1,'证书生成',web_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+function time_add(){
+	
+	var input_str = $("#t_d").val().trim();
+	var ipBuf = [];
+	var $all = $('#ip_n').find('span[class=ss]');
+	var len = $all.length;
+	var iplist = [];
+	var dnslist = []
+	if (input_str != "") {
+		if(len >=6){
+			_alert(2,'证书生成','IP/域名不能超过6个');
+			return false;
+		}
+		if( !ipReg.test(input_str) && !urlReg.test(input_str)){
+			_alert( 2,'证书生成','IP/域名格式不正确',$("#ipInput"));
+			return false;	
+		}else if(!ipReg.test(input_str)){
+			dnslist.push(input_str);
+		}else{
+			iplist.push(input_str);
+		}
+		ipBuf.push(input_str);
+	} else if (len == 0) {
+		_alert(2,'证书生成',"请输入IP/域名",$("#ipInput"));
+		return false;		
+	}
+
+	for (var i = 0; i < len; ++i) {
+		var inputBox = $all.eq(i).find("input");
+		var ip_str = inputBox.val();
+		if ( !ipReg.test(ip_str) && !urlReg.test(ip_str)){
+			inputBox.val('').val(ip_str);
+			_alert(2,'证书生成','IP/域名格式不正确',inputBox);
+			_closeLoading();
+			return false;
+		}else if(!ipReg.test(ip_str)){
+			dnslist.push(ip_str);
+		}else{
+			iplist.push(ip_str);
+		}				
+		if (ip_str == input_str ){
+			$("#ipInput").val('').val(input_str);
+			_alert(2,'证书生成','IP/域名重复',$("#ipInput"));
+			_closeLoading();
+			return false;
+		}
+		if ( ipBuf.indexOf(ip_str) != -1) {
+			inputBox.val('').val(ip_str);
+			_alert(2,'证书生成','IP/域名重复',inputBox);
+			_closeLoading();
+			return false;
+		}
+		ipBuf.push(ip_str);		
+	}
+	ipBuf.reverse();
+	//console.log(ipBuf)
+	oper ='生成证书：（IP/域名：'+ipBuf+'）'
+	
+	$.ajax({
+		url: '/bhost/add_webcrt',
+		type: "POST",
+		async:false,
+		data: {a0:$("input[name=a0]").val(),a1:ipBuf.join(' '),o1:oper,a2:iplist.join(','),a3:dnslist.join(',')},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				$('.btn').blur();
+				parent.layer.open({
+					type:1,
+					title: '证书生成',
+					content: '<div class="layer-alert"><i class="alert succ"></i>生成成功</div>',
+					btn:['确&nbsp;&nbsp;定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					yes:function(i){
+						parent.layer.close(i);
+					}
+				});	
+			}else{
+				_alert(1,'生成证书',result.ErrMsg);
+				return false;
+			}
+		}
+	});
+	
+}
+</script>
+</body>
+</html>

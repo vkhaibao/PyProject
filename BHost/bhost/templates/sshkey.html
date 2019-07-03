@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+
+</head>
+<body style="overflow:hidden;" class="bg-white">
+	<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+				<div class="manual-head" style="float:left;width:100px">
+    				<div class="manual-title" >
+       					<span id="connection_data">密钥管理</span>
+        				<i class="sshkey_data_icon"></i>
+   					</div>
+				</div>
+				
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		
+		<div class="mainer" name="connection" id="connection" >
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr" style="width:288px;">
+									<a href="javascript:;" class="btn btn-default" onclick="connection_add();">创建</a>
+									<a href="javascript:;" class="btn btn-default" onclick="delete_list();">删除</a>
+									<a href="javascript:;" class="btn btn-default" onclick="click_all_list();">全选</a>
+									<a href="javascript:;" class="btn btn-default" onclick="connection_page(0);clear_all();">刷新</a>
+								</div>
+								
+								<div class="filter">
+									<div class="search">
+										<select name="connection_select" id="connection_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="keyname">名称</option>
+											<!--<option value="keycontent">内容</option>-->
+										</select>
+
+										<input type="text" style="padding-right: 22px;" class="filter-text" placeholder="输入关键字" name="connection_text" id="connection_text" maxlength="128" onchange="if($('#connection_text').val()==''){$('#connection_text_check').hide();}else{$('#connection_text_check').show();}" onkeyup="if($('#connection_text').val()==''){$('#connection_text_check').hide();}else{$('#connection_text_check').show();}" onkeydown="if($('#connection_text').val()==''){$('#connection_text_check').hide();}else{$('#connection_text_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return; ">
+                                        <i class="v-check v-wrong" id="connection_text_check" onclick="_clearFilter(this)" style="display: none;cursor: pointer; float: left; position: static;"></i>
+     
+
+										<button class="btn filter-btn" onclick="_addFilter(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div>
+							</div>
+							
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th width="50"><input type="checkbox" class="form-checkbox" id="check_one_page"/></th>
+											<th>名称</th>
+											<th>类型</th>
+											<!--<th>状态</th>-->
+											<th>内容</th>	
+											<th width="51"></th>
+										</tr>
+									</thead>
+
+									<tbody name="connection_list" id="connection_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_nums">10</span>条 总数：<span id = "connection_total">0</span>  选中：<span class="sum">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="connection_begin" onclick="connection_page(0.1);"><i></i></a>
+									<a href="javascript:;" class="nav prev" id="connection_prev" onclick="connection_page(-1);"><i></i></a>
+									<input type="text" id = "connection_page" value="1" onchange="showMsg();">/&nbsp;<span id = "connection_pages">1</span>
+									<a href="javascript:;" class="nav next" id="connection_next" onclick="connection_page(1);"><i></i></a>
+									<a href="javascript:;" class="nav2 end" id="connection_end" onclick="connection_page(0.9);"><i></i></a>
+								</div>
+							</div>
+						</div>	
+						<div class="clearfix"></div>
+							
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="save_connection();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+
+<form action="/bhost/get_sshkey" method="POST" name="frm_sshkey" id="frm_sshkey">
+			<input type="hidden" name="tasktype" id = "tasktype" value="3" />
+			<!--创建 编辑 列表-->
+			<input type="hidden" name="sshkey_id" id = "sshkey_id" value="0" />
+			<!--需要查询id-->
+			<input type="hidden" name="paging" id = "paging" value="{{paging}}" />
+			<!--页码-->
+			<input type="hidden" name="search_typeall" id = "search_typeall" value="{{search_typeall}}" />
+			<!--search_typeall-->
+			<input type="hidden" name="e" id = "e" value="{{e}}" />
+			<!--e-->
+			<input type="hidden" name="se" id = "se" value="{{se}}" />
+			<!--f0-->
+			<input type="hidden" name="type" id = "type" value="{{type_value}}" />
+			<input type="hidden" name="keyname" id = "keyname" value="" />
+			<input type="hidden" name="keytype" id = "keytype" value="" />
+			<input type="hidden" name="keytypeid" id = "keytypeid" value="" />
+			<input type="hidden" name="keycontent" id = "keycontent" value="" />
+			<input type="hidden" name="passwork" id = "passwork" value="" />
+			<input type="hidden" name="enable" id = "enable" value="" />
+			<input type="hidden" name="enableid" id = "enableid" value="" />
+	</form>
+	
+<script>
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+<style>
+		.c-table table tr:hover .last_td,
+		.xTable table tr:hover .last_td{
+			background-color: #63c3d9
+		}
+	
+	</style>
+<script>
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+
+<script type="text/javascript">
+var delect_str = new Array();
+var check_num=0;
+var total_all_r=0;
+var connection_array=null;
+//总数
+var fenye_r=0;
+//总页码
+var search_typeall_r=document.frm_sshkey.search_typeall.value;
+//关键字
+var sshkey = {
+			"SshKeyId": 0,
+			"KeyName": null,
+			"KeyType": 0,
+			"KeyContent": null,
+		};
+function save_connection(){
+	window.parent._closePage(null); 
+}
+$(function(){
+	document.frm_sshkey.se.value=window.parent.document.frm.se.value;
+	if(search_typeall_r!=""){
+        var v1="";
+        var id="";
+        var str_new="";
+        var search_typeall_str=search_typeall_r.split('\t');
+        //console.log(search_typeall_str);
+        $.each(search_typeall_str,function(i,item){
+            if(item==""){
+                return false;
+            }
+            var str_sea=item.split("-");
+            v1=$('#connection_select').find('option[value='+str_sea[0]+']').text();
+            id=item;
+            str_sea[0]=v1;
+            str_new=str_sea.join('-');
+            $('#filterWW>ul').append('<li><span style = "display:none">'+id+'</span><span class="ww">'+str_new+'</span><i class="del" onclick="_delFilter(this);"></i></li>');
+	    selView();
+        });
+    }
+    var search_typeall_select=document.frm_sshkey.e.value.substr(document.frm_sshkey.e.value.indexOf(':')+1,document.frm_sshkey.e.value.length-1);
+    if(search_typeall_select!=''){
+        var array=new Array();
+        array[0]=search_typeall_select.substr(0,search_typeall_select.indexOf('-'));
+        array[1]=search_typeall_select.substr(search_typeall_select.indexOf('-')+1,search_typeall_select.length);
+        //console.log(array);
+        $('#connection_select').val(array[0]).trigger('change');
+        $('#connection_text').val(array[1]);
+        if(array[1]!=''){
+            $('#connection_text_check').show();
+        }
+    }
+	//输入数字
+	$("#connection_page").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	////console.log("connectionlist11");
+	//页码显示
+	$("#page_nums").val(MAX_PAGE);
+	//list show
+	show_connection_list();
+	parent._switchBtn(1);//显示按钮
+	//tr双击事件
+	$("#connection_list").on('dblclick','tr',function(e){
+		x=e.target;
+		if(x.nodeName !='A' && x.nodeName !='INS'){
+			var id=$(this).find("td");
+			var sshkey_id = parseInt($(id).eq(1).text());
+			var keyname = $(id).eq(2).text();
+			var keytypeid = parseInt($(id).eq(3).attr('id')); 
+			var keytype = $(id).eq(3).text();
+			var keycontent = $(id).eq(4).text();
+			var passwork=$(id).eq(2).attr('passwork');
+			//var enable = $(id).eq(4).text();
+			//var enableid = $(id).eq(4).attr('id');
+			//if(enableid=="true"){
+			//	return false;
+			//}
+			//if (confirm("你确定编辑吗？")) {
+			document.frm_sshkey.sshkey_id.value=sshkey_id;
+			document.frm_sshkey.tasktype.value=2;
+			document.frm_sshkey.keyname.value=keyname;
+			document.frm_sshkey.keytype.value=keytype;
+			document.frm_sshkey.keytypeid.value=keytypeid;
+			document.frm_sshkey.keycontent.value=keycontent;
+			document.frm_sshkey.passwork.value=passwork;
+			document.frm_sshkey.search_typeall.value=search_typeall_r;
+			document.frm_sshkey.e.value=search_typeall_new+':'+$('#connection_select').val()+'-'+$('#connection_text').val();
+			document.frm_sshkey.action = '/bhost/sshkey_update';
+			document.frm_sshkey.submit();
+		}
+		
+	}).on("click", "tr", function (e){  
+		x=e.target;
+		//删除按钮
+		if(x.id == 'del'){
+			var id=$(this).find("td");
+			var input  = $(this).find("input"); 
+			$('.btn').blur();parent.layer.open({
+				type:1,
+				title: '密钥管理',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+				btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+				btnAlign:'c',
+				closeBtn: false,
+				skin:'layer-custom',
+				area:['380px','310px'],
+				move: false,
+				resize: false,
+				yes:function(i){
+					parent.layer.close(i);
+					var delete_item=$(id).eq(1).text();			
+					//$(input).iCheck('uncheck');
+					delete_fun(delete_item+'\t'+$(id).eq(2).text());
+				}
+			});
+		}
+		//编辑按钮
+		if(x.id == 'edit'){
+			var id=$(this).find("td");
+			var sshkey_id = parseInt($(id).eq(1).text());
+			var keyname = $(id).eq(2).text();
+			var keytypeid = parseInt($(id).eq(3).attr('id')); 
+			var keytype = $(id).eq(3).text();
+			var keycontent = $(id).eq(4).text();
+			var passwork=$(id).eq(2).attr('passwork');
+			//var enable = $(id).eq(4).text();
+			//var enableid = $(id).eq(4).attr('id');
+			//if(enableid=="true"){
+			//	return false;
+			//}
+			//if (confirm("你确定编辑吗？")) {
+			document.frm_sshkey.sshkey_id.value=sshkey_id;
+			document.frm_sshkey.tasktype.value=2;
+			document.frm_sshkey.keyname.value=keyname;
+			document.frm_sshkey.keytype.value=keytype;
+			document.frm_sshkey.keytypeid.value=keytypeid;
+			document.frm_sshkey.keycontent.value=keycontent;
+			document.frm_sshkey.passwork.value=passwork;
+			//document.frm_sshkey.enable.value=enable;
+			//document.frm_sshkey.enableid.value=enableid;
+			document.frm_sshkey.search_typeall.value=search_typeall_r;
+			document.frm_sshkey.e.value=search_typeall_new+':'+$('#connection_select').val()+'-'+$('#connection_text').val();
+			document.frm_sshkey.action = '/bhost/sshkey_update';
+			document.frm_sshkey.submit();
+		}
+		//停用
+		if (x.id == 'stop_icon') {
+			var id = $(this).find("td");
+			var SshKeyId = parseInt($(id).eq(1).text());
+			var KeyName = $(id).eq(2).text();
+			var KeyType = parseInt($(id).eq(3).attr('id'));
+			var KeyContent = $(id).eq(5).text();
+			sshkey.SshKeyId = SshKeyId;
+			sshkey.KeyName = KeyName;
+			sshkey.KeyType = KeyType;
+			sshkey.KeyContent = KeyContent;
+			sshkey.IfValid = false;
+			msstr = aceg(JSON.stringify(sshkey),$("input[name=se]").val());
+			$.ajax({
+				url: "/bhost/add_sshkey",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(sshkey),a2:'停用',m1: msstr},
+				success: function (result) {
+					var result=JSON.parse(result);
+					if(result.Result){
+						connection_page(0);
+					}else{
+						_alert(1,'密钥管理',result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+
+		//启用
+		if (x.id == 'start_icon') {
+			var id = $(this).find("td");
+			var SshKeyId = parseInt($(id).eq(1).text());
+			var KeyName = $(id).eq(2).text();
+			var KeyType = parseInt($(id).eq(3).attr('id'));
+			var KeyContent = $(id).eq(5).text();
+			sshkey.SshKeyId = SshKeyId;
+			sshkey.KeyName = KeyName;
+			sshkey.KeyType = KeyType;
+			sshkey.KeyContent = KeyContent;
+			sshkey.IfValid = true;
+			msstr = aceg(JSON.stringify(sshkey),$("input[name=se]").val());
+			$.ajax({
+				url: "/bhost/add_sshkey",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(sshkey),a2:'启用',m1: msstr},
+				success: function (result) {
+					var result=JSON.parse(result);
+					if(result.Result){
+						connection_page(0);	
+					}else{
+						_alert(1,'密钥管理',result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+	});
+	$('#check_one_page').on('ifClicked',function(e){
+		if(!$('#check_one_page').is(':checked')){
+			$("table tbody tr input").iCheck('check');
+		}else{
+			$("table tbody tr input").iCheck('uncheck');
+		}
+		
+	});
+	$("#connection_list").on("ifChecked",function(e){
+		check_num++;
+		$("span.sum").text(check_num);		
+		if($("table tbody tr input:checked").length==$("table tbody tr input").length){
+			$('#check_one_page').iCheck('check');
+		}
+
+	}).on("ifUnchecked",function(e){
+		check_num--;
+		$("span.sum").text(check_num);	
+		$('#check_one_page').iCheck('uncheck');	
+	});
+})
+//显示创建页面
+function connection_add(){
+	document.frm_sshkey.tasktype.value=1;
+	document.frm_sshkey.sshkey_id.value=0;
+	document.frm_sshkey.action = '/bhost/sshkey_handle';
+	document.frm_sshkey.search_typeall.value=search_typeall_r;
+	document.frm_sshkey.e.value=search_typeall_new+':'+$('#connection_select').val()+'-'+$('#connection_text').val();
+	document.frm_sshkey.submit();
+}
+
+//选中字段存储
+function delect_save(){
+	$(">tr","#connection_list").each(function(){
+		var input  = $(this).find("input[type='checkbox']");
+		var delect_item=$(">td",this).eq(1).text()+'\t'+$(">td",this).eq(2).text();
+		var index=$.inArray(delect_item,delect_str);
+		if($(input).is(':checked')){
+			if(index<0){
+				delect_str.push(delect_item);
+			}
+		}else{
+			if(index>=0){
+				delect_str.splice(index,1); 
+			}
+		}
+	});
+}
+//check显示
+function check_show(){
+	$(">tr","#connection_list").each(function(){
+		var check_id=$(">td",this).eq(1).text()+'\t'+$(">td",this).eq(2).text();
+		if($.inArray(check_id,delect_str)>=0){
+			$(this).find("input[type='checkbox']").iCheck('check');
+		}
+	});
+}
+//input回车触发事件
+function showMsg(){
+	delect_save();
+	var cur = $("#connection_page").val();
+	cur=cur.replace(/\D/g, "");
+	if(cur=='' || parseInt(cur) < 1){
+		cur=1;
+	}else if (parseInt(cur)>fenye_r) {
+		cur=fenye_r;
+	}
+	if (parseInt(cur) ==parseInt(document.frm_sshkey.paging)){
+		$("#connection_page").val(cur);
+		return false;
+	}
+	document.frm_sshkey.paging.value=cur;
+	show_connection_list();
+}
+var search_typeall_new=document.frm_sshkey.e.value.substr(0,document.frm_sshkey.e.value.indexOf(':'));
+
+//搜索
+function _addFilter(obj,type){
+	var id = $(obj).parent().children('select').children('option:selected').val();
+	var v1 = $(obj).parent().children('select').children('option:selected').text();
+	if(id=='all'){
+        v1='';
+    }else{
+        v1+='-';
+    }
+	var v2 = $.trim( $(obj).parent().children('input[type=text]').val());
+	if(v2 == ''){
+		$(obj).parent().children('input[type=text]').blur();
+		_alert(2,'搜索','请输入关键字', $(obj).parent().children('input[type=text]'));
+		return false;
+	}else{
+		switch(id){
+			case "keyname":
+				var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				break;
+		}
+		if(id=='keyname'){
+			if(!Reg.test(v2)){
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(1,'搜索','关键字格式不正确', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+		}
+		if(search_typeall_r.indexOf(id+'-'+v2+'\t')>=0){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(2,'搜索','相同的关键字已存在', $(obj).parent().children('input[type=text]'));
+			return false;
+		}
+		if(type){
+			search_typeall_r=search_typeall_r+id+'-'+v2+'\t';
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'-'+v2+'</span><span class="ww">'+v1+'-'+v2+'</span><i class="del" onclick="_delFilter(this);"></i></li>')
+			search_typeall_new='';
+			$(obj).parent().children('input[type=text]').val('');
+			$('#connection_text_check').hide();
+			selView();
+		}else{
+			search_typeall_new=id+'-'+v2+'\t';
+		}
+		
+	}
+	$("table tbody tr input").iCheck('uncheck');
+		delect_str=new Array();
+		connection_page(0.1);
+		check_num=0;
+		$("span.sum").text(check_num);
+}
+function _delFilter(obj){
+	var id = $(obj).parent().find("span");
+	var ids=$(id).eq(0).text();
+	search_typeall_r = search_typeall_r.replace(ids+'\t','');
+	//console.log(search_typeall_r);
+	var connection_text=$.trim( $('#connection_text').val());
+	if(connection_text==''){
+		search_typeall_new=='';
+	}else{
+		search_typeall_new=$('#connection_select').val()+'-' +connection_text+'\t';
+	}
+	$(obj).parent().remove();
+	selView();
+	$("table tbody tr input").iCheck('uncheck');
+		delect_str=new Array();
+		connection_page(0.1);
+		check_num=0;
+		$("span.sum").text(check_num);
+}
+function _clearFilter(obj){
+	$('#clearFilter').next().children('ul').empty();
+	$('#connection_text').val('');
+	$('#connection_text_check').hide();
+	$('#clearFilter').hide();
+	search_typeall_new='';
+	search_typeall_r='';
+	selView();
+	$("table tbody tr input").iCheck('uncheck');
+		delect_str=new Array();
+		connection_page(0.1);
+		check_num=0;
+		$("span.sum").text(check_num);
+}
+function selView(){
+	var $sel = $('#filterWW');
+	var len = $('li',$sel).length;
+
+	if(len == 0){
+		$sel.hide();
+		$('#clearFilter').hide();
+	}else{
+		$("#filterWW").show();
+		$('#clearFilter').show();
+		$('>span.ww',$sel).show();
+		$sel.addClass('selector-multiple');
+	}
+}
+var paging_max=null;
+//以每页显示数显示列表函数
+function show_connection_list(){
+	update_list_id();
+	var paging = document.frm_sshkey.paging.value;
+	var page_num = MAX_PAGE;
+	var search_typeall=search_typeall_r+search_typeall_new;
+	var sshkey_id=document.frm_sshkey.sshkey_id.value;
+	$.ajax({
+		url: "/bhost/get_sshkey",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a4:page_num,a3:paging,a2:search_typeall,a1:sshkey_id,a5:$("input[name=type]").val(),dsc:true},
+		success:function(result){
+			var connection_result = JSON.parse(result);
+			if (connection_result.Result){
+				var connection_data = connection_result.info;
+				var total_all = connection_data.totalrow;
+				if(total_all%MAX_PAGE==0){
+					fenye_r=parseInt(total_all/MAX_PAGE);
+				}else{
+					fenye_r=parseInt(total_all/MAX_PAGE)+1;
+				}
+				if(connection_data.data=="" && paging!="1"){
+					connection_page(0.9);
+				}else{
+					//total = 0;
+					total_all_r = total_all;
+					if(total_all){
+						$("#connection_list").empty();
+						$.each(connection_data.data,function(i,item){
+							//if (total<page_num){
+								//total++;
+								item.SshKeyId=item.SshKeyId||'';
+								item.KeyName=item.KeyName||'';
+								item.KeyType=item.KeyType||'';
+								item.KeyContent=item.KeyContent||'';
+								if(item.KeyType==1){
+									var keytype = "私钥";
+								}else{
+									var keytype = "公钥";
+									item.KeyType=0;
+								}
+								{
+									$("#connection_list").append("<tr>"+
+									"<td class=\"in\"><input type=\"checkbox\" class=\"form-checkbox\" id=\"in\"/></td>"+
+									"<td style = \"display:none\">"+item.SshKeyId+"</td>"+
+									"<td title='"+item.KeyName+"' passwork='"+(item.Password||'')+"'>"+item.KeyName+"</td>"+
+									"<td id='"+item.KeyType+"' title='"+keytype+"'>"+keytype+"</td>"+
+									"<td title='"+item.KeyContent+"'>"+item.KeyContent+"</td>"+
+									"<td class=\"last_td\"><div class=\"tab-ctr\">"+
+									"<a href=\"javascript:;\" class=\"edit\" id=\"edit\"  title='编辑'></a><a href=\"javascript:;\" class=\"del\" id=\"del\" title='删除'></a></div>"+
+									"</td></tr>");
+								}
+						})
+						//tabArr();
+						$(".form-checkbox","#connection_list").iCheck({
+							checkboxClass: 'icheckbox_minimal-blue',
+							radioClass: 'iradio_minimal-blue',
+							increaseArea: '0' // optional
+						});
+						$("#connection_total").text(total_all);
+						if(paging>=fenye_r){
+							paging=fenye_r;
+						}
+						document.frm_sshkey.paging.value=paging;
+						document.getElementById("connection_page").value=paging;
+						$("#connection_pages").text(fenye_r);
+						$('#check_one_page').iCheck('uncheck');
+						$("table tbody tr input").iCheck('uncheck');
+						check_show();
+						check_num=delect_str.length;
+						$("span.sum").text(check_num);
+					}else{
+						$("span.sum").text(0);
+						$("table tbody tr input").iCheck('uncheck');
+						$("#connection_list").empty();
+						$("#connection_total").text(total_all);
+						$("#connection_pages").text(1);
+						document.frm_sshkey.paging.value=1;
+						fenye_r=1;
+						document.getElementById("connection_page").value=1;
+					}	
+				}
+			}else{
+				_alert(1,"密钥管理",connection_result.ErrMsg);
+				$("table tbody tr input").iCheck('uncheck');
+				$("span.sum").text(0);
+				$("#connection_total").text(0);
+				$("#connection_pages").text(1);
+				document.frm_sshkey.paging.value=1;
+				fenye_r=1;
+				document.getElementById("connection_page").value=1;
+				return false;
+			}
+		}
+	});
+}
+//获取总条数
+function update_list_id() {
+	var search_typeall=search_typeall_r+search_typeall_new;
+	var sshkey_id=document.frm_sshkey.sshkey_id.value;
+	$.ajax({
+		url: "/bhost/get_sshkey",
+		type:"POST",
+		async:true,
+		data:{a0:$("input[name=se]").val(),a2:search_typeall,a1:sshkey_id,a5:$("input[name=type]").val(),dsc:true},
+		success:function(result){
+			var connection_result = JSON.parse(result);
+			if (connection_result.Result){
+				var connection_data = connection_result.info;
+				var delect_str_old=delect_str;
+				delect_str=new Array();
+				
+				connection_array=[];
+                for(var i=0;i<connection_data.data.length;i++){
+						if($.inArray(connection_data.data[i].SshKeyId+'\t'+connection_data.data[i].KeyName,delect_str_old)>=0){
+							delect_str.push(connection_data.data[i].SshKeyId+'\t'+connection_data.data[i].KeyName);
+						}
+                        connection_array.push(connection_data.data[i].SshKeyId+'\t'+connection_data.data[i].KeyName);
+                }
+			}else{
+				_alert(1,'密钥管理',connection_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+
+//分页 and 刷新
+function connection_page(num){
+	var paging=parseInt(document.frm_sshkey.paging.value)+num;
+	if(paging==0 || paging==fenye_r+1){
+		return false;
+	}
+	delect_save();
+	var connection_list_s = [];
+	if (num == 0.1){
+		var paging = 1;
+	}else if(num == 0.9){
+		var paging=fenye_r;
+	}
+	document.getElementById("connection_page").value=paging;
+	document.frm_sshkey.paging.value=paging;
+	show_connection_list();
+}
+var click_all=false;
+//全选按钮
+function click_all_list(){
+	delect_save();
+	if(connection_array.length==delect_str.length){
+		delect_str=new Array();
+	}else{
+		delect_str=connection_array;
+	}
+	show_connection_list();
+}
+//刷新
+function clear_all(){
+	$("table tbody tr input").iCheck('uncheck');
+	delect_str=new Array();
+	check_num=0;
+	$("span.sum").text(check_num);
+}
+//删除函数
+function delete_fun(delect_str_1){
+	$.ajax({
+		url: '/bhost/del_sshkey',
+		type: "POST",
+		async:false,
+		data: {a0:$("input[name=se]").val(),a1:delect_str_1,a10:document.frm_sshkey.type.value},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				connection_page(0);
+				//_alert(0,"密钥管理","删除成功");
+				if(result.fail_num!=0){
+					if (result.success_num!=0)
+						_alert(0,"密钥管理","成功："+result.success_num+'，失败：'+result.fail_num);
+					else
+						if ((result.fail_num+result.success_num)==1)
+							_alert(1,"密钥管理",result.ErrMsg);
+						else
+							_alert(0,"密钥管理",'失败：'+result.fail_num);
+				}else{
+					_alert(0,"密钥管理","删除成功");
+				}
+			}else{
+				connection_page(0);
+				_alert(1,"密钥管理",result.ErrMsg);
+				return false;
+			}	
+		}
+	});
+}
+//删除按钮
+function delete_list(){
+	delect_save();
+	if(delect_str.length == 0){
+		_alert(2,"密钥管理","请选择要删除的数据");
+		return false;
+	}
+	//利用对话框返回的值 （true 或者 false）  
+	$('.btn').blur();parent.layer.open({
+		type:1,
+		title: '密钥管理',
+		content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		yes:function(i){
+			parent.layer.close(i);
+			delete_fun(delect_str.join(',')); 
+			delect_str=new Array();
+			check_num=0;
+			$("span.sum").text(check_num);
+		}
+	});
+}
+$(function(){
+	$("#connection_data").on("click",function(){
+		parent.reload();
+	});
+});
+
+</script>
+</body>
+</html>

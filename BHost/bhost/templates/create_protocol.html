@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>protocol</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	
+	<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<script src="/manage/js/jquery.datepick.js"></script>
+	
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<div class="c-top"><!-- 顶部 -->
+			<div class="c-title">
+				<!--
+				<h3 onclick="parent.reload();">协议</h3>
+				-->
+				<div class="manual-head" style="width:100px;float:left;">
+					<div class="manual-title">
+						<span id="protocol_reload" style="cursor: pointer;">协议</span>
+						<i class="protocol_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<!---->
+		<div class="mainer">
+			
+			<div class="container">
+
+				<div class="c-cont">
+					<div class="c-form" style="padding-bottom:10px;" id="protocol">
+						<div class="form">
+							<div id="luo"> </div>
+							<div class="luo" id="luo_0" style="float:left;width:100%;">
+								<div class="form-item" id="P_name" style="width:38%;float:left;"><!-- 名称区域 -->
+									<span class="form-tag" style="width:60px;"><em class="imp">*</em>名称：</span>
+									<div class="form-c" style="padding:0 0;width:325px;">
+										<input type="text" maxlength="128" class="form-text" style="width:180px" id="Protocol_Name0" onblur="protocolCheck(this)"><i class="v-check" id="check0" style=""></i>
+										<p class="form-tip" id="prompt0">特殊字符仅支持下划线、横杠</p>
+									</div>
+								</div>
+								<div class="form-item" id="Port_0" style="width:22%;float:left;"><!-- 端口 -->
+									<span class="form-tag" style="width:60px;"><em class="imp">*</em>端口：</span>
+									<div class="form-c" style="padding:0 0;">
+										<input id="Port0" name="Port" class="form-text" type="text" onkeyup="data_check(this);" style="width: 55px;"><i class="v-check" id="check1" style=""></i>
+										<p class="form-tip" id="prompt_0">0-65535&nbsp;之间</p>
+									</div>
+								</div>
+								<div class="form-item" id="Port_1" style="width:22%;float:left;"><!-- 端口 -->
+									<span class="form-tag" style="width:65px;"><em class="imp">*</em>端口1：</span>
+									<div class="form-c" style="padding:0 0;">
+										<input id="Port_one" name="Port" class="form-text" type="text" onkeyup="data_check(this);" style="width: 55px;"><i class="v-check" id="check2" style=""></i>
+										<p class="form-tip">0-65535&nbsp;之间</p>
+									</div>
+								</div>
+								<div class="form-item" id="desc" style="width:40%;float:left;"><!-- 描述 -->
+									<span class="form-tag" style="width:60px;">描述：</span>
+									<div class="form-c sel-type1" style="margin-bottom:15px;padding:0 0;">
+										<li id="add_del0">
+											<input type="text" class="form-text" id="Description0" maxlength="1024" style="width:185px;">
+											<i class="ctrl add" id="addProt0" value="0" onclick="addProtocol(this)" style="margin-top: 0px;"></i>
+										</li>
+									</div>
+								</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+			{%if 14 in manage_power_id %}
+			<div class="btns">
+				<a href="javascript:;" class="btn btn-normal" onclick="save()">保&nbsp;&nbsp;存</a>
+				<!--
+				<a href="javascript:;" class="btn btn-normal" onclick="back(1)">取&nbsp;&nbsp;消</a>
+				-->
+			</div>
+			{%endif%}
+			<div id="bBtn" style="position: fixed;z-index:5;">
+				<a href="javascript:;" class="btn" style="float: right;" onclick="back(1);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+			</div>
+			
+	</div>
+
+
+</body>
+<form action="/bhost/index" method="POST" name="frm_protocol">
+	<input type="hidden" name="a0" value = ""/>
+	<input type="hidden" name="a1" value = ""/>
+	<input type="hidden" name="a2" value = ""/>
+	<input type="hidden" name="a3" value = ""/> 
+	<input type="hidden" name="a4" value = ""/>
+	<input type="hidden" name="t1" value = ""/>
+	<input type="hidden" name="x1" value = ""/>
+	<input type="hidden" name="x2" value = ""/>
+	<input type="hidden" name="x3" value = ""/>
+	<input type="hidden" name="x4" value = ""/>
+	<input type="hidden" name="x5" value = ""/>
+</form>
+<style>
+.form-tip {
+	padding-left:65px;
+}
+</style>
+<script>
+var protocol_id = "{{protocolid}}";
+var ipage = "{{ipage}}";
+var keyword_re = {{keyword|safe}};
+var selectid={{selid|safe}};
+var sear={{sear|safe}};
+var number=0;
+var addid=[]
+var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-]+$/;
+var portReg = /^[0-9]/
+var se;
+
+//检查输入名称
+function protocolCheck(obj){
+	var val = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check')
+	if(nameReg.test(val)){
+		$i.show().attr('class','v-check v-right');
+	}else{
+		$i.show().attr('class','v-check v-wrong');
+	}
+}
+//检查输入端口
+function data_check(obj){
+	var val = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check')
+	if(portReg.test(val)){
+		$i.show().attr('class','v-check v-right');
+	}else{
+		$i.show().attr('class','v-check v-wrong');
+	}
+	obj.value.replace(/\D/g, "");
+	var min=1;
+	var max=65534;
+	if(min){
+		if(parseInt(obj.value, 10) < parseInt(min, 10)) obj.value = min;
+	}
+	if(max){
+		if(parseInt(obj.value, 10) > parseInt(max, 10)) obj.value = max;
+	}
+}
+
+//对input进行检索函数
+function datacheck(num){
+	var ProtName = $("#Protocol_Name"+num+"").val().trim();
+	var add=1;
+	var flag=true;
+	if($("#Protocol_Name"+num+"").val() == ""){
+		_alert(2,"协议","请输入名称",$("#Protocol_Name"+num+""));	
+		add=0;
+		return false;
+	}
+	if($("#Description"+num+"").val().length > 1024){
+		_alert(2,"协议","协议描述内容过长，最大长度为1024",$("#Description"+num+""));
+		add=0;
+		return false;
+	}
+	if($("#Port"+num+"").val() == ""){
+		_alert(2,"协议","请输入端口",$("#Port"+num+""));	
+		add=0;
+		return false;
+	}
+	//检查输入框格式
+      	if(!nameReg.test(ProtName)){
+		_alert(1,"协议","协议格式不正确",$("#Protocol_Name"+num+""));
+		add=0;
+		return false;
+    }
+	if(namecheck(ProtName)==false){
+		_alert(2,"协议","已存在相同名称",$("#Protocol_Name"+num+""));
+		add=0;
+		flag=false;
+		return false;
+	}
+	if(addid.length>1&&flag){
+		for(var i=0;i<addid.length;i++){
+			if(ProtName==$("#Protocol_Name"+addid[i]+"").val().trim()&&num!=addid[i]){	
+				_alert(2,"协议","已存在相同名称",$("#Protocol_Name"+num+""));	
+				add=0;
+				return false;
+			}
+		}
+	}
+	if(add==1){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+/*/名称发生改变
+function Name_change(num,obj){
+	var changename=$("#Protocol_Name"+num+"").val().trim();
+	var flag=true;
+	//多于一行判断
+	if(num<number){
+		if (changename == ""){
+			flag=false;
+			$("#Protocol_Name"+num+"").val(test_name[num]);
+			_alert(2,"警告","账号不能为空",$("#Protocol_Name"+num+""));
+			return false;
+		}
+		if (!nameReg.test(changename)){
+			flag=false;
+			$("#Protocol_Name"+num+"").val(test_name[num]);
+			_alert(2,"警告","账号格式不符合要求",$("#Protocol_Name"+num+""));
+			return false;
+		}
+		$.ajax({
+			url:'/bhost/select_name',
+			type: "post",
+			async:false,
+			data: {x1:changename},
+			success:function(result){
+				data = parseInt(result);
+				if (data !=0){
+					$("#Protocol_Name"+num+"").val(test_name[num]);
+					_alert(2,"警告","已存在相同的名称",$("#Protocol_Name"+num+""));
+					flag=false;
+				}
+			}
+		});
+		$.each(account_all.data,function(i1,item1){
+			if ((changename == item1.Name && changeDomainId == item1.DomainId)||(changename == item1.Name &&changeDomainId==0&&item1.DomainId==null)){
+				flag=false;
+				$("#Name"+num+"").val(test_name[num]);
+				_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+				return ;
+			}
+		});
+		if(addid.length>1&&flag){
+			for(var i=0;i<addid.length;i++){
+				if(changename==$("#Protocol_Name"+addid[i]+"").val().trim()&& addid[i]!=num){	
+					flag=false;
+					$("#Protocol_Name"+num+"").val(test_name[num]);
+					_alert(2,"警告","已存在相同的账号",$("#Protocol_Name"+num+""));
+					return ;
+				}
+			}
+		}
+		if(flag){
+			test_name[num]=changename;
+		}
+	}
+	if(num==number){
+		if (!nameReg.test(changename)&&changename!=""){
+			flag=false;
+			$("#Protocol_Name"+num+"").val(test_name[num]);
+			_alert(2,"警告","账号格式不符合要求",$("#Protocol_Name"+num+""));
+			return false;
+		}
+		$.each(account_all.data,function(i1,item1){
+			if (changename == item1.Name && changeDomainId == item1.DomainId){
+				flag=false;
+				$("#Name"+num+"").val(test_name[num]);
+				_alert(2,"警告","已存在相同的账号",$("#Name"+num+""));
+				return ;
+			}
+		});
+		if(addid.length>1&&flag){
+			for(var i=0;i<addid.length-1;i++){
+				if(changename==$("#Protocol_Name"+addid[i]+"").val().trim() && changeDomainId == $("#ADregion"+addid[i]+"").val()&&changeDomainId!=0){	
+					flag=false;
+					$("#Protocol_Name"+num+"").val(test_name[num]);
+					_alert(2,"警告","已存在相同的账号",$("#Protocol_Name"+num+""));
+					return ;
+				}
+			}
+		}
+		if(flag){
+			test_name[num]=changename;
+		}
+	}
+	if(test_name[num]=="")
+	{
+		test_name[num]=changename;
+	}
+}*/
+
+//检查协议名称是否存在
+function namecheck(name){
+	var flag=true;
+	$.ajax({
+		url:'/bhost/select_name',
+		type: "post",
+		async:false,
+		data: {a0:se,x1:name},
+		success:function(result){
+			data = parseInt(result);
+			if (data !=0){
+				flag=false;
+			}
+		}
+	});
+	return flag;
+}
+
+
+//添加按钮
+function addProtocol(){
+	var flag=true;
+	var ProtName = $("#Protocol_Name"+number+"").val().trim();
+	flag=datacheck(number);
+	if(flag==false){
+		return false;
+	}
+	if(flag){
+		addid.push(number+1);
+		var Des=$("#Description"+number+"").val();
+		//$("#prompt"+number+"").hide();
+		//$("#check"+number+"").hide();
+		//$("#prompt_"+number+"").hide();
+		//$("#Protocol_Name"+number+"").attr("disabled",true);
+		$("#add_del"+number+"").html("<input type=\"text\" class=\"form-text\" maxlength=\"1024\" id=\"Description"+number+"\"value=\""+Des+"\" style=\"width:185px;\">"+
+									 "<i class=\"ctrl del\" style=\"margin-top:0px;\" id=\"delProt"+number+"\" value=\""+number+"\" onclick=\"delProtocol(this)\"></i>");
+		number=number+1;
+		$("#luo").after("<div class=\"sel-type1\" id=\"luo_"+number+"\" style=\"float:left;width:100%;\"></div>");
+		$("#luo_"+number+"").append("<div class=\"form-item\" style=\"width:38%;float:left;\">"+
+									"<span class=\"form-tag\" style=\"width:60px;\"><em class=\"imp\">*</em>名称：</span>"+
+									"<div class=\"form-c\" style=\"padding:0 0;width:325px;\">"+
+									"<input type=\"text\" class=\"form-text\" style=\"width:180px\" maxlength=\"128\" id=\"Protocol_Name"+number+"\" onblur=\"protocolCheck(this)\">"+
+									"<i class=\"v-check\" id=\"check"+number+"\" style=\"\"></i><p class=\"form-tip\" id=\"prompt"+number+"\">特殊字符仅支持下划线、横杠</p></div></div>");
+		$("#luo_"+number+"").append("<div class=\"form-item\" style=\"width:22%;float:left;\">"+
+									"<span class=\"form-tag\" style=\"width:60px;\"><em class=\"imp\">*</em>端口：</span>"+
+									"<div class=\"form-c\" style=\"padding:0 0;\">"+
+									"<input id=\"Port"+number+"\" name=\"Port\" class=\"form-text\" type=\"text\" onkeyup=\"data_check(this);\" style=\"width: 55px;\">"+
+									"<i class=\"v-check\" id=\"check"+number+"\" style=\"\"></i>"+
+									"<p class=\"form-tip\" id=\"prompt_"+number+"\">0-65535&nbsp;之间</p></div></div>");
+		$("#luo_"+number+"").append("<div class=\"form-item\" style=\"width:40%;float:left;\">"+
+									"<span class=\"form-tag\" style=\"width:60px;\">描述：</span>"+
+									"<div class=\"form-c sel-type1\" style=\"margin-bottom:15px;padding:0 0;\"><li id=\"add_del"+number+"\">"+
+									"<input type=\"text\" class=\"form-text\" maxlength=\"1024\" id=\"Description"+number+"\" style=\"width:185px;\">"+
+									"<i class=\"ctrl add\" id=\"addProt"+number+"\" value=\""+number+"\" onclick=\"addProtocol(this)\" style=\"margin-top: 0px;\"></i>"+
+									"</li></div></div>");
+		$("#Port"+number+"").on("input propertychange",function(){
+			this.value = this.value.replace(/\D/g, "");
+		}).on("paste",function(){return false});
+		/*var Name=$("#Protocol_Name"+number+"").val().trim();
+		test_name.push(Name);*/
+	}
+}
+
+//删除创建
+function delProtocol(obj){
+	var num=$(obj).attr("value");
+	for(var i=0;i<addid.length;i++){
+		if(addid[i]==num){
+			addid.splice(i,1);
+			break;
+		}
+	}
+	$("#luo_"+num+"").remove();
+}
+
+//全局
+$(function(){
+	se = window.parent.document.frm.se.value;
+	$("#protocol_reload").on("click",function(){
+		//parent.reload();
+		document.frm_protocol.action='/bhost/create_agreement';
+        document.frm_protocol.a0.value = se;
+		if (protocol_id == 0){
+			document.frm_protocol.t1.value = 0;
+		}else{
+			document.frm_protocol.t1.value = 1;
+		}
+        document.frm_protocol.x1.value = ipage;
+        document.frm_protocol.x2.value = protocol_id;
+        document.frm_protocol.x3.value = JSON.stringify(keyword_re);
+        document.frm_protocol.x4.value = JSON.stringify(selectid);
+        document.frm_protocol.x5.value = JSON.stringify(sear);
+        document.frm_protocol.submit();
+	});
+	
+	$("#Port_1").hide();
+	$("#Port0").on("input propertychange",function(){
+			this.value = this.value.replace(/\D/g, "");
+	}).on("paste",function(){return false});
+	$("#Port1").on("input propertychange",function(){
+			this.value = this.value.replace(/\D/g, "");
+	}).on("paste",function(){return false});
+	if(protocol_id!="0"){
+		$("#addProt0").hide();
+		$.ajax({
+		   url:'/bhost/select_protocol',
+		   type:"post",
+		   async:false,
+		   data:{a0:se,x1:protocol_id},
+		   success:function(result){
+				protdata = JSON.parse(result);
+				$.each(protdata.data,function(i,item){
+					if(item.ProtocolName=="PCANY")
+					{
+						var node = document.getElementById("protocol");
+						node.style.width = "1000px";
+						var node0 = document.getElementById("P_name");
+						node0.style.width = "31%";
+						var node1 = document.getElementById("Port_0");
+						node1.style.width = "17%";
+						var node2 = document.getElementById("Port_1");
+						node2.style.width = "19%";
+						var node3 = document.getElementById("desc");
+						node3.style.width = "33%";
+						$("#Port_1").show();
+						$("#Port_one").val(item.Port1);
+					}
+					$("#Protocol_Name0").val(item.ProtocolName);
+					$("#Port0").val(item.Port);
+					$("#Description0").val(item.Description);
+					$("#Protocol_Name0").attr("disabled",true);
+				});
+			}
+		});
+	}
+	//var Name=$("#Protocol_Name"+number+"").val().trim();
+	//test_name.push(Name);
+	addid.push(number);
+	parent._switchBtn(0);//隐藏左右按钮
+});
+
+//返回
+function back(type){
+	if (type == 2){
+		keyword_re = [];
+		sear = [];
+		if (parseInt(protocol_id) != 0){
+			$.ajax({
+				url:'/bhost/get_index',
+				type:'post',
+				async:false,
+				data:{a0:se,z1:protocol_id,z2:3},
+				success:function(result){
+					ipage = Math.ceil(parseInt(result)/MAX_PAGE);
+				}
+			});
+		}else{
+			$.ajax({
+				url:'/bhost/get_agreement_list',
+				type:'post',
+				async:false,
+				data: {a0:se,data1:"null",data2:"null",data3:"[]"},
+				success:function(result){
+					var result=JSON.parse(result);
+					var remain = parseInt(result.totalrow) % MAX_PAGE;
+					if (datalist.length <= remain){
+						ipage = Math.ceil(parseInt(result.totalrow)/MAX_PAGE);
+					}else{
+						ipage_r = Math.ceil((datalist.length - remain)/MAX_PAGE); //需要增加的页数
+						ipage = Math.ceil(parseInt(result.totalrow)/MAX_PAGE) + ipage_r;
+					}
+				}
+			});
+		}
+	}
+	var deliver = JSON.stringify(keyword_re);
+	var searchword=JSON.stringify(sear);
+	var sel_id=JSON.stringify(selectid);
+	document.frm_protocol.action='/bhost/protocol_app_show';
+	document.frm_protocol.a0.value = se;
+	document.frm_protocol.a1.value = ipage;
+	document.frm_protocol.a2.value = deliver;
+	document.frm_protocol.a3.value = sel_id;
+	document.frm_protocol.a4.value = searchword;
+	document.frm_protocol.submit();
+}
+
+//保存数据
+var datalist=[];
+function save(){
+	var flag=true;
+	
+	var id_length=addid.length;
+	if($("#Protocol_Name"+number+"").val() == "" && id_length>1){	
+		id_length=id_length-1;
+	}
+	for(var i=id_length-1;i>-1;i--){
+		if(protocol_id==0){
+			flag=datacheck(addid[i]);
+			if(flag==false){
+				return;
+			}
+		}
+	}
+	//对数据进行检查
+	for(var i=0; i<id_length;i++){
+		var Port1=0;
+		if($("#Protocol_Name"+addid[i]+"").val()=="PCANY")
+		{
+			Port1=parseInt($("#Port_one").val());
+		}
+		//去掉数据头尾的空格
+		var ProtocolName = $("#Protocol_Name"+addid[i]+"").val().trim();
+		var Description = $("#Description"+addid[i]+"").val().trim().replace(/"/g,'\\"');
+		var Port=parseInt($("#Port"+addid[i]+"").val());
+		protocol_id=parseInt(protocol_id);
+		var dataP='{"ProtocolId":'+protocol_id+',"ProtocolName":"'+ProtocolName+'","Port":'+Port+',"Port1":'+Port1+',"Description":"'+Description+'"}';
+		datalist.push(dataP);
+	}
+	msstr = aceg(JSON.stringify(datalist),se);
+	$.ajax({
+		url:'/bhost/set_protocol',
+		type: "post",
+		async:false,
+		data: {a0:se,x1:JSON.stringify(datalist),m1:msstr},
+		success:function(result){
+			data = JSON.parse(result);
+			if (data.Result){
+				$('.btn').blur();
+				parent.layer.open({
+						type:1,
+						title:"协议",
+						content:'<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+						btn:['确定'],
+						btnAlign:'c',
+						closeBtn: false,
+						skin:'layer-custom',
+						area:['380px','310px'],
+						move: false,
+						resize: false,
+						btn1:function(i){
+							parent.layer.close(i);
+							protocol_id = data.ProtocolId;
+							back(2);
+						},
+						btn2:function(i){
+							parent.layer.close(i);
+						}
+				});
+			}else{
+				_alert(1,"协议",'执行失败：'+data.ErrMsg);
+			}
+		}
+	});			
+}
+</script>
+
+</html>

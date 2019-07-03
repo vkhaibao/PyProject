@@ -1,0 +1,343 @@
+{% extends "index.html" %} {% block head %}
+<!--icheck-->
+<script src="/manage/js/icheck.min.js"></script>
+<script src="/manage/js/select2.full.min.js"></script>
+<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+<link rel="stylesheet" href="/manage/css/select2.min.css">
+<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />
+<link rel="stylesheet" href="/manage/css/G-style.css" type="text/css" />
+<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+<script src="/manage/js/jquery.datepick.js"></script>
+<link rel="stylesheet" href="/manage/css/new-head.css">
+<style>
+    .ifile-wrap {
+        height: 28px;
+    }
+    .ifile-wrap button {
+        height: 28px;
+    }
+    .h-content2{
+        height:auto;
+        width: 100%;
+        overflow: hidden;
+        padding: 14px 0 0 0;
+    }
+	.h-content2 .form-item {
+		height: auto;
+		padding: 20px 0 10px;
+		min-height: 38px;
+		padding: 5px;
+		width: 380px;
+		float: left;
+	}
+    .form-item .form-c a.btn {
+        float: left;
+        padding: 0 15px;
+        line-height: 24px;
+        color: #8D808A;
+        border: 1px solid #8D808A;
+        margin-right: 12px;
+        border-radius: 5px;
+        transition: all 0.4s;
+    }
+	.h-content2 .form-tag {
+		float: left;
+		width: 140px;
+		text-align: right;
+		color: #000;
+		line-height: 28px;
+	}
+
+	.h-content2 .form-c {
+		padding-left: 0px;
+        position: relative;
+        float:left;
+	}
+    .h-content2 .form-c span{
+        line-height: 28px;
+    }
+	.h-content2 .form-text {
+		width: 200px;
+	}
+</style>
+ {% endblock %} {% block main %}
+<!---->
+<!---->
+<div class="mainer">
+
+	<div class="container" id="step1">
+		<div class="c-top">
+			<div class="c-title">
+				<!--<h3 onclick="parent.reload();">授权许可</h3>-->
+				<div class="manual-head" style="width:100px;float:left;" >
+					<div class="manual-title">
+						<span id="licensing" style="cursor: pointer;" >设备许可</span>
+						<i class="licensing_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="c-cont">
+			<div class="c-wrap" style="padding: 10px 0 0">
+				<div class="c-exp" style="margin: -1px auto;">
+
+					<div class="h-explorer">
+						<div class="G-top">
+							<div class="G-box1"></div>
+							<strong>&nbsp;授权许可</strong>
+						</div>
+
+						<div class="h-content2" style="">
+							<div class="form-item" style="">
+								<span class="form-tag" style="">客户名称：</span>
+								<div class="form-c" style="">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-item" style="">
+								<span class="form-tag" style="">设备编号：</span>
+								<div class="form-c" style="">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-item" style="">
+								<span class="form-tag" style="">设备型号：</span>
+								<div class="form-c" style="">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-item" style="">
+								<span class="form-tag" style="">设备类型：</span>
+								<div class="form-c" style="">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-item" style="">
+								<span class="form-tag" style="">托管上限：</span>
+								<div class="form-c" style="">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-item" style="">
+								<span class="form-tag" style="">授权起始：</span>
+								<div class="form-c" style="">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-item" style="">
+								<span class="form-tag" style="">授权截止：</span>
+								<div class="form-c" style="">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-item" style="display:none;">
+								<span class="form-tag" style="">生产厂商：</span>
+								<div class="form-c" style="">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-item" style="width: 460px;">
+								<span class="form-tag" style="">原始序列号：</span>
+								<div class="form-c" style="">
+									<span></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="c-exp s-hide" style="margin: -1px auto; margin-bottom: 10px;" >
+					<div class="h-explorer">
+						<div class="G-top">
+							<div class="G-box1"></div><strong>&nbsp;更新证书</strong>
+						</div>
+					 <form id="frm1">
+						<div class="h-content2" style="">
+							<div class="form-item" style="width: 520px;padding-bottom: 15px;">
+								<span class="form-tag" style="">选择文件：</span>
+								<div class="form-c" style="width:290px;padding:0 0 0 7px;">
+									<input id="file_v" name="file_v" class="form-text" type="text" style="float: left;width: 182px;padding-right:8px;">
+									<a class="btn " href="javascript:;" style="margin-left: 7px;height: 26px;" onclick="browes();">浏&nbsp;&nbsp;览</a>
+									<input id="file_change" name="file_change" class="form-text" type="file" onchange="filetip(this);" style="float: left;opacity: 0;width:168px;margin-top: -28px;">
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="btns s-hide">
+		<a href="javascript:;" class="btn btn-normal " onclick="savedata();" style="font-weight: 400;">确&nbsp;&nbsp;定</a>
+		<!--<a href="javascript:;" class="btn btn-normal " onclick="back();" style="font-weight: 400;">取&nbsp;&nbsp;消</a>-->
+
+	</div>
+	<div id="bBtn" style="z-index: 5;">
+		<a href="javascript:;" class="btn" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+	</div>
+</div>
+
+{% endblock %} {% block script %}
+<style>
+	.h-explorer {
+		width: 95%;
+		height: 100%;
+		border: 1px solid #CCC;
+		margin: 0 auto;
+		overflow: hidden;
+		min-width: 1100px;
+	}
+</style>
+<script>
+	var sess = window.parent.document.frm.se.value;
+	var Month;
+	$('.filter-select,.form-select,.select2').select2({ minimumResultsForSearch: -1 }); 
+	$("input.datepicker").datepick();
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+		radioClass: 'iradio_minimal-blue',
+		increaseArea: '0' // optional
+	});
+	$(function () {
+		//获取初始信息
+		usercode = window.parent.document.frm.us.value;
+		get_crt();
+		parent._switchBtn(1);
+
+		_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+		if(_if_disable == '1'){
+			$('.s-hide').remove();
+		}
+	})
+	function filetip(obj){
+		var c = $(obj).val();
+		//console.log(c)
+		c = c.split("\\");
+		var b = c[c.length-1];
+		//console.log(b);
+		//console.log($(obj).prev("input"));
+		//console.log($(obj).next("input"));
+		//console.log($(obj).parent());
+		//console.log($(obj).parent().children('input:first'));
+		$('#file_v').val(b);
+	}
+	$(function(){
+		$("#licensing").on("click",function(){
+			location.reload();
+		});
+	}); 
+	function browes(){
+		$("#file_change").click();
+	}
+	function back(){
+		parent._closePage(this);
+	}
+	//获取证书
+	function get_crt(){
+		$.ajax({
+			url:'/bhost/get_crt',
+			type: "post",
+			async:true,
+			data: {a0:sess},
+			success: function(result){
+				result = JSON.parse(result);
+				data_str = result.info.data[0];
+				if(data_str['istest'] == 1) var istest = '测试设备';
+				else var istest = '供货设备';		
+				if(parseInt(data_str['count']) == 0){
+					data_str['count'] = '无上限';
+				}
+				$('.h-content2').eq(0).find('.form-item').eq(0).find('div').children().text(data_str['client_name']);
+				$('.h-content2').eq(0).find('.form-item').eq(1).find('div').children().text(data_str['devid_name']);
+				$('.h-content2').eq(0).find('.form-item').eq(2).find('div').children().text(data_str['dev_name']);
+				$('.h-content2').eq(0).find('.form-item').eq(3).find('div').children().text(istest);
+				$('.h-content2').eq(0).find('.form-item').eq(4).find('div').children().text(data_str['count']);
+				$('.h-content2').eq(0).find('.form-item').eq(5).find('div').children().text(data_str['start']);
+				$('.h-content2').eq(0).find('.form-item').eq(6).find('div').children().text(data_str['end']);
+				$('.h-content2').eq(0).find('.form-item').eq(7).find('div').children().text(data_str['productor_name']);
+				$('.h-content2').eq(0).find('.form-item').eq(8).find('div').children().text(data_str['serial']);				
+			}
+		})
+	}
+	function  DateDiff(sDate1, sDate2){		//sDate1和sDate2是2017-10-20格式
+		var aDate, oDate1, oDate2, iDays  
+		aDate = sDate1.split("-")  
+		oDate1 = new Date(aDate[1] + '/' + aDate[2] + '/' + aDate[0])//转换为10-20-2017格式
+		aDate = sDate2.split("-")  
+		oDate2 = new Date(aDate[1] + '/' + aDate[2] + '/' + aDate[0])
+		Month = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24 / 30)//把相差的毫秒数转换为天数
+	}
+	//保存数据
+	
+function savedata() {
+	
+	var file_v = $("#file_v").val();
+	if (file_v == ""){
+		_alert(2,"设备许可","请选择文件");
+		return false;
+	}
+	var file_v = $("#file_v").val();
+	//////console.log(file_v.substr(file_v.length-3));
+	if (file_v.substr(file_v.length-3) != "crt"){
+		_alert(1,"设备许可","文件格式不正确，只支持.crt格式文件");
+		return false;
+	}
+	msstr = aceg(sess,sess);
+	var formData_f = new FormData($("#frm1")[0]);
+	formData_f.append('a0',sess);
+	formData_f.append('m1',msstr);
+	$.ajax({
+		url:'/bhost/upload_file_crt',
+		type:'post',
+		data:formData_f,
+		async: false,  
+		cache: false,
+		contentType: false,
+		processData: false,
+		success:function(result){
+			data = JSON.parse(result);
+			if (data.Result == true){
+				layer.open({
+					type:1,
+					title:"导入证书",
+					content:'<div class="layer-alert"><i class="alert succ"></i>导入成功</div>',
+					btn:['确&nbsp;&nbsp;定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					btn1:function(i){
+						//清空 证书信息
+						$('div.form-item div.form-c span').text('');
+						time_refubish();  
+						layer.close(i);
+					},
+					btn2:function(i){
+						 layer.close(i);
+					}
+				});	
+			}else{
+				_alert(1,"设备许可","导入证书失败，失败原因："+data.ErrMsg);
+			}
+		}	
+	});
+	  
+}
+
+var num=0;
+function time_refubish(){
+	 get_crt();
+	 num++;
+	 if(num<=12){
+		setTimeout(time_refubish,2000);
+	 }	
+}
+</script>
+
+{% endblock %}

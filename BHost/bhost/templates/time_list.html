@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+</head>
+
+<body style="overflow:hidden;display:none;" class="bg-white">
+	<!--时间集合表-->
+	<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title">
+						<span id="time_group" style="cursor: pointer;">时间集合</span>
+						<i class="time_group_icon"></i>
+					</div>
+				</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)">
+						<i></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer" name="timeset" id="timeset">
+
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr" style="width:288px;">
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="timeset_add();">创建</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="delete_list();">删除</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="click_all_list();">全选</a>
+									<a href="javascript:;" class="btn btn-default" onclick="clear_all();">刷新</a>
+								</div>
+								<div class="filter">
+									<div class="search">
+										<select name="timeset_select" id="timeset_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="Name">名称</option>
+											<option value="Description">描述</option>
+										</select>
+
+										<input type="text" style="/*display:none;*/padding-right: 22px;" 
+										class="filter-text" placeholder="输入关键字" 
+										name="timeset_text" id="timeset_text" maxlength="128"
+										onchange="if($('#timeset_text').val()==''){$('#timeset_text_check').hide();}else{$('#timeset_text_check').show();}"
+										onkeyup="if($('#timeset_text').val()==''){$('#timeset_text_check').hide();}else{$('#timeset_text_check').show();}"
+										onblur="if($('#timeset_text').val()=='' && search_typeall_new!=''){search_typeall_new='';_addFilter(this,false,1);}"
+										onkeydown="if($('#timeset_text').val()==''){$('#timeset_text_check').hide();}else{$('#timeset_text_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return; ">
+										<i class="v-check v-wrong" id="timeset_text_check" 
+										onclick="_clearFilter(this,1)" 
+										style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<button class="btn filter-btn" onclick="_addFilter(this,false);">
+											<i class="add-filter"></i>
+										</button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)">
+											<i class="append-filter"></i>
+										</button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)">
+											<i class="clear-filter"></i>
+										</button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th width="50" class="perm_disabled">
+												<input type="checkbox" class="form-checkbox" id="check_one_page" />
+											</th>
+											<th>名称</th>
+											<th>描述</th>
+											<th>设置</th>
+											<th id="timeset_list_th" width="55"></th>
+										</tr>
+									</thead>
+
+									<tbody name="timeset_list" id="timeset_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示
+									<span id="page_nums">10</span>条 总数：
+									<span id="timeset_total">0</span><span class="perm_disabled"> 选中：</span>
+									<span class="sum perm_disabled">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="timeset_begin" onclick="timeset_page(0.1);">
+										<i></i>
+									</a>
+									<a href="javascript:;" class="nav prev" id="timeset_prev" onclick="timeset_page(-1);">
+										<i></i>
+									</a>
+									<input type="text" id="timeset_page" value="1" onchange="showMsg();" onblur="showMsg();">/&nbsp;
+									<span id="timeset_pages">1</span>
+									<a href="javascript:;" class="nav next" id="timeset_next" onclick="timeset_page(1);">
+										<i></i>
+									</a>
+									<a href="javascript:;" class="nav2 end" id="timeset_end" onclick="timeset_page(0.9);">
+										<i></i>
+									</a>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="save_timeset();">
+								<i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<form action="/bhost/get_timeset_list" method="POST" name="frm_timeset" id="frm_timeset">
+		<input type="hidden" name="tasktype" id="tasktype" value="3" />
+		<!--创建 编辑 列表-->
+		<input type="hidden" name="timesetId" id="timesetId" value="0" />
+		<!--需要查询id-->
+		<input type="hidden" name="paging" id="paging" value="{{paging}}" />
+		<!--页码-->
+		<input type="hidden" name="search_typeall" id="search_typeall" value="{{search_typeall}}" />
+		<!--search_typeall-->
+		<input type="hidden" name="e" id="e" value="{{e}}" />
+		<!--e-->
+		<input type="hidden" name="se" id="se" value="{{se}}" />
+		<!--se-->
+	</form>
+
+
+	<script>
+		var perm={{perm}};
+		if (perm==0) parent.parent.$('#nav-s1 a.active').click();
+		else{
+			$('.bg-white').show();
+			if(perm==1){
+				$('.perm_disabled').remove();
+				$('#timeset_list_th').attr('width',25);
+			}
+		}
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+	</script>
+
+
+
+	<script>
+		$('.filter-select').select2({ minimumResultsForSearch: -1 });
+	</script>
+	<script type="text/javascript">
+		var delect_str = new Array();
+		var check_num = 0;
+		var total_all_r = 0;
+		//总数
+		var timeset_array = null;
+		var fenye_r = 0;
+		//总页码
+		var search_typeall_r = document.frm_timeset.search_typeall.value;
+		//关键字
+		function save_timeset() {
+			window.parent._closePage(null);
+		}
+		$(function () {
+			document.frm_timeset.se.value = window.parent.document.frm.se.value;
+			$("#timeset_select").change(function () {
+				var type = $(this).val();
+				if (type == 0) {
+					$("#timeset_text").hide();
+					$('#filterWW').hide();
+					$('#clearFilter').hide();
+				} else {
+					$("#timeset_text").show();
+					if ($('#filterWW ul li').length) {
+						$('#filterWW').show();
+						$('#clearFilter').show();
+					}
+				}
+			});
+			if (search_typeall_r != "") {
+				var v1 = "";
+				var id = "";
+				var str_new = "";
+				var search_typeall_str = search_typeall_r.split('\t');
+				$.each(search_typeall_str, function (i, item) {
+					if (item == "") {
+						return false;
+					}
+					var str_sea = item.split("-");
+					v1 = $('#timeset_select').find('option[value=' + str_sea[0] + ']').text();
+					id = item;
+					str_sea[0] = v1;
+					str_new = str_sea.join('-');
+					$('#filterWW>ul').append('<li><span style = "display:none">' + id + '</span><span class="ww">' + str_new + '</span><i class="del" onclick="_delFilter(this);"></i></li>');
+					selView();
+				});
+			}
+			var search_typeall_select = document.frm_timeset.e.value.substr(document.frm_timeset.e.value.indexOf(':') + 1, document.frm_timeset.e.value.length - 1);
+			if (search_typeall_select != '') {
+				var array = new Array();
+				array[0] = search_typeall_select.substr(0, search_typeall_select.indexOf('-'));
+				array[1] = search_typeall_select.substr(search_typeall_select.indexOf('-') + 1, search_typeall_select.length);
+				$('#timeset_select').val(array[0]).trigger('change');
+				$('#timeset_text').val(array[1]);
+				if(array[1]!=''){
+					$('#timeset_text_check').show();
+				}
+			}
+			//页码显示
+			$("#page_nums").val(MAX_PAGE);
+			//list show
+			show_timeset_list();
+			//只输入数字
+			$("#timeset_page").bind('keydown', function (e) {
+				DigitInput(e);
+			});
+			parent._switchBtn(1);//显示按钮
+			//tr双击事件
+			$("#timeset_list").on('dblclick', 'tr', function (e) {
+				x = e.target;
+				var id = $(this).find("td");
+				if (x.nodeName != 'A' && x.nodeName != 'INS') {
+					var id = $(this).find("td");
+					var edit_item = $(id).eq(1).text();
+					document.frm_timeset.timesetId.value = edit_item;
+					document.frm_timeset.tasktype.value = 2;
+					document.frm_timeset.search_typeall.value = search_typeall_r;
+					document.frm_timeset.e.value = search_typeall_new + ':' + $('#timeset_select').val() + '-' + $('#timeset_text').val();
+					document.frm_timeset.action = '/bhost/timeset_handle';
+					document.frm_timeset.submit();
+				}
+			}).on("click", "tr", function (e) {
+				x = e.target;
+				//删除按钮
+				if (x.id == 'del') {
+					var id = $(this).find("td");
+					var input = $(this).find("input");
+					$('.btn').blur(); parent.layer.open({
+						type: 1,
+						title: '时间集合',
+						content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+						btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							parent.layer.close(i);
+							var delete_item = $(id).eq(1).text();
+							// $(input).iCheck('uncheck');
+							delete_fun(delete_item+'\t'+$(id).eq(2).text());
+						}
+					});
+				}
+				//编辑按钮
+				if (x.id == 'edit') {
+					var id = $(this).find("td");
+					var edit_item = $(id).eq(1).text();
+					document.frm_timeset.timesetId.value = edit_item;
+					document.frm_timeset.tasktype.value = 2;
+					document.frm_timeset.search_typeall.value = search_typeall_r;
+					document.frm_timeset.e.value = search_typeall_new + ':' + $('#timeset_select').val() + '-' + $('#timeset_text').val();
+					document.frm_timeset.action = '/bhost/timeset_handle';
+					document.frm_timeset.submit();
+				}
+			});
+			$('#check_one_page').on(' ifClicked', function (e) {
+				if (!$('#check_one_page').is(':checked')) {
+					$("table tbody tr input").iCheck('check');
+				} else {
+					$("table tbody tr input").iCheck('uncheck');
+				}
+
+			});
+			$("#timeset_list").on("ifChecked", function (e) {
+				check_num++;
+				$("span.sum").text(check_num);
+				if ($("table tbody tr").children("td.in").children("div").children("input:checked").length == $("table tbody tr").length) {
+					$('#check_one_page').iCheck('check');
+				}
+			}).on("ifUnchecked", function (e) {
+				check_num--;
+				$("span.sum").text(check_num);
+				$('#check_one_page').iCheck('uncheck');
+			});
+		})
+		//显示创建页面
+		function timeset_add() {
+			document.frm_timeset.tasktype.value = 1;
+			document.frm_timeset.timesetId.value = 0;
+			document.frm_timeset.action = '/bhost/timeset_handle';
+			document.frm_timeset.e.value = search_typeall_new + ':' + $('#timeset_select').val() + '-' + $('#timeset_text').val();
+			document.frm_timeset.search_typeall.value = search_typeall_r;
+			document.frm_timeset.submit();
+		}
+		//刷新
+		function clear_all() {
+			delect_str = new Array();
+			show_timeset_list();
+		}
+		var search_typeall_new = document.frm_timeset.e.value.substr(0, document.frm_timeset.e.value.indexOf(':'));
+		String.prototype.ResetBlank=function(){
+			var regEx = /\s+/g; 
+			return this.replace(regEx, ' '); 
+		};
+		function _addFilter(obj, type,type_num) {
+			var id = $(obj).parent().children('select').children('option:selected').val();
+			// if (id == "0") {
+			// 	$('#filterWW>ul').empty();
+			// 	search_typeall_r = "";
+			// 	search_typeall_new = '';
+			// 	$(obj).parent().children('input[type=text]').val('');
+			// 	$("table tbody tr input").iCheck('uncheck');
+			// 	delect_str = new Array();
+			// 	timeset_page(0.1);
+			// 	check_num = 0;
+			// 	$("span.sum").text(check_num);
+			// 	return false;
+			// }
+			var v1 = $(obj).parent().children('select').children('option:selected').text();
+			var v2 = $(obj).parent().children('input[type=text]').val().trim();
+			if(id=='all'){
+				v1='';
+			}else{
+				v1=v1+'-';
+			}
+			v2=v2.ResetBlank();
+			if (v2 == '' && type_num!=1) {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+				return false;
+			} 
+			
+			// else 
+			{
+				var Reg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				if (id == 'Name' && !Reg.test(v2) && type_num!=1) {
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if (search_typeall_r.indexOf(id + '-' + v2 + '\t') >= 0 && type_num!=1) {
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(2, '搜索', '关键字重复', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if (type) {
+					search_typeall_r = search_typeall_r + id + '-' + v2 + '\t';
+					search_typeall_new = '';
+					$(obj).parent().children('input[type=text]').val('');
+					$('#filterWW>ul').append('<li><span style = "display:none">' + id + '-' + v2 + '</span><span class="ww">' + v1 + v2 + '</span><i class="del" onclick="_delFilter(this);"></i></li>')
+					$('#timeset_text_check').hide();
+					selView();
+				} else {
+					if(type_num!=1)search_typeall_new = id + '-' + v2 + '\t';
+				}
+
+			}
+			document.frm_timeset.paging.value=1;
+			delect_str = new Array();
+			show_timeset_list();
+		}
+		function _delFilter(obj) {
+			var id = $(obj).parent().find("span");
+			var ids = $(id).eq(0).text();
+			search_typeall_r = search_typeall_r.replace(ids + '\t', '');
+			var timeset_text = $('#timeset_text').val().trim();
+			if (timeset_text == '') {
+				search_typeall_new == '';
+			} else {
+				search_typeall_new = $('#timeset_select').val() + '-' + timeset_text + '\t';
+			}
+			$(obj).parent().remove();
+			selView();
+			document.frm_timeset.paging.value=1;
+			delect_str = new Array();
+			show_timeset_list();
+		}
+		function _clearFilter(obj,num) {
+			if(num==1){
+				$('#timeset_text').val('');
+			$('#timeset_text_check').hide();
+			search_typeall_new = '';
+			document.frm_timeset.paging.value=1;
+			delect_str = new Array();
+			show_timeset_list();
+				return;
+			}
+			$('#clearFilter').next().children('ul').empty();
+			$('#timeset_text').val('');
+			$('#timeset_text_check').hide();
+			$('#clearFilter').hide();
+			search_typeall_new = '';
+			search_typeall_r = '';
+			selView();
+			document.frm_timeset.paging.value=1;
+			delect_str = new Array();
+			show_timeset_list();
+		}
+		function selView() {
+			var $sel = $('#filterWW');
+			var len = $('li', $sel).length;
+
+			if (len == 0) {
+				$sel.hide();
+				$('#clearFilter').hide();
+			} else {
+				$("#filterWW").show();
+				$('#clearFilter').show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			}
+		}
+		//选中字段存储
+		function delect_save() {
+			$(">tr", "#timeset_list").each(function () {
+				var input = $(this).find("input[type='checkbox']");
+				var delect_item = $(">td", this).eq(1).text()+'\t'+(perm==2?$(">td", this).eq(2).text():$(">td", this).eq(0).text());
+				var index = $.inArray(delect_item, delect_str);
+				if ($(input).is(':checked')) {
+					if (index < 0) {
+						delect_str.push(delect_item);
+					}
+				} else {
+					if (index >= 0) {
+						delect_str.splice(index, 1);
+					}
+				}
+			});
+		}
+		//check显示
+		function check_show() {
+			//console.log(delect_str);
+			$(">tr", "#timeset_list").each(function () {
+				var check_id = $(">td", this).eq(1).text()+'\t'+$(">td", this).eq(2).text();
+				//console.log(check_id);
+				if ($.inArray(check_id, delect_str) >= 0) {
+					$(this).find("input[type='checkbox']").iCheck('check');
+				}
+			});
+		}
+		//input回车触发事件
+		function showMsg() {
+			delect_save();
+			var cur = $("#timeset_page").val();
+			cur = cur.replace(/\D/g, "");
+			if (cur == '' || parseInt(cur) < 1) {
+				cur = 1;
+			}
+			document.frm_timeset.paging.value = cur;
+			show_timeset_list();
+		}
+		var paging_max = null;
+		//以每页显示数显示列表函数
+		function show_timeset_list() {
+			update_all_list();
+			var paging = document.frm_timeset.paging.value;
+			var page_num = MAX_PAGE;
+			var timesetId = document.frm_timeset.timesetId.value;
+			var search_typeall = search_typeall_r + search_typeall_new;
+			$.ajax({
+				url: "/bhost/get_timeset_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a4: page_num, a3: paging, a2: search_typeall, a1: timesetId,dsc:true },
+				success: function (result) {
+					var timeset_result = JSON.parse(result);
+					if (timeset_result.Result == true) {
+						var timeset_data = timeset_result.info;
+						var total_all = timeset_data.totalrow;
+						if (paging_max == null) {
+							paging_max = parseInt(total_all / MAX_PAGE) + 1;
+						}
+						fenye_r = Math.ceil(total_all / MAX_PAGE)||1;
+						if (timeset_data.data == "" && paging != "1") {
+							timeset_page(0.9);
+						} else {
+							//total = 0;
+							total_all_r = total_all;
+							if (total_all) {
+								$("#timeset_list").empty();
+								$("#timeset_list").append(timeset_data.data.map(function (item) {
+									if (item.Name == null) {
+										item.Name = "";
+									}
+									if (item.Description == null) {
+										item.Description = "";
+									}
+									time_str = "";
+									$.each(item.Set, function (i1, item1) {
+										switch (item1.TimeSetType) {
+											case 11:
+												item1.TimeSetType = "周期 每天 ";
+												break;
+											case 12:
+												item1.TimeSetType = "周期 每周 ";
+												switch (item1.StartPeriod) {
+													case 1:
+														item1.StartPeriod = "周一 ";
+														break;
+													case 2:
+														item1.StartPeriod = "周二 ";
+														break;
+													case 3:
+														item1.StartPeriod = "周三 ";
+														break;
+													case 4:
+														item1.StartPeriod = "周四 ";
+														break;
+													case 5:
+														item1.StartPeriod = "周五 ";
+														break;
+													case 6:
+														item1.StartPeriod = "周六 ";
+														break;
+													case 7:
+														item1.StartPeriod = "周日 ";
+														break;
+												};
+												switch (item1.EndPeriod) {
+													case 1:
+														item1.EndPeriod = "周一 ";
+														break;
+													case 2:
+														item1.EndPeriod = "周二 ";
+														break;
+													case 3:
+														item1.EndPeriod = "周三 ";
+														break;
+													case 4:
+														item1.EndPeriod = "周四 ";
+														break;
+													case 5:
+														item1.EndPeriod = "周五 ";
+														break;
+													case 6:
+														item1.EndPeriod = "周六 ";
+														break;
+													case 7:
+														item1.EndPeriod = "周日 ";
+														break;
+												};
+												break;
+											case 13:
+												item1.TimeSetType = "周期 每月 ";
+												item1.StartPeriod = item1.StartPeriod + "日 ";
+												item1.EndPeriod = item1.EndPeriod + "日 ";
+												break;
+											case 20:
+												item1.TimeSetType = "区间 ";
+												break;
+											case 31:
+												item1.TimeSetType = "任务 当前 ";
+												break;
+											case 32:
+												item1.TimeSetType = "任务 当天 ";
+												break;
+										}
+										if (item1.StartDate == null) {
+											item1.StartDate = "";
+										}
+										if (item1.EndDate == null) {
+											item1.EndDate = "";
+										}
+										if (item1.StartTime == null) {
+											item1.StartTime = "";
+										}
+										if (item1.EndTime == null) {
+											item1.EndTime = "";
+										}
+										if (item1.StartPeriod == null) {
+											item1.StartPeriod = "";
+										}
+										if (item1.EndPeriod == null) {
+											item1.EndPeriod = "";
+										}
+										time_str = time_str + item1.TimeSetType + item1.StartDate.substr(0, 10) + " " + item1.StartPeriod + " " + item1.StartTime + "至 " + item1.EndDate.substr(0, 10) + " " + item1.EndPeriod + " " + item1.EndTime + "，";
+									});
+									time_str = time_str.substr(0, time_str.length - 1);
+									return "<tr>" +
+										(perm==2?"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" /></td>":"<td title='" + item.Name + "'>" + item.Name + "</td>") +
+										"<td style = \"display:none\">" + item.TimeSetId + "</td>" +
+										(perm==2?"<td title='" + item.Name + "'>" + item.Name + "</td>":'') +
+										"<td title='" + item.Description + "'>" + item.Description + "</td>" +
+										"<td title='" + time_str + "'>" + time_str + "</td>" +
+										"<td><div class=\"tab-ctr\">"+
+										(perm==2?"<a href=\"javascript:;\" class=\"edit\" id=\"edit\" title='编辑'></a>":"<a href=\"javascript:;\" class=\"search_result\" id=\"edit\" title='查看'></a>")+
+										(perm==2?"<a href=\"javascript:;\" class=\"del\" id=\"del\" title='删除'></a>":"")+
+										"</div>" +
+										"</td></tr>";
+								}));
+								$(".input_checkbox", "#timeset_list").iCheck({
+									checkboxClass: 'icheckbox_minimal-blue',
+									radioClass: 'iradio_minimal-blue',
+									increaseArea: '0' // optional
+								});
+								$("#timeset_total").text(total_all);
+								if (paging >= fenye_r) {
+									paging = fenye_r;
+								}
+								document.frm_timeset.paging.value = paging;
+								document.getElementById("timeset_page").value = paging;
+								$("#timeset_pages").text(fenye_r);
+								$('#check_one_page').iCheck('uncheck');
+								$("table tbody tr input").iCheck('uncheck');
+								check_show();
+								check_num = delect_str.length;
+								$("span.sum").text(check_num);
+							} else {
+								$("span.sum").text(0);
+								$('#check_one_page').iCheck('uncheck');
+								$("table tbody tr input").iCheck('uncheck');
+								$("#timeset_list").empty();
+								$("#timeset_total").text(total_all);
+								$("#timeset_pages").text(1);
+								document.frm_timeset.paging.value = 1; fenye_r = 1;
+								document.getElementById("timeset_page").value = 1;
+							}
+						}
+					} else {
+						_alert(1, "时间集合", timeset_result.info);
+						$('#check_one_page').iCheck('uncheck');
+						$("table tbody tr input").iCheck('uncheck');
+						$("span.sum").text(0);
+						$("#timeset_total").text(0);
+						$("#timeset_pages").text(1);
+						document.frm_timeset.paging.value = 1; fenye_r = 1;
+						document.getElementById("timeset_page").value = 1;
+						return false;
+					}
+				}
+			});
+
+		}
+		//分页 and 刷新
+		function timeset_page(num) {
+			var paging = parseInt(document.frm_timeset.paging.value) + num;
+			if (paging < 1) {
+				paging=1;
+			}
+			delect_save();
+			if (num == 0.1) {
+				paging = 1;
+			} else if (num == 0.9) {
+				paging = fenye_r;
+			}
+			// document.getElementById("timeset_page").value = paging;
+			document.frm_timeset.paging.value = paging;
+			show_timeset_list();
+		}
+		var click_all = false;
+		function update_all_list() {
+			var search_typeall = search_typeall_r + search_typeall_new;
+			var timesetId = document.frm_timeset.timesetId.value;
+			$.ajax({
+				url: "/bhost/get_timeset_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a2: search_typeall, a1: timesetId ,dsc:true},
+				success: function (result) {
+					var timeset_result = JSON.parse(result);
+					if (timeset_result.Result) {
+						var timeset_data = timeset_result.info;
+						var delect_str_old=delect_str;
+						delect_str=new Array();
+						timeset_array = timeset_data.data.map(function (params) {
+							var item_value=params.TimeSetId+'\t'+params.Name;
+							if($.inArray(item_value,delect_str_old)>=0){
+								delect_str.push(item_value);
+							}
+							return item_value;
+						});
+					}
+				}
+			});
+		}
+		//全选按钮
+		function click_all_list() {
+			//console.log(timeset_array);
+			delect_save();
+			//console.log(delect_str);
+			if (timeset_array.length == delect_str.length) {
+				delect_str = new Array();
+			} else {
+				delect_str = timeset_array;
+			}
+			//console.log(delect_str);
+			show_timeset_list();
+		}
+		//删除函数
+		function delete_fun(delect_str_1) {
+			$.ajax({
+				url: '/bhost/del_timeset',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: delect_str_1 },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						timeset_page(0);
+						// _alert(0, "时间集合", "删除成功");
+						// if(result.fail_num!=0){
+						// 	_alert(0,"时间集合","成功："+result.success_num+'，失败：'+result.fail_num);
+						// }else{
+						// 	_alert(0,"时间集合","删除成功");
+						// }
+						if(result.fail_num!=0){
+							if (result.success_num!=0)
+								_alert(0,"时间集合","成功："+result.success_num+'，失败：'+result.fail_num);
+							else
+								if ((result.fail_num+result.success_num)==1)
+									_alert(1,"时间集合",result.ErrMsg);
+								else
+									_alert(0,"时间集合",'失败：'+result.fail_num);
+						}else{
+							_alert(0,"时间集合","删除成功");
+						}
+					} else {
+						timeset_page(0);
+						_alert(1, "时间集合", result.info);
+						return false;
+					}
+				}
+			});
+		}
+		//删除按钮
+		function delete_list() {
+			delect_save();
+			if (delect_str.length == 0) {
+				_alert(2, "时间集合", "请选择要删除的数据");
+				return false;
+			}
+			//利用对话框返回的值 （true 或者 false） 
+			$('.btn').blur(); parent.layer.open({
+				type: 1,
+				title: '时间集合',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+				btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+				btnAlign: 'c',
+				closeBtn: false,
+				skin: 'layer-custom',
+				area: ['380px', '310px'],
+				move: false,
+				resize: false,
+				yes: function (i) {
+					parent.layer.close(i);
+					delete_fun(delect_str.join(','));
+				}
+			});
+		}
+		$(function () {
+			$("#time_group").on("click", function () {
+				parent.reload();
+			});
+		});
+	</script>
+</body>
+
+</html>

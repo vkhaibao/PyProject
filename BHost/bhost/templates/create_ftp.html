@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3>FTP</h3>
+				-->
+				<div class="manual-head" style="width:10%;float:left;">
+					<div class="manual-title">
+						<span id="ftp_reload" style="cursor: pointer;">FTP</span>
+						<i class="ftp_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-form" style="padding-bottom:10px;">
+						<div class="form">	
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>配置名称：</span>
+								<div class="form-c">
+									<input id="FTPServerName" name="FTPServerName" style="width: 267px;" class="form-text" type="text" onblur="NameCheck(this);" maxlength="128"><i class="v-check"></i>
+									<p class="form-tip" style="width: 270px;margin-left: -5px;">特殊字符仅支持下划线、横杠、小数点</p>
+								</div>
+							</div>
+							<!--
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>DNS服务地址：</span>
+								<div class="form-c">
+									<input id="FTPServerName" name="FTPServerName" style="width: 267px;" class="form-text" type="text" onblur="NameCheck(this);"><i class="v-check"></i>
+								</div>
+							</div>
+							-->
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>服务器地址：</span>
+								<div class="form-c">
+									<input id="ServerIP" name="ServerIP" class="form-text" type="text" style="width: 124px;" onblur="IPCheck(this);"><i class="v-check" style=""></i>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>用户名：</span>
+								<div class="form-c">
+									<input id="ServerUser" name="ServerUser" style="width: 267px;" class="form-text" type="text" onblur="NameCheck(this);"><i class="v-check"></i>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>用户密码：</span>
+								<div class="form-c">
+									<input id="ServerPasswd" name="ServerPasswd" class="form-text" type="password" style="width: 291px;padding: 0 3px 0px 3px;">
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>上传路径：</span>
+								<div class="form-c">
+									<input id="ServerPath" name="ServerPath" class="form-text" type="text" maxlength="128" style="width: 267px;">
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag" style=""><em class="imp">*</em>方式：</span>
+								<div class="form-c" style="">
+									<select class="filter-select" id="Flag" style="width:90px;">
+										<option value="2">默认</option>
+										<option value="1">备用</option>
+										<option value="0">其他</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag" style=""><em class="imp">*</em>模式：</span>
+								<div class="form-c" style="">
+									<select class="filter-select" id="IfPasv" style="width:90px;">
+										<option value="1">被动</option>
+										<option value="2">主动</option>
+									</select>
+								</div>
+							</div>
+							<!--
+							<div class="form-item tab-t" style="padding:20px 0 10px;">
+								<div class="ctr" style="margin-left:121px;width:76px;">
+									<a class="btn" href="javascript:;" style="" onclick="test_ftp();">测试</a>
+								</div>
+							</div>
+							-->
+						</div>
+					</div>
+					<div class="btns s-hide">
+						<a href="javascript:;" class="btn btn-normal" onclick="ftp_save();">保&nbsp;&nbsp;存</a>
+						<a href="javascript:;" class="btn btn-normal" onclick="test_ftp();">测&nbsp;&nbsp;试</a>
+					</div>
+					<div class="c-form">
+						
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="back(1);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<form action="/bhost/manager_smssvr" method="POST" name="frm_ftp" id="frm_ftp">
+		<input type="hidden" name="tasktype" id = "tasktype" value="" />
+		<input type="hidden" name="z1" id = "z1" value="" />		
+		<input type="hidden" name="z2" id = "z2" value=""/>
+		<input type="hidden" name="z3" id = "z3" value=""/>
+		<input type="hidden" name="z4" id = "z4" value=""/>
+		<input type="hidden" name="a0" value=""/>
+	</form>
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+$('.type-select,.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+
+
+<script>
+var ftpset = {
+	"FTPServerId": 2,  
+	"FTPServerName": "168FTP",          
+	"ServerIP": "192.168.0.168",
+	"DNS": null,
+	"ServerUser": "abc",
+	"ServerPasswd": "123456",
+	"ServerPath": "data/",
+	"Flag": 0,
+	"IfPasv":true
+}
+var now="{{now}}";
+var keyword_re = {{keyword|safe}};
+var edit = {{edit|safe}};
+var selectid = {{selectid|safe}}
+var se;
+$(function(){
+	_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+	if(_if_disable == '1'){
+		$('.s-hide').remove();
+	}
+	$("#ftp_reload").on("click",function(){
+		//back(1);
+		document.frm_ftp.action = '/bhost/create_ftp';
+		document.frm_ftp.z1.value = now;
+		document.frm_ftp.z2.value = JSON.stringify(keyword_re);
+		if (edit != "None" && edit != ""){
+			document.frm_ftp.z3.value = JSON.stringify(edit);
+		}else{
+			document.frm_ftp.z3.value = "None";
+		}
+		document.frm_ftp.z4.value = JSON.stringify(selectid);
+		document.frm_ftp.a0.value =se;
+		document.frm_ftp.submit();
+	});
+	se = window.parent.document.frm.se.value;
+	if (edit != "None"){
+		ftpset.FTPServerId = edit.data[0].FTPServerId;
+		$("#FTPServerName").val(edit.data[0].FTPServerName);
+		$("#FTPServerName").prop("disabled",true);
+		$("#ServerIP").val(edit.data[0].ServerIP);
+		$("#ServerUser").val(edit.data[0].ServerUser);
+		$("#ServerPasswd").val(edit.data[0].ServerPasswd);
+		$("#ServerPath").val(edit.data[0].ServerPath);
+		$("#Flag").val(edit.data[0].Flag).trigger('change');
+		if (edit.data[0].Flag == 2){
+			$.ajax({
+				url:'/bhost/get_ftp_flag',
+				type:'post',
+				async:false,
+				data:{a0:se},
+				success:function(result){
+					var ftp_flag = JSON.parse(result);
+					if (ftp_flag.Result){
+												if (ftp_flag.count_ftp == 2){
+							$("#Flag").attr('disabled',true);
+						}
+					}
+				}
+			})
+		}
+	}else{
+		$.ajax({
+			url:'/bhost/get_ftp_flag',
+			type:'post',
+			async:false,
+			data:{a0:se},
+			success:function(result){
+				var ftp_flag = JSON.parse(result);
+				if (ftp_flag.Result){
+										if (ftp_flag.count_ftp == 1){
+						$("#Flag").val(2).trigger('change');
+												$("#Flag").attr('disabled',true);
+					}else if (ftp_flag.def_ftp == 0){
+						$("#Flag").val(2).trigger('change');
+					}else if (ftp_flag.spare_ftp == 0){
+						$("#Flag").val(1).trigger('change');
+					}else{
+						$("#Flag").val(0).trigger('change');
+					}
+				}
+			}
+		})
+	}
+	parent._switchBtn(0);//掩藏按钮
+})
+var numCheck = /\D/;
+var ipcheck_route=/(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+var nameCheck = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+function IPCheck(obj){
+	var ip = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check');
+	if (!ipcheck_route.test(ip)){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+
+function NameCheck(obj){
+	var Name = $(obj).val();
+	var $i = $(obj).next('i.v-check');
+	if (!nameCheck.test(Name)){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+
+//保存配置
+function ftp_save(){
+	var FTPServerName = $("#FTPServerName").val();
+	var ServerIP = $("#ServerIP").val();
+	var ServerUser = $("#ServerUser").val();
+	var ServerPasswd = $("#ServerPasswd").val();
+	var ServerPath = $("#ServerPath").val();
+	var Flag = $("#Flag").val();
+	if (FTPServerName == ""){
+		_alert(2,"FTP","请输入名称",$("#FTPServerName"));
+		return false;
+	}else{
+		if (!nameCheck.test(FTPServerName)){
+			_alert(1,"FTP","名称格式不正确",$("#FTPServerName"));
+			return false;
+		}
+	}
+	if (ServerIP == ""){
+		_alert(2,"FTP","请输入服务器地址",$("#ServerIP"));
+		return false;
+	}else{
+		if (!ipcheck_route.test(ServerIP)){
+			_alert(1,"FTP","服务器地址格式不正确",$("#ServerIP"));
+			return false;
+		}
+	}
+	
+	if (ServerUser == ""){
+		_alert(2,"FTP","请输入用户名",$("#ServerUser"));
+		return false;
+	}else{
+		if (!nameCheck.test(ServerUser)){
+			_alert(1,"FTP","用户名格式不正确",$("#ServerUser"));
+			return false;
+		}
+	}
+	
+	if (ServerPasswd == ""){
+		_alert(2,"FTP","请输入用户密码",$("#ServerPasswd"));
+		return false;
+	}
+	if(ServerPasswd.length > 64){
+		_alert(2, 'FTP', "密码不能超过系统限定64位", $("#ServerPasswd"));
+		return false;
+	}
+	if (ServerPath == ""){
+		_alert(2,"FTP","请输入上传路径",$("#ServerPath"));
+		return false;
+	}
+	if (edit == "None"){
+		ftpset.FTPServerId = 0;
+	}
+	ftpset.FTPServerName = FTPServerName;
+	ftpset.ServerIP = ServerIP;
+	ftpset.ServerUser = ServerUser;
+	ftpset.ServerPasswd = ServerPasswd;
+	ftpset.ServerPath = ServerPath;
+	ftpset.Flag = parseInt(Flag);
+	if ($("#IfPasv").val() == 1){
+		ftpset.IfPasv = true;
+	}else{
+		ftpset.IfPasv = false;
+	}
+		var pwd_flag = 0;
+	if (edit != "None"){
+		if (ftpset.ServerPasswd == edit.data[0].ServerPasswd){
+			pwd_flag = 1;
+		}
+	}
+	msstr = aceg(JSON.stringify(ftpset),se);
+	$.ajax({
+		url:'/bhost/save_ftp',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:JSON.stringify(ftpset),z2:pwd_flag,m1:msstr},
+		success:function(result){
+			data = JSON.parse(result);
+			if (data.Result == true){
+				parent.layer.open({
+					type:1,
+					title:"FTP",
+					content:'<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn:['确&nbsp;&nbsp;定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					btn1:function(i){
+						parent.layer.close(i);
+						back(2,ftpset.Flag,data.FTPServerId);
+					},
+					btn2:function(i){
+						parent.layer.close(i);
+					}
+				});	
+			}else{
+				_alert(1,"FTP","执行失败：" + data.ErrMsg);
+			}
+		}
+	});
+}
+//返回
+function back(type,flag,id){
+	if (type == 2){
+		if (flag == 2){
+			now = 1;
+		}else{
+			$.ajax({
+				url:'/bhost/get_index',
+				type:'post',
+				async:false,
+				data:{a0:se,z1:id,z2:32},
+				success:function(result){
+					now = Math.ceil(parseInt(result)/MAX_PAGE);
+				}
+			});
+			/*
+			if (edit != "None"){
+				$.ajax({
+					url:'/bhost/get_index',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:edit.data[0].FTPServerId,z2:32},
+					success:function(result){
+						now = Math.ceil(parseInt(result)/MAX_PAGE);
+					}
+				});
+			}else{
+				$.ajax({
+					url:'/bhost/get_ftp_list',
+					type:'post',
+					async:false,
+					data:{a0:se},
+					success:function(result){
+						var result = JSON.parse(result);
+						var remain = parseInt(result.totalrow) % MAX_PAGE;
+						if (remain > 0){
+							now = Math.ceil(parseInt(result.totalrow)/MAX_PAGE);
+						}else{
+							now = parseInt(result.totalrow)/MAX_PAGE + 1;
+						}
+					}
+				});
+			}
+			*/
+		}
+	}
+	var deliver = JSON.stringify(keyword_re);
+	document.frm_ftp.z1.value = now;
+	document.frm_ftp.z2.value = deliver;
+	document.frm_ftp.z3.value = JSON.stringify(selectid);
+	document.frm_ftp.a0.value = se;
+	document.frm_ftp.action='/bhost/manage_ftp';
+	document.frm_ftp.submit();
+}
+function test_ftp(){
+	var ServerIP = $("#ServerIP").val();
+	var ServerUser = $("#ServerUser").val();
+	var ServerPasswd = $("#ServerPasswd").val();
+	var ServerPath = $("#ServerPath").val();
+	if (ServerIP == ""){
+		_alert(2,"FTP","请输入服务器地址",$("#ServerIP"));
+		return false;
+	}else{
+		if (!ipcheck_route.test(ServerIP)){
+			_alert(1,"FTP","服务器地址格式不正确",$("#ServerIP"));
+			return false;
+		}
+	}
+	
+	if (ServerUser == ""){
+		_alert(2,"FTP","请输入用户名",$("#ServerUser"));
+		return false;
+	}else{
+		if (!nameCheck.test(ServerUser)){
+			_alert(1,"FTP","用户名格式不正确",$("#ServerUser"));
+			return false;
+		}
+	}
+	
+	if (ServerPasswd == ""){
+		_alert(2,"FTP","请输入用户密码",$("#ServerPasswd"));
+		return false;
+	}
+	
+	if (ServerPath == ""){
+		_alert(2,"FTP","请输入上传路径",$("#ServerPath"));
+		return false;
+	}
+	_showLoading();
+	$.ajax({
+		url:'/bhost/test_ftp',
+		type:'post',
+		async:true,
+		data:{a0:se,z1:ServerIP,z2:ServerUser,z3:ServerPasswd,z4:ServerPath},
+		success:function(result){
+			_closeLoading();
+			var test_result = JSON.parse(result);
+			if (test_result.Result){
+				_alert(0,"FTP","测试成功");
+				return false;
+			}else{
+				_alert(1,"FTP","测试失败，失败原因：" + test_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+</script>

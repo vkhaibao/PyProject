@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=11;IE=10;IE=9; IE=8; IE=EDGE,chrome=1" />
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+
+</head>
+<body style="overflow:hidden;" class="bg-white">
+	<div class="rwrap" id="one">
+		<!--批量执行表-->
+		<div class="c-top">
+			<div class="c-title">
+				<!--<h3 onclick="parent.reload();">批量执行</h3>-->
+
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title" >
+							 <span id="batchStart_data">批量执行</span>
+						 <i class="batchs_icon"></i>
+						</div>
+				</div>
+			</div>
+		</div>
+		<div class="mainer" name="batchStart" id="batchStart" >
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr">
+									<a href="javascript:;" class="btn btn-default" onclick="batchStart_add();">创建</a>
+									<a href="javascript:;" class="btn btn-default" onclick="delete_list();">删除</a>
+									<a href="javascript:;" class="btn btn-default" onclick="click_all_list();">全选</a>
+									<a href="javascript:;" class="btn btn-default" onclick="batchStart_page(0);clear_all();">刷新</a>
+								</div>
+
+								<!-- <div class="filter">
+									<div class="search">
+										<select name="batchStart_select" id="batchStart_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="ConnParamName">名称</option>
+											<option value="ServiceName">服务名</option>
+											<option value="ProtocolName">协议</option>
+										</select>
+
+										<input type="text" style="/*display:none;*/padding-right: 22px;" 
+										class="filter-text" placeholder="输入关键字" 
+										name="batchStart_text" id="batchStart_text" maxlength="128" 
+										onchange="if($('#batchStart_text').val()==''){$('#batchStart_text_check').hide();}else{$('#batchStart_text_check').show();}"
+										onkeyup="if($('#batchStart_text').val()==''){$('#batchStart_text_check').hide();}else{$('#batchStart_text_check').show();}"
+										onkeydown="if($('#batchStart_text').val()==''){$('#batchStart_text_check').hide();}else{$('#batchStart_text_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return; ">
+										<i class="v-check v-wrong" id="batchStart_text_check" onclick="_clearFilter(this)" style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<button class="btn filter-btn" onclick="_addFilter(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div> -->
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th width="50"><input type="checkbox" class="form-checkbox" id="check_one_page"/></th>
+											<th style="width: 8%;">任务名称</th>
+											<th style="width: 17%;">类型</th>
+											<th style="width: 16%;">开始时间</th>
+											<th style="width: 16%;">上次执行时间</th>
+											<th style="width: 6%;">周期</th>
+											<th style="width: 10%;">最新执行状态</th>
+											<th style="width: 5%;">状态</th>
+											<th style="width: 8%;">立即执行</th>
+											<th style="width: 101px;"></th>
+										</tr>
+									</thead>
+
+									<tbody name="batchStart_list" id="batchStart_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_nums">10</span>条 总数：<span id = "batchStart_total">0</span>  选中：<span class="sum">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="batchStart_begin" onclick="batchStart_page(0.1);"><i></i></a>
+									<a href="javascript:;" class="nav prev" id="batchStart_prev" onclick="batchStart_page(-1);"><i></i></a>
+									<input type="text" id = "batchStart_page" value="1" onblur="showMsg();" onchange="showMsg();">/&nbsp;<span id = "batchStart_pages">1</span>
+									<a href="javascript:;" class="nav next" id="batchStart_next" onclick="batchStart_page(1);"><i></i></a>
+									<a href="javascript:;" class="nav2 end" id="batchStart_end" onclick="batchStart_page(0.9);"><i></i></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="rwrap" id="two" style="display:none;">
+		<div class="manual-head">
+			<div class="manual-title">
+				<span onclick="save_BatchTask();"> 执行任务</span>
+				<i class="htesttask_icon"></i>
+			</div>						
+		</div>
+		<div class="mainer" name="BatchTask" id="BatchTask">
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr">
+									<a href="javascript:;" class="btn btn-default" onclick="BatchTask_page(0);BatchTask_clear_all();">刷新</a>
+								</div>
+								<!-- <div class="filter">
+									<div class="search">
+										<select name="BatchTask_select" id="BatchTask_select" class="filter-select">
+											<option value="0" selected>所有</option>
+											<option value="Name">名称</option>
+										</select>
+
+										<input type="text" style="display:none;" class="filter-text" placeholder="输入关键字" name="BatchTask_text" id="BatchTask_text"
+										 maxlength="128" onkeydown=" if (event.keyCode == 13){BatchTask_addFilter(this,false);return false;} else return; ">
+
+										<button class="btn filter-btn" onclick="BatchTask_addFilter(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="BatchTask_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="BatchTaskclearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="BatchTask_BatchTaskclearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="BatchTaskfilterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div> -->
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<!-- <th>计划名称</th> -->
+											<th width="150">执行时间</th>
+											<th>总数</th>
+											<th>成功总数</th>
+											<th>失败总数</th>
+											<th>未知总数</th>
+											<th>状态</th>
+											<th style="width:30px;"></th>
+										</tr>
+									</thead>
+
+									<tbody name="BatchTask_list" id="BatchTask_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="BatchTaskpage_nums">10</span>条 总数：<span id="BatchTask_total">0</span> 
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="BatchTask_begin" onclick="BatchTask_page(0.1);"><i></i></a>
+									<a href="javascript:;" class="nav prev" id="BatchTask_prev" onclick="BatchTask_page(-1);"><i></i></a>
+									<input type="text" id="BatchTask_page" value="1" onchange="BatchTaskshowMsg();" onblur="BatchTaskshowMsg();">/&nbsp;<span id="BatchTask_pages">1</span>
+									<a href="javascript:;" class="nav next" id="BatchTask_next" onclick="BatchTask_page(1);"><i></i></a>
+									<a href="javascript:;" class="nav2 end" id="BatchTask_end" onclick="BatchTask_page(0.9);"><i></i></a>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+						<!--
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal" onclick="save_BatchTask();">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+						<div id="bBtn" style="z-index: 5;    position: fixed;">
+							<a href="javascript:;" class="btn" onclick="save_BatchTask();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="rwrap" id="three" style="display:none;">
+		<div class="manual-head">
+			<div class="manual-title">
+				<span onclick="save_BatchTaskDetails();">执行结果</span>
+				<i class="htestresult_icon"></i>
+			</div>						
+		</div>
+		<div class="mainer" name="BatchTaskDetails" id="BatchTaskDetails">
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr">
+									<a href="javascript:;" class="btn btn-default" onclick="BatchTaskDetails_page(0);BatchTaskDetails_clear_all();">刷新</a>
+								</div>
+								<!-- <div class="filter">
+									<div class="search">
+										<select name="BatchTaskDetails_select" id="BatchTaskDetails_select" class="filter-select">
+											<option value="0" selected>所有</option>
+											<option value="hostip">主机IP</option>
+											<option value="hostname">主机名</option>
+											<option value="protocolname">协议</option>
+											<option value="accountname">账号</option>
+										</select>
+
+										<input type="text" style="display:none;" class="filter-text" placeholder="输入关键字" name="BatchTaskDetails_text" id="BatchTaskDetails_text"
+										 maxlength="128" onkeydown=" if (event.keyCode == 13){BatchTaskDetails_addFilter(this,false);return false;} else return; ">
+
+										<button class="btn filter-btn" onclick="BatchTaskDetails_addFilter(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="BatchTaskDetails_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="BatchTaskDetailsclearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="BatchTaskDetails_BatchTaskDetailsclearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="BatchTaskDetailsfilterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div> -->
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th style="width: 18%;">开始时间</th>
+											<!-- <th style="width:150px;">结束时间</th> -->
+											<th style='width: 15%;'>主机IP</th>
+											<th>主机名</th>
+											<th>协议</th>
+											<!-- <th>端口</th> -->
+											<th style="width: 17%;">账号</th>
+											<th style="width: 15%;">状态</th>
+											<th style="width: 0.1%;"></th>
+										</tr>
+									</thead>
+
+									<tbody name="BatchTaskDetails_list" id="BatchTaskDetails_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="BatchTaskDetailspage_nums">10</span>条 总数：<span id="BatchTaskDetails_total">0</span> 
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="BatchTaskDetails_begin" onclick="BatchTaskDetails_page(0.1);"><i></i></a>
+									<a href="javascript:;" class="nav prev" id="BatchTaskDetails_prev" onclick="BatchTaskDetails_page(-1);"><i></i></a>
+									<input type="text" id="BatchTaskDetails_page" value="1" onchange="BatchTaskDetailsshowMsg();" onblur="BatchTaskDetailsshowMsg();">/&nbsp;<span id="BatchTaskDetails_pages">1</span>
+									<a href="javascript:;" class="nav next" id="BatchTaskDetails_next" onclick="BatchTaskDetails_page(1);"><i></i></a>
+									<a href="javascript:;" class="nav2 end" id="BatchTaskDetails_end" onclick="BatchTaskDetails_page(0.9);"><i></i></a>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+						<!--
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal" onclick="save_BatchTaskDetails();">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+						<div id="bBtn" style="z-index: 5;position:fixed">
+							<a href="javascript:;" class="btn" onclick="save_BatchTaskDetails();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>	
+	<form action="/bhost/batch_index" method="POST" name="frm_batchList" id="frm_batchList">
+		<input type="hidden" name="tasktype" id = "tasktype" value="3" />
+		<!--创建 编辑 列表-->
+		<input type="hidden" name="taskid" id = "taskid" value="0" />
+		<!--需要查询id-->
+		<input type="hidden" name="paging" id = "paging" value="{{paging}}" />
+		<!--页码-->
+		<input type="hidden" name="search_typeall" id = "search_typeall" value="{{search_typeall}}" />
+		<!--search_typeall-->
+		<input type="hidden" name="e" id = "e" value="{{e}}" />
+		<!--e-->
+		<input type="hidden" name="se" id = "se" value="{{se}}" />
+		<!--f0-->
+	</form>
+<style>
+	#BatchTaskDetails_list tr:hover td:last-child, .xTable table tr:hover td:last-child {
+		background-color: #e6e6e6;
+	}	
+	#BatchTaskDetails_list tr:hover td:last-child, .xTable table tr:hover td:last-child {
+		background-color: #e6e6e6;
+	}
+	.c-table table th, .c-table table td, .xTable table th, .xTable table td {
+	    border: 0;
+	    padding: 10px 10px;
+	    line-height: 1.5;
+	}
+</style>
+<script>
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+<style>
+		.c-table table tr:hover .last_td,
+		.xTable table tr:hover .last_td{
+			background-color: #63c3d9
+		}
+		.c-table {
+			min-width:1177px;
+		}
+	</style>
+
+<script>
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+<script type="text/javascript">
+var delect_str = new Array();
+var check_num=0;
+var total_all_r=0;
+var batchStart_array=null;
+//总数
+var fenye_r=0;
+//总页码
+var search_typeall_r=document.frm_batchList.search_typeall.value;
+//关键字
+function save_batchStart(){
+	window.parent._closePage(null); 
+}
+$(function(){
+	document.frm_batchList.se.value=window.parent.document.frm.se.value;
+
+	if(search_typeall_r!=""){
+		var v1="";
+		var id="";
+		var str_new="";
+		var search_typeall_str=search_typeall_r.split('\t');
+		//console.log(search_typeall_str);
+		$.each(search_typeall_str,function(i,item){
+			if(item==""){
+				return false;
+			}
+			var str_sea=item.split("-");
+			v1=$('#batchStart_select').find('option[value='+str_sea[0]+']').text();
+			id=item;
+			str_sea[0]=v1;
+			str_new=str_sea.join('-');
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'</span><span class="ww">'+str_new+'</span><i class="del" onclick="_delFilter(this);"></i></li>');
+		});
+	}
+	var search_typeall_select=document.frm_batchList.e.value.substr(document.frm_batchList.e.value.indexOf(':')+1,document.frm_batchList.e.value.length-1);
+	if(search_typeall_select!=''){
+		var array=new Array();
+		array[0]=search_typeall_select.substr(0,search_typeall_select.indexOf('-'));
+		array[1]=search_typeall_select.substr(search_typeall_select.indexOf('-')+1,search_typeall_select.length);
+		//console.log(array);
+		$('#batchStart_select').val(array[0]).trigger('change');
+		$('#batchStart_text').val(array[1]);
+		if(array[1]!=''){
+			$('#batchStart_text_check').show();
+		}
+	}
+	//输入数字
+	$("#batchStart_page").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	////console.log("batchStartlist11");
+	//页码显示
+	$("#page_nums").val(MAX_PAGE);
+	//list show
+	show_batchStart_list();
+	parent._switchBtn(1);//显示按钮
+	//tr双击事件
+	$("#batchStart_list").on('dblclick','tr',function(e){
+		x=e.target;
+		if(x.nodeName !='A' && x.nodeName !='INS'){
+			var id=$(this).find("td");
+			var edit_item=$(id).eq(1).text();
+			if($(id).eq(7).text() == '正在执行'){
+				return true;
+			}
+			document.frm_batchList.taskid.value = edit_item;
+			document.frm_batchList.tasktype.value=2;
+			document.frm_batchList.search_typeall.value=search_typeall_r;
+			document.frm_batchList.e.value=search_typeall_new+':'+$('#batchStart_select').val()+'-'+$('#batchStart_text').val();
+			document.frm_batchList.submit();
+		}
+	}).on("click", "tr", function (e){  
+		x=e.target;
+		//删除按钮
+		if(x.id == 'del'){
+			var id=$(this).find("td");
+			var input  = $(this).find("input"); 
+			$('.btn').blur();parent.layer.open({
+				type:1,
+				title: '批量执行',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+				btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+				btnAlign:'c',
+				closeBtn: false,
+				skin:'layer-custom',
+				area:['380px','310px'],
+				move: false,
+				resize: false,
+				yes:function(i){
+					parent.layer.close(i);
+					var delete_item=$(id).eq(1).text();
+					$(input).iCheck('uncheck');
+					delete_fun(delete_item);
+				}
+			});
+		}
+		if (x.id == 'icon7') {
+			var id = $(this).find("td");
+			BatchTaskId = $(id).eq(1).text();
+			BatchTasksearch_typeall_r = '';
+			BatchTasksearch_typeall_new='';
+			BatchTaskpaging=1;
+			$('#one').hide();
+			$('#two').show();
+			$('#three').hide();
+			$('#BatchTaskfilterWW ul').empty();
+			$('#BatchTask_text').val('');
+			$('#BatchTask_select').val(0).trigger('change');
+			$(this).trigger('click');
+			//list show
+			show_BatchTask_list();
+		}	
+		//console.log(x);	
+		//编辑按钮
+		if(x.id == 'edit'){
+			var id=$(this).find("td");
+			//if (confirm("你确定编辑吗？")) {
+				var edit_item=$(id).eq(1).text();
+				document.frm_batchList.taskid.value=edit_item;
+				document.frm_batchList.tasktype.value=2;
+				document.frm_batchList.search_typeall.value=search_typeall_r;
+				document.frm_batchList.e.value=search_typeall_new+':'+$('#batchStart_select').val()+'-'+$('#batchStart_text').val();
+				document.frm_batchList.submit();
+			//}
+		}else if(x.id == 'start_icon'){
+			var id=$(this).find("td");
+			var plan_id = $(id).eq(1).text();
+			$.ajax({
+				url: "/bhost/StartBatchSTask",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(),a1:plan_id},
+				success: function (result) {
+					var result=JSON.parse(result);
+					if(result.Result){
+						batchStart_page(0);
+					}else{
+						_alert(1,'批量执行','启用失败');
+						return false;
+					}
+				}
+			});
+		}else if(x.id == 'stop_icon'){
+			var id=$(this).find("td");
+			var plan_id = $(id).eq(1).text();
+			$.ajax({
+				url: "/bhost/StopBatchSTask",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(),a1:plan_id},
+				success: function (result) {
+					var result=JSON.parse(result);
+					if(result.Result){
+						batchStart_page(0);
+					}else{
+						_alert(1,'批量执行','停用失败');
+						return false;
+					}
+				}
+			});
+		}
+	});
+	$('#check_one_page').on('ifClicked',function(e){
+		if(!$('#check_one_page').is(':checked')){
+			$("table tbody tr input").iCheck('check');
+		}else{
+			$("table tbody tr input").iCheck('uncheck');
+		}
+		
+	});
+	$("#batchStart_list").on("ifChecked",function(e){
+		check_num++;
+		$("span.sum").text(check_num);		
+		if($("table tbody tr input:checked").length==$("table tbody tr input").length){
+			$('#check_one_page').iCheck('check');
+		}
+
+	}).on("ifUnchecked",function(e){
+		check_num--;
+		$("span.sum").text(check_num);	
+		$('#check_one_page').iCheck('uncheck');	
+	});
+})
+//显示创建页面
+function batchStart_add(){
+	document.frm_batchList.tasktype.value = 1;
+	document.frm_batchList.taskid.value = 0;
+	// /document.frm_batchList.action = '/bhost/index';
+	document.frm_batchList.search_typeall.value = search_typeall_r;
+	document.frm_batchList.e.value = search_typeall_new+':'+$('#batchStart_select').val()+'-'+$('#batchStart_text').val();
+	document.frm_batchList.submit();
+}
+
+//选中字段存储
+function delect_save(){
+	$(">tr","#batchStart_list").each(function(){
+		var input  = $(this).find("input[type='checkbox']");
+		var delect_item=$(">td",this).eq(1).text();
+		var index=$.inArray(delect_item,delect_str);
+		if($(input).is(':checked')){
+			if(index<0){
+				delect_str.push(delect_item);
+			}
+		}else{
+			if(index>=0){
+				delect_str.splice(index,1); 
+			}
+		}
+	});
+}
+//check显示
+function check_show(){
+	$(">tr","#batchStart_list").each(function(){
+		var check_id=$(">td",this).eq(1).text();
+		if($.inArray(check_id,delect_str)>=0){
+			$(this).find("input[type='checkbox']").iCheck('check');
+		}
+	});
+}
+//input回车触发事件
+function showMsg(){
+	delect_save();
+	var cur = $("#batchStart_page").val();
+	////console.log(cur);
+	cur=cur.replace(/\D/g, "");
+	if (parseInt(cur) < 1){
+		$("#batchStart_page").val(1);
+		document.frm_batchList.paging.value=1;
+	}else{
+		document.frm_batchList.paging.value=cur;
+	}
+	show_batchStart_list();
+}
+var search_typeall_new=document.frm_batchList.e.value.substr(0,document.frm_batchList.e.value.indexOf(':'));
+function _addFilter(obj,type){
+	var id = $(obj).parent().children('select').children('option:selected').val();
+
+	var v1 = $(obj).parent().children('select').children('option:selected').text();
+	if(id=='all'){
+		v1='';
+	}else{
+		v1+='-';
+	}
+	var v2 = $.trim( $(obj).parent().children('input[type=text]').val());
+	if(v2 == ''){
+		$(obj).parent().children('input[type=text]').blur();
+		_alert(2,'搜索','请输入关键字', $(obj).parent().children('input[type=text]'));
+		return false;
+	}else{
+		switch(id){
+			case "ConnParamName":
+				var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				break;
+			case "ServiceName":
+				var Reg=/^[^@\/\'\\\"#$%&\^\*\s]+$/;
+				break;
+			case "ProtocolName":
+				var Reg=/^[a-zA-Z\d\s]+$/;
+				break;
+		}
+		if(id!='all'){
+			if(!Reg.test(v2)){
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(1,'搜索','关键字格式不正确', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+		}
+		if(search_typeall_r.indexOf(id+'-'+v2+'\t')>=0){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(2,'搜索','相同的关键字已存在', $(obj).parent().children('input[type=text]'));
+			return false;
+		}
+		if(type){
+			search_typeall_r=search_typeall_r+id+'-'+v2+'\t';
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'-'+v2+'</span><span class="ww">'+v1+v2+'</span><i class="del" onclick="_delFilter(this);"></i></li>')
+			search_typeall_new='';
+			$(obj).parent().children('input[type=text]').val('');
+			$('#batchStart_text_check').hide();
+			selView();
+		}else{
+			search_typeall_new=id+'-'+v2+'\t';
+		}
+		
+	}
+	$("table tbody tr input").iCheck('uncheck');
+		delect_str=new Array();
+		batchStart_page(0.1);
+		check_num=0;
+		$("span.sum").text(check_num);
+}
+function _delFilter(obj){
+	var id = $(obj).parent().find("span");
+	var ids=$(id).eq(1).text();
+	search_typeall_r = search_typeall_r.replace(ids+'\t','');
+	//console.log(search_typeall_r);
+	var batchStart_text=$.trim( $('#batchStart_text').val());
+	if(batchStart_text==''){
+		search_typeall_new=='';
+	}else{
+		search_typeall_new=$('#batchStart_select').val()+'-' +batchStart_text+'\t';
+	}
+	$(obj).parent().remove();
+	selView();
+	$("table tbody tr input").iCheck('uncheck');
+		delect_str=new Array();
+		batchStart_page(0.1);
+		check_num=0;
+		$("span.sum").text(check_num);
+}
+function _clearFilter(obj){
+	$('#clearFilter').next().children('ul').empty();
+	$('#batchStart_text').val('');
+	$('#batchStart_text_check').hide();
+	$('#clearFilter').hide();
+	search_typeall_new='';
+	search_typeall_r='';
+	selView();
+	$("table tbody tr input").iCheck('uncheck');
+		delect_str=new Array();
+		batchStart_page(0.1);
+		check_num=0;
+		$("span.sum").text(check_num);
+}
+function selView(){
+	var $sel = $('#filterWW');
+	var len = $('li',$sel).length;
+
+	if(len == 0){
+		$sel.hide();
+		$('#clearFilter').hide();
+	}else{
+		$("#filterWW").show();
+		$('#clearFilter').show();
+		$('>span.ww',$sel).show();
+		$sel.addClass('selector-multiple');
+	}
+}
+var paging_max=null;
+//以每页显示数显示列表函数
+function show_batchStart_list(){
+	update_list_id();
+	var paging = document.frm_batchList.paging.value;
+	if(paging == "")paging = 1;
+	var page_num = MAX_PAGE;
+	var search_typeall=search_typeall_r+search_typeall_new;
+	var taskid=document.frm_batchList.taskid.value;
+	var offsetrow = (paging-1)*page_num;
+	if(offsetrow < 0){
+		offsetrow = 0;
+	}
+	var jsondata = {
+		"LoginUserCode": window.parent.document.frm.us.value,
+		"limitrow":page_num,
+		"offsetrow":offsetrow
+	}
+	$.ajax({
+		url: "/bhost/GetBatchStart_list",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:JSON.stringify(jsondata)},
+		success:function(result){
+			var batchStart_result = JSON.parse(result);
+			if (batchStart_result.Result){
+				var batchStart_data = batchStart_result.info;
+				var total_all = batchStart_data.totalrow;
+				//console.log("total_all:"+total_all);
+				if(total_all % MAX_PAGE==0){
+					fenye_r=parseInt(total_all/MAX_PAGE);
+				}else{
+					fenye_r=parseInt(total_all/MAX_PAGE)+1;
+				}
+				//console.log("fenye_r:"+fenye_r);
+				if(batchStart_data.data=="" && paging!="1"){
+					batchStart_page(0.9);
+				}else{
+					//total = 0;
+					total_all_r = total_all;
+					if(total_all){
+						$("#batchStart_list").empty();
+						$.each(batchStart_data.data,function(i,item){
+
+							if(item.BatchType == 1){//0.无，1.系统批处理，2.MYSQL，3.ORACLE
+								item.BatchType = "Windows,*Unix批处理";
+							}else if(item.BatchType == 2){
+								item.BatchType = "MYSQL批处理";
+							}else if(item.BatchType == 3){
+								item.BatchType = "ORACLE批处理";
+							}								
+							switch (item.Status) {
+								case 0: item.Status = '未执行'; break;
+								case 1: item.Status = '正在执行'; break;
+								case 2: item.Status = '执行完成'; break;
+								default: break;
+							}
+							var a_class=item.Enabled == true ? 'stop_icon' : 'start_icon';
+							$("#batchStart_list").append("<tr>" +
+								"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" /></td>" +
+								"<td style = \"display:none\">" + item.BatchPlanId + "</td>" +								
+								"<td title='"+item.BatchPlanName+"'>"+item.BatchPlanName+"</td>"+
+								"<td title='"+item.BatchType+"'>"+item.BatchType+"</td>"+
+								"<td title='" + (item.StartTime == null ? '' : item.StartTime) + "'>" + (item.StartTime == null ? '' : item.StartTime) + "</td>" +
+								"<td title='" + (item.LastExecuteTime == null ? '' : item.LastExecuteTime) + "'>" + (item.LastExecuteTime == null ? '' : item.LastExecuteTime) + "</td>" +
+								"<td title='"+ (item.PeriodValue == null ? '' : item.PeriodValue) + (item.PeriodType == 1 ? '天' : (item.PeriodType == 2?'分钟':'')) +"'>" + (item.PeriodValue == null ? '' : item.PeriodValue) + (item.PeriodType == 1 ? '天' : (item.PeriodType == 2?'分钟':'')) + "</td>" +
+								"<td title='"+item.Status+"'>" + item.Status + "</td>" +
+								"<td title='"+ (item.Enabled == true ? '启用' : '停用') +"'>" + (item.Enabled == true ? '启用' : '停用') + "</td>" +
+								"<td title='"+ (item.Execution == true ? '是' : '否') +"'>" + (item.Execution == true ? '是' : '否') + "</td>" +
+								"<td class=\"last_td\"><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\""+(item.Status != '正在执行' ? 'edit' : 'edit disabled')+"\" id=\""+(item.Status != '正在执行' ? 'edit' : 'editdisabled')+"\" title='编辑'></a><a href=\"javascript:;\" class=\""+a_class+(item.Status != '正在执行' ? '' : ' disabled')+"\" id=\""+a_class+(item.Status != '正在执行' ? '' : 'disabled')+"\" title=\""+(item.Enabled == true ? '停用' : '启用')+"\"></a><a href=\"javascript:;\" class=\"icon7\" id=\"icon7\" title=\"执行任务\"></a><a href=\"javascript:;\" class=\""+(item.Status != '正在执行' ? 'del' : 'del disabled')+"\" id=\""+(item.Status != '正在执行' ? 'del' : 'deldisabled')+"\" title='删除'></a></div></td></tr>");
+						})
+						tabArr1();
+						$(".input_checkbox","#batchStart_list").iCheck({
+							checkboxClass: 'icheckbox_minimal-blue',
+							radioClass: 'iradio_minimal-blue',
+							increaseArea: '0' // optional
+						});
+						$("#batchStart_total").text(total_all);
+						if(paging>=fenye_r){
+							paging=fenye_r;
+						}
+						//console.log("paging:"+paging);
+						document.frm_batchList.paging.value=paging;
+						document.getElementById("batchStart_page").value=paging;
+						$("#batchStart_pages").text(fenye_r);
+						$('#check_one_page').iCheck('uncheck');
+						$("table tbody tr input").iCheck('uncheck');
+						check_show();
+						check_num=delect_str.length;
+						$("span.sum").text(check_num);
+					}else{
+						$("span.sum").text(0);
+						$("table tbody tr input").iCheck('uncheck');
+						$("#batchStart_list").empty();
+						$("#batchStart_total").text(total_all);
+						$("#batchStart_pages").text(1);
+						document.frm_batchList.paging.value=1;
+						fenye_r=1;
+						document.getElementById("batchStart_page").value=1;
+					}	
+				}
+			}else{
+				_alert(1,"批量执行",batchStart_result.ErrMsg);
+				$("table tbody tr input").iCheck('uncheck');
+				$("span.sum").text(0);
+				$("#batchStart_total").text(0);
+				$("#batchStart_pages").text(1);
+				document.frm_batchList.paging.value=1;
+				fenye_r=1;
+				document.getElementById("batchStart_page").value=1;
+				return false;
+			}
+		}
+	});
+}
+
+function tabArr1(){
+	$('table').unbind();
+	var tout,tin;
+	var $cloneItem;
+	var z = false;
+
+	$('table').on('mouseover','tbody>tr',function(){
+		document.onclick = null;
+	}).on('mouseout','tbody>tr',function(){
+		document.onclick = function(){
+			$('div.tab-moreinfo-on').hide();
+			$('tr.on').removeClass('on');
+		}
+	}).on('click','tbody>tr',function(e){
+		x=e.target;
+		if(x.id=='del'){
+			return false;
+		}
+		if(x.id=='edit'){
+			return false;
+		}
+		document.onclick = null;
+
+		var $this = $(this);
+		var $tr = $this;
+		var oset = $tr.offset();
+
+		var trc = $tr.attr('class');
+		if(trc && trc.indexOf('on') >=0 ){
+			$('div.tab-moreinfo-on').hide();
+			$('tr.on').removeClass('on');
+			return;
+		}
+
+		$('div.tab-moreinfo-on').hide();
+		$('tr.on').removeClass('on');
+		$tr.addClass('on');
+
+		var $box = $this.parents('div.box-table').parents('.c-cont');
+		var boxh = $box.height() - 40, boxo = $box.offset();
+
+		var $item = $this.children('td:last').children('div.tab-moreinfo');
+		var ih = $item.outerHeight(),th = $tr.outerHeight();
+
+		$cloneItem = $item.clone().addClass('tab-moreinfo-on').appendTo('body');
+
+		if(boxh < oset.top-boxo.top + ih + th - 40 ){
+			$cloneItem.css({
+				top:oset.top - ih,
+				left:oset.left,
+				width:$tr.outerWidth() - 1,
+				opacity:0,
+				display:'block'
+			}).stop().animate({
+				opacity:1
+			});
+		}else{
+			$cloneItem.css({
+				top:oset.top + $tr.outerHeight() + 1,
+				left:oset.left,
+				width:$tr.outerWidth() - 1,
+				opacity:0,
+				display:'block'
+			}).stop().animate({
+				opacity:1
+			});
+		}
+	})
+	
+	$('.box-table,body,.c-cont2,.c-cont').on('scroll',function(){
+		$('div.tab-moreinfo-on').remove();
+		$('tr.on').removeClass('on');
+	})
+	
+	var len = $("#batchStart_list").find('.tab-ctr:first').children('a').length;
+	//console.log("len："+len);
+	$('table>thead>tr>th:last').width(len*26);
+}
+
+function update_list_id() {
+	var search_typeall=search_typeall_r+search_typeall_new;
+	var taskid=document.frm_batchList.taskid.value;
+	var jsondata = {
+		"LoginUserCode": window.parent.document.frm.us.value,
+		"limitrow":null,
+		"offsetrow":null
+	}
+	$.ajax({
+		url: "/bhost/GetBatchStart_list",
+		type:"POST",
+		async:true,
+		data:{a0:$("input[name=se]").val(),a1:JSON.stringify(jsondata)},
+		success:function(result){
+			var batchStart_result = JSON.parse(result);
+			if (batchStart_result.Result){
+				var batchStart_data = batchStart_result.info;
+				var batchStart_array=[];
+				 for(var i=0;i<batchStart_data.data.length;i++){
+                        batchStart_array.push(''+batchStart_data.data[i].BatchPlanId);
+                }
+			}else{
+				_alert(1,'批量执行',batchStart_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+//分页 and 刷新
+function batchStart_page(num){
+	var paging=parseInt(document.frm_batchList.paging.value)+num;
+	if(paging==0 || paging==fenye_r+1){
+		return false;
+	}
+	delect_save();
+	var batchStart_list_s = [];
+	if (num == 0.1){
+		var paging = 1;
+	}else if(num == 0.9){
+		var paging=fenye_r;
+	}
+	document.getElementById("batchStart_page").value=paging;
+	document.frm_batchList.paging.value=paging;
+	show_batchStart_list();
+}
+var click_all=false;
+//全选按钮
+function click_all_list(){
+	delect_save();
+	//console.log(batchStart_array);
+	//console.log(delect_str);
+	if(batchStart_array.length==delect_str.length){
+		delect_str=new Array();
+	}else{
+		delect_str=batchStart_array;
+	}
+	//console.log("after");
+	//console.log(batchStart_array);
+	//console.log(delect_str);	
+	show_batchStart_list();
+}
+//刷新
+function clear_all(){
+	$("table tbody tr input").iCheck('uncheck');
+	delect_str=new Array();
+	check_num=0;
+	$("span.sum").text(check_num);
+}
+//删除函数
+function delete_fun(delect_str_1){
+	$.ajax({
+		url: '/bhost/DelBatchStartTask',
+		type: "POST",
+		async:false,
+		data: {a0:$("input[name=se]").val(),a1:delect_str_1,a10:"批量执行"},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				batchStart_page(0);
+				_alert(0,"批量执行","删除成功");
+			}else{
+				batchStart_page(0);
+				_alert(1,"批量执行",result.ErrMsg);
+				return false;
+			}	
+		}
+	});
+}
+//删除按钮
+function delete_list(){
+	delect_save();
+	if(delect_str.length == 0){
+		_alert(2,"批量执行","请选择要删除的数据");
+		return false;
+	}
+	//利用对话框返回的值 （true 或者 false）  
+	$('.btn').blur();parent.layer.open({
+		type:1,
+		title: '批量执行',
+		content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		yes:function(i){
+			parent.layer.close(i);
+			delete_fun(delect_str.join(',')); 
+			delect_str=new Array();
+			check_num=0;
+			$("span.sum").text(check_num);
+		}
+	});
+}
+$(function(){
+	
+	$("#batchStart_data").on("click",function(){
+		parent.reload();
+	});
+})
+
+</script>
+<script type="text/javascript">
+	var BatchTasktotal_all_r = 0;
+	//总数
+	var BatchTaskfenye_r = 0;
+	var BatchTask_array = null;
+	//总页码
+	var BatchTasksearch_typeall_r = '';
+	//关键字
+	function save_BatchTask() {
+		$('#two').hide();
+		show_batchStart_list();
+		$('#one').show();
+		$('#three').hide();
+		
+	}
+	$(function () {
+		$("#BatchTask_select").change(function () {
+			var type = $(this).val();
+			if (type == 0) {
+				$("#BatchTask_text").hide();
+				$('#BatchTaskfilterWW').hide();
+				$('#BatchTaskclearFilter').hide();
+			} else {
+				$("#BatchTask_text").show();
+				if ($('#BatchTaskfilterWW ul li').length) {
+					$('#BatchTaskfilterWW').show();
+					$('#BatchTaskclearFilter').show();
+				}
+			}
+		});
+		//输入数字
+		$("#BatchTask_page").bind('keydown', function (e) {
+			DigitInput(e);
+		});
+		//页码显示
+		$("#BatchTaskpage_nums").val(MAX_PAGE);
+		//tr双击事件
+		$("#BatchTask_list").on('dblclick','tr',function(e){
+			var id = $(this).find("td");
+			BatchTaskDetailsId = $(id).eq(1).text();
+			BatchTaskDetailssearch_typeall_r = '';
+			BatchTaskDetailssearch_typeall_new='';
+			BatchTaskDetailspaging=1;
+			$('#one').hide();
+			$('#two').hide();
+			$('#three').show();
+			$('#BatchTaskDetailsfilterWW ul').empty();
+			$('#BatchTaskDetails_text').val('');
+			$('#BatchTaskDetails_select').val(0).trigger('change');
+			$(this).trigger('click');
+			//list show
+			show_BatchTaskDetails_list();
+		}) .on("click", "tr", function (e) {
+			x = e.target;
+			//二次测试按钮
+			if (x.id == 'second_do') {
+				var task_id=$(this).find("td").eq(1).text();
+				$.ajax({
+					url: "/bhost/start_connecttask",
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: task_id },
+					success: function (result) {
+						var result=JSON.parse(result);
+						if(result.Result){
+							if(result.info){
+								BatchTask_page(0);
+							}else{
+								_alert(1,'测试任务','二次测试失败');
+								return false;
+							}
+						}else{
+							_alert(1,'测试任务',result.ErrMsg);
+							return false;
+						}
+					}
+				});
+			}else if(x.id == 'icon5') {
+				var id = $(this).find("td");
+				BatchTaskDetailsId = $(id).eq(1).text();
+				BatchTaskDetailssearch_typeall_r = '';
+				BatchTaskDetailssearch_typeall_new='';
+				BatchTaskDetailspaging=1;
+				$('#one').hide();
+				$('#two').hide();
+				$('#three').show();
+				$('#BatchTaskDetailsfilterWW ul').empty();
+				$('#BatchTaskDetails_text').val('');
+				$('#BatchTaskDetails_select').val(0).trigger('change');
+				$(this).trigger('click');
+				//list show
+				show_BatchTaskDetails_list();
+			}
+		});
+		
+	})
+	//刷新
+	function BatchTask_clear_all() {
+	}
+	function BatchTask_addFilter(obj, type) {
+		var id = $(obj).parent().children('select').children('option:selected').val();
+		if (id == "0") {
+			$('#BatchTaskfilterWW>ul').empty();
+			BatchTasksearch_typeall_r = "";
+			BatchTasksearch_typeall_new = '';
+			$(obj).parent().children('input[type=text]').val('');
+			BatchTask_page(0.1);
+			return false;
+		}
+		var v1 = $(obj).parent().children('select').children('option:selected').text();
+		var v2 = $.trim( $(obj).parent().children('input[type=text]').val());
+
+		if (v2 == '') {
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+			return false;
+		} else {
+			if (id == 'Name' && !nameReg.test(v2)) {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+			if (BatchTasksearch_typeall_r.indexOf(id + '-' + v2 + '\t') >= 0) {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '关键字重复', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+
+			if (type) {
+				BatchTasksearch_typeall_r = BatchTasksearch_typeall_r + id + '-' + v2 + '\t';
+				BatchTasksearch_typeall_new = '';
+				$('#BatchTaskfilterWW>ul').append('<li><span style = "display:none">' + id + '-' + v2 + '</span><span class="ww">' + v1 + '-' + v2 + '</span><i class="del" onclick="BatchTask_delFilter(this);"></i></li>')
+				$("#BatchTask_text").val('');
+				BatchTaskselView();
+			} else {
+				BatchTasksearch_typeall_new = id + '-' + v2 + '\t';
+			}
+		}
+		BatchTask_page(0.1);
+	}
+	var BatchTasksearch_typeall_new = '';
+	function BatchTask_delFilter(obj) {
+		var id = $(obj).parent().find("span");
+		var ids = $(id).eq(1).text();
+		BatchTasksearch_typeall_r = BatchTasksearch_typeall_r.replace(ids + '\t', '');
+		var BatchTask_text = $.trim( $('#BatchTask_text').val());
+		if (BatchTask_text == '') {
+			BatchTasksearch_typeall_new == '';
+		} else {
+			BatchTasksearch_typeall_new = $('#BatchTask_select').val() + '-' + BatchTask_text + '\t';
+		}
+		$(obj).parent().remove();
+		BatchTaskselView();
+		BatchTask_page(0.1);
+	}
+	function BatchTask_BatchTaskclearFilter(obj) {
+		$('#BatchTaskclearFilter').next().children('ul').empty();
+		$('#BatchTask_text').val('');
+		BatchTasksearch_typeall_new = '';
+		BatchTasksearch_typeall_r = '';
+		$('#BatchTaskclearFilter').hide();
+		BatchTaskselView();
+		BatchTask_page(0.1);
+	}
+	function BatchTaskselView() {
+		var $sel = $('#BatchTaskfilterWW');
+		var len = $('li', $sel).length;
+		if (len == 0) {
+			$sel.hide();
+			$('#BatchTaskclearFilter').hide();
+		} else {
+			$("#BatchTaskfilterWW").show();
+			$('#BatchTaskclearFilter').show();
+			$('>span.ww', $sel).show();
+			$sel.addClass('selector-multiple');
+		}
+	}
+	//input回车触发事件
+	function BatchTaskshowMsg() {
+		var cur = $("#BatchTask_page").val();
+		cur=cur.replace(/\D/g, "");
+		if(cur=='' || parseInt(cur) < 1){
+			cur=1;
+		}else if (parseInt(cur)>BatchTaskfenye_r) {
+			cur=BatchTaskfenye_r;
+		}
+		if (parseInt(cur) ==parseInt(BatchTaskfenye_r)) {
+			$("#BatchTask_page").val(cur);
+			return false;
+		} 
+		BatchTaskpaging = cur;
+		show_BatchTask_list();
+	}
+	var BatchTaskpaging=1
+	//以每页显示数显示列表函数
+	function show_BatchTask_list() {		
+		var paging=BatchTaskpaging
+		var page_num = MAX_PAGE;
+		var search_typeall = BatchTasksearch_typeall_r + BatchTasksearch_typeall_new;
+		var offsetrow = (paging-1)*page_num;
+		if(offsetrow < 0){
+			offsetrow = 0;
+		}		
+		var jsondata_task = {
+			"batchplanid": BatchTaskId,					//计划id
+			"limitrow": page_num,									//查找几条
+			"offsetrow": offsetrow							//查找前忽略几条
+		}		
+		$.ajax({
+			url: "/bhost/get_batch_task",
+			type: "POST",
+			async: false,
+			data: { a0: $("input[name=se]").val(),a1:JSON.stringify(jsondata_task)},
+			success: function (result) {
+				var BatchTask_result = JSON.parse(result);
+				// var has_finish=false;
+				if (BatchTask_result.Result == true) {
+					var BatchTask_data = BatchTask_result.info;
+					var total_all = BatchTask_data.totalrow;
+					if (total_all % MAX_PAGE == 0) {
+						BatchTaskfenye_r = parseInt(total_all / MAX_PAGE);
+					} else {
+						BatchTaskfenye_r = parseInt(total_all / MAX_PAGE) + 1;
+					}
+					if (BatchTask_data.data == "" && paging != "1") {
+						BatchTask_page(0.9);
+					} else {
+						//total = 0;
+						BatchTasktotal_all_r = total_all;
+						if (total_all) {
+							$("#BatchTask_list").empty();
+							$.each(BatchTask_data.data, function (i, item) {
+								switch (item.Status) {//0-未执行，1-队列中，2-执行中 3-执行完成 4-执行异常
+									case 0: item.Status = '未执行'; break;
+									case 1: item.Status = '队列中'; break;
+									case 2: item.Status = '执行中'; break;
+									case 3: item.Status = '执行完成'; break;
+									case 4: item.Status = '执行异常'; break;
+									default: break;
+								}
+								item.LoginFailCount=item.LoginFailCount||0;
+								item.BatchFailCount=item.BatchFailCount||0;
+								item.BatchPlanName =item.BatchPlanName||'';
+								item.StartTime=item.StartTime||'';
+								item.EndTime=item.EndTime||'';
+								item.TotalCount=item.TotalCount||0;
+								item.SuccCount=item.SuccCount||0;
+								$("#BatchTask_list").append("<tr>" +
+									// "<td title='" +item.BatchPlanName + "'>" + item.BatchPlanName + "</td>" +
+									"<td title='" + item.RunTime.replace('T',' ') + "'>" + item.RunTime.replace('T',' ') + "</td>" +
+									"<td style = \"display:none\">" + item.BatchTaskId + "</td>" +
+									//"<td title='" +item.EndTime + "'>" + item.EndTime + "</td>" +
+									"<td>" +  item.TotalCount + "</td>" +
+									"<td>" + item.SuccCount + "</td>" +
+									"<td>" + item.ErrCount + "</td>" +
+									"<td>" + item.UnknowCount + "</td>" +
+									"<td>" + item.Status + "</td>" +
+									"<td class=\"last_td\"><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"icon5\" id=\"icon5\" title='测试结果'></a>"+"</div>"+
+									"</td></tr>");
+							});
+							tabArr();
+							$(".input_checkbox", "#BatchTask_list").iCheck({
+								checkboxClass: 'icheckbox_minimal-blue',
+								radioClass: 'iradio_minimal-blue',
+								increaseArea: '0' // optional
+							});
+							$("#BatchTask_total").text(total_all);
+
+							if (paging >= BatchTaskfenye_r) {
+								paging = BatchTaskfenye_r;
+							}
+							BatchTaskpaging = paging;
+							document.getElementById("BatchTask_page").value = paging;
+							$("#BatchTask_pages").text(BatchTaskfenye_r);
+							// $('#BatchTask_list').prev('thead').find('th').last().css('width',has_finish?'50px':'25px'); 
+							// //console.log(has_finish?'50px;':'25px;');
+						} else {
+							$("#BatchTask_list").empty();
+							$("#BatchTask_total").text(total_all);
+							$("#BatchTask_pages").text(1);
+							BatchTaskpaging = 1;
+							BatchTaskfenye_r = 1;
+							document.getElementById("BatchTask_page").value = 1;
+							// $('#BatchTask_list').prev('thead').find('th').last().css('width',has_finish?'50px':'25px'); 
+							// //console.log(has_finish?'50px;':'25px;');
+						}
+					}
+				} else {
+					_alert(1, "测试任务", BatchTask_result.ErrMsg);
+					$("#BatchTask_total").text(0);
+					$("#BatchTask_pages").text(1);
+					BatchTaskpaging = 1;
+					BatchTaskfenye_r = 1;
+					document.getElementById("BatchTask_page").value = 1;
+					// $('#BatchTask_list').prev('thead').find('th').last().css('width',has_finish?'50px':'25px'); 
+					// //console.log(has_finish?'50px;':'25px;');
+					return false;
+				}
+			}
+		});
+
+	}
+	//分页 and 刷新
+	function BatchTask_page(num) {
+		var paging = parseInt(BatchTaskpaging) + num;
+		if (paging == 0 || paging == BatchTaskfenye_r + 1) {
+			return false;
+		}
+		var BatchTask_list_s = [];
+		if (num == 0.1) {
+			paging = 1;
+		} else if (num == 0.9) {
+			paging = BatchTaskfenye_r;
+		}
+		document.getElementById("BatchTask_page").value = paging;
+		BatchTaskpaging = paging;
+		show_BatchTask_list();
+	}
+
+</script>
+
+<script type="text/javascript">
+	var BatchTaskDetailstotal_all_r = 0;
+	//总数
+	var BatchTaskDetailsfenye_r = 0;
+	var BatchTaskDetails_array = null;
+	//总页码
+	var BatchTaskDetailssearch_typeall_r = '';
+	//关键字
+	function save_BatchTaskDetails() {
+		$('#two').show();
+		$('#one').hide();
+		$('#three').hide();
+		show_BatchTask_list();
+	}
+	$(function () {
+		$("#BatchTaskDetails_select").change(function () {
+			var type = $(this).val();
+			if (type == 0) {
+				$("#BatchTaskDetails_text").hide();
+				$('#BatchTaskDetailsfilterWW').hide();
+				$('#BatchTaskDetailsclearFilter').hide();
+			} else {
+				$("#BatchTaskDetails_text").show();
+				if ($('#BatchTaskDetailsfilterWW ul li').length) {
+					$('#BatchTaskDetailsfilterWW').show();
+					$('#BatchTaskDetailsclearFilter').show();
+				}
+			}
+		});
+		//输入数字
+		$("#BatchTaskDetails_page").bind('keydown', function (e) {
+			DigitInput(e);
+		});
+		//页码显示
+		$("#BatchTaskDetailspage_nums").val(MAX_PAGE);
+		//tr双击事件
+		$("#BatchTaskDetails_list").on("click", "tr", function (e) {
+			x = e.target;
+			//下载
+			if (x.id == 'icon6') {
+				
+			}
+		});
+		
+	})
+	//刷新
+	function BatchTaskDetails_clear_all() {
+	}
+	function BatchTaskDetails_addFilter(obj, type) {
+		var id = $(obj).parent().children('select').children('option:selected').val();
+		if (id == "0") {
+			$('#BatchTaskDetailsfilterWW>ul').empty();
+			BatchTaskDetailssearch_typeall_r = "";
+			BatchTaskDetailssearch_typeall_new = '';
+			$(obj).parent().children('input[type=text]').val('');
+			BatchTaskDetails_page(0.1);
+			return false;
+		}
+		var v1 = $(obj).parent().children('select').children('option:selected').text();
+		var v2 = $.trim( $(obj).parent().children('input[type=text]').val());
+
+		if (v2 == '') {
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+			return false;
+		} else {
+			if (id == 'Name' && !nameReg.test(v2)) {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+			if (BatchTaskDetailssearch_typeall_r.indexOf(id + '-' + v2 + '\t') >= 0) {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '关键字重复', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+
+			if (type) {
+				BatchTaskDetailssearch_typeall_r = BatchTaskDetailssearch_typeall_r + id + '-' + v2 + '\t';
+				BatchTaskDetailssearch_typeall_new = '';
+				$('#BatchTaskDetailsfilterWW>ul').append('<li><span style = "display:none">' + id + '-' + v2 + '</span><span class="ww">' + v1 + '-' + v2 + '</span><i class="del" onclick="BatchTaskDetails_delFilter(this);"></i></li>')
+				$("#BatchTaskDetails_text").val('');
+				BatchTaskDetailsselView();
+			} else {
+				BatchTaskDetailssearch_typeall_new = id + '-' + v2 + '\t';
+			}
+		}
+		BatchTaskDetails_page(0.1);
+	}
+	var BatchTaskDetailssearch_typeall_new = '';
+	function BatchTaskDetails_delFilter(obj) {
+		var id = $(obj).parent().find("span");
+		var ids = $(id).eq(1).text();
+		BatchTaskDetailssearch_typeall_r = BatchTaskDetailssearch_typeall_r.replace(ids + '\t', '');
+		var BatchTaskDetails_text = $.trim( $('#BatchTaskDetails_text').val());
+		if (BatchTaskDetails_text == '') {
+			BatchTaskDetailssearch_typeall_new == '';
+		} else {
+			BatchTaskDetailssearch_typeall_new = $('#BatchTaskDetails_select').val() + '-' + BatchTaskDetails_text + '\t';
+		}
+		$(obj).parent().remove();
+		BatchTaskDetailsselView();
+		BatchTaskDetails_page(0.1);
+	}
+	function BatchTaskDetails_BatchTaskDetailsclearFilter(obj) {
+		$('#BatchTaskDetailsclearFilter').next().children('ul').empty();
+		$('#BatchTaskDetails_text').val('');
+		BatchTaskDetailssearch_typeall_new = '';
+		BatchTaskDetailssearch_typeall_r = '';
+		$('#BatchTaskDetailsclearFilter').hide();
+		BatchTaskDetailsselView();
+		BatchTaskDetails_page(0.1);
+	}
+	function BatchTaskDetailsselView() {
+		var $sel = $('#BatchTaskDetailsfilterWW');
+		var len = $('li', $sel).length;
+		if (len == 0) {
+			$sel.hide();
+			$('#BatchTaskDetailsclearFilter').hide();
+		} else {
+			$("#BatchTaskDetailsfilterWW").show();
+			$('#BatchTaskDetailsclearFilter').show();
+			$('>span.ww', $sel).show();
+			$sel.addClass('selector-multiple');
+		}
+	}
+	//input回车触发事件
+	function BatchTaskDetailsshowMsg() {
+		var cur = $("#BatchTaskDetails_page").val();
+		cur=cur.replace(/\D/g, "");
+		if(cur=='' || parseInt(cur) < 1){
+			cur=1;
+		}else if (parseInt(cur)>BatchTaskDetailsfenye_r) {
+			cur=BatchTaskDetailsfenye_r;
+		}
+		////console.log(cur);
+		if (parseInt(cur) ==parseInt(BatchTaskDetailspaging)) {
+			$("#BatchTaskDetails_page").val(cur);
+			return false;
+		} 
+		BatchTaskDetailspaging = cur;
+		show_BatchTaskDetails_list();
+	}
+	var BatchTaskDetailspaging=1
+	var BatchTaskDetailsId=0;
+	//以每页显示数显示列表函数
+	function show_BatchTaskDetails_list() {
+		var paging=BatchTaskDetailspaging
+		var page_num = MAX_PAGE;
+		var search_typeall = BatchTaskDetailssearch_typeall_r + BatchTaskDetailssearch_typeall_new;
+		var jsondata_task = {	
+			"batchtaskid": BatchTaskDetailsId,					//任务id
+			//"accountname":"plan1",			//账号名
+			//"hostname": "1",						//主机名
+			//"protocol": "1" ,						//协议
+			//"hostservicename":"ssh",		//主机服务名
+			"limitrow": page_num,
+			"offsetrow": (paging-1)*page_num
+		}
+		$.ajax({
+			url: "/bhost/get_batch_taskdetails",
+			type: "POST",
+			async: false,
+			data: { a0: $("input[name=se]").val(), a1: JSON.stringify(jsondata_task)},
+			success: function (result) {
+				var BatchTaskDetails_result = JSON.parse(result);
+				if (BatchTaskDetails_result.Result == true) {
+					var BatchTaskDetails_data = BatchTaskDetails_result.info;
+					var total_all = BatchTaskDetails_data.totalrow;
+					if (total_all % MAX_PAGE == 0) {
+						BatchTaskDetailsfenye_r = parseInt(total_all / MAX_PAGE);
+					} else {
+						BatchTaskDetailsfenye_r = parseInt(total_all / MAX_PAGE) + 1;
+					}
+					if (BatchTaskDetails_data.data == "" && paging != "1") {
+						BatchTaskDetails_page(0.9);
+					} else {
+						//total = 0;
+						BatchTaskDetailstotal_all_r = total_all;
+						if (total_all) {
+							$("#BatchTaskDetails_list").empty();
+							$.each(BatchTaskDetails_data.data, function (i, item) {
+								//if (total<page_num){
+								//total++;//
+								switch (item.Status) {//0未执行；1正在执行；2成功；3失败；4结果未知；5审批失败
+									case 0: item.Status = '未执行'; break;
+									case 1: item.Status = '正在执行'; break;
+									case 2: item.Status = '成功'; break;
+									case 3: item.Status = '失败'; break;
+									case 4: item.Status = '结果未知'; break;
+									case 5: item.Status = '审批失败'; break;
+									default: break;
+								}
+								item.ExeResultLog.replace('/\n/g','\\n');
+                                                                var float_str = "执行结果: "+item.ExeResultLog.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;").replace(/\n/g, "<p>");
+
+								// if(item.ExeResultLog == ""){
+								// 	float_str = ;
+								// }
+								$("#BatchTaskDetails_list").append("<tr>" +
+									"<td title='" + (item.RunTime == null ? '' : item.RunTime.replace('T',' ')) + "'>" + (item.RunTime == null ? '' : item.RunTime.replace('T',' ')) + "</td>" +
+									"<td style = \"display:none\">" + item.BatchTaskId + "</td>" +
+									// "<td title='" + (item.EndTime == null ? '' : item.EndTime) + "'>" + (item.EndTime == null ? '' : item.EndTime) + "</td>" +
+									"<td title='"+ (item.HostIP == null ? '' : item.HostIP) +"'>" + (item.HostIP == null ? '' : item.HostIP) + "</td>" +
+									"<td title='"+ (item.HostName == null ? '' : item.HostName) +"'>" +  (item.HostName == null ? '' : item.HostName) + "</td>" +
+									
+									"<td title='"+ (item.Protocol == null ? '' : item.Protocol) +"'>" + (item.Protocol == null ? '' : item.Protocol) + "</td>" +
+									// "<td>" + (item.Port == null ? '' : item.Port) + "</td>" +
+									"<td title='"+ (item.AccountName == null ? '' : item.AccountName) +"'>" + (item.AccountName == null ? '' : item.AccountName) + "</td>" +
+									"<td title='"+ item.Status+ "'>" + item.Status + "</td>" +
+									"<td><div class=\"tab-ctr\"></div><div class=\"tab-moreinfo\">" + float_str + "</div></td></tr>"
+								);
+							})
+							
+							tabArr();
+							$(".input_checkbox", "#BatchTaskDetails_list").iCheck({
+								checkboxClass: 'icheckbox_minimal-blue',
+								radioClass: 'iradio_minimal-blue',
+								increaseArea: '0' // optional
+							});
+							$("#BatchTaskDetails_total").text(total_all);
+
+							if (paging >= BatchTaskDetailsfenye_r) {
+								paging = BatchTaskDetailsfenye_r;
+							}
+							BatchTaskDetailspaging = paging;
+							document.getElementById("BatchTaskDetails_page").value = paging;
+							$("#BatchTaskDetails_pages").text(BatchTaskDetailsfenye_r);
+							$('#BatchTaskDetails_list').prev('thead').find('th').last().css('width','0.1%');
+						} else {
+							$("#BatchTaskDetails_list").empty();
+							$("#BatchTaskDetails_total").text(total_all);
+							$("#BatchTaskDetails_pages").text(1);
+							BatchTaskDetailspaging = 1;
+							BatchTaskDetailsfenye_r = 1;
+							document.getElementById("BatchTaskDetails_page").value = 1;
+							$('#BatchTaskDetails_list').prev('thead').find('th').last().css('width','0.1%');
+						}
+					}
+				} else {
+					_alert(1, "测试结果", BatchTaskDetails_result.ErrMsg);
+					$("#BatchTaskDetails_total").text(0);
+					$("#BatchTaskDetails_pages").text(1);
+					BatchTaskDetailspaging = 1;
+					BatchTaskDetailsfenye_r = 1;
+					document.getElementById("BatchTaskDetails_page").value = 1;
+					$('#BatchTaskDetails_list').prev('thead').find('th').last().css('width','0.1%');
+					return false;
+				}
+			}
+		});
+
+	}
+	//分页 and 刷新
+	function BatchTaskDetails_page(num) {
+		var paging = parseInt(BatchTaskDetailspaging) + num;
+		if (paging == 0 || paging == BatchTaskDetailsfenye_r + 1) {
+			return false;
+		}
+		var BatchTaskDetails_list_s = [];
+		if (num == 0.1) {
+			paging = 1;
+		} else if (num == 0.9) {
+			paging = BatchTaskDetailsfenye_r;
+		}
+		document.getElementById("BatchTaskDetails_page").value = paging;
+		BatchTaskDetailspaging = paging;
+		show_BatchTaskDetails_list();
+	}
+
+</script>
+</body>
+</html>

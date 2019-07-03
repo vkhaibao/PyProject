@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+	<!---->
+	<div class="rwrap">
+		<!---->
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3 onclick="parent.reload();">设备类型</h3>
+				-->
+				<div class="manual-head" style="width:100px;float:left;">
+					<div class="manual-title">
+						<span id="devicetype_reload" style="cursor: pointer;">设备类型</span>
+						<i class="devicetype_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			
+			<div class="container">
+
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table">
+							<div class="tab-t">
+								<div class="ctr" style="width:280px;">
+									{%if 14 in manage_power_id %}
+									<a href="javascript:;" class="btn btn-default" onclick="create_devicetype();">创建</a>
+									<a href="javascript:;" class="btn btn-default" onclick="delete_all();">删除</a>
+									<a href="javascript:;" class="btn btn-default" onclick="select_all();">全选</a>
+									{%endif%}
+									<a href="javascript:;" class="btn btn-default" style="margin-right:0px;" onclick="refresh();">刷新</a>
+								</div>
+
+								<div class="filter">
+									<div class="search">
+										<select name="" id="filter_select" class="filter-select" onchange="change_filter(this);" style="width:120px;">
+											<option value="0">所有</option>
+											<option value="1">名称</option>
+											<option value="2">描述</option>
+											<option value="3">状态</option>
+											<option value="4">账号切换命令</option>
+											<option value="5">切换密码提示</option>
+										</select>
+										<select name="" id="status_select" class="filter-select" style="display: none;">
+											<option value="3" selected>所有</option>
+											<option value="0">显示</option>
+											<option value="1">隐藏</option>
+										</select>
+										<input type="text" class="filter-text" placeholder="输入关键字" id="keyword" style="padding: 0 22px 0 4px;" onkeydown="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return;" onchange="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();}" onkeyup="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();}" onblur="change_input(this);">
+										
+										
+										<i class="v-check v-wrong" id="text_check" onclick="_clear_keyword(this)" style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<button class="btn filter-btn" onclick="_addFilter(this,false)"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 10px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display: none;">
+										<span class="ww">搜索条件</span>
+										<ul></ul>
+									</div>
+								</div>
+							</div>
+							<div class="box-table">
+							<table cellpadding="0" cellspacing="0" id="devicetype_list">
+								<thead>
+									<tr><th width="50"><input type="checkbox" class="form-checkbox" id="check_page"/></th>
+										<th>名称</th>
+										<th>账号切换命令</th>
+										<th>切换密码提示</th>
+										<th>描述</th>
+										<th>状态</th>
+										{%if 14 in manage_power_id %}
+										<th width="60"></th>
+										{%else%}
+										<th width="20"></th>
+										{%endif%}
+									</tr>
+								</thead>
+
+								<tbody>
+
+								</tbody>
+							</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_total">10</span>条 总数：<span id = "devicetype_total">25</span>  选中：<span id = "select_total">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" onclick="firstpage()"><i></i></a>
+									<a href="javascript:;" class="nav prev" onclick="prevpage()"><i></i></a>
+									<input type="text" value="1" id="curpage" onchange="jumppage()">/&nbsp;<span id = "totalpage">25</span>
+									<a href="javascript:;" class="nav next" onclick="nextpage()"><i></i></a>
+									<a href="javascript:;" class="nav2 end" onclick="lastpage()"><i></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="clearfix"></div>
+						<!--
+						<div class="btns" id="bBtn" style="position: fixed;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+							<a href="javascript:;" class="btn btn-normal" onclick="back();">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+					</div>
+				</div>
+			</div>
+			<div id="bBtn" style="position: fixed;">
+				<a href="javascript:;" class="btn" style="float: right;" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+			</div>
+		</div>
+		
+	</div>
+	<form action="/bhost/access_user_index" method="POST" name="frm_access">
+		<input type="hidden" name="a0" id = "a0" value="" />
+		<input type="hidden" name="z1" id = "z1" value="" />
+		<input type="hidden" name="z2" id = "z2" value="" />
+		<input type="hidden" name="z3" id = "z3" value="" />
+		<input type="hidden" name="z4" id = "z4" value="" />
+		<input type="hidden" name="z5" id = "z5" value="" />
+		<input type="hidden" name="z6" id = "z6" value="" />
+		<input type="hidden" name="tasktype" id = "tasktype" value="" />
+		<input type="hidden" name="us"  value="zdp" />
+	</form>
+
+
+<script>
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+
+<script>
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+
+<!---->
+<script>
+var nameReg = /^[_\-.\n\w\u4e00-\u9fa5]*$/;
+var now = "{{now}}";
+var tasktype = "{{tasktype}}";
+var keyword_re = {{keyword|safe}};
+var filter_flag = {{filter_flag}};
+var selectid = {{selectid|safe}};
+var se;
+var manage_power_id = {{manage_power_id}};
+var keyword_v = "";
+$(function(){
+	$("#devicetype_reload").on("click",function(){
+		parent.reload();
+	});
+	se = window.parent.document.frm.se.value;
+	parent._switchBtn(1);
+	$("#status_select").hide();
+	$("#status_select").next().hide();
+	$("#status_select").next('span').find('span.select2-selection').css({"border-bottom-left-radius":"1px","border-top-left-radius":"1px","margin-left":"-1px"})
+	$("#keyword").show();
+	if (keyword_re != "" && keyword_re != "None"){
+		var key_len = keyword_re.length;
+		var filter_value = 0;
+		$.each(keyword_re,function(i,item){
+			var filter = item.split('-');
+			filter_value = filter[0];
+			var filter_v = item.substring(2);
+			if (filter_flag == 1){
+				if (key_len == 1){
+					$("#filter_select").val(filter_value).trigger('change');
+					if (filter_value == "3"){
+						$("#status_select").val(filter[1]).trigger('change');
+					}else{
+						$("#keyword").val(item.substring(2));
+					}
+					keyword_v = item;
+					return false;
+				}else{
+					if (i+1 != key_len){
+						$("#filterWW").show();
+						$("#clearFilter").show();
+						if (filter_value == "1"){
+							filter_v = "名称-" + filter_v;
+						}else if (filter_value == "2"){
+							filter_v = "描述-" + filter_v;
+						}else if (filter_value == "3"){
+							if (filter_v == "0"){
+								filter_v = "显示";
+							}else if (filter_v == "1"){
+								filter_v = "隐藏";
+							}
+							filter_v = "状态-" + filter_v;
+						}else if (filter_value == "4"){
+							filter_v = "账号切换命令-" + filter_v;
+						}else if (filter_value == "5"){
+							filter_v = "切换密码提示-" + filter_v;
+						}
+						$("#filterWW ul").append("<li><span class=\"ww\" data-value=\""+item+"\">"+filter_v+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");	
+					}else{
+						if (filter_value == "3"){
+							$("#status_select").val(filter_v).trigger('change');
+						}else{
+							$("#keyword").val(item.substring(2));
+						}
+						keyword_v = item;
+					}
+				}
+				$("#keyword").focus();
+				$("#text_check").show();
+			}else{
+				$("#filterWW").show();
+				$("#clearFilter").show();
+				
+				if (filter_value == "1"){
+					filter_v = "名称-" + filter_v;
+				}else if (filter_value == "2"){
+					filter_v = "描述-" + filter_v;
+				}else if (filter_value == "3"){
+					if (filter_v == "0"){
+						filter_v = "显示";
+					}else if (filter_v == "1"){
+						filter_v = "隐藏";
+					}
+					filter_v = "状态-" + filter_v;
+				}else if (filter_value == "4"){
+					filter_v = "账号切换命令-" + filter_v;
+				}else if (filter_value == "5"){
+					filter_v = "切换密码提示-" + filter_v;
+				}
+				$("#filterWW ul").append("<li><span class=\"ww\" data-value=\""+item+"\">"+filter_v+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+			}
+			if (i+1 == key_len){
+				$("#filter_select").val(filter_value).trigger('change');
+			}
+		});
+		if (now != "" && now != "None"){
+			$('#curpage').val(now);
+		}
+		get_devicetype_list();
+		
+	}else{
+		if (now != "" && now != "None"){
+			$('#curpage').val(now);
+		}
+		get_devicetype_list();
+	}
+})
+
+//下一页
+function nextpage(){
+	var cpage = $("#curpage").val();
+	var total = $("#totalpage").text();
+	var npage = 0;
+	if (total == cpage){
+		return;
+	}else{
+		npage = parseInt(cpage)+1;
+	}
+	$("#curpage").val(npage);
+	get_devicetype_list();
+}
+
+//上一页
+function prevpage(){
+	var cpage = $("#curpage").val();
+	var ppage = 0;
+	if (parseInt(cpage) == 1){
+		return;
+	}else{
+		ppage = parseInt(cpage)-1;
+	}
+	$("#curpage").val(ppage);
+	get_devicetype_list();
+}
+//首页
+function firstpage(){
+	$("#curpage").val(1);
+	get_devicetype_list();
+}
+//末页
+function lastpage(){
+	var cpage = $("#curpage").val();
+	var lpage = $("#totalpage").text();
+	if (cpage == lpage){
+		return;
+	}
+	$("#curpage").val(lpage);
+	get_devicetype_list();
+}
+//跳页
+function jumppage(){
+	var cur = $("#curpage").val();
+	var numReg = /\D/;
+	if (numReg.test(cur)){
+		$("#curpage").val(1);
+		cur = 1;
+	}
+	if (parseInt(cur) < 1 || cur == ""){
+		$("#curpage").val(1);
+		cur = 1;
+	}
+	get_devicetype_list();
+}
+
+function get_devicetype_list(){
+	var curpage = $("#curpage").val();
+	var keyword = JSON.stringify(keyword_re);
+	$.ajax({
+		url:'/bhost/get_devicetype_list',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:MAX_PAGE,z2:curpage,z3:keyword,dsc:true},
+		success:function(result){
+			devicetype_list = JSON.parse(result);
+			$("#devicetype_list tbody").empty();
+			$.each(devicetype_list.data,function(i,item){
+				var status;
+				if (item.Status == 0){
+					status = "显示";
+				}else if (item.Status == 1){
+					status = "隐藏";
+				}else{
+					status = "停用";
+				}
+				var acctswitchcmd;
+				if (item.AcctSwitchCmd == "" || item.AcctSwitchCmd == null){
+					acctswitchcmd = "";
+				}else{
+					acctswitchcmd = item.AcctSwitchCmd;
+				}
+				var switchpasswdprompt;
+				if (item.SwitchPasswdPrompt == "" || item.SwitchPasswdPrompt == null){
+					switchpasswdprompt = "";
+				}else{
+					switchpasswdprompt = item.SwitchPasswdPrompt;
+				}
+				var description;
+				if (item.Description == "" || item.Description == null){
+					description = "";
+				}else{
+					description = item.Description;
+				}
+				var float_str = "";
+				var service_str = "";
+				$.each(item.ServiceSet,function(i1,item1){
+					service_str = service_str + item1.DeviceServiceName + '，';
+				});
+				if (service_str != ""){
+					service_str = service_str.substring(0,service_str.length-1);
+				}
+				float_str = "<p>服务："+service_str+"</p>";
+				/*
+				var protocol_str = "";
+				var param_str = "";
+				var accIP_str = "";
+				var float_str = "";
+				$.each(item.ServiceSet,function(i1,item1){
+					protocol_str = protocol_str + item1.ProtocolName + ',';
+					if (item1.ConnParamName != null){
+						param_str = param_str + item1.ConnParamName + ',';
+					}
+					$.each(item1.AccIPSet,function(i2,item2){
+						accIP_str = accIP_str + item2.AccIP + ',';
+					});
+				});
+				if (protocol_str != ""){
+					protocol_str = protocol_str.substring(0,protocol_str.length-1);
+				}
+				
+				if (param_str != ""){
+					param_str = param_str.substring(0,param_str.length-1);
+				}
+				if (accIP_str != ""){
+					accIP_str = accIP_str.substring(0,accIP_str.length-1);
+				}
+				*/
+				//float_str = "<p>协议："+protocol_str+"</p>"+"<p>连接参数："+param_str+"</p>" + "<p>前置机："+accIP_str+"</p>";
+				var append_str = "";
+				if (item.DeviceTypeId < 1001){
+					append_str += '<tr><td><input disabled="disabled" class="form-checkbox" type="checkbox" name="'+item.DeviceTypeName+'" value="'+item.DeviceTypeId+'"></td><td title="'+item.DeviceTypeName+'">'+item.DeviceTypeName+'</td><td title="'+acctswitchcmd+'">'+acctswitchcmd+'</td><td title="'+switchpasswdprompt+'">'+switchpasswdprompt+'</td><td title="'+description+'">'+description+'</td><td title="'+status+'">'+status+'</td><td><div class="tab-ctr">';
+					if (manage_power_id.indexOf(14) != -1){
+						append_str += '<a href="javascript:;" title="编辑" class="edit" onclick="edit_devicetype('+item.DeviceTypeId+');"></a><a href="javascript:;" class="del disabled" id="del" title="删除" style=""></a></div><div class="tab-moreinfo">'+float_str+'</div></td></tr>';
+					}else{
+						append_str += '<a href="javascript:;" title="查看" class="search_result" onclick="edit_devicetype('+item.DeviceTypeId+');"></a></div><div class="tab-moreinfo">'+float_str+'</div></td></tr>';
+					}
+					
+					//$("#devicetype_list tbody").append('<tr><td><input disabled="disabled" class="form-checkbox" type="checkbox" name="'+item.DeviceTypeName+'" value="'+item.DeviceTypeId+'"></td><td title="'+item.DeviceTypeName+'">'+item.DeviceTypeName+'</td><td title="'+acctswitchcmd+'">'+acctswitchcmd+'</td><td title="'+switchpasswdprompt+'">'+switchpasswdprompt+'</td><td title="'+description+'">'+description+'</td><td title="'+status+'">'+status+'</td><td><div class="tab-ctr"><a href="javascript:;" title="编辑" class="edit" onclick="edit_devicetype('+item.DeviceTypeId+');"></a><a href="javascript:;" class="del disabled" id="del" title="删除" style=""></a></div><div class="tab-moreinfo">'+float_str+'</div></td></tr>');
+				}else{
+					append_str += '<tr><td><input class="form-checkbox" type="checkbox" name="'+item.DeviceTypeName+'" value="'+item.DeviceTypeId+'"></td><td title="'+item.DeviceTypeName+'">'+item.DeviceTypeName+'</td><td title="'+acctswitchcmd+'">'+acctswitchcmd+'</td><td title="'+switchpasswdprompt+'">'+switchpasswdprompt+'</td><td title="'+description+'">'+description+'</td><td title="'+status+'">'+status+'</td><td><div class="tab-ctr">';
+					
+					if (manage_power_id.indexOf(14) != -1){
+						append_str += '<a href="javascript:;" class="edit" title="编辑" onclick="edit_devicetype('+item.DeviceTypeId+');"></a><a href="javascript:;" class="del" id="del" title="删除" onclick="del_devicetype('+item.DeviceTypeId+');"></a></div><div class="tab-moreinfo">'+float_str+'</div></td></tr>';
+					}else{
+						append_str += '<a href="javascript:;" class="search_result" title="查看" onclick="edit_devicetype('+item.DeviceTypeId+');"></a></div><div class="tab-moreinfo">'+float_str+'</div></td></tr>';
+					}
+					//$("#devicetype_list tbody").append('<tr><td><input class="form-checkbox" type="checkbox" name="'+item.DeviceTypeName+'" value="'+item.DeviceTypeId+'"></td><td title="'+item.DeviceTypeName+'">'+item.DeviceTypeName+'</td><td title="'+acctswitchcmd+'">'+acctswitchcmd+'</td><td title="'+switchpasswdprompt+'">'+switchpasswdprompt+'</td><td title="'+description+'">'+description+'</td><td title="'+status+'">'+status+'</td><td><div class="tab-ctr"><a href="javascript:;" class="edit" title="编辑" onclick="edit_devicetype('+item.DeviceTypeId+');"></a><a href="javascript:;" class="del" id="del" title="删除" onclick="del_devicetype('+item.DeviceTypeId+');"></a></div><div class="tab-moreinfo">'+float_str+'</div></td></tr>');
+				}
+				$("#devicetype_list tbody").append(append_str);
+				tabArr();
+				$('#devicetype_list .form-checkbox').iCheck({
+					checkboxClass: 'icheckbox_minimal-blue',
+					radioClass: 'iradio_minimal-blue',
+					increaseArea: '0' 
+				});
+			})
+		}
+	});
+	$("#devicetype_total").text(devicetype_list.totalrow);
+	totalpage = Math.ceil(parseInt(devicetype_list.totalrow)/MAX_PAGE);
+	if (totalpage < 1){
+		totalpage = 1;
+	}
+	$("#totalpage").text(totalpage.toString());
+	$("#page_total").text(MAX_PAGE);
+	$('#check_page').iCheck('uncheck');
+	
+	var check_page_flag = 0;
+	$("#devicetype_list tbody input[type='checkbox']").each(function(){
+		if ($.inArray(parseInt(this.value), selectid) != -1){					
+			$(this).iCheck('check');
+			check_page_flag++;
+		}
+    });
+	if (check_page_flag == $("#devicetype_list tbody input[type='checkbox']").length && check_page_flag != 0){
+		$('#check_page').iCheck('check');
+	}
+	
+	
+	if (parseInt(curpage) > totalpage){
+		$("#curpage").val(totalpage);
+		get_devicetype_list();
+	}
+
+	//绑定列表单击选中
+	/*
+	$("#devicetype_list tbody >tr").unbind().bind("click",function(e){
+		x=e.target;
+		if (x.nodeName != 'A'){
+			var input = $(this).find("input[type='checkbox']");
+			if ($(input).prop('checked') == false && $(input).prop("disabled") == false){
+				$(input).iCheck('check');
+			}else{
+				$(input).iCheck('uncheck');
+			}
+		}
+	})
+	*/
+	$("#devicetype_list tbody >tr").bind("dblclick",function(e){
+		x=e.target;
+		if (x.nodeName != "INS"){
+			$(this).children('td:last').find('.edit').click();
+			$(this).children('td:last').find('.search_result').click();
+		}
+	});
+	$('#check_page').on('ifClicked',function(e){
+		
+		if(!$('#check_page').prop('checked')){
+			$("#devicetype_list tbody input[type='checkbox']").each(function(){
+				if (!$(this).prop("disabled")){
+					$(this).iCheck('check');   
+				}
+			}) 
+		}else{
+			$("#devicetype_list").children('tbody').find('input[type=checkbox]').iCheck('uncheck');
+		}
+		
+	});
+	var flag_id = 0;	
+	num = selectid.length;
+	$("#select_total").text(num);
+
+	$("#devicetype_list tbody input[type='checkbox']").on("ifChanged",function(){
+		if ($(this).is(":checked")){
+			num = $("#select_total").text();   
+			num++;
+			if (selectid.indexOf(parseInt(this.value)) == -1){
+				selectid.push(parseInt(this.value))	
+			}
+			$("#select_total").text(num);
+		}else{
+			num = $("#select_total").text();
+			num--;
+			selectid.splice($.inArray(parseInt(this.value),selectid),1);
+			$("#select_total").text(num);   
+		}
+		var check_num = 0;
+		$("#devicetype_list tbody input[type='checkbox']").each(function(){
+			if (!$(this).prop("disabled")){
+				check_num++;
+			}
+		}) 
+		if ($("#devicetype_list tbody").find('input[type=checkbox]:checked').length == check_num){
+			$('#check_page').iCheck('check');
+		}else{
+			$('#check_page').iCheck('uncheck');
+		}
+	});
+}
+
+//全选
+var select_all_click = 0;
+function select_all(){
+	var num = 0;
+	selectid = [];
+	var select_total = $("#select_total").text();
+	var devicetype_total = $("#devicetype_total").text();
+	if (select_total == parseInt(devicetype_total)-10){
+		$("#devicetype_list").find('input').iCheck('uncheck');
+	}else{
+		var keyword = JSON.stringify(keyword_re);
+		$.ajax({
+			url:'/bhost/get_devicetype_list',
+			type:'post',
+			async:false,
+			data:{a0:se,z1:"null",z2:"null",z3:keyword,dsc:true},
+			success:function(result){
+				var result = JSON.parse(result);
+				$.each(result.data,function(i,item){
+					if (item.DeviceTypeId > 1000){
+						selectid.push(item.DeviceTypeId);
+					}
+				})
+			}
+		});
+		$("#devicetype_list tbody input[type='checkbox']").each(function(){
+			if (!$(this).prop("disabled")){
+				$(this).iCheck('check'); 
+			}
+		});
+	}
+	num = selectid.length;
+	$("#select_total").text(num);
+}
+
+String.prototype.ResetBlank=function(){
+	var regEx = /\s+/g; 
+	return this.replace(regEx, ' '); 
+};
+
+//搜索
+function _addFilter(obj,type){
+	
+	var addfilter_temp = addfilter;
+	var filter_v = $("#filter_select").val();
+	var add = 0;
+	$("#keyword").blur();
+	var status_v = "";
+	if (filter_v != "3"){
+		var addfilter = $("#keyword").val().trim();
+	}else{
+		var addfilter = $("#status_select").find('option:selected').text();
+		status_v = $("#status_select").val();
+	}
+	if (addfilter == ""){
+		_alert(2,"搜索","请输入关键字",$("#keyword"));
+		return false;
+	}
+	addfilter = addfilter.ResetBlank();
+	var addfilter_v = "";
+	
+	if (filter_v == '0'){
+		addfilter_v = addfilter;
+	}else if (filter_v == '1'){
+		filter_name = "名称";
+	}else if (filter_v == '2'){
+		filter_name = "描述";
+	}else if (filter_v == '3'){
+		filter_name = "状态";
+	}else if (filter_v == '4'){
+		filter_name = "账号切换命令";
+	}else if (filter_v == '5'){
+		filter_name = "密码切换提示";
+	}
+	
+	if (filter_v != '0'){
+		addfilter_v = filter_name + '-' + addfilter;
+	}
+	
+	if (filter_v == '3'){
+		addfilter = filter_v + "-" + status_v;
+	}else{
+		addfilter = filter_v + "-" + addfilter;
+	}
+	if (type){
+		var status_flag = 0;
+		$("#filterWW li").each(function(i,item){
+			var filter = $(item).find('.ww').attr('data-value');
+			var filter_arry = filter.split('-');
+			if (filter_v == '3'){
+				if (filter_arry[0] == '3'){
+					status_flag = 1;
+					_alert(2,"搜索","状态搜索条件已存在",$("#keyword"));
+					return false;
+				}
+			}
+			if (filter == addfilter){
+				_alert(2,"搜索","相同的搜索条件已存在",$("#keyword"));
+				add = 1;
+				return false;
+			}
+		});
+		if (status_flag == 1){
+			$("#keyword").val('');
+			return;
+		}
+		keyword_v = "";
+	}
+
+	if (type){
+		if (add != 1){
+			if (filter_flag == 1){
+				keyword_re.splice(-1,1);
+				filter_flag = 0;
+			}
+			$("#filterWW").show();
+			$("#clearFilter").show();
+			$("#filterWW ul").append("<li><span class=\"ww\" data-value=\""+addfilter+"\">"+addfilter_v+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+			keyword_re.push(addfilter);
+			$("#keyword").val('');
+			$("#text_check").hide();
+		}
+		keyword_v = "";
+	}else{
+		$("#filterWW li").each(function(i,item){
+			var filter = $(item).find('.ww').attr('data-value');
+			var filter_arry = filter.split('-');
+			if (filter_v == '3'){
+				if (filter_arry[0] == '3'){
+					status_flag = 1;
+					_alert(2,"搜索","状态搜索条件已存在",$("#keyword"));
+					return false;
+				}
+			}
+		})
+		
+		if (status_flag == 1){
+			return false;
+		}
+		if (filter_flag != 0){
+			keyword_re.splice(-1,1);
+		}
+		filter_flag=1;
+		keyword_re.push(addfilter);
+		keyword_v = addfilter;
+	}
+	$("#keyword").focus();
+	$("#curpage").val(1);
+	selectid=[];
+	get_devicetype_list();
+}
+function _clearFilter(obj){
+	$("#filterWW").children('ul').empty();
+	$("#filterWW").hide();
+	$("#clearFilter").hide();
+	$("#text_check").hide();
+	keyword_re=[];
+	$("#keyword").val('');
+	keyword_v = "";
+	filter_flag = 0;
+	get_devicetype_list();
+}
+
+//移除搜索条件
+function _delFilter(obj){
+	var filter_text = $(obj).parent().children('span').attr('data-value');
+	$(obj).parent().remove();
+	keyword_re.splice($.inArray(filter_text,keyword_re),1);
+	if ($("#filterWW").children('ul').children('li').length == 0){
+		$("#filterWW").hide();
+		$("#clearFilter").hide();
+	}
+	get_devicetype_list();
+}
+
+function _clear_keyword(){
+	$("#keyword").val("");
+	$("#text_check").hide();
+	if (keyword_v != ""){
+		keyword_v = "";
+		keyword_re.splice(-1,1);
+		filter_flag = 0;
+		get_devicetype_list();
+	}
+}
+
+function change_input(obj){
+	if ($(obj).val() == "" && keyword_v != "" && $("#filter_select").val() != "3"){
+		keyword_v = "";
+		filter_flag = 0;
+		keyword_re.splice(-1,1);
+		get_devicetype_list();
+	}
+}
+
+//批量删除
+function delete_all(){
+	var cur = $("#curpage").val();
+	if (selectid.length == 0){
+		_alert(2,"设备类型","请选择要删除的数据");
+		return;
+	}
+	var id = JSON.stringify(selectid);
+	$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"设备类型",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			$("#select_total").text(0);
+        	delete_devicetype(1,id);
+        	selectid=[];
+        	get_devicetype_list();
+		},
+		btn2:function(i){
+			parent.layer.close(i);
+		}
+	});	
+}
+//单个删除
+function del_devicetype(id){
+	var name = $("[value="+id+"]").prop('name');
+	var cur = $("#curpage").val();
+	$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"设备类型",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+		btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			delete_devicetype(0,id);
+			for (var i = 0; i < selectid.length; i++){      
+				if (selectid[i] == parseInt(id)){
+					num = $("#select_total").text();
+					num = parseInt(num)-1;
+					$("#select_total").text(num);
+					selectid.splice($.inArray(parseInt(id),selectid),1);
+					break;
+				}
+        	}
+			get_devicetype_list();
+		},
+		btn2:function(i){
+			 parent.layer.close(i);
+		}
+	});
+}
+
+function delete_devicetype(type,id){
+	$.ajax({
+		url:'/bhost/devicetype_delete',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:type,z2:id},
+		success:function(results){
+			data = JSON.parse(results);
+			if (data.Result == false){
+				_alert(1,"设备类型","删除失败："+data.ErrMsg);
+			}else{
+				_alert(0,"设备类型","删除成功");
+			}
+		}
+	});
+}
+//过滤下拉框选择
+function filter_change(){
+	var name = $("#filter_select").val();
+	if (name == '0'){
+		$("#keyword").hide();
+        $("#filterWW").hide();
+		$("#clearFilter").hide();
+	}else{
+		$("#keyword").show();
+		$("#keyword").focus();
+        //$("#filterWW").show();
+		$("#keyword").bind("keyup",function(){
+			$("#keyword").val($("#keyword").val().replace(/[<>|]/,""));
+		})
+	}
+}
+//刷新
+function refresh(){
+	selectid=[];
+	var cur = $("#curpage").val();
+	$("#devicetype_list input[type='checkbox']").each(function(){                                 
+		$(this).iCheck('uncheck');
+	});
+	$("#select_total").text(0);
+	$("#curpage").val(cur);
+	get_devicetype_list();	
+}
+
+//返回
+function back(){
+	window.parent._closePage(null);
+}
+
+//创建
+function create_devicetype(){
+	var curpage = $("#curpage").val();
+	document.frm_access.a0.value=se;
+	document.frm_access.z1.value=curpage; //当前页
+	document.frm_access.z2.value="None"; //是否是编辑
+	document.frm_access.z3.value=tasktype; //进入口
+	document.frm_access.z4.value=JSON.stringify(keyword_re);  //搜索条件
+	document.frm_access.z5.value=filter_flag;
+	document.frm_access.z6.value=JSON.stringify(selectid);
+	document.frm_access.action = '/bhost/add_devicetype';
+	document.frm_access.submit();
+}
+//编辑
+function edit_devicetype(id){
+	var curpage = $("#curpage").val();
+	var flag = 0;
+	$.ajax({
+		url:'/bhost/check_edit_devicetype',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:id},
+		success:function(result){
+			results = JSON.parse(result);
+			if (results.totalrow == "0"){
+				_alert(1,"设备类型","该设备类型已删除");
+				flag = 1;
+			}else{
+				var data = JSON.stringify(results)
+				var curpage = $("#curpage").val();
+				document.frm_access.a0.value=se;
+				document.frm_access.z1.value=curpage;
+				document.frm_access.z2.value=data;
+				document.frm_access.z3.value=tasktype;
+				document.frm_access.z4.value=JSON.stringify(keyword_re);
+				document.frm_access.z5.value=filter_flag;
+				document.frm_access.z6.value=JSON.stringify(selectid);
+				document.frm_access.action = '/bhost/add_devicetype';
+				document.frm_access.submit();
+			}
+		}
+	});
+	if (flag == 1){
+		refresh();
+		return;
+	}
+}
+
+function change_filter(obj){
+	if ($(obj).val() == 3){
+		$("#status_select").show();
+		$("#status_select").next().show();
+		$("#keyword").hide();
+	}else{
+		$("#status_select").hide();
+		$("#status_select").next().hide();
+		$("#keyword").show();
+	}
+}
+
+</script>
+</body>
+
+</html>

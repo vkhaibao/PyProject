@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+</head>
+<style>
+	.v-check{
+		float: left;
+		position: static;
+	}
+</style>
+<body style="overflow:hidden;" class="bg-white">
+	<!--别名管理-->
+	<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title">
+						<span id="alias_group" style="cursor: pointer;">别名管理</span>
+						<i class="alias_group_icon"></i>
+					</div>
+				</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)">
+						<i></i>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer" name="alias" id="alias">
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr">
+									<a href="javascript:;" class="btn btn-default" onclick="alias_add();">创建</a>
+									<a href="javascript:;" class="btn btn-default" onclick="delete_list();">删除</a>
+									<a href="javascript:;" class="btn btn-default" onclick="click_all_list();">全选</a>
+									<a href="javascript:;" class="btn btn-default" onclick="alias_page(0);clear_all();">刷新</a>
+								</div>
+								<div class="filter">
+									<div class="search">
+										<select name="alias_select" id="alias_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="HostName">主机</option>
+											<option value="AccountName">账号</option>
+											<option value="HostAccountAliasName">别名</option>
+										</select>
+
+										<input type="text" onchange="if($('#alias_text').val()==''){$('#alias_text_check').hide();}else{$('#alias_text_check').show();}" style="/*display:none;*/padding-right: 22px;" class="filter-text" placeholder="输入关键字" name="alias_text" id="alias_text" maxlength="128"
+										 onkeydown="if($('#alias_text').val()==''){$('#alias_text_check').hide();}else{$('#alias_text_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return; "
+										 onkeyup="if($('#alias_text').val()==''){$('#alias_text_check').hide();}else{$('#alias_text_check').show();}">
+										 <i class="v-check v-wrong" id="alias_text_check" onclick="_clearFilter(this)" style="display:none;cursor: pointer;"></i>
+										<button class="btn filter-btn" onclick="_addFilter(this,false);">
+											<i class="add-filter"></i>
+										</button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)">
+											<i class="append-filter"></i>
+										</button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)">
+											<i class="clear-filter"></i>
+										</button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th width="50">
+												<input type="checkbox" class="form-checkbox" id="check_one_page" />
+											</th>
+											<th>主机</th>
+											<th>账号</th>
+											<th>别名</th>
+											<th width="60"></th>
+										</tr>
+									</thead>
+
+									<tbody name="alias_list" id="alias_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示
+									<span id="page_nums">10</span>条 总数：
+									<span id="alias_total">0</span> 选中：
+									<span class="sum">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="alias_begin" onclick="alias_page(0.1);">
+										<i></i>
+									</a>
+									<a href="javascript:;" class="nav prev" id="alias_prev" onclick="alias_page(-1);">
+										<i></i>
+									</a>
+									<input type="text" id="alias_page" value="1" onchange="showMsg();" onblur="showMsg();">/&nbsp;
+									<span id="alias_pages">1</span>
+									<a href="javascript:;" class="nav next" id="alias_next" onclick="alias_page(1);">
+										<i></i>
+									</a>
+									<a href="javascript:;" class="nav2 end" id="alias_end" onclick="alias_page(0.9);">
+										<i></i>
+									</a>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+						<!--
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal" onclick="save_alias();">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="save_alias();">
+								<i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<form action="/bhost/get_alias_list" method="POST" name="frm_alias" id="frm_alias">
+		<input type="hidden" name="tasktype" id="tasktype" value="3" />
+		<!--创建 编辑 列表-->
+		<input type="hidden" name="a" id="a" value="{{a}}" />
+		<!--需要查询id-->
+		<input type="hidden" name="b" id="b" value="{{b}}" />
+		<!--页码-->
+		<input type="hidden" name="c" id="c" value="{{c}}" />
+		<!--search_typeall-->
+		<input type="hidden" name="e" id="e" value="{{e}}" />
+		<!--e-->
+		<input type="hidden" name="se" id="se" value="{{se}}" />
+		<!--se-->
+		<input type="hidden" name="a0" id="a0" value="{{se}}" />
+		<!--se-->
+	</form>
+
+
+	<script>
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+	</script>
+	<style>
+		.c-table table tr:hover .last_td,
+		.xTable table tr:hover .last_td{
+			background-color: #63c3d9
+		}
+	
+	</style>
+
+
+	<script>
+		$('.filter-select').select2({ minimumResultsForSearch: -1 });
+	</script>
+	<script type="text/javascript">
+		var delect_str = new Array();
+		var check_num = 0;
+		var total_all_r = 0;
+		//总数
+		var alias_array = null;
+		var fenye_r = 0;
+		//总页码
+		var search_typeall_r = document.frm_alias.c.value;
+		search_typeall_r = search_typeall_r == '' ? new Array() : search_typeall_r.split('\t');
+		//关键字
+		function save_alias() {
+			window.parent._closePage(null);
+		}
+		$(function () {
+			document.frm_alias.se.value = window.parent.document.frm.se.value;
+			$("#alias_select").change(function () {
+				var type = $(this).val();
+				if (type == 0) {
+					$("#alias_text").show();
+					if ($('#filterWW ul li').length) {
+						$('#filterWW').show();
+						$('#clearFilter').show();
+					}
+				} else {
+					$("#alias_text").show();
+					if ($('#filterWW ul li').length) {
+						$('#filterWW').show();
+						$('#clearFilter').show();
+					}
+				}
+			});
+			/*
+			$('#alias_text').on('change',function(){
+				if($('#alias_text').val()==''){
+					$('#alias_text_check').hide();
+				}else{
+					$('#alias_text_check').show();
+				}
+			});
+			*/
+			if (search_typeall_r.length != 0) {
+				var v1 = "";
+				var id = "";
+				var str_new = "";
+				$.each(search_typeall_r, function (i, item) {
+					if (item == "") {
+						return true;
+					}
+					var str_sea_type = item.substring(0, item.indexOf('-'));
+					var str_sea_value = item.substring(item.indexOf('-') + 1);
+					v1 = $('#alias_select').find('option[value=' + str_sea_type + ']').text();
+					//console.log('v1' + v1);
+					str_new = v1 + '-' + str_sea_value;
+					$('#filterWW>ul').append('<li><span style = "display:none">' + item + '</span><span class="ww">' + str_new + '</span><i class="del" onclick="_delFilter(this);"></i></li>');
+				});
+			}
+			var search_typeall_select = document.frm_alias.e.value.substr(document.frm_alias.e.value.indexOf(':') + 1, document.frm_alias.e.value.length - 1);
+			if (search_typeall_select != '') {
+				var array = new Array();
+				array[0] = search_typeall_select.substring(0, search_typeall_select.indexOf('-'));
+				array[1] = search_typeall_select.substring(search_typeall_select.indexOf('-') + 1);
+				$('#alias_select').val(array[0]).trigger('change');
+				$('#alias_text').val(array[1]);
+				if(array[1]!=''){
+					$('#alias_text_check').show();
+				}
+			}
+			//页码显示
+			$("#page_nums").val(MAX_PAGE);
+			//list show
+			show_alias_list();
+			//只输入数字
+			$("#alias_page").bind('keydown', function (e) {
+				DigitInput(e);
+			});
+			parent._switchBtn(1);//显示按钮
+			//tr双击事件
+			$("#alias_list").on('dblclick', 'tr', function (e) {
+				x = e.target;
+				var id = $(this).find("td");
+				if (x.nodeName != 'A' && x.nodeName != 'INS') {
+					var id = $(this).find("td");
+					var edit_item = $(id).eq(2).text();
+					document.frm_alias.a.value = edit_item;
+					document.frm_alias.tasktype.value = 2;
+					document.frm_alias.c.value = '';
+					document.frm_alias.e.value = search_typeall_new + ':' + $('#alias_select').val() + '-' + $('#alias_text').val();
+					document.frm_alias.action = '/bhost/alias_show_';
+					document.frm_alias.submit();
+				}
+			}).on("click", "tr", function (e) {
+				x = e.target;
+				//删除按钮
+				if (x.id == 'del') {
+					var id = $(this).find("td");
+					var input = $(this).find("input");
+					$('.btn').blur(); parent.layer.open({
+						type: 1,
+						title: '别名管理',
+						content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+						btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							parent.layer.close(i);
+							var delete_item = $(id).eq(1).text();
+							// $(input).iCheck('uncheck');
+							delete_fun(delete_item+'\t'+$(id).eq(5).text());
+						}
+					});
+				}
+				//编辑按钮
+				if (x.id == 'edit') {
+					var id = $(this).find("td");
+					var edit_item = $(id).eq(2).text();
+					document.frm_alias.a.value = edit_item;
+					document.frm_alias.tasktype.value = 2;
+					document.frm_alias.c.value = '';
+					document.frm_alias.e.value = search_typeall_new + ':' + $('#alias_select').val() + '-' + $('#alias_text').val();
+					document.frm_alias.action = '/bhost/alias_show_';
+					document.frm_alias.submit();
+				}
+			});
+			$('#check_one_page').on(' ifClicked', function (e) {
+				if (!$('#check_one_page').is(':checked')) {
+					$("table tbody tr input").iCheck('check');
+				} else {
+					$("table tbody tr input").iCheck('uncheck');
+				}
+
+			});
+			$("#alias_list").on("ifChecked", function (e) {
+				check_num++;
+				$("span.sum").text(check_num);
+				if ($("table tbody tr").children("td.in").children("div").children("input:checked").length == $("table tbody tr").length) {
+					$('#check_one_page').iCheck('check');
+				}
+			}).on("ifUnchecked", function (e) {
+				check_num--;
+				$("span.sum").text(check_num);
+				$('#check_one_page').iCheck('uncheck');
+			});
+		})
+		//显示创建页面
+		function alias_add() {
+			document.frm_alias.tasktype.value = 1;
+			document.frm_alias.a.value = 0;
+			document.frm_alias.action = '/bhost/alias_show_';
+			document.frm_alias.e.value = search_typeall_new + ':' + $('#alias_select').val() + '-' + $('#alias_text').val();
+			document.frm_alias.c.value = '';
+			document.frm_alias.submit();
+		}
+		//刷新
+		function clear_all() {
+			$("table tbody tr input").iCheck('uncheck');
+			delect_str = new Array();
+			$("span.sum").text(delect_str.length);
+		}
+		var search_typeall_new = document.frm_alias.e.value.substr(0, document.frm_alias.e.value.indexOf(':'));
+		function _addFilter(obj, type) {
+			var id = $(obj).parent().children('select').children('option:selected').val();
+			/*
+			if (id == "0") {
+				$('#filterWW>ul').empty();
+				search_typeall_r = new Array();
+				search_typeall_new = '';
+				$(obj).parent().children('input[type=text]').val('');
+				$("table tbody tr input").iCheck('uncheck');
+				delect_str = new Array();
+				alias_page(0.1);
+				$("span.sum").text(delect_str.length);
+				return false;
+			}
+			*/
+			var v1 = $(obj).parent().children('select').children('option:selected').text();
+			var v2 = $.trim( $(obj).parent().children('input[type=text]').val());
+
+			if (v2 == '') {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+				return false;
+			} else {
+				var Reg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				switch (id) {
+					case 'HostName':
+						Reg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'AccountName':
+						Reg = /^[a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'HostAccountAliasName':
+						Reg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+				}
+				if (id!='all' && !Reg.test(v2)) {
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if ($.inArray(id + '-' + v2,search_typeall_r) >= 0) {
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(2, '搜索', '关键字重复', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if (type) {
+					search_typeall_r.push(id + '-' + v2);
+					search_typeall_new = '';
+					$(obj).parent().children('input[type=text]').val('');
+					$('#alias_text_check').hide();
+					$('#filterWW>ul').append('<li><span style = "display:none">' + id + '-' + v2 + '</span><span class="ww">' + v1 + '-' + v2 + '</span><i class="del" onclick="_delFilter(this);"></i></li>')
+					selView();
+				} else {
+					search_typeall_new = id + '-' + v2;
+				}
+
+			}
+			$("table tbody tr input").iCheck('uncheck');
+			delect_str = new Array();
+			alias_page(0.1);
+			$("span.sum").text(delect_str.length);
+		}
+		function _delFilter(obj) {
+			var id = $(obj).parent().find("span");
+			var ids = $(id).eq(0).text();
+			search_typeall_r.splice($.inArray(ids,search_typeall_r),1);
+			var alias_text = $.trim( $('#alias_text').val());
+			if (alias_text == '') {
+				search_typeall_new == '';
+			} else {
+				search_typeall_new = $('#alias_select').val() + '-' + alias_text + '\t';
+			}
+			$(obj).parent().remove();
+			selView();
+			$("table tbody tr input").iCheck('uncheck');
+			delect_str = new Array();
+			alias_page(0.1);
+			$("span.sum").text(delect_str.length);
+		}
+		function _clearFilter(obj) {
+			$('#clearFilter').next().children('ul').empty();
+			$('#alias_text').val('');
+			$('#alias_text_check').hide();
+			$('#clearFilter').hide();
+			search_typeall_new = '';
+			search_typeall_r = new Array();
+			selView();
+			$("table tbody tr input").iCheck('uncheck');
+			delect_str = new Array();
+			alias_page(0.1);
+			$("span.sum").text(delect_str.length);
+		}
+		function selView() {
+			var $sel = $('#filterWW');
+			var len = $('li', $sel).length;
+
+			if (len == 0) {
+				$sel.hide();
+				$('#clearFilter').hide();
+			} else {
+				$("#filterWW").show();
+				$('#clearFilter').show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			}
+		}
+		//选中字段存储
+		function delect_save() {
+			$(">tr", "#alias_list").each(function () {
+				var input = $(this).find("input[type='checkbox']");
+				var delect_item = $(">td", this).eq(1).text()+'\t'+$(">td", this).eq(5).text();
+				var index = $.inArray(delect_item, delect_str);
+				if ($(input).is(':checked')) {
+					if (index < 0) {
+						delect_str.push(delect_item);
+					}
+				} else {
+					if (index >= 0) {
+						delect_str.splice(index, 1);
+					}
+				}
+			});
+		}
+		//check显示
+		function check_show() {
+			$(">tr", "#alias_list").each(function () {
+				var check_id = $(">td", this).eq(1).text()+'\t'+$(">td", this).eq(5).text();
+				if ($.inArray(check_id, delect_str) >= 0) {
+					$(this).find("input[type='checkbox']").iCheck('check');
+				}
+			});
+		}
+		//input回车触发事件
+		function showMsg() {
+			delect_save();
+			var cur = $("#alias_page").val();
+			cur = cur.replace(/\D/g, "");
+			if (cur == '' || parseInt(cur) < 1) {
+				cur = 1;
+			} else if (parseInt(cur) > fenye_r) {
+				cur = fenye_r;
+			}
+			////console.log(cur);
+			if (parseInt(cur) == parseInt(document.frm_alias.b.value)) {
+				$("#alias_page").val(cur);
+				return false;
+			}
+			document.frm_alias.b.value = cur;
+			show_alias_list();
+		}
+		var paging_max = null;
+		//以每页显示数显示列表函数
+		function show_alias_list() {
+			update_all_list();
+			var paging = document.frm_alias.b.value;
+			var page_num = MAX_PAGE;
+			var aliasId = document.frm_alias.a.value;
+			var search_typeall ={
+				"HostAccountAliasName":"",
+				"HostName":"",
+				"AccountName":"",
+				"searchstring":""	
+			};
+			$.each(search_typeall_r,function(i,item){
+				if (item == "") {
+					return true;
+				}
+				var index=item.indexOf('-');
+				var str_sea_value = item.substring(index + 1);
+				switch (item.substring(0,index)) {
+					case 'all':
+						search_typeall.searchstring+=(item.substring(index + 1)+'\n');
+						break;
+					case 'HostAccountAliasName':
+						search_typeall.HostAccountAliasName+=(item.substring(index + 1)+'\n');
+						break;
+					case 'HostName':
+						search_typeall.HostName+=(item.substring(index + 1)+'\n');
+						break;
+					case 'AccountName':
+						search_typeall.AccountName+=(item.substring(index + 1)+'\n');
+						break;
+					
+				}
+			});
+			var index=search_typeall_new.indexOf('-');
+			switch (search_typeall_new.substring(0,index)) {
+				case 'all':
+					search_typeall.searchstring+=(search_typeall_new.substring(index + 1)+'\n');
+					break;
+				case 'HostAccountAliasName':
+					search_typeall.HostAccountAliasName+=(search_typeall_new.substring(index + 1)+'\n');
+					break;
+				case 'HostName':
+					search_typeall.HostName+=(search_typeall_new.substring(index + 1)+'\n');
+					break;
+				case 'AccountName':
+					search_typeall.AccountName+=(search_typeall_new.substring(index + 1)+'\n');
+					break;
+				
+			}
+			if(search_typeall.searchstring!=''){
+				search_typeall.searchstring=search_typeall.searchstring.substr(0,search_typeall.searchstring.length-1);
+			}
+			if(search_typeall.HostAccountAliasName!=''){
+				search_typeall.HostAccountAliasName=search_typeall.HostAccountAliasName.substr(0,search_typeall.HostAccountAliasName.length-1);
+			}
+			if(search_typeall.HostName!=''){
+				search_typeall.HostName=search_typeall.HostName.substr(0,search_typeall.HostName.length-1);
+			}
+			if(search_typeall.AccountName!=''){
+				search_typeall.AccountName=search_typeall.AccountName.substr(0,search_typeall.AccountName.length-1);
+			}
+			$.ajax({
+				url: "/bhost/get_alias_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a4: page_num, a3: paging, a2: JSON.stringify(search_typeall), a1: aliasId },
+				success: function (result) {
+					var alias_result = JSON.parse(result);
+					if (alias_result.Result == true) {
+						var alias_data = alias_result.info;
+						var total_all = alias_data.totalrow;
+						if (paging_max == null) {
+							paging_max = parseInt(total_all / MAX_PAGE) + 1;
+						}
+						if (total_all % MAX_PAGE == 0) {
+							fenye_r = parseInt(total_all / MAX_PAGE);
+						} else {
+							fenye_r = parseInt(total_all / MAX_PAGE) + 1;
+						}
+						if (alias_data.data == "" && paging != "1") {
+							alias_page(0.9);
+						} else {
+							//total = 0;
+							total_all_r = total_all;
+							if (total_all) {
+								$("#alias_list").empty();
+								
+								var gn=[];
+								for(var i=0;i<alias_data.data.length;i++){
+									s = "<tr>" +
+										"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" /></td>" +
+										"<td style = \"display:none\">" + alias_data.data[i].HostAccountAliasNameId + "</td>" +
+										"<td style = \"display:none\">" + JSON.stringify(alias_data.data[i]) + "</td>" +
+										"<td title='" + alias_data.data[i].HostName + '(' + alias_data.data[i].HostIP + ')' + "'>" + alias_data.data[i].HostName + '(' + alias_data.data[i].HostIP + ')' + "</td>" +
+										"<td title='" + alias_data.data[i].AccountName + "'>" + alias_data.data[i].AccountName + "</td>" +
+										"<td title='" + alias_data.data[i].HostAccountAliasName + "'>" + alias_data.data[i].HostAccountAliasName + "</td>" +
+										"<td class=\"last_td\"><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"edit\" id=\"edit\" title='编辑'></a><a href=\"javascript:;\" class=\"del\" id=\"del\" title='删除'></a></div>" +
+										"</td></tr>"
+										
+									gn.push(s);
+								}
+								$("#alias_list").append(gn.join(''));
+								/*
+								$("#alias_list").append(alias_data.data.map(function (item) {
+									return "<tr>" +
+										"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" /></td>" +
+										"<td style = \"display:none\">" + item.HostAccountAliasNameId + "</td>" +
+										"<td style = \"display:none\">" + JSON.stringify(item) + "</td>" +
+										"<td title='" + item.HostName + '(' + item.HostIP + ')' + "'>" + item.HostName + '(' + item.HostIP + ')' + "</td>" +
+										"<td title='" + item.AccountName + "'>" + item.AccountName + "</td>" +
+										"<td title='" + item.HostAccountAliasName + "'>" + item.HostAccountAliasName + "</td>" +
+										"<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"edit\" id=\"edit\" title='编辑'></a><a href=\"javascript:;\" class=\"del\" id=\"del\" title='删除'></a></div>" +
+										"</td></tr>"
+								}).join(''));*/
+								$(".input_checkbox", "#alias_list").iCheck({
+									checkboxClass: 'icheckbox_minimal-blue',
+									radioClass: 'iradio_minimal-blue',
+									increaseArea: '0' // optional
+								});
+								$("#alias_total").text(total_all);
+								if (paging >= fenye_r) {
+									paging = fenye_r;
+								}
+								document.frm_alias.b.value = paging;
+								document.getElementById("alias_page").value = paging;
+								$("#alias_pages").text(fenye_r);
+								$('#check_one_page').iCheck('uncheck');
+								$("table tbody tr input").iCheck('uncheck');
+								check_show();
+								$("span.sum").text(delect_str.length);
+							} else {
+								$("span.sum").text(0);
+								$('#check_one_page').iCheck('uncheck');
+								$("table tbody tr input").iCheck('uncheck');
+								$("#alias_list").empty();
+								$("#alias_total").text(total_all);
+								$("#alias_pages").text(1);
+								document.frm_alias.b.value = 1; fenye_r = 1;
+								document.getElementById("alias_page").value = 1;
+							}
+						}
+					} else {
+						_alert(1, "别名管理", alias_result.ErrMsg);
+						$('#check_one_page').iCheck('uncheck');
+						$("table tbody tr input").iCheck('uncheck');
+						$("span.sum").text(0);
+						$("#alias_total").text(0);
+						$("#alias_pages").text(1);
+						document.frm_alias.b.value = 1; fenye_r = 1;
+						document.getElementById("alias_page").value = 1;
+						return false;
+					}
+				}
+			});
+
+		}
+		//分页 and 刷新
+		function alias_page(num) {
+			var paging = parseInt(document.frm_alias.b.value) + num;
+			if (paging == 0 || paging == fenye_r + 1) {
+				return false;
+			}
+			delect_save();
+			var alias_list_s = [];
+			if (num == 0.1) {
+				paging = 1;
+			} else if (num == 0.9) {
+				paging = fenye_r;
+			}
+			$("span.sum").text(0);
+			document.getElementById("alias_page").value = paging;
+			document.frm_alias.b.value = paging;
+			show_alias_list();
+		}
+		var click_all = false;
+		function update_all_list() {
+			var search_typeall = '{}';
+			var aliasId = document.frm_alias.a.value;
+			var search_typeall ={
+				"HostAccountAliasName":"",
+				"HostName":"",
+				"AccountName":"",
+				"searchstring":""	
+			};
+			$.each(search_typeall_r,function(i,item){
+				if (item == "") {
+					return true;
+				}
+				var index=item.indexOf('-');
+				var str_sea_value = item.substring(index + 1);
+				switch (item.substring(0,index)) {
+					case 'all':
+						search_typeall.searchstring+=(item.substring(index + 1)+'\n');
+						break;
+					case 'HostAccountAliasName':
+						search_typeall.HostAccountAliasName+=(item.substring(index + 1)+'\n');
+						break;
+					case 'HostName':
+						search_typeall.HostName+=(item.substring(index + 1)+'\n');
+						break;
+					case 'AccountName':
+						search_typeall.AccountName+=(item.substring(index + 1)+'\n');
+						break;
+					
+				}
+			});
+			var index=search_typeall_new.indexOf('-');
+			switch (search_typeall_new.substring(0,index)) {
+				case 'all':
+					search_typeall.searchstring+=(search_typeall_new.substring(index + 1)+'\n');
+					break;
+				case 'HostAccountAliasName':
+					search_typeall.HostAccountAliasName+=(search_typeall_new.substring(index + 1)+'\n');
+					break;
+				case 'HostName':
+					search_typeall.HostName+=(search_typeall_new.substring(index + 1)+'\n');
+					break;
+				case 'AccountName':
+					search_typeall.AccountName+=(search_typeall_new.substring(index + 1)+'\n');
+					break;
+				
+			}
+			if(search_typeall.searchstring!=''){
+				search_typeall.searchstring=search_typeall.searchstring.substr(0,search_typeall.searchstring.length-1);
+			}
+			if(search_typeall.HostAccountAliasName!=''){
+				search_typeall.HostAccountAliasName=search_typeall.HostAccountAliasName.substr(0,search_typeall.HostAccountAliasName.length-1);
+			}
+			if(search_typeall.HostName!=''){
+				search_typeall.HostName=search_typeall.HostName.substr(0,search_typeall.HostName.length-1);
+			}
+			if(search_typeall.AccountName!=''){
+				search_typeall.AccountName=search_typeall.AccountName.substr(0,search_typeall.AccountName.length-1);
+			}
+			$.ajax({
+				url: "/bhost/get_alias_list",
+				type: "POST",
+				async: true,
+				data: { a0: $("input[name=se]").val(), a2: JSON.stringify(search_typeall), a1: aliasId },
+				success: function (result) {
+					var alias_result = JSON.parse(result);
+					if (alias_result.Result) {
+						var alias_data = alias_result.info;
+						var delect_str_old=delect_str;
+						delect_str=new Array();
+						
+						alias_array=[];
+						for(var i=0;i<alias_data.data.length;i++){
+							if($.inArray(alias_data.data[i].HostAccountAliasNameId+'\t'+alias_data.data[i].HostAccountAliasName,delect_str_old)>=0){
+								delect_str.push(alias_data.data[i].HostAccountAliasNameId+'\t'+alias_data.data[i].HostAccountAliasName);
+							}
+							alias_array.push(alias_data.data[i].HostAccountAliasNameId + '\t'+alias_data.data[i].HostAccountAliasName);
+						}
+						
+					}
+				}
+			});
+		}
+		//全选按钮
+		function click_all_list() {
+			delect_save();
+			if (alias_array.length == delect_str.length) {
+				delect_str = new Array();
+			} else {
+				delect_str = alias_array;
+			}
+			show_alias_list();
+		}
+		//删除函数
+		function delete_fun(delect_str_1) {
+			$.ajax({
+				url: '/bhost/del_alias',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: delect_str_1 },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						alias_page(0);
+						// _alert(0, "别名管理", "删除成功");
+						if(result.fail_num!=0){
+							if (result.success_num!=0)
+								_alert(0,"别名管理","成功："+result.success_num+'，失败：'+result.fail_num);
+							else
+								if ((result.fail_num+success_num)==1)
+									_alert(1,"别名管理",result.ErrMsg);
+								else
+									_alert(0,"别名管理",'失败：'+result.fail_num);
+						}else{
+							_alert(0,"别名管理","删除成功");
+						}
+					} else {
+						alias_page(0);
+						_alert(1, "别名管理", result.info);
+						return false;
+					}
+				}
+			});
+		}
+		//删除按钮
+		function delete_list() {
+			delect_save();
+			if (delect_str.length == 0) {
+				_alert(2, "别名管理", "请选择要删除的数据");
+				return false;
+			}
+			//利用对话框返回的值 （true 或者 false） 
+			$('.btn').blur(); parent.layer.open({
+				type: 1,
+				title: '别名管理',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+				btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+				btnAlign: 'c',
+				closeBtn: false,
+				skin: 'layer-custom',
+				area: ['380px', '310px'],
+				move: false,
+				resize: false,
+				yes: function (i) {
+					parent.layer.close(i);
+					delete_fun(delect_str.join(','));
+					delect_str = new Array();
+					$("span.sum").text(delect_str.length);
+				}
+			});
+		}
+		$(function () {
+			$("#alias_group").on("click", function () {
+				parent.reload();
+			});
+		});
+	</script>
+</body>
+</html>

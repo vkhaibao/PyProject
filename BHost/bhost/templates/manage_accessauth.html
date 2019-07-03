@@ -1,0 +1,2558 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+	<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+	<!---->
+	<div class="rwrap">
+		<!---->
+		<div class="mainer">
+			
+			<div class="container container3">
+				<div class="c-top">
+					<!--
+					<div class="c-title">
+						<a href="javascript:;"><h3 onclick="manage_auth();">访问授权<i class="icon-access"></i></h3></a>
+						<a href="javascript:;" onclick="manage_work();"><h3 class="unsel">工单授权</h3></a>
+						<a href="javascript:;" onclick="cmd_auth();"><h3 class="unsel">指令授权</h3></a>
+						<a href="javascript:;" onclick="manage_add();"><h3 class="unsel">管理授权</h3></a>
+					</div>
+					-->
+					<div class="manual-head">
+						
+						<div class="manual-title-other title-item" id="frist">
+							<span id="manage_auth">访问授权</span>
+							<i class="access_icon"></i>
+						</div>
+						{%if auth_flag2 != 0%}
+						<div class="manual-title-other title-item">
+							<span id="manage_work"> 工单授权</span>
+							<i style="display: none;"></i>
+						</div>
+						{%endif%}
+						{%if auth_flag3 != 0%}
+						<div class="manual-title-other title-item">
+							<span id="cmd_auth"> 指令授权</span>
+							<i style="display: none;"></i>
+						</div>
+						{%endif%}
+						{%if auth_flag4 != 0%}
+						<div class="manual-title-other title-item">
+							<span id="manage_add"> 管理授权</span>
+							<i style="display: none;"></i>
+						</div>
+						{%endif%}
+					</div>
+				</div>
+
+				<div class="c-cont">
+					<div class="c-wrap" style="padding: 0px 0px 28px;">
+						<div class="c-table">
+							<div class="tab-t">
+								<div class="ctr" style="width: 288px;">
+									{%if auth_flag1 == 1%}
+									<a href="javascript:;" class="btn btn-default" onclick="creat_access();">创建</a>
+									<a href="javascript:;" class="btn btn-default" onclick="delete_all();">删除</a>
+									<a href="javascript:;" class="btn btn-default" onclick="select_all();">全选</a>
+									{%endif%}
+									<a href="javascript:;" class="btn btn-default" onclick="refresh();">刷新</a>
+									<!--
+									<a href="javascript:;" class="btn btn-default" onclick="import_access(this);">导入</a>
+									-->
+								</div>
+
+								<div class="filter" style="float: right;">
+									<div id="waitTip" class="waitTip" style="float: right;margin-top: 7px;margin-left: -26px;"></div>
+									<div class="search">
+										<select name="" id="filter_select" class="filter-select" onchange="filter_change();">
+											<option value="0">所有</option>
+											<option value="1">名称</option>
+											<option value="2">运维用户</option>
+											<option value="3">用户组</option>
+											<option value="4">权限配置</option>
+											<option value="5">管理员</option>
+											<option value="6">主机组</option>
+											<option value="7">主机名</option>
+											<option value="8">主机服务</option>
+											<option value="9">账号</option>
+											<option value="10">服务器范围</option>
+											<option value="11">授权动作</option>
+											<option value="12">状态</option>
+										</select>
+										<select name="" id="select_two" class="filter-select" style="display:none;">
+											
+										</select>
+										<input type="text" class="filter-text" placeholder="输入关键字" id="keyword" style="border-left:0;padding: 0 22px 0 4px;" onkeydown="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return;" onchange="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();}" onkeyup="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();}" onblur="change_input(this);">
+										
+										<i class="v-check v-wrong" id="text_check" onclick="_clear_keyword(this)" style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<button class="btn filter-btn" onclick="_addFilter(this,false)"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display: none;">
+										<span class="ww">搜索条件</span>
+										<ul></ul>
+									</div>
+								</div>
+							</div>
+							<div class="box-table">
+							<table cellpadding="0" cellspacing="0" id="access_auth_list">
+								<thead>
+									<tr><th style="width: 10px;"><input type="checkbox" class="form-checkbox" id="check_page"/></th>
+										<th style="width: 42px;">优先级</th>
+										<th >名称</th>
+										<th >权限配置</th>
+										<th >服务器范围</th>
+										<th >管理员</th>
+										<th>授权动作</th>
+										<th style="width: 32px;">状态</th>
+										{%if auth_flag1 == 1%}
+										<th width="80"></th>
+										{%else%}
+										<th width="20"></th>
+										{%endif%}
+									</tr>
+								</thead>
+
+								<tbody>
+
+								</tbody>
+							</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_total">10</span>条 总数：<span id = "auth_total">25</span>  选中：<span id = "select_total">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" onclick="firstpage()"><i></i></a>
+									<a href="javascript:;" class="nav prev" onclick="prevpage()"><i></i></a>
+									<input type="text" value="1" id="curpage" onchange="jumppage()">/&nbsp;<span id = "totalpage">25</span>
+									<a href="javascript:;" class="nav next" onclick="nextpage()"><i></i></a>
+									<a href="javascript:;" class="nav2 end" onclick="lastpage()"><i></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				{%if auth_flag1 == 1%}
+				<div class="btns">                                                                      
+					<a href="javascript:;" class="btn btn-normal s-hide" id="import_btn" onclick="import_access();">导&nbsp;&nbsp;入</a><a href="javascript:;" class="btn btn-normal" onclick="export_access();">导&nbsp;&nbsp;出</a>
+				</div>
+				{%endif%}
+				<div id="bBtn" style="z-index: 5;">
+					<a href="javascript:;" class="btn" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+				</div>
+			</div>
+			<!-- 授权导入 -->
+			<div class="dialog-cont" id="scDCTab2_import" style="display:none;">
+				<div class="fsel" style="margin-left: 0;">
+					<ul><li><a class="active" href="javascript:;" id="task_import" onclick="set_tab(this,1);">授权导入</a></li>
+						<li><a href="javascript:;" id="task_list_tab" onclick="set_tab(this,2);">任务列表</a></li>
+					</ul>
+				</div>
+				<div class="container5">
+					<div id="import_module" class="c-cont" style="min-height:400px;max-height:400px;overflow:hidden;">
+						<div class="c-form" style="padding-bottom:10px;padding-left:50px;">
+							<div class="tab-t c-form">
+								<span class="form-tag">下载模板：</span>
+								<div class="ctr" style="margin-left:6px;">
+									<a class="btn" href="javascript:;" style="" onclick="export_template();">下载</a>
+								</div>
+							</div>
+							<div class="c-form" style="">
+								<form id="uploadForm">
+									<div class="form-item tab-t">
+										<span class="form-tag"><em class="imp">*</em>选择文件：</span>
+										<div class="form-c ctr" style="width:300px;padding:0 0 0 7px;">
+											<div class="item" style="float: left;width:67%">
+												<input id="file_v" name="file_v" class="form-text" type="text" style="float: left;width: 220px;">
+												<input id="file_change" name="file_change" class="form-text" type="text" onclick="browes();" onchange="/*filetip(this);*/" style="float: left;opacity: 0;margin-top: -28px;cursor: pointer;">
+												<input id="file_change1" name="file_change1" class="form-text" type="file" onchange="filetip(this);" style="float: left;opacity: 0;margin-top: -28px;cursor: pointer;display: none;">
+											</div>
+											<div class="item" style="float: left;width:33%">
+												<a class="btn" href="javascript:;" style="margin-left: 70px;height: 26px;width:33px;" onclick="browes();">浏览</a>
+											</div>
+											<p class="form-tip" id="" style="margin-top: 28px;width: 243px;height: 32px;">特殊字符仅支持下划线、横杠、小数点</p>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="c-form">
+								<span class="form-tag">覆盖：</span>
+								<div style="width: 215px;margin-left: 200px;margin-top: 4px;">
+									<input class="form-checkbox" id="cover_box1" type="checkbox"/>
+									<span class="tip" style="color: #b2b2b2;">覆盖</span>
+								</div>
+							</div>
+							<div class="btns" style="">
+								<a href="javascript:;" class="btn btn-normal btn-submit" >确&nbsp;&nbsp;定</a>
+							</div>
+						</div>
+					</div>
+				
+					<div id="details_module" class="c-cont" style="min-height:400px;max-height:400px;overflow:hidden;display:none;">
+						<div class="c-form" style="padding:0;width: auto;">
+							<div class="c-wrap" style="padding:0;">
+							<div class="c-table r-list" style="padding:0;">
+								<div class="tab-t">
+									<div class="ctr">
+										<a href="javascript:;" class="btn btn-default" onclick="select_task()">全选</a>
+										<a href="javascript:;" class="btn btn-default" onclick="del_task_more()">删除</a>
+										<a href="javascript:;" class="btn btn-default" onclick="fresh_task_list()">刷新</a>
+									</div>
+								</div>
+								<div class="box-table" style="overflow: hidden;">
+									<table cellpadding="0" cellspacing="0" id="accesstask_list">
+										<thead>
+											<tr>		
+												<th width="50"><input type="checkbox" class="form-checkbox" id="check_task_page"/></th>
+												<th>名称</th>
+												<th>成功数</th>
+												<th>失败数</th>
+												<th>状态</th>
+												<th>错误信息</th>
+												<th width="50"></th>
+											</tr>
+										</thead>
+										<tbody>
+											
+										</tbody>
+									</table>
+								</div>
+								<div class="tab-i">
+									<div class="il">
+										每页显示<span id="task_page_total">10</span>条 总数<span id = "task_total">25</span>  选中：<span id = "select_task_total">0</span>
+									</div>
+
+									<div class="ipage">
+										<a href="javascript:;" class="nav2 begin" onclick="turn_page(1);"><i></i></a>
+										<a href="javascript:;" class="nav prev" onclick="turn_page(2)"><i></i></a>
+										<input type="text" value="1" id="task_curpage" onchange="turn_page(5)">/ <span id ="task_totalpage">25</span>
+										<a href="javascript:;" class="nav next" onclick="turn_page(3)"><i></i></a>
+										<a href="javascript:;" class="nav2 end" onclick="turn_page(4)"><i></i></a>
+									</div>
+								</div>
+							</div>
+							
+							<div class="clearfix"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--导入信息详情-->
+		<div class="container6">
+			<div id="importPage" style="display: none;">
+				<div class="ap-top" id="">
+					<div class="ctrl">
+						<a href="javascript:;" class="re" onclick="_reloadDetail()" style="border-radius: 14px;"><i style="margin: 3px auto;margin-left: 8px;"></i></a>
+						<!--<a href="javascript:;" class="close" onclick="_closeDetail()"><i></i></a>-->
+					</div>
+					<div class="types">
+						<label>
+							<input type="checkbox" name="" id="fail_IP_box" class="form-checkbox" >失败的授权</label>
+					</div>
+				</div>
+				<div class="apWrap">
+					<div class="title">
+						<h2>导入详情</h2>
+					</div>
+					<div class="top">
+						<div class="mm mm1">
+							总数：<span>11</span> 成功授权：<span>11</span> 失败授权：<span>11</span>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					<div id="apArea1" style="height:auto;">
+					</div>
+					<div id="aploadTip1">正在加载</div>
+				</div>
+				<div id="bBtn" style="position: fixed;z-index:5;">
+                			<a href="javascript:;" class="btn" style="float: right;" onclick="_closeDetail()"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+        			</div>
+			</div>
+		</div>
+		<!-- 导出方式 浮层-->
+		<div class="dialog-cont s-hide" id="export_type" style="display:none;">
+			<div class="container">
+				<div id="export_module" class="c-cont" style="min-height:350px;max-height:300px;overflow:hidden;">
+					<div class="c-form" style="padding-bottom:10px;padding-left:50px;">
+						<span>方式：</span>
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="all_check" value="all" name="exportType_radio" checked="checked"/>所有
+						</label>
+						<!-- <label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="resource_check" value="resource" name="exportType_radio"/>资源
+						</label>
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="acc_check" value="acc" name="exportType_radio"/>访问
+						</label>
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="work_check" value="work" name="exportType_radio"/>工单
+						</label>
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="cmd_check" value="cmd" name="exportType_radio"/>指令
+						</label>
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="manage_check" value="manage" name="exportType_radio"/>管理
+						</label> -->
+					</div>
+					<div class="c-form" style="padding-bottom:10px;padding-left:50px;padding-top: 5px;">
+						<span style="padding-right: 46px;"></span>
+						<!-- <label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="all_check" value="all" name="exportType_radio" checked="checked"/>所有
+						</label> -->
+						
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="resource_check" value="resource" name="exportType_radio"/>资源
+						</label>
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="acc_check" value="acc" name="exportType_radio"/>访问
+						</label>
+						{%if auth_flag2 != 0%}
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="work_check" value="work" name="exportType_radio"/>工单
+						</label>
+						{%endif%}
+						{%if auth_flag3 != 0%}
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="cmd_check" value="cmd" name="exportType_radio"/>指令
+						</label>
+						{%endif%}
+						{%if auth_flag4 != 0%}
+						<label class="form-label" style="width: 60px;">
+							<input type="checkbox" class="form-checkbox" id="manage_check" value="manage" name="exportType_radio"/>管理
+						</label>
+						{%endif%}
+					</div>
+					<div class="c-form" style="padding-bottom:10px;padding-left:50px;">
+						<span>格式：</span>
+						<label class="form-label" style="width: 60px;">
+							<input type="radio" class="form-radio" value=0 name="exportType_radio2" checked="checked"/>CSV
+						</label>
+						<label class="form-label" style="width: 60px;">
+							<input type="radio" class="form-radio" value=1 name="exportType_radio2"/>XLS
+						</label>
+						<!--<label class="form-label" style="width: 60px;">
+							<input type="radio" class="form-radio" value=2 name="exportType_radio2"/>XLSX
+						</label>-->
+					</div>
+				</div>
+				<div class="btns" style="/*padding: 20px 0 0px;*/">
+					<a href="javascript:;" class="btn btn-normal btn-submit" >确&nbsp;&nbsp;定</a>
+				</div>
+			</div>
+		</div>
+		</div>
+		
+	</div>
+	<form action="/bhost/access_user_index" method="POST" name="frm_access">
+		<input type="hidden" name="a0" id = "a0" value="" />
+		<input type="hidden" name="a1" id = "a1" value="" />
+		<input type="hidden" name="a2" id = "a2" value="" />
+		<input type="hidden" name="z1" id = "z1" value="" />
+		<input type="hidden" name="z2" id = "z2" value="" />
+		<input type="hidden" name="z3" id = "z3" value="" />
+		<input type="hidden" name="z4" id = "z4" value="" />
+		<input type="hidden" name="z5" id = "z5" value="" />
+		<input type="hidden" name="z6" id = "z6" value="" />
+		<input type="hidden" name="tasktype" id = "tasktype" value="" />
+		<input type="hidden" name="us"  value="" />
+		<input type="hidden" name="se"  value="" />
+		<input type="hidden" name="user"  value="" />
+		<input type="hidden" name="a99"  value="" />
+	</form>
+
+<script>
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+
+<script>
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+<style>
+	.fsel {
+		position: fixed;
+		margin: -67px 0 0 -20px;
+		width: 580px;
+		height: 45px;
+		background: #FFF;
+	}
+	.fsel ul li {
+		float: left;
+	}
+
+	.fsel ul li a.active {
+		border-top: 5px solid #4cb2d0;
+		border-right: 1px solid #DDD;
+		border-left: 1px solid #DDD;
+		line-height: 41px;
+		border-bottom: 1px solid #FFF;
+	}
+	.fsel ul li a {
+		float: left;
+		padding: 0 32px;
+		line-height: 45px;
+		font-size: 18px;
+		color: #000;
+	}
+	.ui-dialog-body{
+		padding: 20px 0 0 0;
+	}
+	#importPage{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #f3f3f3;
+		overflow: auto;
+	}
+	.apItem{
+		width: 50%;
+		padding: 5px 0;
+		overflow: hidden;
+		transition: background-color 0.4s;
+		float: left;
+	}
+
+	#accesstask_list .tab-ctr {
+		display: none !important;
+	}
+	#accesstask_list tr:hover td div.tab-ctr {
+		display: block !important;
+	}
+</style>
+<!---->
+<script>
+var selectid={{selectid|safe}};
+var nameReg = /^[_\-.\n\w\u4e00-\u9fa5]*$/;
+var now = "{{now}}";
+var tasktype="{{tasktype}}";
+var keyword_re = {{keyword|safe}};
+var order_flag = 0;
+//var usercode;
+var se;
+var manage_filter_flag = {{manage_filter_flag}};
+
+$(document).ready(function () {
+	$("#manage_auth").on("click",function(){
+		manage_auth();
+	});
+	$("#manage_work").on("click",function(){
+		manage_work();
+	});
+	$("#cmd_auth").on("click",function(){
+		cmd_auth();
+	});
+	$("#manage_add").on("click",function(){
+		manage_add();
+	});
+})
+
+var filter_json = {
+	"1":"名称",
+	"2":"运维用户",
+	"3":"用户组",
+	"4":"权限配置",
+	"5":"管理员",
+	"6":"主机组",
+	"7":"主机名",
+	"8":"主机服务",
+	"9":"账号",
+	"10":"服务器范围",
+	"11":"授权动作",
+	"12":"状态"
+}
+
+//var auth_power;
+var keyword_v = "";
+$(function(){
+	
+	$("#select_two").next('span').find('span.select2-selection').css({"border-bottom-left-radius":"1px","border-top-left-radius":"1px","margin-left":"-1px"});
+	$("#select_two").next().hide();
+	$("#select_two").hide();
+	//usercode = window.parent.document.frm.us.value;
+	se = window.parent.document.frm.se.value;
+	if (keyword_re != "" && keyword_re != "None"){
+		var key_len = keyword_re.length;
+		var filter_value = 0;
+		$.each(keyword_re,function(i,item){
+			var filter = item.split('-');
+			var index = item.indexOf('-');
+			var key_v = item.substring(index + 1);
+			
+			filter_value = filter[0];
+			if (filter_value == '0'){
+				filter_v = key_v;
+			}else{
+				filter_name = filter_json[filter_value];
+				if (filter_value == '11'){
+					var select_v = key_v;
+					if (key_v == "1"){
+						key_v = "允许";
+					}else if (key_v == "2"){
+						key_v = "拒绝";
+					}
+				}else if (filter_value == '12'){
+					var select_v = key_v;
+					if (key_v == "true"){
+						key_v = "启用";
+					}else if (key_v == "false"){
+						key_v = "停用";
+					}
+				}
+				filter_v = filter_name + '-' + key_v;
+			}
+			if (manage_filter_flag == 1){
+				if (key_len == 1){
+					$("#filter_select").val(filter_value).trigger('change');
+					if (filter_value == '11' || filter_value == '12'){
+						$("#select_two").show();
+						$("#select_two").next().show();
+						$("#select_two").val(select_v).trigger('change');
+					}else{
+						$("#keyword").val(key_v);
+						$("#keyword").focus();
+						$("#text_check").show();
+					}
+					keyword_v = item;
+				}else{
+					$("#filterWW").show();
+					$("#clearFilter").show();
+					if (i+1 != key_len){
+						$("#filterWW ul").append("<li><span class=\"ww\" data-value=\""+item+"\">"+filter_v+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+					}else{
+						$("#filter_select").val(filter_value).trigger('change');
+						if (filter_value == '11' || filter_value == '12'){
+							$("#select_two").show();
+							$("#select_two").next().show();
+							$("#select_two").val(select_v).trigger('change');
+						}else{
+							$("#keyword").val(key_v);
+							$("#keyword").focus();
+							$("#text_check").show();
+						}
+						keyword_v = item;
+					}
+				}
+			}else{
+				$("#filterWW").show();
+				$("#clearFilter").show();
+				$("#filterWW ul").append("<li><span class=\"ww\" data-value=\""+item+"\">"+filter_v+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+				keyword_v = "";
+			}
+		});
+		if (now != "" && now != "None"){
+			$('#curpage').val(now);
+			order_flag = (parseInt(now)-1)*10;
+		}
+		get_accessauth_list();
+		
+	}else{
+		if (now != "" && now != "None"){
+			$('#curpage').val(now);
+			order_flag = (parseInt(now)-1)*10;
+		}
+		get_accessauth_list();
+	}
+});
+
+//下一页
+function nextpage(){
+	var cpage = $("#curpage").val();
+	var total = $("#totalpage").text();
+	var npage = 0;
+	if (total == cpage){
+		return;
+	}else{
+		npage = parseInt(cpage)+1;
+	}
+	$("#curpage").val(npage);
+	order_flag = parseInt(cpage)*10;
+	get_accessauth_list();
+}
+
+//上一页
+function prevpage(){
+	var cpage = $("#curpage").val();
+	var ppage = 0;
+	if (parseInt(cpage) == 1){
+		return;
+	}else{
+		ppage = parseInt(cpage)-1;
+	}
+	$("#curpage").val(ppage);
+	order_flag = (ppage-1)*10;
+	get_accessauth_list();
+}
+//首页
+function firstpage(){
+	$("#curpage").val(1);
+	order_flag = 0;
+	get_accessauth_list();
+}
+//末页
+function lastpage(){
+	var cpage = $("#curpage").val();
+	var lpage = $("#totalpage").text();
+	if (cpage == lpage){
+		return;
+	}
+	$("#curpage").val(lpage);
+	order_flag = (parseInt(lpage)-1)*10;
+	get_accessauth_list();
+}
+//跳页
+function jumppage(){
+	var cur = $("#curpage").val();
+	var numReg = /\D/;
+	if (numReg.test(cur)){
+		$("#curpage").val(1);
+		cur = 1;
+	}
+	if (parseInt(cur) < 1 || cur == ""){
+		$("#curpage").val(1);
+		cur = 1;
+	}
+	order_flag = (parseInt(cur)-1)*10;
+	get_accessauth_list();
+}
+
+function get_accessauth_list(){
+	var filter_name = $("#filter_select").val();
+	var curpage = $("#curpage").val();
+	$.ajax({
+		url:'/bhost/get_AccessAuth_z',
+		type:'post',
+		async:true,
+		data:{a0:se,z1:MAX_PAGE,z2:curpage,z3:JSON.stringify(keyword_re)},
+		success:function(result){
+			auth_list = JSON.parse(result);
+			$("#access_auth_list tbody").empty();
+			$.each(auth_list.data,function(i,item){
+				//if (item.Mode == 2){
+					//运维用户
+					var user = "";
+					var ug = ""
+					$(item.AuthUserSet).each(function(i1,item1){
+						if (item1.Type == 1){
+							user = user + item1.Name + ',';
+						}else{
+							ug = ug +item1.Name + ',';
+						}
+					});
+					user = user.substring(0,user.length-1);
+					ug = ug.substring(0,ug.length-1);
+					//服务器范围
+					var scope = "";
+					$(item.AuthScope).each(function(i1,item1){
+						if (item1.Type == '1'){
+							scope = scope + item1.ServerScopeName + ',';
+						}
+					});
+					scope = scope.substring(0,scope.length-1);
+					var account = "";
+					var protocol = "";
+					var param = "";
+					if (item.AuthAccountName == null){
+						account = "";
+					}else{
+						var aname = item.AuthAccountName.split(',');
+						$.each(aname,function(i1,item1){
+							account = account+item1+',';
+						});
+					}
+					/*
+					if (item.AuthServiceSet != null){
+						$.each(item.AuthServiceSet,function(i1,item1){
+							protocol = protocol + item1.ProtocolName + ',';
+							if (item1.ConnParamName != null){
+								param = param + item1.ConnParamName + ',';
+							}
+						});
+					}
+					
+					//对象
+					var obj_hg = "";//对象主机组;
+					var obj_host = "";//对象主机;
+					var account_array = [];
+					var protocol_array = [];
+					var host_array = [];
+					if (item.AuthObject != null){
+						$.each(item.AuthObject,function(i1,item1){
+							if (item1.AccountId != null){
+								if (account_array.indexOf(item1.AccountName) === -1){
+									account_array.push(item1.AccountName);
+								}
+								if (protocol_array.indexOf(item1.ProtocolName) === -1){
+									protocol_array.push(item1.ProtocolName);
+								}
+							}else if (item1.HostName != null){
+								host_array.push(item1.HostName + '('+item1.HostIP+')');
+							}else{
+								obj_hg = obj_hg + item1.HGName + ',';
+							}
+						});
+						account = account_array.toString();
+						protocol = protocol_array.toString();
+						obj_hg = obj_hg.substring(0,obj_hg.length-1);
+						obj_host = host_array.toString();
+					}
+					param = param.substring(0,param.length-1);
+					*/
+					var admin = "";
+					$(item.AdminSet).each(function(i1,item1){
+						admin = admin + item1.UserCode + ',';
+					});
+					admin = admin.substring(0,admin.length-1);
+					if (item.Enabled == true){
+						var enabled = "启用";
+						var e_class = "stop_icon";
+						var e_type = 2;
+						var e_v = "停用";
+					}else{
+						var enabled = "停用";
+						var e_class = "start_icon";
+						var e_type = 1;
+						var e_v = "启用";
+					}
+					if (item.Action == 1){
+						action = "允许";
+					}else{
+						action = "拒绝";
+					}
+					var AccessStrategyName = "";
+					if (item.AccessStrategyInfo != null){
+						if (item.AccessStrategyInfo.AccessStrategyName.indexOf("#") != -1){
+							AccessStrategyName = "";
+						}else{
+							AccessStrategyName = item.AccessStrategyInfo.AccessStrategyName;
+						}		
+					}
+					//order_flag++;
+					//float_str = "<p>运维用户："+user+"</p>"+"<p>运维用户组："+ug+"</p>"+"<p>对象主机："+obj_host+"</p>"+"<p>对象主机组："+obj_hg+"</p>"+"<p>账号："+account+"</p>"+"<p>协议："+protocol+"</p>"+"<p>连接参数："+param+"</p>";
+					var float_str = "";
+					if (user != ""){
+						float_str = "<p>运维用户："+user+"</p>";
+					}
+					if (ug != ""){
+						float_str = float_str + "<p>运维用户组："+ug+"</p>";
+					}
+					var append_str = '<tr><td><input class="form-checkbox" type="checkbox" name="'+item.AccessAuthName+'" value="'+item.AccessAuthId+'"></td><td><div class="sortEdit" id="del" onclick="_editSort(this,'+item.AccessAuthId+')" style="width:40px">'+item.PrioNum+'</div></td><td title="'+item.AccessAuthName+'">'+item.AccessAuthName+'</td><td title="'+AccessStrategyName+'">'+AccessStrategyName+'</td><td title="'+scope+'">'+scope+'</td><td title="'+admin+'">'+admin+'</td><td title="'+action+'">'+action+'</td><td title="'+enabled+'">'+enabled+'</td><td><div class="tab-ctr">';
+					
+					if ({{auth_flag1}} == 2){
+						append_str = append_str + '<a href="javascript:;" title="查看" class="search_result" onclick="edit_auth('+item.AccessAuthId+');"></a></div><div class="tab-moreinfo">'+float_str+'</div></td></tr>';
+					}else{
+						append_str = append_str + '<a href="javascript:;" title="编辑" class="edit" onclick="edit_auth('+item.AccessAuthId+');"></a><a href="javascript:;" class="'+e_class+'" title="'+e_v+'" onclick="enable_work('+e_type+','+item.AccessAuthId+');"></a><a href="javascript:;" title="删除" class="del" id="del" onclick="del_auth('+item.AccessAuthId+');"></a></div><div class="tab-moreinfo">'+float_str+'</div></td></tr>';
+					}
+					
+					$("#access_auth_list tbody").append(append_str);
+					
+					tabArr();
+					$('#access_auth_list .form-checkbox').iCheck({
+						checkboxClass: 'icheckbox_minimal-blue',
+						radioClass: 'iradio_minimal-blue',
+						increaseArea: '0' 
+					});
+				//}
+			});
+			$("#auth_total").text(auth_list.totalrow);
+			totalpage = Math.ceil(parseInt(auth_list.totalrow)/MAX_PAGE);
+			if (totalpage < 1){
+				totalpage = 1;
+			}
+			$("#totalpage").text(totalpage.toString());
+			$("#page_total").text(MAX_PAGE);
+			$('#check_page').iCheck('uncheck');
+			var check_page_flag = 0;
+			$("#access_auth_list tbody input[type='checkbox']").each(function(){
+				if ($.inArray(parseInt(this.value), selectid) != -1){					
+					$(this).iCheck('check');
+					check_page_flag++;
+				}
+			});
+			if (check_page_flag == $("#access_auth_list tbody input[type='checkbox']").length && check_page_flag != 0){
+				$('#check_page').iCheck('check');
+			}
+			if (parseInt(curpage) > totalpage){
+				$("#curpage").val(totalpage);
+				order_flag =(totalpage-1)*10;
+				get_accessauth_list();
+			}
+			$("#access_auth_list tbody >tr").bind("dblclick",function(e){
+				x=e.target;
+				if (x.nodeName != "INPUT" && x.nodeName != "INS"){
+					$(this).children('td:last').find('.edit').click();
+				}
+			});
+			
+			$('#check_page').on('ifClicked',function(e){
+				if(!$('#check_page').prop('checked')){
+					$("#access_auth_list").children('tbody').find('input[type=checkbox]').iCheck('check');
+				}else{
+					$("#access_auth_list").children('tbody').find('input[type=checkbox]').iCheck('uncheck');
+				}	
+			});
+			var flag_id = 0;	
+			num = selectid.length;
+			$("#select_total").text(num);
+			$("#access_auth_list tbody input[type='checkbox']").on("ifChanged",function(){
+				if ($(this).is(":checked")){
+					num = $("#select_total").text();   
+					num++;
+					if (selectid.indexOf(parseInt(this.value)) == -1){
+						selectid.push(parseInt(this.value));
+					}
+					$("#select_total").text(num);
+				}else{
+					num = $("#select_total").text();
+					num--;
+					selectid.splice($.inArray(parseInt(this.value),selectid),1);
+					$("#select_total").text(num);   
+				}
+				if ($("#access_auth_list tbody").find('input[type=checkbox]:checked').length == $("#access_auth_list tbody input[type='checkbox']").length){
+					$('#check_page').iCheck('check');
+				}else{
+					$('#check_page').iCheck('uncheck');
+				}
+			});
+			_waitDone($(".waitTip"));
+		}
+	});
+}
+
+//全选
+function select_all(){
+	var num = 0;
+	selectid=[];
+	var select_total = $("#select_total").text();
+	var auth_total = $("#auth_total").text();
+	if (select_total == auth_total){
+		$("#access_auth_list").find('input').iCheck('uncheck');
+	}else{
+		var keyword = JSON.stringify(keyword_re);
+		$.ajax({
+			url:'/bhost/get_AccessAuth_z',
+			type:'post',
+			async:false,
+			data:{a0:se,z1:"null",z2:"null",z3:keyword},
+			success:function(result){
+				var result = JSON.parse(result);
+				$.each(result.data,function(i,item){
+					selectid.push(item.AccessAuthId);
+				});
+			}
+		});
+		$("#access_auth_list input[type='checkbox']").each(function(){
+			$(this).iCheck('check');
+		});
+	}
+	num = selectid.length;
+	$("#select_total").text(num);
+}
+
+String.prototype.ResetBlank=function(){
+	var regEx = /\s+/g; 
+	return this.replace(regEx, ' '); 
+};
+
+//搜索
+function _addFilter(obj,type){
+	var filter_v = $("#filter_select").val();
+	if (filter_v == '11' || filter_v == '12'){
+		var addfilter = $("#select_two").val();
+		var addfilter_text = $("#select_two").children('option:selected').text();
+	}else{
+		var addfilter = $("#keyword").val().trim();
+		var addfilter_text = "";
+	}
+	var add = 0;
+	$("#keyword").blur();
+	if (addfilter == ""){
+		_alert(2,"搜索","请输入关键字",$("#keyword"));
+		return false;
+	}
+	addfilter = addfilter.ResetBlank();
+	var addfilter_v = "";
+	
+	if (filter_v == '0'){
+		addfilter_v = addfilter;
+	}else{
+		filter_name = filter_json[filter_v];
+		addfilter_v = filter_name + '-' + (addfilter_text != ""?addfilter_text:addfilter);
+	}
+
+	addfilter = filter_v + "-" + addfilter;
+	
+	$("#filterWW li").each(function(i,item){
+		var filter = $(item).find('.ww').attr('data-value');
+		var filter_array = filter.split('-');
+		var index = filter.indexOf('-');
+		var key_v = filter.substring(index + 1);
+		if (filter_array[0] == "11" && filter_array[0] == filter_v){
+			add = 1;
+			_alert(2,"搜索","只能搜索一个授权动作");
+			return false;
+		}else if (filter_array[0] == '12' && filter_array[0] == filter_v){
+			add = 1;
+			_alert(2,"搜索","只能搜索一个状态");
+			return false;
+		}else{
+			if (filter == addfilter){
+				add = 1;
+				_alert(2,"搜索","相同的搜索条件已存在",$("#keyword"));
+				return false;
+			}
+		}
+	});
+	if (add == 1){
+		return false;
+	}
+	if (type){
+		if (manage_filter_flag == 1){
+			keyword_re.splice(-1,1);
+			manage_filter_flag = 0;
+		}
+		$("#filterWW").show();
+		$("#clearFilter").show();
+		$("#filterWW ul").append("<li><span class=\"ww\" data-value=\""+addfilter+"\">"+addfilter_v+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+		keyword_re.push(addfilter);
+		$("#keyword").val('');
+		keyword_v = "";
+		$("#text_check").hide();
+	}else{
+		if (manage_filter_flag == 1){
+			keyword_re.splice(-1,1);
+		}
+		manage_filter_flag = 1;
+		keyword_re.push(addfilter);
+		keyword_v = addfilter;
+	}
+	
+	$("#curpage").val(1);
+	order_flag = 0;
+	selectid=[];
+	_getWait($(".waitTip"));
+	get_accessauth_list();
+	$("#keyword").focus();
+}
+function _clearFilter(obj){
+	$("#filterWW").children('ul').empty();
+	$("#filterWW").hide();
+	$("#clearFilter").hide();
+	keyword_re=[];
+	$("#keyword").val('');
+	$("#text_check").hide();
+	keyword_v = "";
+	manage_filter_flag = 0;
+	get_accessauth_list();
+}
+//移除搜索条件
+function _delFilter(obj){
+	var filter_text = $(obj).parent().children('span').attr('data-value');
+	$(obj).parent().remove();
+	keyword_re.splice($.inArray(filter_text,keyword_re),1);
+	order_flag = 0;
+	if ($("#filterWW").children("ul").children('li').length == 0){
+		$("#filterWW").hide();
+		$("#clearFilter").hide();
+	}
+	get_accessauth_list();
+}
+
+function _clear_keyword(){
+	$("#keyword").val("");
+	$("#text_check").hide();
+	if (keyword_v != ""){
+		keyword_v = "";
+		keyword_re.splice(-1,1);
+		manage_filter_flag = 0;
+		get_accessauth_list();
+	}
+}
+
+function change_input(obj){
+	if ($(obj).val() == "" && keyword_v != "" && $("#select_two").is(':hidden')){
+		keyword_v = "";
+		manage_filter_flag = 0;
+		keyword_re.splice(-1,1);
+		get_accessauth_list();
+	}
+}
+//批量删除
+function delete_all(){
+	var cur = $("#curpage").val();
+	if (selectid.length == 0){
+		_alert(2,"访问授权","请选择要删除的数据");
+		return;
+	}
+	var id = JSON.stringify(selectid);
+	$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"访问授权",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			$("#select_total").text(0);
+        	delete_auth(1,id);
+        	selectid=[];
+		order_flag = (parseInt(cur)-1)*10;
+        	get_accessauth_list();
+		},
+		btn2:function(i){
+			parent.layer.close(i);
+		}
+	});	
+}
+//单个删除
+function del_auth(id){
+	var name = $("[value="+id+"]").prop('name');
+	var cur = $("#curpage").val();
+	$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"访问授权",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+		btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			delete_auth(0,id);
+			for (var i = 0; i < selectid.length; i++){      
+				if (selectid[i] == parseInt(id)){
+					num = $("#select_total").text();
+					num = parseInt(num)-1;
+					$("#select_total").text(num);
+					selectid.splice($.inArray(parseInt(id),selectid),1);
+					break;
+				}
+        	}
+			order_flag = (parseInt(cur)-1)*10;
+			get_accessauth_list();
+		},
+		btn2:function(i){
+			 parent.layer.close(i);
+		}
+	});
+}
+//删除授权
+function delete_auth(type,id){
+	$.ajax({
+		url:'/bhost/delete_auth',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:type,z2:id},
+		success:function(results){
+			data = JSON.parse(results);
+			if (data.Result == "false"){
+				_alert(1,"访问授权","删除失败：" + data.ErrMsg);
+			}else{
+				_alert(0,"访问授权","删除成功");
+			}
+		}
+	});
+}
+//过滤下拉框选择
+function filter_change(){
+	var name = $("#filter_select").val();
+	if (name == "11"){
+		$("#keyword").hide();
+		$("#select_two").show();
+		$("#select_two").next().show();
+		var option_str = '<option value="0">所有</option><option value="1">允许</option><option value="2">拒绝</option>';
+		$("#keyword").hide();
+		$("#select_two").empty().append(option_str);
+	}else if (name == "12"){
+		$("#keyword").hide();
+		$("#select_two").show();
+		$("#select_two").next().show();
+		var option_str = '<option value="0">所有</option><option value="true">启用</option><option value="false">停用</option>';
+		$("#keyword").hide();
+		$("#select_two").empty().append(option_str);
+	}else{
+		$("#keyword").show();
+		$("#select_two").hide();
+		$("#select_two").next().hide();
+	}
+}
+//刷新
+function refresh(){
+	selectid=[];
+	var cur = $("#curpage").val();
+	$("#access_auth_list input[type='checkbox']").each(function(){                                 
+		$(this).iCheck('uncheck');
+	});
+	$("#select_total").text(0);
+	$("#curpage").val(cur);
+	order_flag = (parseInt(cur)-1)*10;
+	get_accessauth_list();	
+}
+
+//返回
+function back(){
+	document.frm_access.tasktype.value=3;
+	document.frm_access.se.value = se;
+	document.frm_access.us.value = window.parent.document.frm.us.value;
+	document.frm_access.action = '/bhost/index';
+	document.frm_access.submit();
+}
+
+//创建
+function creat_access(){
+	var curpage = $("#curpage").val();
+	document.frm_access.z1.value=curpage;
+	document.frm_access.z2.value="None";
+	document.frm_access.z3.value=tasktype;
+	document.frm_access.z4.value=JSON.stringify(keyword_re);
+	document.frm_access.z5.value=manage_filter_flag;
+	document.frm_access.z6.value=JSON.stringify(selectid);
+	document.frm_access.action = '/bhost/add_access_auth';
+	document.frm_access.submit();
+}
+//编辑
+function edit_auth(id){
+	var curpage = $("#curpage").val();
+	var flag = 0;
+	/*$.ajax({
+		url:'/bhost/check_edit',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:id},
+		success:function(result){
+			results = JSON.parse(result);
+			if (results.totalrow == "0"){
+				_alert(1,"访问授权","该访问授权已删除");
+				flag = 1;
+			}else{
+				var data = JSON.stringify(results)*/
+				var curpage = $("#curpage").val();
+				document.frm_access.z1.value=curpage;
+				document.frm_access.z2.value=id;
+				document.frm_access.z3.value=tasktype;
+				document.frm_access.z4.value=JSON.stringify(keyword_re);
+				document.frm_access.z5.value=manage_filter_flag;
+				document.frm_access.z6.value=JSON.stringify(selectid);
+				document.frm_access.action = '/bhost/add_access_auth';
+				document.frm_access.submit();
+			/*}
+		}
+	});*/
+	if (flag == 1){
+		refresh();
+		return;
+	}
+}
+//启用停用
+function enable_work(type,id){
+	$.ajax({
+		url:'/bhost/enable_work',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:id,z2:type},
+		success:function(result){
+			get_accessauth_list();
+		}
+	});
+}
+
+var eCheck = true;
+var PRI = "";
+function _editSort(obj,id){
+	if ({{auth_flag1}} == 2){
+		return false;
+	}
+	if($(obj).children('input').length>0){
+		return;
+	}
+
+	if(!eCheck){
+		return;
+	}
+	var v = $(obj).text();
+	var s = v.length;
+	PRI = parseInt(v);
+	var $i = $('<input type="text"  value="'+v+'" name="" id="del" style="width:'+(s/2+0.5)+'em" onblur="_checkNum(this,'+id+','+v+')" onkeydown="_autoWidth(this)" onkeyup="_Numcheck(this);"/>');
+	$(obj).empty().html($i);
+	$('input',obj).focus().select();
+}
+
+function _Numcheck(obj){
+	var num = $(obj).val();
+	num = num.replace(/\D/g,"");
+	$(obj).val(num);
+}
+
+function _checkNum(obj,id,_v){
+	var v = parseInt($(obj).val().trim());
+	var numCheck = /^\d+$/;
+
+	if(!numCheck.test(v)){
+		$(obj).parent().empty().text(_v);
+		eCheck = true;
+		return false;
+	}else{
+		var position;
+		if (v == 0){
+			v = 1;
+		}
+		if (v == PRI){
+			$(obj).parent().empty().text(v);
+			eCheck = true;
+			return;
+		}else if (v < PRI){
+			position = 1;
+		}else{
+			position = 2;
+		}
+		now = $("#curpage").val();
+		var modifyid = id;
+		var referid = "";
+		$.ajax({
+			url:'/bhost/check_edit',
+			type:'post',
+			async:false,
+			data:{a0:se,z1:-1},
+			success:function(result){
+				var all_auth = JSON.parse(result);
+				var lastpostid = all_auth.totalrow;//最后一个优先级
+				if (v > lastpostid){
+					referid = all_auth.data[parseInt(lastpostid)-1].AccessAuthId;
+				}else{
+					referid = all_auth.data[v-1].AccessAuthId;
+				}
+			}
+		});
+		
+		if (referid == modifyid){
+			$(obj).parent().empty().text(PRI);
+			eCheck = true;
+			return false;
+		}
+		
+		$.ajax({
+			url:'/bhost/modify_priority_z',
+			type:'post',
+			async:false,
+			data:{a0:se,z1:modifyid,z2:referid,z3:position},
+			success:function(result){
+				if (result == '1'){
+					$('#curpage').val(now);
+					order_flag = (parseInt(now)-1)*10;
+					get_accessauth_list();			
+				}else{
+					$(obj).parent().empty().text(PRI);
+					eCheck = true;
+				}
+			}
+		})
+	}
+}
+
+function _autoWidth(obj){
+	var v = $(obj).val();
+	var len = v.length;
+	$(obj).width((len/2+1) + 'em');
+}
+
+function cmd_auth(){
+	document.frm_access.a0.value=se;
+	document.frm_access.tasktype.value=0;
+	document.frm_access.z1.value=0;
+	document.frm_access.z2.value="[]";
+	document.frm_access.action = '/bhost/auth_manage_xtc';
+	document.frm_access.submit();
+}
+
+function manage_add(){
+	document.frm_access.tasktype.value=3;
+	document.frm_access.se.value = se;
+	document.frm_access.user.value = window.parent.document.frm.us.value;
+	document.frm_access.action = '/bhost/manage_auth_add';
+	document.frm_access.submit();
+}
+
+function manage_work(){
+	document.frm_access.a0.value=se;
+	document.frm_access.z1.value=1;
+	document.frm_access.z3.value=2;
+	document.frm_access.z4.value="[]";
+	document.frm_access.z5.value=0;
+	document.frm_access.z6.value="[]";
+	document.frm_access.action = '/bhost/show_manage_workorder';
+	document.frm_access.submit();
+}
+
+function manage_auth(){
+	document.frm_access.a0.value=se;
+	document.frm_access.z3.value=2;
+	document.frm_access.z4.value="[]";
+	document.frm_access.z5.value=0;
+	document.frm_access.z6.value="[]";
+	document.frm_access.action = '/bhost/show_manage_accessauth';
+	document.frm_access.submit();
+}
+
+function _getWait(obj) {
+	if (typeof waitDonelayer != 'undefined') {
+		layer.close(waitDonelayer);
+	}
+
+	$(obj).removeClass('done').show().unbind().on('mouseover', function () {
+		waitlayer = layer.tips('搜索中', this, {
+			tips: 1,
+			time: 0,
+			skin: 'waitlayer'
+		});
+	}).on('mouseout', function () {
+		if (typeof waitlayer != 'undefined') {
+			layer.close(waitlayer);
+		}
+	});
+}
+function _waitDone(obj) {
+	if (typeof waitlayer != 'undefined') {
+		layer.close(waitlayer);
+	}
+	$(obj).fadeOut(3000);
+	if (typeof waitDonelayer != 'undefined') {
+		layer.close(waitDonelayer);
+	}
+}
+
+//切换导入/任务
+function set_tab(obj,type){
+	if (type == 1){
+		$("#import_module").show();
+		$("#details_module").hide();
+	}else if(type == 2){
+		$("#details_module").show();
+		$("#import_module").hide();
+	}
+	$(obj).addClass("active").parent().siblings().children().removeClass("active");
+	if (type == 2){
+		clearInterval(if_ok);
+		get_accesstask_list();
+		repeat_execute = function(){
+			if_ok = setInterval(function(){
+				get_accesstask_list();
+			},5000)}
+		repeat_execute();
+	}else{
+		clearInterval(if_ok);
+	}
+}
+
+var d;
+var if_ok;
+var if_ok_down;
+var MAX_PAGE_T = 5;
+function task_detail(obj,id){
+	var filename = $(obj).attr('data');
+	status = $(obj).attr('data1');
+	var host_count = $(obj).attr('data2');
+	var acct_count = $(obj).attr('data3');
+	$("#import_host_list_detail tbody").empty();
+	$(".tab-moreinfo.tab-moreinfo-on").remove();
+	$('#apArea').empty();
+	$('#apArea1').empty();
+	page = 0;
+	ppage = 0;
+	append_flag = 0;
+	row_len = 0;
+	remain_page = 0;
+	page_flag = 0;
+	same_page = 0;
+	keyword_t = null;
+	if (status == 0){
+		_alert(2,"授权任务","该任务正在导入中");
+		return false;
+	}
+	if (status == 2){//导入中断
+		_alert(1,"授权任务","该任务发生错误");
+		return false;
+	}
+	d.close().remove();
+	var succ_flag = $(obj).parents('tr:first').children('td:eq(2)').text();
+	var fail_flag = $(obj).parents('tr:first').children('td:eq(3)').text();
+	clearInterval(if_ok);
+	if (status == 1){//导入完成
+		$("#fail_IP_box").iCheck('uncheck');
+		$(".mm.mm1").children('span').eq(0).text(parseInt(succ_flag)+parseInt(fail_flag));
+		$(".mm.mm1").children('span').eq(1).text(succ_flag);
+		$(".mm.mm1").children('span').eq(2).text(fail_flag);
+		task_id = id;
+		_initLoadData1();
+		$("#fail_IP_box").on('ifChanged',function(){//仅显示导入失败的用户信息
+			if ($(this).prop("checked")){
+				keyword_t = 1;
+			}else{
+				keyword_t = null;
+			}
+			$('#apArea1').empty();
+			page = 0;
+			ppage = 0;
+			append_flag = 0;
+			row_len = 0;
+			remain_page = 0;
+			page_flag = 0;
+			same_page = 0;
+			_initLoadData1();
+		});
+		$(".container3").hide();
+		$('#importPage').show();
+	}
+}
+
+function _initLoadData1() {
+	var h1 = $('#importPage').height();
+	var h2 = $('#apArea1').height();
+	var add = function() {
+		if (h1 - 203 > h2) {
+			page++;
+			var offsetrow = (page-1)*10;
+			get_import_detail_manage_auth(task_id,10,offsetrow);
+			get_data_i(0);
+			h2 = $('#apArea1').height();
+		}else{
+			clearInterval(if_select1);
+			return false;
+		}
+	}
+	var if_select1 = setInterval(function(){
+		if (row_len < 10){
+			clearInterval(if_select1);
+			return false;
+		}
+		if (row_len == 10 && import_list_detail.totalrow == 10){
+			clearInterval(if_select1);
+			return false;
+		}
+		add();	
+	},1000);
+	
+	add();
+}
+function get_data_i(type_add){
+	if($("#apArea1").find('.apSort').length==0){
+		$("#apArea1").append('<div class="apSort"></div>');
+	}
+	$('#aploadTip1').show();
+	var html = '';
+	var Status;
+	var npage = 0;
+	var page_i = -1;
+	var page_re = 0;
+	if (import_list_detail.data.length == 0){
+		return false;
+	}
+	$.each(import_list_detail.data,function(i,item){
+		html='';
+		if (item.Status == 0){
+			Status = "成功";
+			html += '<div class="apItem"><div class="label authsucc" style="width:50%; text-overflow: ellipsis;">' + item.AuthName + '</div><div class="cc" style="padding-left: 50%;"><table cellpadding="0" cellspacing="0"><tbody><tr><td style="width:153px;">' + Status + '<span class="a"></span></td></tr>';
+		}else if (item.Status == 1){
+			Status = "失败：" + item.ErrorLog;
+			html += '<div class="apItem"><div class="label authfail" style="width:50%; text-overflow: ellipsis;">' + item.AuthName + '</div><div class="cc" style="padding-left: 50%;"><table cellpadding="0" cellspacing="0"><tbody><tr><td style="width:153px;">' + Status + '<span class="a"></span></td></tr>';
+		}
+		html += '</tbody></table></div></div>';
+		$("#apArea1").find('.apSort:last').append(html);
+	});
+	html = '<div class="ap-pc"> 共' + import_list_detail.totalrow + '条</div>';
+	$("#apArea1").find('.ap-pc:last').remove();
+	$('#apArea1').append(html);
+	
+	var maxPage = Math.floor(import_list_detail.totalrow / 10);
+	var task_page = page - 1,
+		num = 10;
+	var pnum = (task_page * num + 1) + '-' + (task_page + 1) * num;
+	if((task_page + 1) * num > import_list_detail.totalrow){
+		pnum = (task_page * num + 1) + '-' + import_list_detail.totalrow;
+	}
+	
+	if (task_page >= maxPage) {
+		$('#aploadTip1').html('已全部加载').show();
+		return;
+	} else if (task_page < maxPage) {
+		$('#aploadTip1').hide();
+	}
+	if(type_add<2){
+		type_add++;
+		_addData1(type_add);
+	}
+}
+var append_flag = 0;
+var ppage = 0;
+var row_len = 0;
+var remain_page = 0;
+var page_flag = 0;
+var same_page = 0;
+
+var page = 0;
+
+$('#importPage').scroll(function() {
+	var wh = $('#importPage').height(),
+		vh = $('#apArea1').height(),
+		st = $('#importPage').scrollTop();
+
+	if (wh + st >= vh) {
+		_addData1(0);
+	}
+})
+
+function _addData1(type_add) {
+	if ($('#aploadTip1').is(':visible')) {
+		return;
+	}
+	page++;
+	var offsetrow = (page-1)*10;
+	get_import_detail_manage_auth(task_id,10,offsetrow);
+	get_data_i(type_add);
+}
+
+//获取导入完成的详细信息
+var import_list_detail;
+var keyword_t;
+function get_import_detail_manage_auth(id,limitrow,offsetrow){
+	$.ajax({
+		url:'/bhost/get_import_detail_manage_auth',
+		type:'post',
+		async:false,
+		data:{'a0':se,'a1':id,'a2':keyword_t,a3:limitrow,a4:offsetrow},
+		success:function(result){
+			import_list_detail = JSON.parse(result);
+			//import_list_detail.data.sort(import_list_detail);
+		}
+	});
+}
+var select_id = [];
+function get_accesstask_list(){
+	//////console.log(select_id);
+	var cur = $("#task_curpage").val();
+	$.ajax({
+		url:'/bhost/PGet_AuthImportTask',
+		type:'post',
+		async:false,
+		data:{a0:se,a1:cur,a2:5},
+		success:function(result){
+			task_list = JSON.parse(result);
+			$("#accesstask_list tbody").empty();
+			var Status = "";
+			var succcount;
+			var FailCount;
+			var ErrorLog;
+			$.each(task_list.data,function(i,item){
+				if(item.Status == 0){
+					Status = "正在执行";
+				}else if(item.Status == 1){
+					Status = "执行完成";
+				}else if(item.Status == 2){
+					Status = "执行失败";
+				}
+				if (item.SuccCount == null){
+					SuccCount = "";
+				}else{
+					SuccCount = item.SuccCount;
+				}
+				if (item.FailCount == null){
+					FailCount = "";
+				}else{
+					FailCount = item.FailCount;
+				}
+				if (item.ErrorLog == null){
+					ErrorLog = "";
+				}else{
+					ErrorLog = item.ErrorLog;
+				}
+				var HostCount = parseInt(SuccCount) + parseInt(FailCount);
+				float_str = "<p>错误信息："+ErrorLog+"</p>";
+				$("#accesstask_list tbody").append('<tr><td width="50"><input type="checkbox" class="form-checkbox" value="'+item.AuthImportTaskId+'"/></td><td title="'+item.AuthImportTaskName+'">'+item.AuthImportTaskName+'</td><td title="'+SuccCount+'">'+SuccCount+'</td><td title="'+FailCount+'">'+FailCount+'</td><td title="'+Status+'">'+Status+'</td><td title="'+ErrorLog+'">'+ErrorLog+'</td><td width="50"><div class=\"tab-ctr\"><a href="javascript:;" class="icon7" id="edit" title="导入详情" data="'+item.AuthImportTaskName+'" data1="'+item.Status+'"onclick="task_detail(this,'+item.AuthImportTaskId+');"></a><a href=\"javascript:;\" class=\"del\" id=\"del\" title="删除任务" onclick=\"del_task_one('+item.AuthImportTaskId+')\"></a></div><div class="tab-moreinfo">'+float_str+'</div></td></tr>');
+			});
+			$('.form-checkbox,.form-radio').iCheck({
+				checkboxClass: 'icheckbox_minimal-blue',
+				radioClass: 'iradio_minimal-blue',
+				increaseArea: '0' 
+			});
+		}
+	});
+	tabArr1();
+	$("#task_total").text(task_list.totalrow);
+	totalpage = Math.ceil(parseInt(task_list.totalrow)/5);
+	if (totalpage < 1){
+		totalpage = 1;
+	}
+	$("#task_totalpage").text(totalpage.toString());
+	$("#task_page_total").text(5);
+	//<tr>中选择按钮进行设置
+	$('#check_task_page').iCheck('uncheck');
+	var check_page_flag = 0;
+	////console.log(select_id);
+	$("#accesstask_list tbody input[type='checkbox']").each(function(){
+		if ($.inArray(parseInt(this.value), select_id) != -1){					
+			$(this).iCheck('check');
+			check_page_flag++;
+		}
+	});
+	if (check_page_flag == $("#accesstask_list tbody input[type='checkbox']").length && check_page_flag != 0){
+		$('#check_task_page').iCheck('check');
+	}
+	if (parseInt(cur) > totalpage){
+		$("#task_curpage").val(totalpage);
+		get_accesstask_list();
+	}
+	var flag_id = 0;
+	num = select_id.length;
+	//////console.log(select_id);
+	$("#select_task_total").text(num);
+	$("#accesstask_list tbody input[type='checkbox']").on("ifChanged",function(){
+		if ($(this).is(":checked")){
+			num = $("#select_task_total").text();   
+			num++;
+			if (select_id.indexOf(parseInt(this.value)) == -1){
+				select_id.push(parseInt(this.value))	
+			}
+			$("#select_task_total").text(num);
+		}else{
+			num = $("#select_task_total").text();
+			num--;
+			select_id.splice($.inArray(parseInt(this.value),select_id),1);
+			$("#select_task_total").text(num);   
+		}
+		var check_num = 0;
+		$("#accesstask_list tbody input[type='checkbox']").each(function(){
+			if (!$(this).prop("disabled")){
+				check_num++;
+			}
+		}) 
+		if ($("#accesstask_list tbody").find('input[type=checkbox]:checked').length == check_num){
+			$('#check_task_page').iCheck('check');
+		}else{
+			$('#check_task_page').iCheck('uncheck');
+		}
+	});
+	$('#check_task_page').on('ifClicked',function(e){
+		if(!$('#check_task_page').prop('checked')){
+			$("#accesstask_list tbody input[type='checkbox']").each(function(){
+				$(this).iCheck('check');   
+			}) 
+		}else{
+			$("#accesstask_list").children('tbody').find('input[type=checkbox]').iCheck('uncheck');
+		}
+	});	
+}
+
+
+function import_access(){
+	$("#import_btn").blur();
+	$("#file_v").val('');
+	$("#file_change").val('');$("#file_change1").val('');
+	$("#cover_box1").iCheck('uncheck');
+	var $dialogCont = $("#scDCTab2_import").show();
+	d = dialog({
+		title:"授权导入",
+		content:$dialogCont,
+		id:"scDCTab2_import",
+		width:"850px"
+	});
+	d.addEventListener('close', function () {
+		$dialogCont.appendTo("body").hide();
+		$('#check_page').unbind().bind('ifClicked',function(e){
+			if(!$('#check_page').prop('checked')){
+				$("#access_auth_list").children('tbody').find('input[type=checkbox]').iCheck('check');
+			}else{
+				$("#access_auth_list").children('tbody').find('input[type=checkbox]').iCheck('uncheck');
+			}	
+		});
+		num = selectid.length;
+		$("#select_total").text(num);
+		$("#access_auth_list tbody input[type='checkbox']").unbind().bind("ifChanged",function(){
+			if ($(this).is(":checked")){
+				num = $("#select_total").text();   
+				num++;
+				if (selectid.indexOf(parseInt(this.value)) == -1){
+					selectid.push(parseInt(this.value));
+				}
+				$("#select_total").text(num);
+			}else{
+				num = $("#select_total").text();
+				num--;
+				selectid.splice($.inArray(parseInt(this.value),selectid),1);
+				$("#select_total").text(num);   
+			}
+			if ($("#access_auth_list tbody").find('input[type=checkbox]:checked').length == $("#access_auth_list tbody input[type='checkbox']").length){
+				$('#check_page').iCheck('check');
+			}else{
+				$('#check_page').iCheck('uncheck');
+			}
+		});
+		if (if_ok == null){
+		}else{
+			clearInterval(if_ok);
+		}
+	});
+	d.showModal();
+	
+	$("#import_module").show();
+	$("#details_module").hide();
+	$("#task_import").addClass("active").parent().siblings().children().removeClass("active");
+	$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+		d.close().remove();
+	});
+	$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+		if ($("#details_module").is(':visible')){
+			d.close().remove();
+			return false;
+		}
+		var cover_flag = 0;
+		if ($("#file_v").val() == ""){
+			_alert(2,"授权导入","请选择文件");
+			return false;
+		}
+		var file_v = $("#file_v").val();
+		var fileReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+		if (!fileReg.test(file_v)){
+			_alert(1,"授权导入","导入文件名称格式不正确");
+			return false;
+		}
+		var last_4=file_v.substr(file_v.length-4).toLowerCase();
+		var last_5=file_v.substr(file_v.length-5).toLowerCase();
+		if ( last_4!= ".csv" && last_4!='.xls' && last_5!='.xlsx'){
+			_alert(1,"授权导入","导入文件格式不正确，只支持.CSV、.XLS、.XLSX格式文件");
+			return false;
+		}
+		var file_name = file_v.substring(0,file_v.length-4);
+
+		var file_exist = 0;
+		var formData_f = new FormData($("#uploadForm")[0]);
+		formData_f.append('a0',se);
+		
+		$.ajax({
+			url:'/bhost/isexist_auth_import',
+			type:'post',
+			data:formData_f,
+			async: false,  
+			cache: false,
+			contentType: false,
+			processData: false,
+			success:function(result){
+				var is_r = JSON.parse(result);
+				if (is_r.Result){
+					file_exist = 0;
+				}else{
+					file_exist = 1;
+					_alert(2,"授权导入","该任务已存在");
+					return false;
+				}	
+			}
+		});
+		if (file_exist == 1){
+			return false;
+		}
+			
+		if ($("#cover_box1").prop('checked')){
+			cover_flag = 1;
+		}else{
+			cover_flag = 0;
+		}
+		var formData = new FormData($("#uploadForm")[0]);
+		formData.append('a1',cover_flag);
+		formData.append('a0',se);
+		formData.append('a99',use_BH);
+		$.ajax({
+			url:'/bhost/import_access',
+			type: 'POST',
+			data: formData,  
+			async: false,  
+			cache: false,
+			contentType: false,  
+			processData: false,  
+			success: function (result) {
+				$("#file_v").val('');
+				$("#file_change").val('');$("#file_change1").val('');
+				$("#cover_box1").iCheck('uncheck');
+				
+				$.ajax({
+					url:'/bhost/PGet_AuthImportTask',
+					type:'post',
+					async:false,
+					data:{a0:se,a1:1,a2:5},
+					success:function(result){
+						var task_list_data = JSON.parse(result);
+						var totalpage = Math.ceil(parseInt(task_list_data.totalrow)/MAX_PAGE_T);
+						if (totalpage < 1){
+							totalpage = 1;
+						}
+						//$("#task_curpage").val(totalpage);
+						$("#task_curpage").val(1);
+						set_tab($("#task_list_tab"),2);
+					}
+				});
+				
+				set_tab($("#task_list_tab"),2);
+				
+			}
+		});
+	});
+}
+
+//弹窗列表绑定
+function tabArr1(){
+	$('table').unbind();
+	var tout,tin;
+	var $cloneItem;
+	var z = false;
+
+	$('#accesstask_list').on('mouseover','tbody>tr',function(){
+		document.onclick = null;
+	}).on('mouseout','tbody>tr',function(){
+		document.onclick = function(){
+			$('div.tab-moreinfo-on').hide();
+			$('tr.on').removeClass('on');
+		}
+	}).on('click','tbody>tr',function(e){		
+		x=e.target;
+		if(x.id=='del'){
+			return false;
+		}
+		if(x.id=='edit'){
+			return false;
+		}
+		document.onclick = null;
+
+		var $this = $(this);
+
+			var $tr = $this;
+
+			var oset = $tr.offset();
+			var trc = $tr.attr('class');
+			if(trc && trc.indexOf('on') >=0 ){
+				$('div.tab-moreinfo-on').hide();
+				$('div.tab-moreinfo-on').remove();
+				$('tr.on').removeClass('on');
+				return;
+			}
+
+			$('div.tab-moreinfo-on').hide();
+			$('tr.on').removeClass('on');
+			$tr.addClass('on');
+			
+			var $box = $this.parents('div.box-table');
+			var boxh = $box.outerHeight(), boxo = $box.offset();
+
+			var $item = $this.children('td:last').children('div.tab-moreinfo');
+			var ih = $item.outerHeight(),th = $tr.outerHeight();
+			$cloneItem = $item.clone().addClass('tab-moreinfo-on').appendTo('body');
+			if(boxh < oset.top-boxo.top + ih + th - 40 ){
+				$cloneItem.css({
+					top:oset.top - ih,
+					left:oset.left,
+					width:$tr.outerWidth() - 1,
+					opacity:0,
+					display:'block'
+				}).stop().animate({
+					opacity:1
+				});
+			}else{
+				$cloneItem.css({
+					top:oset.top + $tr.outerHeight() + 1,
+					left:oset.left,
+					width:$tr.outerWidth() - 1,
+					opacity:0,
+					display:'block'
+				}).stop().animate({
+					opacity:1
+				});
+			}
+			//$cloneItem.prev('div').remove();
+			z_v = $cloneItem.prev('div').css('z-index');
+			$cloneItem.css('z-index',z_v+1);
+	});
+	$('.box-table,body,.c-cont2,.c-cont').on('scroll',function(){
+		$('div.tab-moreinfo-on').remove();
+		$('tr.on').removeClass('on');
+	})
+	
+	var len = $('.tab-ctr:last').children('a').length;
+	$('#accesstask_list>thead>tr>th:last').width(len*30);
+}
+
+var repeat_get;
+var if_ok_down;
+
+function export_access(){
+	var $dialogCont = $("#export_type").show();	
+	title="导出";
+	var d = dialog({
+		title:title,
+		content:$dialogCont,
+		id:"export_type",
+		width:"700px",
+	});
+	d.addEventListener('close', function () {
+		$dialogCont.appendTo("body").hide();
+	});
+	$('#all_check').unbind().on('ifChecked',function(){
+		resource_check=$('#resource_check').is(':checked');
+		acc_check=$('#acc_check').is(':checked');
+		work_check=$('#work_check').is(':checked');
+		manage_check=$('#manage_check').is(':checked');
+		cmd_check=$('#cmd_check').is(':checked');
+		if(!resource_check || !acc_check || !work_check || !cmd_check || !manage_check){
+			$('#acc_check').iCheck('check');
+			$('#resource_check').iCheck('check');
+			$('#work_check').iCheck('check');
+			$('#cmd_check').iCheck('check');
+			$('#manage_check').iCheck('check');
+		}
+		
+	}).on('ifUnchecked',function(){
+		resource_check=$('#resource_check').is(':checked');
+		acc_check=$('#acc_check').is(':checked');
+		work_check=$('#work_check').is(':checked');
+		manage_check=$('#manage_check').is(':checked');
+		cmd_check=$('#cmd_check').is(':checked');
+		if(resource_check && acc_check && work_check && manage_check && cmd_check){
+			$('#acc_check').iCheck('uncheck');
+			$('#resource_check').iCheck('uncheck');
+			$('#work_check').iCheck('uncheck');
+			$('#cmd_check').iCheck('uncheck');
+			$('#manage_check').iCheck('uncheck');
+		}
+	});
+	$('#resource_check').unbind().on('ifChecked',function(){
+		if ($('#resource_check').is(':checked') && $('#acc_check').is(':checked') && $('#work_check').is(':checked') && $('#cmd_check').is(':checked') && $('#manage_check').is(':checked')){
+			$('#all_check').iCheck('check');
+		}
+	}).on('ifUnchecked',function(){
+		$('#all_check').iCheck('uncheck');
+	});
+	$('#acc_check').unbind().on('ifChecked',function(){
+		if ($('#resource_check').is(':checked') && $('#acc_check').is(':checked') && $('#work_check').is(':checked') && $('#cmd_check').is(':checked') && $('#manage_check').is(':checked')){
+			$('#all_check').iCheck('check');
+		}
+	}).on('ifUnchecked',function(){
+		$('#all_check').iCheck('uncheck');
+		
+	});
+	$('#work_check').unbind().on('ifChecked',function(){
+		if ($('#resource_check').is(':checked') && $('#acc_check').is(':checked') && $('#work_check').is(':checked') && $('#cmd_check').is(':checked') && $('#manage_check').is(':checked')){
+			$('#all_check').iCheck('check');
+		}
+	}).on('ifUnchecked',function(){
+		$('#all_check').iCheck('uncheck');
+	});
+	$('#cmd_check').unbind().on('ifChecked',function(){
+		if ($('#resource_check').is(':checked') && $('#acc_check').is(':checked') && $('#work_check').is(':checked') && $('#cmd_check').is(':checked') && $('#manage_check').is(':checked')){
+			$('#all_check').iCheck('check');
+		}
+	}).on('ifUnchecked',function(){
+		$('#all_check').iCheck('uncheck');
+	});
+	$('#manage_check').unbind().on('ifChecked',function(){
+		if ($('#resource_check').is(':checked') && $('#acc_check').is(':checked') && $('#work_check').is(':checked') && $('#cmd_check').is(':checked') && $('#manage_check').is(':checked')){
+			$('#all_check').iCheck('check');
+		}
+	}).on('ifUnchecked',function(){
+		$('#all_check').iCheck('uncheck');
+	});
+	$('#all_check').iCheck('uncheck');
+	$('#acc_check').iCheck('check');
+	$('#resource_check').iCheck('check');
+	$('#work_check').iCheck('uncheck');
+	$('#cmd_check').iCheck('uncheck');
+	$('#manage_check').iCheck('uncheck');
+	$('input[name=exportType_radio2][value=0]').iCheck('check');
+	d.showModal();
+	$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+		d.close().remove();
+		parent.layer.open({
+			type: 1,
+			title: '访问授权',
+			content: '<div class="layer-alert"><i class="alert warning"></i>是否导出</div>',
+			btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+			btnAlign:'c',
+			closeBtn: false,
+			skin:'layer-custom',
+			area:['380px','310px'],
+			move: false,
+			resize: false,
+			btn1:function(i){
+				var exportType=[];
+				format=$("#export_type").find("input[name=exportType_radio2]:checked").val();
+				if($('#resource_check').is(':checked')){
+					exportType.push('resource');
+				}
+				if($('#acc_check').is(':checked')){
+					exportType.push('acc');
+				}
+				if($('#work_check').is(':checked')){
+					exportType.push('work');
+				}
+				if($('#cmd_check').is(':checked')){
+					exportType.push('cmd');
+				}
+				if($('#manage_check').is(':checked')){
+					exportType.push('manage');
+				}
+				exportType=exportType.join(',');
+				parent.layer.close(i);
+				$.ajax({
+					url:'/bhost/down_access',
+					type:'post',
+					async:false,
+					data:{a0:se,z2:exportType,z3:format},
+					success:function(result){
+						var result=JSON.parse(result);
+						_showLoading();
+						repeat_get = function(){
+							if_ok_down = setInterval(function(){
+								get_down_ok(result.file_name);
+							},5000)}
+						repeat_get();
+					}
+				});				
+			},
+			btn2:function(i){
+				parent.layer.close(i);
+			}
+		})
+	});	
+	
+}
+var format=0;
+var use_BH=window.parent.parent.document.frm.use_BH.value;
+function get_down_ok(file_name){
+	$.ajax({
+		url:'/bhost/get_down_ok_access',
+		type:'post',
+		async:false,
+		data:{a0:se,a1:format,a2:file_name},
+		success:function(result){
+			var down_result = JSON.parse(result);
+			if (down_result.Result){
+				clearInterval(if_ok_down);
+				_closeLoading();
+				if (down_result.ErrMsg != "None"){
+					_alert(1,"授权导出",down_result.ErrMsg);
+					return false;
+				}
+				if(use_BH=='0'){
+					document.frm_access.action='/bhost/download_file_access';
+					document.frm_access.a0.value = se;
+					document.frm_access.a1.value = format;
+					document.frm_access.a2.value = down_result.filename;
+					document.frm_access.a99.value = use_BH;
+
+					document.frm_access.submit();
+					return 0;
+				}
+				$.ajax({
+					url:'/bhost/download_file_access',
+					type:'post',
+					async:false,
+					data:{a0:se,a1:format,a99:use_BH,a2:down_result.filename},
+					success:function(result){
+						var result=JSON.parse(result);
+						if(result.Result){
+							var sesstimet = (new Date()).valueOf();
+							var referrer_arr=document.referrer.toString().split('/');
+							referrer_arr.pop();
+							var referrer=referrer_arr.join('/');
+							var filename_arr=result.filename.split('.');
+							filename_arr.pop(1);
+							filename_arr.pop(1);
+							var json_download = {
+									"Type": "Download",
+									"Url": referrer,
+									"Path": result.path,
+									"Filename": result.filename,
+									"Session": se,
+									"sesstimet":sesstimet,
+									"Filenewname": result.filenewname,
+							}
+							var if_html_client = false;
+							var base64_str = '';
+							$.ajax({
+									url: "/bhost/get_base64",
+									type:"POST",
+									async:false,
+									data:{a0:se,z1:JSON.stringify(json_download)},
+									success:function(result){
+											var result=JSON.parse(result);
+											if(result.Result){
+													if_html_client = result.info;
+													base64_str = result.b64;
+											}else{
+													_alert(1,"授权导出",result.ErrMsg); 
+											}
+									}
+							})
+							if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(json_download));
+							else{
+								get_regedit('bhost', window.parent.document.frm.se.value,'',sesstimet);
+								$('#YuFrame1').remove();
+								$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+								$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+							}
+						}
+					}
+				});
+				/*
+				$.ajax({
+					url:'/bhost/del_access_file',
+					type:'post',
+					async:false,
+					data:{a0:se,a1:format},
+					success:function(result){
+					}
+				});
+				*/
+			}
+		}
+	});
+}
+
+function filetip(obj){
+	var c=$(obj).val();
+	c = c.split("\\");
+	var b = c[c.length-1];
+	$('#file_v').val(b);
+}
+var setinterval=null;
+function browes(){
+	if (use_BH=='0'){
+		$("#file_change1").click();
+		return 0;
+	}
+	var referrer_arr=document.referrer.toString().split('/');
+	referrer_arr.pop();
+	var referrer=referrer_arr.join('/');
+	var sesstimet = (new Date()).valueOf();
+	var json_download = {
+			"Type": "Upload",
+			"Url": referrer,
+			"Path": "/usr/storage/.system/upload/",
+			"Filename": sesstimet+'',
+			"Session": se,
+			"sesstimet":sesstimet+''
+	}
+	var if_html_client = false;
+	var base64_str = '';
+	$.ajax({
+			url: "/bhost/get_base64",
+			type:"POST",
+			async:false,
+			data:{a0:window.parent.document.frm.se.value,z1:JSON.stringify(json_download)},
+			success:function(result){
+					var result=JSON.parse(result);
+					if(result.Result){
+							if_html_client = result.info;
+							base64_str = result.b64;
+					}else{
+							_alert(1,"授权导出",result.ErrMsg); 
+					}
+			}
+	})
+	if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(json_download));
+	else{
+		get_regedit('bhost', window.parent.document.frm.se.value,'',sesstimet);
+		$('#YuFrame1').remove();
+		$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+		$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+	}
+	clearInterval(setinterval);
+	setinterval=setInterval(function(){
+		$.ajax({
+			url: "/bhost/find_item_sql",
+			type:"POST",
+			async:false,
+			data:{a0:window.parent.document.frm.se.value,a1:sesstimet},
+			success:function(result){
+				var result=JSON.parse(result);
+				if(result.Result){
+					if(result.info==null){
+
+					}else{
+						var info_arr=result.info.split('/');
+						if(info_arr.length>1){
+							$('#file_v').val(info_arr.pop());
+							$('#file_change').val('/usr/storage/.system/upload/'+sesstimet);
+						}else{
+							if(result.info=='NULL'){
+								$('#file_v').val('');
+								$('#file_change').val('');
+							}else{
+								$('#file_v').val(result.info);
+								$('#file_change').val('/usr/storage/.system/upload/'+sesstimet);
+							}
+						}
+						
+						clearInterval(setinterval);
+					}
+				}
+			}
+		});
+	}, 3000);
+}
+
+function del_task(id){
+	$.ajax({
+		url:'/bhost/del_auth_task',
+		type:'post',
+		async:false,
+		data:{a0:se,a1:id},
+		success:function(result){
+			var result = JSON.parse(result);
+			if (result['Result']){
+				_alert(0,"授权导入","删除成功");
+			}else{
+				_alert(0,"授权导入","删除失败："+result['ErrMsg']);
+			}
+		}
+	})
+}
+
+function del_task_one(id){
+	$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"授权导入",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+		btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			for (var i = 0; i < select_id.length; i++){      
+				if (select_id[i] == parseInt(id)){
+					num = $("#select_task_total").text();
+					num = parseInt(num)-1;
+					$("#select_task_total").text(num);
+					select_id.splice($.inArray(parseInt(id),select_id),1);
+					break;
+				}
+			}
+			del_task(id);
+			get_accesstask_list();
+		},
+		btn2:function(i){
+			parent.layer.close(i);
+		}
+	});
+}
+
+function del_task_more(){
+	if (select_id.length == 0){
+		_alert(2,"授权导入","请选择要删除的数据");
+		return false;
+	}
+	$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"授权导入",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			selectid_str = select_id.toString();
+			del_task(selectid_str);
+			select_id=[];
+			get_accesstask_list();
+		},
+		btn2:function(i){
+			parent.layer.close(i);
+		}
+	});
+}
+
+function export_template(){
+	 var data = [
+		// ['类型'],
+		// ['协议','*协议名称','*端口','描述'],
+        // ['','特殊字符仅支持下划线、横杠','0-65535之间'],
+		// [''],
+		// [''],
+		// [''],
+		// ['AD域','*AD域名称','*服务器IP'],
+        // ['','特殊字符仅支持下划线、横杠、小数点','0.0.0.0-255.255.255.255之间'],
+		// [''],
+		// [''],
+		// [''],
+        // ['连接参数','*连接参数名称','*协议','配置'],
+        // ['','特殊字符仅支持下划线、横杠、小数点','RRDP/SSH/ORACLE/MSSQL/MYSQL/HTTP(S)/TELNET/FTP/VNC/X11/RADMIN/SYBASE/DB2/RLOGIN/PCANY/TN5250','TELNET/FTP/VNC/X11/RLOGIN/PCANY/TN5250协议，配置为空即不填'],
+        // ['','','','RDP：1.访问方式：NORMAL/CONSOLE；2.格式：访问方式'],
+		// ['','','','SSH：1.版本号：1/2；2.格式：版本号'],
+		// ['','','','ORACLE：1.指定：SID/SERVICE_NAME；2.实例名或服务名：不能含有特殊字符；3.连接方式：未指定/NORMAL/SYSDBA/SYSOPER；4.格式：指定|实例名/服务名|连接方式'],
+		// ['','','','MSSQL：1.实例名：不能含有特殊字符；2.认证方式：未指定/SQL服务器验证/Windows验证/Windows单一登录；3.格式：实例名|认证方式'],
+		// ['','','','MYSQL/DB2：1.数据库名：不能含有特殊字符；2.格式：数据库名'],
+		// ['','','','SYBASE：1.实例名：不能含有特殊字符；2.格式：实例名'],
+		// ['','','','HTTP(S)：1.URL；2.账号元素：不能含有特殊字符；3.密码元素：不能含有特殊字符；4.提交元素；5.格式：URL|账号|密码|提交元素'],
+		// ['','','','RADMIN：1.认证方式：未指定/RADMIN/Windows；2.格式：认证方式'],
+		// [''],
+		// [''],
+		// [''],
+        // ['邮件','*邮件名称','*服务器地址','*发送邮箱地址','*服务器账号','*服务器验证','*附件大小','*编码方式','*方式'],
+        // ['','特殊字符仅支持下划线、横杠、小数点','0.0.0.0-255.255.255.255之间','邮箱格式','','密码/否','数字','UTF-8/GBK','默认/备用/其他'],
+		// [''],
+		// [''],
+		// [''],
+        // ['短信网关','*短信网关名称','*数据库类型','*服务器地址','*端口','*账号','*密码','*数据库','*短信sql语句模板','*编码方式','*方式'],
+        // ['','特殊字符仅支持下划线、横杠、小数点','ORACLE/MSSQL/MYSQL/SYBASE','0.0.0.0-255.255.255.255之间','0-65535之间','','','','包含\'%phone%\'、\'%content%\'','UTF-8/GBK','默认/备用/其他'],
+		// [''],
+		// [''],
+		// [''],
+        // ['SYSLOG','*SYSLOG名称','*服务器地址','*端口','*编码方式','*方式'],
+		// ['','特殊字符仅支持下划线、横杠、小数点','0.0.0.0-255.255.255.255之间','0-65535之间','UTF-8/GBK','默认/备用/其他'],
+		// [''],
+		// [''],
+		// [''],
+        // ['SNMP','*SNMP名称','*服务器地址','*端口','*编码方式','*方式'],
+        // ['','特殊字符仅支持下划线、横杠、小数点','0.0.0.0-255.255.255.255之间','0-65535之间','UTF-8/GBK','默认/备用/其他'],
+		// [''],
+		// [''],
+		// [''],
+		// ['事件告警','*事件告警名称','描述','*等级','*类型','*方式','默认','备用','接收者已定义','接收者自定义'],
+        // ['','特殊字符仅支持下划线、横杠、小数点','方式不为无时，为必填项','无/低/中/高（不填默认为无）','无/违规操作/高危操作/登录异常（不填默认为无）','无/邮件/短信网关/SNMP/SYSLOG（不填默认为无）','仅限邮件、短信网关','仅限邮件、短信网关','仅限邮件、短信网关','仅限邮件、短信网关'],
+		// [''],
+		// [''],
+		// [''],
+		// ['审批策略','*审批策略名称','短信网关默认','短信网关备用','邮件默认','邮件备用','*审批者','*审批人数'],
+        // ['','特殊字符仅支持下划线、横杠、小数点','','','','','','数字'],
+		// [''],
+		// [''],
+		// [''],
+		['*时间集合名称','描述','*设置'],
+        ['特殊字符仅支持下划线、横杠、小数点','','周期 每天 00:00:00-23:59:59'],
+        ['','','周期 每周 周一 00:00:00-周一 23:59:59'],
+		[
+			// '客户端集合',
+			'*客户端集合名称','IP地址','IP区间','MAC地址','MAC区间'],
+		[
+			// '',
+			'特殊字符仅支持下划线、横杠、小数点','0.0.0.0-255.255.255.255之间','0.0.0.0-255.255.255.255','00:00:00:00:00:00-ff:ff:ff:ff:ff:ff之间','00:00:00:00:00:00-ff:ff:ff:ff:ff:ff'],
+		// ['',''],
+		// ['',''],
+		// ['',''],
+		// [''],
+		// [''],
+		// [''],
+        [
+			// '服务器集合',
+			'*服务器集合名称','是否启用IP限制','IP地址','IP区间','主机组'],
+        [
+			// '',
+			'特殊字符仅支持下划线、横杠、小数点','启用/不启用（默认：启用）','0.0.0.0-255.255.255.255之间','0.0.0.0-255.255.255.255','非按组授权主机组格式：/组1/组2/组3/*'],
+        // ['',''],
+        // ['',''],
+        ['','','','按组授权主机组格式：/组1/组2/组3/'],
+        // ['','','主机格式：/组1/组2/组3/主机a'],
+		// [''],
+		// [''],
+		// [''],
+        [
+			// '访问授权',
+			'*访问授权名称','*启用授权','*授权动作','*管理者','*用户/用户组','*对象指定/范围指定|自定义/已定义|所有/共有','*服务器/服务器范围','*协议','*账号','模板名称','*登录审批','*协同登录','*访问备注','*登录告警','*RDP剪贴板上传','*RDP剪贴板下载','*RDP文件记录','*磁盘映射上行、下行','*键盘记录','*SSH文件上传','*SSH文件下载','*SSH文件记录','*FTP文件上传','*FTP文件下载','*FTP文件记录','*时间生效范围','时间范围','*客户端地址限制','客户端集合/范围','预处理命令'],
+        [
+			// '',
+			'特殊字符仅支持下划线、横杠、小数点','是/否（不填默认为是）','允许/拒绝（不填默认为允许）','','非按组授权用户组格式：/组1/组2/组3/*','范围指定','范围指定时，格式：服务器集合名称','范围指定格式：协议:端口|连接参数','范围指定填时账号','不填为私有策略','审批策略名称/否（不填默认为否）','是/否（不填默认为否）','是/否（不填默认为否）',	'事件告警名称/否（不填默认为否）',	'是/否（不填默认为是）',	'是/否（不填默认为是）',	'是/否（不填默认为否）',	'0:不开启，1:开启上行，2:开启上行，3：全部开启（不填默认为全部开启）',	'是/否（不填默认为是）',	'是/否（不填默认为是）',	'是/否（不填默认为是）',	'是/否（不填默认为否）',	'是/否（不填默认为是）',	'是/否（不填默认为是）',	'是/否（不填默认为否）',	'不限制/允许|自定义/已定义/例外|自定义/已定义（不填默认为不限制）',	'已定义时填时间集合',	'不限制/允许|自定义/已定义/例外|自定义/已定义（不填默认为不限制）',	'已定义时填客户端集合'],
+        [
+			// '',
+			'','','','',	'按组授权用户组格式：/组1/组2/组3/','对象指定','对象指定时填写主机组（/主机组）主机（192.168.0.1或/主机组/主机）','范围指定：协议端口(连接参数名)','对象指定：账号','','','',
+		'','','','','','','','','','',	'','','','','','自定义（任务 当前 20:45:07；任务 当天 01:00:00-23:59:59；区间 2018/03/28 00:00:00-2018/03/28 23:59:59；周期 每月 1日 00:00:00-31日 23:59:59；周期 每周 周一 00:00:00-周日 23:59:59；周期 每天 00:00:00-23:59:59）','','自定义：0.0.0.0-255.255.255.255之间','',''],
+        [
+			// '',
+			'',	'',	'','',	'',	'','非按组授权主机组格式：/组1/组2/组3/*','*','*','',	'',	'',	'',	'',	'',	'',	'',	'',	'',			'',	'',	'',	'',	'','','','','','','0.0.0.0-255.255.255.255','',''],
+        [
+			// '',
+			'',	'',	'',	'',	'',	'',	'按组授权主机组格式：/组1/组2/组3/','*','*',	'',	'',	'',	'',	'','',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'','','','00:00:00:00:00:00-ff:ff:ff:ff:ff:ff之间','',''],
+        [
+			// '',
+			'',	'',	'',	'',	'',	'',	'按主机授权主机格式：主机1',	'*',	'*',	'',	'','',	'','','','','',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'','00:00:00:00:00:00-ff:ff:ff:ff:ff:ff','',''],
+		[
+			// '',
+			'',	'',	'',	'',	'',	'',	'非按主机授权主机格式：主机1','-','-','',	'','','','','','',	'',	'',	'',	'',	'',	'',	'',	'',	'','','','','','',''],
+		// [''],
+		// [''],
+		// [''],
+	]; 
+	// var csvContent = "data:text/csv;charset=utf-8,\ufeff";
+	var csvContent = "";
+	// if (window.navigator.msSaveOrOpenBlob) {
+	//         csvContent = "\ufeff";
+	// }
+	data.forEach(function(infoArray, index){
+		dataString = infoArray.join(",");
+		csvContent += index < data.length ? dataString+ "\n" : dataString;
+	});
+	if (window.navigator.msSaveOrOpenBlob) {
+		// if browser is IE
+		csvContent = "\ufeff"+csvContent;
+		var blob = new Blob([decodeURIComponent(encodeURI(csvContent))],{
+				type: "text/csv;charset=utf-8;"
+		});
+		navigator.msSaveBlob(blob, '访问授权模板.csv');
+	}else{
+		csvContent = "data:text/csv;charset=utf-8,\ufeff"+csvContent;
+		var encodedUri = encodeURI(csvContent);
+		var link = document.createElement("a");
+		link.setAttribute("href", encodedUri);
+		link.setAttribute("download", "访问授权模板.csv");
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	}
+}
+
+
+function _closeDetail() {
+	$('#importPage').hide();
+	$(".container3").show();
+	import_access()
+	$("#task_list_tab").click();
+}
+
+function _reloadDetail(){
+	$('#apArea1').empty();
+	$('#aploadTip1').html('正在加载').hide();
+	page = 0;
+	ppage = 0;
+	append_flag = 0;
+	row_len = 0;
+	hostip = "";
+	remain_page = 0;
+	page_flag = 0;
+	same_page = 0;
+	_initLoadData1();
+}
+
+function select_task(){
+	var num = 0;
+	select_id=[];
+	var select_total = $("#select_task_total").text();
+	var task_total = $("#task_total").text();
+	if (select_total == task_total){
+		$("#accesstask_list").find('input').iCheck('uncheck');
+	}else{
+		$.ajax({
+			url:'/bhost/PGet_AuthImportTask',
+			type:'post',
+			async:false,
+			data:{a0:se,a1:'null',a2:'null'},
+			success:function(result){
+				var result = JSON.parse(result);
+				$.each(result.data,function(i,item){
+					select_id.push(item.AuthImportTaskId);
+				});
+			}
+		});
+		$("#accesstask_list input[type='checkbox']").each(function(){
+			$(this).iCheck('check');
+		});
+	}
+	num = select_id.length;
+	$("#select_task_total").text(num);
+	////console.log(select_id);
+}
+
+function fresh_task_list(){
+	get_accesstask_list();
+	select_id = [];
+	$("#details_module input[type='checkbox']").each(function(){	
+		$(this).iCheck('uncheck');
+	});
+	$("#select_task_total").text(0);
+}
+
+function turn_page(type){
+	////console.log(select_id);
+	switch (type){
+		case 1: //首页
+			$("#task_curpage").val(1);
+			break;
+		case 2://上一页
+			var cur = $("#task_curpage").val();
+			if (cur == '1'){
+				return false;
+			}else{
+				$("#task_curpage").val((parseInt(cur)-1));	
+			}
+			break;
+		case 3://下一页
+			var cur = $("#task_curpage").val();
+			var total = $("#task_totalpage").text();
+			if (cur == total){
+				return false;
+			}else {
+				$("#task_curpage").val((parseInt(cur)+1));
+			}
+			break;
+		case 4:
+			$("#task_curpage").val($("#task_totalpage").text());
+			break;
+		case 5:
+			var cur = $("#task_curpage").val();
+			var numReg = /\D/;
+			if (numReg.test(cur) || parseInt(cur) < 1 || cur == ''){
+				$("#task_curpage").val(1);
+			}
+			break;
+		default:
+			;
+	}
+	////console.log(select_id);
+	get_accesstask_list();
+	////console.log(select_id);
+}
+</script>
+</body>
+</html>

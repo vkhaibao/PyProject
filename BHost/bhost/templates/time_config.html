@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+    <link rel="stylesheet" href="/manage/css/jedate.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<!-- <script src="/manage/js/jquery.datepick.js"></script> -->
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<script src="/manage/js/jquery.jedate.min.js"></script>
+	<style>
+		.ss{
+			    padding-bottom: 10px;
+		}
+		.form-text {
+			padding: 0 8px;
+		}
+		
+	</style>
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<!--时间设置-->
+		<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+				<!--<h3 onclick="parent.reload();">时间设置</h3>-->
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title">
+							<span id="time_config" style="cursor: pointer;">系统时间</span>
+							<i class="time_config_icon"></i>
+					</div>
+				</div>
+			<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-form" style="padding-bottom:10px;">
+						<div class="form">	
+							<div class="form-item" >
+								<span class="form-tag"><em class="imp">*</em>系统时间：</span>
+								<div class="form-c form-c1">
+									<div class="srSort" id="srTemp-xtime" style="">
+											<span class="stwrap">
+											<input type="text" id="t_d" value="" placeholder="日期" class="datepicker" readonly>
+											<input type="text" id="t_h" placeholder="时" class="timeinput" min="00" max="23" value="00">
+											<span class="srTip">:</span>
+											<input type="text" id="t_m" placeholder="分" class="timeinput" min="00" max="59" value="00">
+											<span class="srTip">:</span>
+											<input type="text" id="t_s" placeholder="秒" class="timeinput" min="00" max="59" value="00">
+										</span>
+									</div>
+									<a href="javascript:;" style="margin-left: 6px;height: 26px;border-color: #AAA;" class="form-button s-hide"  id="Time_button" name="Time_button" onclick="update_time();">修改</a>
+								</div>
+							</div>
+						</div>
+						<div class="form-item" style="padding-top:10px">
+							<span class="form-tag">启用NTP：</span>
+							<div class="form-c">
+								<label class="form-label" style="margin-top: 4px;"><input class="form-checkbox" type="checkbox" name="Enabled" id="Enabled"></label>
+							</div>
+						</div>
+					</div>
+					<div class="c-form c-form-host"style="width:780px;min-width:780px;padding-top:0px;display:none;" id="NTPServer" name="NTPServer">
+						<div class="form">
+							<div class="form-item form-item-100 " style="width:900px;font-size:16px;">
+								<span class="form-tag"style="width:192px;" ><em class="imp">*</em>NTP服务器地址：</span>
+								<div id="ip_n" name="ip_n" class="form-c"style="padding-left:10px;height: auto;overflow-y:hidden;width:auto;max-width:540px;float: left;">
+									<span class="ss ss-add">
+										<input id="ipInput" type="text" style="width:134px;" class="form-text" onkeyup="/*showMsg*/">
+										<i class="ctr ctr-add" onclick="_addIp(this)" style="margin-left: 5px;    margin-top: 9px;"></i>
+									</span>
+								</div>
+								<a href="javascript:;" style="margin-left:3px;margin-top: 2px;float: left;height: 26px;border-color: #AAA;" class="form-button s-hide"  id="updatetime_button" name="updatetime_button" onclick="updatetime_button();">同步</a>
+							</div>
+						</div>
+					</div>
+					<div class="c-form">
+						<div class="btns s-hide">
+							<a href="javascript:;" class="btn btn-normal"onclick="time_add();">保&nbsp;&nbsp;存</a>
+							<!--
+							<a href="javascript:;" class="btn btn-normal" onclick="time_result();">取&nbsp;&nbsp;消</a> 
+							-->
+						</div>
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="time_result();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<form action="/bhost/time_handle" method="POST" name="frm_time_add">
+		<input type="hidden" name="se" id = "" value="{{se}}" />
+	</form>
+
+
+<script>
+$('#Enabled').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+</script>
+
+<!--select2-->
+
+<script>
+</script>
+<script>
+//"时间设置"的数据结构
+var time={
+   "TimeConfigId": 1,   
+   "Enabled": true,
+   "NTPServerIP": "192.168.0.43"
+};
+
+//正则表达式，用来检验一个IP地址是否合法
+var ipReg =/(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+</script>
+<script>
+$(function(){
+	_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+	if(_if_disable == '1'){
+		$('.s-hide').remove();
+	}
+	$(document).on('keydown','input.timeinput',function(){
+        var i = $(this).index();        
+        var v = $(this).val();
+        v = v.replace(/[^\d]/g,'');
+        $(this).val(v);
+    }).on('keyup','input.timeinput',function(e){
+        var i = $(this).index();
+        var v = $(this).val();    
+        var max = 23;
+        if(i>1){
+            max = 59;
+        }
+
+        if(v > max){
+            v = max;
+        }
+
+        $(this).val(v);
+
+        v = v.toString();
+        if(v.length >= 2){
+            $(this).val(v.substring(0,2));
+
+            var keycode = e.keyCode;
+            if(keycode != 9){
+                $(this).next().next().focus();
+            }
+        }
+    }).on('focus','input.timeinput',function(){
+        $(this).select();
+    }).on('blur','input.timeinput',function(){
+        var v = $(this).val();
+        v = v.toString();
+
+        if(v == ''){
+            v = '00';
+        }else if(v.length == 1){
+            v = '0' + v;
+        }
+
+        $(this).val(v);
+	});
+	document.frm_time_add.se.value=window.parent.document.frm.se.value;
+	parent._switchBtn(1);//显示按钮
+	$('#NTPServer').hide();	
+	//输入数字
+	$("#t_h,#t_m,#t_s").on('keydown', function(e){
+		DigitInput(e);
+	})
+	.on('input propertychange', function(){
+		this.value = this.value.replace(/\D/g, "").trim();
+	});
+	//NTF服务器的显示隐藏
+	$('#Enabled').on("ifChecked",function(e){
+		$('#NTPServer').show();
+	})
+	.on("ifUnchecked",function(e){
+		$('#NTPServer').hide();	
+	});
+	showTimeConfig();
+	//var tasktype=document.frm_time_add.tasktype.value;
+	//if(tasktype=="2"){
+	//}
+});
+function updatetime_button() {
+	_showLoading();
+	var input_str = $("#ipInput").val().trim();
+	var ipBuf = [];
+	var $all = $('#ip_n').find('span[class=ss]');
+	var len = $all.length;
+	if (input_str != "") {
+		if( wrongIPFormat(input_str)){
+			_alert( 1,'时间设置','NTP服务器地址格式不正确',$("#ipInput"));
+			_closeLoading();
+			return false;	
+		}
+		ipBuf.push(input_str);
+	} else if (len == 0) {
+		_alert(2,'时间设置',"请输入NTP服务器地址",$("#ipInput"));
+		_closeLoading();
+		return false;		
+	}
+	for (var i = 0; i < len; ++i) {
+		var inputBox = $all.eq(i).find("input");
+		var ip_str = inputBox.val();
+		if ( wrongIPFormat(ip_str)){
+			inputBox.val('').val(ip_str);
+			_alert(1,'时间设置','NTP服务器地址格式不正确',inputBox);
+			_closeLoading();
+			return false;
+		}				
+		if (ip_str == input_str ){
+			$("#ipInput").val('').val(input_str);
+			_alert(2,'时间设置','NTP服务器地址重复',$("#ipInput"));
+			_closeLoading();
+			return false;
+		}
+		if ( ipBuf.indexOf(ip_str) != -1) {
+			inputBox.val('').val(ip_str);
+			_alert(2,'时间设置','NTP服务器地址重复',inputBox);
+			_closeLoading();
+			return false;
+		}
+		ipBuf.push(ip_str);		
+	}
+	ipBuf.reverse();
+	oper ='同步时间：（NTP服务器地址:'+ipBuf.join(';')+'）'
+	$.ajax({
+		url: "/bhost/update_ntp_time",
+		type:"POST",
+		async:false,
+		data:{se:$("input[name=se]").val(),a1:ipBuf.join(';'),o1:oper},
+		success:function(result){
+			var time_result = JSON.parse(result);
+			if (time_result.Result){
+				setTimeout(function () {
+					_closeLoading();
+					$('.btn').blur();
+					parent.layer.open({
+						type:1,
+						title: '系统时间',
+						content: '<div class="layer-alert"><i class="alert succ"></i>同步成功</div>',
+						btn:['确&nbsp;&nbsp;定'],
+						btnAlign:'c',
+						closeBtn: false,
+						skin:'layer-custom',
+						area:['380px','310px'],
+						move: false,
+						resize: false,
+						yes:function(i){
+							$.ajax({
+								url: "/bhost/get_time_config",
+								type:"POST",
+								async:false,
+								data:{se:$("input[name=se]").val()},
+								success:function(result){
+									var result=JSON.parse(result);
+									if(result.Result){
+										var time_str=result.time.split(" ");
+										$('#t_d').val(time_str[0]);
+										var h_m_s=time_str[1].split(':');
+										$('#t_h').val(h_m_s[0]);
+										$('#t_m').val(h_m_s[1]);
+										$('#t_s').val(h_m_s[2]);
+									}else{
+									}
+								}
+							});
+							parent.layer.close(i);
+						}
+					});
+				},5000);	
+			}else{
+				_alert(0,'系统时间',time_result.ErrMsg);
+				_closeLoading();
+			}
+		}
+	});
+	
+}
+
+function showTimeConfig() {
+	$.ajax({
+		url: "/bhost/get_time_config",
+		type:"POST",
+		async:false,
+		data:{se:$("input[name=se]").val()},
+		success:function(result){
+			var time_result = JSON.parse(result);
+			if (time_result.Result==true){
+				var time_data = time_result.info;
+				time.TimeConfigId = time_data.TimeConfigId;
+				time.Enabled = time_data.Enabled;
+				time.NTPServerIP = time_data.NTPServerIP;
+				var now = new Date();
+				var setDate = {
+					year: now.getFullYear(),
+					month: now.getMonth() + 1,
+					day: now.getDate()
+				}
+				var time_str=time_result.time.split(" ");
+				$('#t_d').val(time_str[0]);
+				var h_m_s=time_str[1].split(':');
+				$('#t_h').val(h_m_s[0]);
+				$('#t_m').val(h_m_s[1]);
+				$('#t_s').val(h_m_s[2]);
+				$('#t_d').jeDate({
+					format:"YYYY-MM-DD",
+					isTime:true,
+					// maxDate:9999 + "-" + 99 + "-" + 99
+				});
+				var inputArea = $("#ip_n").find("span[class='ss ss-add']");
+				if (time_data.NTPServerIP != null){
+					var time_data_ip = time_data.NTPServerIP.split(";");
+					$.each(time_data_ip,function(i,item){
+						if(i!=time_data_ip.length-1){
+							inputArea.after( createIPTag(item));
+						}else{
+							$('#ipInput').val(item);
+						}
+						
+					});					
+				}
+				$('#Enabled').iCheck( time_data.Enabled ? 'check' : 'uncheck');
+			}else{
+				_alert(1,'时间设置',time_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+
+//检查格式
+function dataCheck(obj, min, max){//min can not bigger than 1
+	obj.value = obj.value.replace(/\D/g, "");
+	if(min){
+		if(parseInt(obj.value, 10) < parseInt(min, 10)) obj.value = min;
+	}
+	if(max){
+		if(parseInt(obj.value, 10) > parseInt(max, 10)) obj.value = max;
+	}
+}
+//修改时间
+function update_time(){
+	var t_d=$('#t_d').val();
+	var t_h=$('#t_h').val();
+	var t_m=$('#t_m').val();
+	var t_s=$('#t_s').val();
+	var Time=t_d+' '+t_h+':'+t_m+':'+t_s;
+	msstr = aceg(Time,$("input[name=se]").val());
+	//console.log(Time);
+	$.ajax({
+		url: '/bhost/update_server_time',
+		type: 'POST',
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:Time,m1:msstr},
+		success: function(result) {
+			result=JSON.parse(result);
+			if (result.Result == true){
+				_alert(2,"系统时间",result.info);
+			}else{
+				_alert(1,"系统时间",result.ErrMsg);
+			}
+		}
+	});
+};
+
+function save_time(){
+	if(time.Enabled == true) {
+		Enabled = "NTP启用";
+		oper ='保存系统时间：（'+Enabled+'，NTP服务器地址：'+time.NTPServerIP+'）';
+	}
+	else {
+		Enabled = 'NTP停用';
+		oper ='保存系统时间：（'+Enabled+'）';
+	}
+	//oper ='保存系统时间：（'+Enabled+'，NTP服务器地址：'+time.NTPServerIP+'）'
+	msstr = aceg(JSON.stringify(time),$("input[name=se]").val());
+	$.ajax({
+		url: '/bhost/add_timeconfig',
+		type: "POST",
+		async:false,
+		data: {a0:$("input[name=se]").val(),a1:JSON.stringify(time),o1:oper,m1:msstr},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				$('.btn').blur();
+				parent.layer.open({
+					type:1,
+					title: '时间设置',
+					content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn:['确&nbsp;&nbsp;定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					yes:function(i){
+						parent.layer.close(i);
+					}
+				});	
+			}else{
+				_alert(1,'时间设置',result.ErrMsg);
+				return false;
+			}
+		}
+	});
+};
+//添加零
+function add_zero(obj){
+	$(obj).trigger("keyup");
+//	obj.value = obj.value.replace(/\D/g, "");
+	var v = obj.value.trim();
+	if(v == ""){
+		v = '00';
+	} else {
+		v=parseInt(v);
+		if(v <= 0){
+			v = '00';	
+		}else if(v >= 1 && v <= 9){
+			v = '0'+v;
+		}
+	}
+	obj.value = v;
+}
+//删除服务器地址
+function _delIp(obj){
+	var $c = $(obj).parent();
+	$c.fadeOut(function(){
+		$c.remove();
+	});
+}
+
+function wrongIPFormat(ipStr) {
+	if ( !ipReg.test(ipStr)) {
+		return true;
+	}
+	return ipStr == "0.0.0.0" || ipStr == "255.255.255.255";
+}
+
+//加入服务器地址
+function _addIp(obj){
+	var isUnique = true;
+	var inputVal = $("#ipInput").val().trim();
+
+	if(inputVal == ''){
+		_alert(2,'时间设置','请输入NTP服务器地址',$("#ipInput"));
+		$("#ipInput").val("");
+		return false;
+	}else if( wrongIPFormat(inputVal)){
+		_alert(1,'时间设置','NTP服务器地址格式不正确',$("#ipInput"));
+		return false;
+	}else{
+		$("#ip_n>span[class='ss']").each(function(){
+			var ip_str = $(this).find("input").val();
+			if (ip_str == inputVal){
+				_alert(2,'时间设置','NTP服务器地址重复',$("#ipInput"));
+				isUnique = false;
+				return false;
+			}
+		});
+	}
+	if(isUnique){
+		$(obj).parent().after( createIPTag(inputVal));
+		$("#ipInput").val("");
+		$("#ipInput").focus();
+	}
+}
+
+function createIPTag(ipAddr){
+	var contentBuf = [];
+	contentBuf.push('<span class="ss">');
+	contentBuf.push('<input type="text" style="width:134px;" class="form-text" value="' + ipAddr + '">');
+	contentBuf.push('<i class="ctr ctr-del" onclick="_delIp(this)" style="margin-top: 5px;margin-left: -3px;"></i>');
+	contentBuf.push('</span>');
+	return contentBuf.join('');
+}
+
+//创建
+function time_add(){
+	var input_str = $("#ipInput").val().trim();
+	var ipBuf = [];
+	if($('#Enabled').is(':checked')){
+		var $all = $('#ip_n').find('span[class=ss]');
+		var len = $all.length;
+		if (input_str != "") {
+			if( wrongIPFormat(input_str)){
+				_alert( 1,'时间设置','NTP服务器地址格式不正确',$("#ipInput"));
+				return false;	
+			}
+			ipBuf.push(input_str);
+		} else if (len == 0) {
+			_alert(2,'时间设置',"请输入NTP服务器地址",$("#ipInput"));
+			return false;		
+		}
+		for (var i = 0; i < len; ++i) {
+			var inputBox = $all.eq(i).find("input");
+			var ip_str = inputBox.val();
+			if ( wrongIPFormat(ip_str)){
+				inputBox.val('').val(ip_str);
+				_alert(1,'时间设置','NTP服务器地址格式不正确',inputBox);
+				return false;
+			}				
+			if (ip_str == input_str ){
+				$("#ipInput").val('').val(input_str);
+				_alert(2,'时间设置','NTP服务器地址重复',$("#ipInput"));
+				return false;
+			}
+			if ( ipBuf.indexOf(ip_str) != -1) {
+				inputBox.val('').val(ip_str);
+				_alert(2,'时间设置','NTP服务器地址重复',inputBox);
+				return false;
+			}
+			ipBuf.push(ip_str);		
+		}
+		ipBuf.reverse();
+	}
+	time.Enabled=$('#Enabled').is(':checked');
+	time.NTPServerIP = ipBuf.join(';') || null;
+	save_time();
+}
+//显示列表页面
+function time_result(){
+	window.parent._closePage(null); 
+}
+$(function(){
+	
+	$("#time_config").on("click",function(){
+		location.reload();
+	});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1231 @@
+{% extends "index.html" %} {% block head %}
+<!--icheck-->
+<script src="/manage/js/icheck.min.js"></script>
+<script src="/manage/js/select2.full.min.js"></script>
+<script src="/manage/js/common_e.js"></script>
+<script src="/manage/js/jquery.jedate.min.js"></script>
+<script src="/manage/js/xSelect.js"></script>
+<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+<link rel="stylesheet" href="/manage/css/select2.min.css">
+<link rel="stylesheet" href="/manage/css/new-head.css">
+<link rel="stylesheet" href="/manage/css/jedate.css"> {% endblock %} {% block main %}
+<!---->
+<div class="mainer">
+	<div class="container1">
+		<div class="c-top">
+			<div class="c-title">
+				<div class="manual-head" style="float:left;width:auto">
+					<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+						<span id="archiving_strategy">归档策略</span>
+						<i style="display: none;"></i>
+					</div>
+					<div class="manual-title-other title-item" id="frist">
+						<span id="manual_backup"> 数据备份</span>
+						<i class="lbackup_icon"></i>
+					</div>
+
+					<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+						<span id="data_recovery">数据恢复</span>
+						<i style="display: none;"></i>
+					</div>
+
+					<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+						<span id="auto_archiving">数据归档</span>
+						<i style="display: none;"></i>
+					</div>
+
+				</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)">
+						<i></i>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="c-cont">
+			<div class="c-wrap" style="min-width: 1157px;">
+				<div class="c-table">
+					<div class="tab-t" style="min-width: 1157px;">
+						<div class="ctr" style="width:220px">
+							{% if _power_mode == 2%}
+							<a href="javascript:;" class="btn btn-default btn-normal" onclick="delete_lbackup()">删除</a>
+							<a href="javascript:;" class="btn btn-default btn-normal" onclick="select_all()">全选</a>
+							{% endif %}
+							<a href="javascript:;" class="btn btn-default btn-normal" onclick="refresh()">刷新</a>
+						</div>
+						{% if _power_mode == 2%}
+						<div class="ctr" style="float: right; width: auto">
+							<a href="javascript:;" class="btn btn-default btn-normal" onclick="backup()" style="float: right;    margin-right: 0px;">立即备份</a>
+							<!-- <span class="form-tag" style="float: right; font-size: 15px; margin-top: -1px; width: 20px; margin-right: 10px">GB</span>
+							<input style="" class="form-text" id="filesize" type="text" name="" />
+							<span class="form-tag" style="float: right; font-size: 15px; margin-top: -1px; width: 75px;">文件大小：</span> -->
+							<div style="float: right;display:none;padding-right: 20px;width: 224px;" id="ftp_div">
+								<span class="form-tag" style="font-size: 15px; margin-top: -1px; width: 73px">FTP配置：</span>
+								<div class="form-c" style="">
+									<div class="xSelect xSelect_ftp" id="FTPServerId"></div>
+								</div>
+							</div>
+							<div style="float: right;padding-right: 20px;" id="type_div">
+								<span class="form-tag" style="font-size: 15px; margin-top: -1px; width: 50px">方式：</span>
+								<select name="" id="ArchiveType" class="select2" style="margin-left: 6px;width: 100px;" onchange="">
+									<!--<option value="1">本地保存</option>-->
+									<option value="2">FTP上传</option>
+								</select>
+							</div>
+							<div class="form-c" style="float: right; margin-right: 14px; margin-top: -3px;">
+								<div class="bc srItem">
+									<div class="srSort" id="srTemp-xtime">
+										<input type="text" style="height: 25px;" value="" id="startTime" placeholder="日期" class="datepicker" readonly>
+										<span class="srTip">至</span>
+										<input type="text" style="height: 25px;" value="" id="endTime" placeholder="日期" class="datepicker" readonly>
+									</div>
+								</div>
+							</div>
+							<span class="form-tag" style="float: right; margin-right: -25px; font-size: 15px; margin-top: -1px; width: 130px">备份时间范围：</span>
+						</div>
+						{%endif%}
+					</div>
+					<div class="box-table">
+						<table cellpadding="0" cellspacing="0" id="m_list">
+							<thead>
+								<tr>
+									{% if _power_mode == 2%}
+									<th width="50">
+										<input type="checkbox" class="form-checkbox" id="check_page" />
+									</th>
+									{%endif%}
+									<th width='140'>任务提交时间</th>
+									<th width='180'>备份时间范围</th>
+									<th width='120'>文件大小</th>
+									<th width='120'>备份状态</th>
+									<!-- <th width='60'>取消状态</th> -->
+									<th>备注</th>
+									{% if _power_mode == 2%}
+									<th width="80"></th>
+									{%else%}
+									<th width="30"></th>
+									{%endif%}
+									<tr>
+							</thead>
+
+							<tbody name="mbackup_list" id="mbackup_list">
+							</tbody>
+						</table>
+					</div>
+					<div class="tab-i">
+						<div class="il">每页显示10条 总数：
+							<span id="user_total">25</span> 选中：
+							<span id="select_total">0</span>
+						</div>
+
+						<div class="ipage">
+							<a href="javascript:;" class="nav2 begin" id="begin" onclick="user_page(0.1)">
+								<i></i>
+							</a>
+							<a href="javascript:;" class="nav prev" id="prev" onclick="user_page(-1)">
+								<i></i>
+							</a>
+							<input type="text" value="1" id="user_page" onchange="showMsg()">/&nbsp;
+							<span id="totalpage">25</span>
+							<a href="javascript:;" class="nav next" id="next" onclick="user_page(1)">
+								<i></i>
+							</a>
+							<a href="javascript:;" class="nav2 end" id="end" onclick="user_page(0.9)">
+								<i></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<!--
+					<div class="btns">
+						<a href="javascript:;" class="btn btn-cancel btn-normal">返&nbsp;&nbsp;回</a>
+					</div>
+					-->
+				<div id="bBtn" style="position: fixed;z-index:5;">
+					<a href="javascript:;" class="btn btn-cancel" style="float: right;">
+						<i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--ftp  -->
+	<div class="dialog-cont" id="ftp_suspend" style="display:none;max-height: 420px;">
+		<div class="container" style="margin-top: -10px;">
+			<div class="c-cont" style="padding: 0px; height: 281px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="FTPServer_Master" name="FTPServer_Master">
+							<span class="form-tag" style="width:285px;">
+								<em class="imp">*</em>配置名称：</span>
+							<div class="form-c">
+								<input type="text" style="width: 224px;" class="form-text" id="FTPServerName_Master" name="FTPServerName_Master" onblur="regCheck(this,nameReg);">
+								<i class="v-check" style=""></i>
+								<p class="form-tip" style="padding-left: 84px;">特殊字符仅支持下划线、横杠、小数点</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;display:none;">
+							<span class="form-tag" style="width:285px;">DNS服务地址：</span>
+							<div class="form-c">
+								<input style="padding-right: 8px;" type="text" class="form-text" id="DNS_FTP_Master" name="DNS_FTP_Master">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width:285px;">
+								<em class="imp">*</em>服务器IP：</span>
+							<div class="form-c">
+								<input style="padding-right: 8px;" type="text" class="form-text" id="ServerIP_Master" name="ServerIP_Master">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width:285px;">
+								<em class="imp">*</em>用户名：</span>
+							<div class="form-c">
+								<input style="padding-right: 8px;" type="text" class="form-text" id="ServerUser_Master" name="ServerUser_Master">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width:285px;">
+								<em class="imp">*</em>用户密码：</span>
+							<div class="form-c">
+								<input style="padding-right: 8px;" maxlength="64" type="password" class="form-text" id="ServerPasswd_Master" name="ServerPasswd_Master">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width:285px;">
+								<em class="imp">*</em>上传路径：</span>
+							<div class="form-c">
+								<input style="padding-right: 8px;" type="text" class="form-text" id="ServerPath_Master" name="ServerPath_Master">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">方式：</span>
+							<div class="form-c">
+								<select name="ftpFlag" id="ftpFlag" class="form-select" style="width: 100px" onchange="">
+									<option value="2">默认</option>
+									<option value="1">备用</option>
+									<option value="0">其他</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: 0px;margin-left:-20px;width:840px;">
+			{% if _power_mode == 2%}
+			<a href="javascript:;" class="btn btn-normal btn-submit">保&nbsp;&nbsp;存</a>
+			{%endif%}
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+
+	</div>
+	<form action="/bhost/mbackup_list" method="POST" name="frm_mbackup" id="frm_mbackup">
+		<input type="hidden" name="tasktype" id="tasktype" value="" />
+		<!--创建 编辑 列表-->
+		<input type="hidden" name="page_num" id="page_num" value="10" />
+		<!--每页显示数-->
+		<input type="hidden" name="total_all" id="total_all" value="" />
+		<!--总数-->
+		<input type="hidden" name="paging" id="paging" value="1" />
+		<!--页码-->
+		<input type="hidden" name="search_typeall" id="search_typeall" value="" />
+		<!--查询要求，查询内容，查询类型-->
+		<input type="hidden" name="userid" id="userid" value="" />
+		<!--需要查询的id-->
+		<input type="hidden" name="fenye" id="fenye" value="" />
+		<!--总页数-->
+		<input type="hidden" name="se" id="se" value="{{se}}" />
+	</form>
+
+	{% endblock %} {% block script %}
+	<style>
+		.bc input.datepicker,
+		.bc input.texin,
+		.bb-sel-item input.datepicker,
+		.bb-box input.texin {
+			display: inline-block;
+			width: 85px;
+			height: 26px;
+			border: 1px solid #AAA;
+			margin-right: 5px;
+			vertical-align: middle;
+			background-color: #fff;
+			padding: 0 8px;
+			border-radius: 5px;
+		}
+
+		.ctr .form-text {
+			display: inline-block;
+			width: 34px;
+			height: 26px;
+			padding: 0px 8px 0 8px;
+			border: 1px solid #aaaaaa;
+			border-radius: 5px;
+			vertical-align: middle;
+			float: right;
+			margin-right: 2px;
+		}
+
+		.srItem {
+			width: 100%;
+			height: auto;
+			line-height: 30px;
+			border-bottom: 0px solid #e0e0e0;
+			overflow: hidden;
+		}
+
+		.tab-t .ctr {
+			float: left;
+			width: 400px;
+		}
+
+		.ctr .form-c {
+			padding-left: 30px;
+			position: relative;
+		}
+
+		.form-time {
+			display: inline-block;
+			width: 79px;
+			height: 24px;
+			padding: 0px 10px 0 10px;
+			border: 1px solid #8d808a;
+			;
+			border-radius: 5px;
+			vertical-align: middle;
+		}
+	</style>
+	<script type="text/javascript">
+
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0'
+		});
+		$('.form-select,.select2,.filter-select').select2({ minimumResultsForSearch: -1 });
+		var select_str = new Array();
+		var check_num = 0;
+		var mbackup_array = null;
+		var now_date;
+		var now_date0;
+		var ftpserver = [];
+		var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+		var numReg = /^[\d]+$/;
+		var ipReg = /(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+		var ftpserver_save = {
+			"FTPServerId": 0,
+			"FTPServerName": null,
+			"ServerIP": null,
+			"DNS": null,
+			"ServerUser": null,
+			"ServerPasswd": null,
+			"ServerPath": null,
+			"Flag": 0,
+			"IfPasv": true
+		};
+		var if_disabled = "{{_power_mode}}";
+		var first_style = '';
+		$(function () {
+			if(if_disabled =='1'){
+				first_style="style=\"border-left: 1px solid #FFF;\"";
+			}
+			$('.xSelect').on('click', '.xSelect-show', function () {
+				$focusObj = $(this).parents('.xSelect');
+			})
+			//外观初始化
+			var now = new Date();
+			var setDate = {
+				year: now.getFullYear(),
+				month: now.getMonth() + 1,
+				day: now.getDate()
+			}
+			$('input.datepicker').each(function () {
+				$(this).jeDate({
+					format: "YYYY-MM-DD",
+					isTime: true,
+					maxDate: setDate.year + "-" + setDate.month + "-" + setDate.day
+				});
+			});
+			update_xSelect($('.xSelect_ftp'));
+			//文件大小
+			$("#filesize,#user_page").on('keyup', function (e) {
+				DigitInput(e);
+			}).on("input propertychange", function () {				//防止在输入法开启的情况下输入非数字
+				this.value = this.value.replace(/\D/g, "").trim();
+			});
+			$('#ArchiveType').on('change',function(){
+				var ArchiveType=$('#ArchiveType').val();
+				if(ArchiveType=='1'){
+					$('#ftp_div').hide();
+				}else{
+					$('#ftp_div').show();
+				}
+			});
+			$('#ArchiveType').val(2).trigger('change');
+			//页面的 "返回"按钮
+			$("a.btn-cancel").unbind().bind("click", function () {
+				document.frm.se.value = $("input[name=se]").val();						//window.parent.document.frm.se.value
+				window.parent._closePage(null);
+			});
+			$("#mbackup_list").on('dblclick', 'tr', function (e) {		//看不懂
+				x = e.target;
+				//////console.log(x.nodeName);
+				if (x.nodeName != "INS") {							//渲染后的复选框点击时，点击的目标就是 <ins>标签
+					$(this).children('td:last').find('.edit').click();			//没有这个类
+					$(this).children('td:last').find('.search_result').click();
+				}
+			}
+			).on("click", "tr", function (e) {
+				x = e.target;
+				if (x.id == 'del') {
+					var del_id = $(this).find("td").eq(1).text();
+					layer.open({
+						type: 1,
+						title: '数据备份',
+						content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+						btn: ['确&nbsp;&nbsp;认', '取&nbsp;&nbsp;消'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							layer.close(i);
+							deleteItems(del_id, 1);
+						}
+					});
+				} 
+				else if (x.id == 'stop_icon') {
+					var stop_id = $(this).find("td").eq(1).text();
+					var stop_name = $(this).find("td").eq(3).text();
+					var stop_time = $(this).find("td").eq(2).text();
+					$.ajax({
+						url: '/bhost/stop_backup_task',
+						type: 'post',
+						async: false,
+						data: { a0: $("input[name=se]").val(), a1: stop_id, a2: stop_name,a3:stop_time },
+						success: function (result) {
+							var result = JSON.parse(result);
+							if (result.Result) {
+								user_page(0);
+							} else {
+								_alert(2,'数据备份',result.ErrMsg);
+								user_page(0);
+								return false;
+							}
+						}
+					});
+				} 
+				else if (x.id == 'download') {
+					var down_path = $(this).find("td").eq(4).text();
+					var down_name = $(this).find("td").eq(3).text();
+					$.ajax({
+						url: "/bhost/file_exit",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val(), a1: down_path,a2:'数据备份' },
+						success: function (result) {
+							var result=JSON.parse(result);
+							if(result.Result){
+								if(window.parent.parent.document.frm.use_BH.value=='0'){
+									var form = $("<form></form>").attr("action", '/bhost/download_backup_file').attr("method", "post").attr('enctype', 'multipart/form-data');
+									form.append($("<input></input>").attr("type", "hidden").attr("name", "a1").attr("value", down_path));
+									form.append($("<input></input>").attr("type", "hidden").attr("name", "a2").attr("value", 2));
+									form.append($("<input></input>").attr("type", "hidden").attr("name", "a3").attr("value", '数据备份'));
+									form.append($("<input></input>").attr("type", "hidden").attr("name", "a0").attr("value", $("input[name=se]").val()));
+									form.appendTo('body').submit().remove();
+									return 0;
+								}
+								var down_path_arr=down_path.split('/');
+								var file_name=down_path_arr.pop();
+								var file_path=down_path_arr.join('/')+'/';
+								var sesstimet = (new Date()).valueOf();
+								var referrer_arr=document.referrer.toString().split('/');
+								referrer_arr.pop();
+								var referrer=referrer_arr.join('/');
+								var json_download = {
+										"Type": "Download",
+										"Url": referrer,
+										"Path": file_path,
+										"Filename": file_name,
+										"Session": $("input[name=se]").val(),
+										"sesstimet":sesstimet
+								}
+								var if_html_client = false;
+								var base64_str = '';
+								$.ajax({
+										url: "/bhost/get_base64",
+										type:"POST",
+										async:false,
+										data:{a0:$("input[name=se]").val(),z1:JSON.stringify(json_download)},
+										success:function(result){
+												var result=JSON.parse(result);
+												if(result.Result){
+														if_html_client = result.info;
+														base64_str = result.b64;
+												}else{
+														_alert(1,"数据备份",result.ErrMsg); 
+												}
+										}
+								})
+								if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(json_download));
+								else{
+									get_regedit('bhost', window.parent.document.frm.se.value,'',sesstimet);
+									$('#YuFrame1').remove();
+									$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+									$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+								}
+							}
+							else{
+								_alert(2,'数据备份',result.ErrMsg);
+								return false;
+							}
+						}
+					});
+					
+				}
+				else{
+					if($(this).find('input').prop('checked')){
+						$(this).find('input').iCheck('uncheck');
+					}else{
+						$(this).find('input').iCheck('check');
+					}
+				}
+			});
+			$('#check_page').on('ifClicked', function (e) {			//全选复选框
+				if (!$('#check_page').prop('checked')) {
+					$("#m_list").children('tbody').find('input[type=checkbox]').iCheck('check');
+				} else {
+					$("#m_list").children('tbody').find('input[type=checkbox]').iCheck('uncheck');
+				}
+			});
+			$("#mbackup_list").on("ifChecked", function (e) {
+				check_num++;
+				$("#select_total").text(check_num);
+				if ($("table tbody tr input:checked").length == $("#mbackup_list tr").length) {
+					$('#check_page').iCheck('check');
+				}
+			}).on("ifUnchecked", function (e) {
+				check_num--;
+				$("#select_total").text(check_num);
+				$('#check_page').iCheck('uncheck');
+			});
+
+			parent._switchBtn(1);//显示按钮
+			//now_date 前一天
+			initDateInput();
+			$("#startTime").val(now_date0);
+			$("#endTime").val(now_date);
+		});
+		//
+		//显示列表
+		$(document).ready(function () {
+			show_mbackup_list();
+		});
+		function get_dialog_ftp(obj, type) {
+			ftp_master_clear();
+			var title;
+			if (type == 1) {
+				var id = obj.value;
+				title = "编辑FTP配置";
+				$.ajax({
+					url: "/bhost/get_ftpserver",
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: id },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result) {
+							var data = result.info.data[0];
+							MasterFTPServer_input(data);
+							$('#FTPServerName_Master').attr("disabled", true);
+							ftpserver_save.FTPServerId = parseInt(id);
+						} else {
+							_alert(1, 'FTP服务器查询', result.ErrMsg);
+							return false;
+						}
+					}
+				});
+
+			} else {
+				title = "创建FTP新配置";
+				ftpserver_save.FTPServerId = 0;
+			}
+			var $dialogCont = $("#ftp_suspend").show();
+
+			var d = dialog({
+				title: title,
+				content: $dialogCont,
+				id: "ftp_suspend",
+				width: "800px"
+			});
+			d.addEventListener('close', function () {
+				$dialogCont.appendTo("body").hide();
+			});
+			d.showModal();
+			$("a.btn-cancel", $dialogCont).unbind().bind("click", function () {
+				// d.close().remove();
+				ftp_master_clear();
+				if (type == 1) {
+					var id = obj.value;
+					$.ajax({
+						url: "/bhost/get_ftpserver",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val(), a1: id },
+						success: function (result) {
+							var result = JSON.parse(result);
+							if (result.Result) {
+								var data = result.info.data[0];
+								MasterFTPServer_input(data);
+								$('#FTPServerName_Master').attr("disabled", true);
+								ftpserver_save.FTPServerId = parseInt(id);
+							} else {
+								_alert(1, 'FTP服务器查询', result.ErrMsg);
+								return false;
+							}
+						}
+					});
+
+				} else {
+					ftpserver_save.FTPServerId = 0;
+				}
+			});
+			$("a.btn-submit", $dialogCont).unbind().bind("click", function () {
+				var FTPServerName_Master = $("#FTPServerName_Master").val();
+				if (FTPServerName_Master == '') {
+					_alert(2, 'FTP配置', '请输入名称', $('#FTPServerName_Master'));
+					return false;
+				} else if (!nameReg.test(FTPServerName_Master)) {
+					_alert(1, 'FTP配置', '名称格式不正确', $('#FTPServerName_Master'));
+					return false;
+				}
+				var DNS_FTP_Master = $('#DNS_FTP_Master').val();
+				if (DNS_FTP_Master == "") {
+					DNS_FTP_Master = null;
+				}
+				var ServerIP_Master = $('#ServerIP_Master').val();
+				if (ServerIP_Master == "") {
+					_alert(2, 'FTP配置', '请输入服务器IP地址', $('#ServerIP_Master'));
+					return false;
+				} else if (!ipReg.test(ServerIP_Master)) {
+					_alert(1, 'FTP配置', '服务器IP地址格式不正确', $('#ServerIP_Master'));
+					return false;
+				}
+				var ServerUser_Master = $("#ServerUser_Master").val();
+				if (ServerUser_Master == "") {
+					_alert(2, 'FTP配置', '请输入用户名', $("#ServerUser_Master"));
+					return false;
+				}
+				var ServerPasswd_Master = $('#ServerPasswd_Master').val();
+				if (ServerPasswd_Master == "") {
+					_alert(2, 'FTP配置', '请输入密码', $('#ServerPasswd_Master'));
+					return false;
+				}
+				if(ServerPasswd_Master.length > 64){
+					_alert(2, 'FTP配置', "密码不能超过系统限定64位", $("#ServerPasswd_Master"));
+					return false;
+				}
+				var ServerPath_Master = $('#ServerPath_Master').val();
+				if (ServerPath_Master == "") {
+					_alert(2, 'FTP配置', '请输入上传路径', $('#ServerPath_Master'));
+					return false;
+				}
+				ftpserver_save.FTPServerName = FTPServerName_Master;
+				ftpserver_save.ServerIP = ServerIP_Master;
+				ftpserver_save.DNS = DNS_FTP_Master;
+				ftpserver_save.ServerUser = ServerUser_Master;
+				ftpserver_save.ServerPasswd = ServerPasswd_Master;
+				ftpserver_save.ServerPath = ServerPath_Master;
+				ftpserver_save.Flag = parseInt($('#ftpFlag').val());
+				if (save_ftpserver()) {
+					$('.btn').blur(); parent.layer.open({
+						type: 1,
+						title: 'FTP配置',
+						content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+						btn: ['确&nbsp;&nbsp;定'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							parent.layer.close(i);
+							d.close().remove();
+						}
+					});
+				}
+			})
+		}
+		//MasterFTPServer输入
+		function MasterFTPServer_input(item_ftp) {
+			$('#FTPServerName_Master').val(item_ftp.FTPServerName);
+			$('#ServerIP_Master').val(item_ftp.ServerIP);
+			$('#ServerUser_Master').val(item_ftp.ServerUser);
+			$('#ServerPasswd_Master').val(item_ftp.ServerPasswd);
+			ftpserver_save.ServerPasswd = item_ftp.ServerPasswd;
+			$('#ServerPath_Master').val(item_ftp.ServerPath);
+			$('#DNS_FTP_Master').val(item_ftp.DNS);
+			$('#ftpFlag').val(item_ftp.Flag).trigger('change');
+		}
+		//创建邮件FTP下拉框
+		var $focusObj;
+		//ftp_master_clear
+		function ftp_master_clear() {
+			$('#FTPServer_Master').show();
+			$('#FTPServerName_Master').next('i.v-check').attr('class', 'v-check');
+			$("#FTPServerName_Master").val('');
+			$("#FTPServerName_Master").attr("disabled", false);
+			$('#ServerIP_Master').val('');
+			$('#ServerUser_Master').val('');
+			$('#ServerPasswd_Master').val('');
+			ftpserver_save.ServerPasswd = null;
+			$('#ServerPath_Master').val('');
+			$('#DNS_FTP_Master').val('');
+			var ftpconfig_data_all_Flag = ftpconfig_data_all.map(function (params) {
+				return params.Flag;
+			});
+			if ($.inArray(2, ftpconfig_data_all_Flag) < 0) {
+				$('#ftpFlag').val(2).trigger('change');
+			} else if ($.inArray(1, ftpconfig_data_all_Flag) < 0) {
+				$('#ftpFlag').val(1).trigger('change');
+			} else {
+				$('#ftpFlag').val(0).trigger('change');
+			}
+		}
+		//ftpserver_save
+		function save_ftpserver() {
+			if (ftpserver_save == null) {
+				return false;
+			}
+			var pass = true;
+			msstr = aceg(JSON.stringify(ftpserver_save),$("input[name=se]").val());
+			$.ajax({
+				url: "/bhost/add_ftpserver",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(ftpserver_save),a2:'系统管理>数据管理',m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						if (ftpserver[result.FTPServerId] != null) {
+						} else {
+							ftpserver[result.FTPServerId] = {};
+							ftpserver[result.FTPServerId]["type"] = 'edit';
+							ftpserver[result.FTPServerId]["value"] = result.FTPServerId;
+							ftpserver[result.FTPServerId]["name"] = ftpserver_save.FTPServerName;
+						}
+						var focusObj_value = $focusObj.data('value');
+						if (focusObj_value == '0' || focusObj_value == '' || focusObj_value == undefined) {
+							$('.xSelect-show-text', $focusObj).text(ftpserver_save.FTPServerName);
+							$focusObj.data('value', result.FTPServerId);
+						}
+						update_xSelect($('.xSelect_ftp'));
+					} else {
+						if (result.ErrMsg == "同名的FTP服务器配置已存在") {
+							_alert(1, "FTP配置", result.ErrMsg, $('#FTPServerName_Master'));
+						} else {
+							_alert(1, "FTP配置", result.ErrMsg);
+						}
+						pass = false;
+					}
+				}
+
+			});
+			return pass;
+		}
+		//获取今天的日期和昨天的日期
+		function initDateInput() {
+			var now = new Date(), nowTime = now.getTime();				//获取当前日期以及 1970 年 1 月 1 日至今的毫秒数。
+			now_date = getDateStr(now);
+			var yesterday = new Date(nowTime - 24 * 60 * 60 * 1000);
+			now_date0 = getDateStr(yesterday);
+		}
+
+		//将date对象转换成字符串
+		function getDateStr(date) {
+			var year = date.getFullYear();
+			var month = ("0" + (date.getMonth() + 1)).slice(-2);			//结果可能出现'01'或 '012'时的情况
+			var day = ("0" + date.getDate()).slice(-2);
+			return (year + '-' + month + '-' + day);
+		}
+
+		//切到 "归档策略"页面
+		function archiving_strategy() {
+			document.frm_mbackup.tasktype.value = 1;
+			document.frm_mbackup.action = '/bhost/data_show';
+			document.frm_mbackup.submit();
+		}
+
+		//切到 "数据备份"页面
+		function data_recovery() {
+			document.frm_mbackup.tasktype.value = 3;
+			document.frm_mbackup.action = '/bhost/data_show';
+			document.frm_mbackup.submit();
+		}
+
+		//切到 "自动归档"页面
+		function auto_archiving() {
+			document.frm_mbackup.tasktype.value = 4;
+			document.frm_mbackup.action = '/bhost/data_show';
+			document.frm_mbackup.submit();
+		}
+		function update_xSelect($obj) {
+			var id_value = $obj.data('value');
+			if (id_value == undefined || id_value == 0) {
+				text_value = '默认';
+				id_value = 0;
+			} else {
+				var text_value = $('.xSelect-show-text', $obj).text();
+				var id = $('.xSelect-show', $obj).data('id');
+				$obj.empty().data('xSelect', '');
+				$('.' + id).remove();
+			}
+			////console.log(text_value + id);
+			$.ajax({
+				url: "/bhost/get_ftpserver",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val() },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						var data = result.info;
+						ftpconfig_data_all = result.info.data;
+						ftpserver = new Array();
+						ftpserver[0] = (JSON.parse('{"value":0,"name":"默认","type":null}'));
+						$.each(data.data, function (i, item) {
+							if (item.FTPServerId == 0) {
+								return true;
+							}
+							ftpserver[item.FTPServerId] = (JSON.parse('{"value":' + item.FTPServerId + ',"name":"' + item.FTPServerName + '","type":"edit"}'));
+						})
+					} else {
+						_alert(1, 'FTP服务器查询', result.ErrMsg);
+						return false;
+					}
+				}
+			});
+			$obj.xSelect({
+				width: 150,
+				defaultText: '全局指定',
+				items: ftpserver,
+				edit: function (item, obj) {
+					$('.' + $('.xSelect_ftp .xSelect-show').data('id')).hide();
+					get_dialog_ftp(item, 1);
+				},
+				delete: function (item, obj) {
+				},
+				btn: [
+					{
+						'name': '新增',
+						'event': function (items, obj) {
+							get_dialog_ftp(items, 2);
+						}
+					}
+				],
+				setval: function (item, obj) {
+					update_xSelect($('.xSelect_ftp'));
+				}
+			});
+			$obj.data('value', id_value);
+			$('.xSelect-show-text', $obj).text(text_value);
+		}
+		function backup() {
+			var starttime = $("#startTime").val();
+			var endtime = $("#endTime").val();
+			if (starttime == "") {
+				_alert(2, '数据备份', '请输入起始日期', $('#startTime'));
+				return false;
+			}
+			if (endtime == "") {
+				_alert(2, '数据备份', '请输入终止日期', $('#endTime'));
+				return false;
+			}
+			if (starttime > endtime) {
+				_alert(2, '数据备份', '起始日期不能大于终止日期', $('#startTime'));
+				return false;
+			}
+			// var FileSize = $("#filesize").val();
+			// if (FileSize == "") {
+			// 	_alert(2, '数据备份', '请输入文件大小', $('#filesize'));
+			// 	return false;
+			// }
+			// if (parseInt(FileSize) == 0) {
+			// 	_alert(2, '数据备份', '文件大小不能为0', $('#filesize'));
+			// 	return false;
+			// }
+			// FileSize = parseInt(FileSize) + "GB";
+			var jsondata = {
+				"LogBackupTaskId": 0,
+				"TaskType": 1,
+				"StartTime": null,
+				"EndTime": null,
+				"FileSize": null,
+				"Status": 0,
+				"CancelStatus": 0,
+				"FTPServerId": null
+			}
+			jsondata.StartTime = starttime;
+			jsondata.EndTime = endtime;
+			if($('#ArchiveType').val()==1){
+				jsondata.FTPServerId=null;
+			}else{
+				jsondata.FTPServerId=$('#FTPServerId').data('value');
+			}
+			// jsondata.FileSize = FileSize;
+			var msstr = aceg(JSON.stringify(jsondata),$("input[name=se]").val());
+			$.ajax({
+				url: "/bhost/save_lbackup",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(jsondata),m1:msstr },
+				success: function (Result) {
+					var Result = JSON.parse(Result);
+					if (Result.Result) {
+						/*
+						$.ajax({
+							url: "/bhost/PGetRecordRownum",
+							type: "POST",
+							async: false,
+							data: { a0: $("input[name=se]").val(), a1: Result.LogBackupTaskId, a2: 36 },
+							success: function (Result) {
+								var Result = JSON.parse(Result);
+								if (Result.Result) {
+									document.frm_mbackup.paging.value = Math.ceil(Result.info / MAX_PAGE);
+									show_mbackup_list();
+								}
+							}
+						});
+						*/
+						show_mbackup_list();
+						_alert(0, "数据备份", '备份任务创建成功');
+					}
+					else {
+						_alert(1, "数据备份", data.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+
+		//选中字段的id存储到 select_str中
+		function select_save() {
+			$(">tr", "#mbackup_list").each(function () {
+				var input = $(this).find("input[type='checkbox']");
+				if ($(input).is(':checked')) {						//如果被选中则检查select_str中是否已经有这个id
+					var select_item = $(">td", this).eq(1).text();
+					if ($.inArray(select_item, select_str) < 0) {
+						select_str.push(select_item);
+					}
+				} else {
+					var select_item = $(">td", this).eq(1).text();
+					var index = $.inArray(select_item, select_str);
+					if (index >= 0) {
+						select_str.splice(index, 1);
+					}
+				}
+			});
+		}
+
+		//check显示
+		function check_show() {
+			$(">tr", "#mbackup_list").each(function () {
+				var input = $(this).find("input[type=checkbox]");
+				var check_id = $(">td", this).eq(1).text();
+				if ($.inArray(check_id, select_str) >= 0) {
+					$(input).iCheck('check');
+				}
+			});
+		}
+
+		//输入页码 input回车触发事件
+		function showMsg() {
+			var cur = $("#user_page").val();
+			var totalpage = $("#totalpage")[0].textContent;
+			cur = cur.replace(/\D/g, "");
+			if (cur == '') {
+				cur = '1'
+			}
+			if (parseInt(cur) < 1) {
+				$("#user_page").val(1);
+				document.frm_mbackup.paging.value = 1;
+			} else {
+				document.frm_mbackup.paging.value = cur;
+			}
+			show_mbackup_list();
+		}
+
+		function update_array() {
+			var tasktype = 1;
+			$.ajax({
+				url: '/bhost/get_lbackup_task',					//为什么不用 /bhost/get_lbackup_task? 两个的处理函数其实差不多
+				type: 'post',
+				async: false,
+				data: { a0: $("input[name=se]").val(), a3: tasktype },
+				success: function (result) {
+					var user_result = JSON.parse(result);
+					if (user_result.Result) {
+						var user_data = user_result.info;
+						var select_str_old = select_str;
+						select_str = new Array();
+						mbackup_array = user_data.data.map(function (params) {
+							if ($.inArray(params.TaskId + '', select_str_old) >= 0) {
+								select_str.push(params.TaskId + '');
+							}
+							return params.TaskId + '';
+						});
+					}
+				}
+			});
+		}
+
+		function selView() {
+			var $sel = $('#filterWW');
+			var len = $('li', $sel).length;
+
+			if (len == 0) {
+				$sel.hide();
+			} else if (len == 1) {
+				$("#filterWW").show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			} else {
+				$("#filterWW").show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			}
+		}
+
+		//以每页显示数显示列表函数
+		function show_mbackup_list() {
+			update_array();
+			//////console.log(select_str);
+			var paging = document.frm_mbackup.paging.value;
+			var page_num = MAX_PAGE;
+			var tasktype = 1;
+			$.ajax({
+				url: "/bhost/get_lbackup_task",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: page_num, a2: paging, a3: tasktype },
+				success: function (result) {
+					var user_result = JSON.parse(result);
+					if (user_result.Result == true) {
+						var user_data = user_result.info;
+						var total_all = user_data.totalrow;
+						$("#user_total").text(total_all);						//显示备份任务总数
+						var fenye = Math.ceil(total_all / page_num)||1;		//获得总页数
+						document.frm_mbackup.fenye.value = fenye;					//显示总页数
+						$("#totalpage").text(fenye);   		//备份任务总数	
+						if (user_data.data.length == 0 && paging != "1") {
+							user_page(0.9);
+						} else {
+							document.frm_mbackup.total_all.value = total_all;
+							if (total_all) {
+								$("#mbackup_list").empty();
+								$('#mbackup_list').append(user_data.data.map(function (item) {
+									var p;
+									item.FileSize = item.FileSize || '';
+									var tar_1='<a href="javascript:;" class="stop_icon disabled" id="" title="取消"></a>';
+									switch (item.CancelStatus) {
+										case 0:
+											p1 = "正常状态";
+											tar_1 = '<a href="javascript:;" class="stop_icon s-hide" id="stop_icon" title="取消"></a>';
+											break;
+										case 1:
+											p1 = "取消状态";
+											tar_1 = '<a href="javascript:;" class="stop_icon disabled s-hide" id="" title="取消"></a>';
+											break;
+									}
+									switch (item.Status) {
+										case 0:
+											p = "队列中";
+											break;
+										case 1:
+											p = "执行中";
+											break;
+										case 2:
+											p = "成功";
+											tar_1 = '<a href="javascript:;" class="stop_icon disabled s-hide" id="" title="取消"></a>';
+											break;
+										case 3:
+											p = "失败";
+											tar_1 = '<a href="javascript:;" class="stop_icon disabled s-hide" id="" title="取消"></a>';
+											break;
+									}
+									var str_tmp1 = item.SubmitTime;
+									var str_tmp2 = item.StartTime.split(' ')[0] + " 至 " + item.EndTime.split(' ')[0];
+									var p1;
+
+									var tab_1 = "<a href=\"javascript:;\" class=\"icon6\" id=\"download\" title=\"下载\" onclick=\"\"></a>";
+									if (item.FileName == '' || item.FileName == null) {
+										tab_1 = "<a href=\"javascript:;\" class=\"icon6 disabled\" id=\"\" title=\"下载\" onclick=\"\"></a>";
+									}
+									item.Memo = item.Memo || '';
+									return "<tr>" +
+										"<td class=\"in s-hide\"><input type=\"checkbox\" class=\"input_checkbox\" /></td>" +
+										"<td style = \"display:none\">" + item.TaskId + "</td>" +
+										"<td title=\"" + str_tmp1 + "\" "+first_style+">" + str_tmp1 + "</td>" +
+										"<td title=\"" + str_tmp2 + "\" >" + str_tmp2 + "</td>" +
+										"<td style = \"display:none\">" + item.FileName + "</td>" +
+										"<td title=\"" + item.FileSize + "\" >" + item.FileSize + "</td>" +
+										"<td title=\"" + p + "\" >" + p + "</td>" +
+										// "<td title=\"" + p1 + "\" >" + p1 + "</td>" +
+										"<td title=\"" + item.Memo + "\" >" + item.Memo + "</td>" +
+										"<td id=\"on\"><div class=\"tab-ctr\" id=\"tab\">" +
+										tar_1 +
+										tab_1 +
+										"<a href=\"javascript:;\" class=\"del s-hide\" id=\"del\"  title=\"删除\" onclick=\"\"></a>" +
+										"</div></td></tr>";
+								}));
+								if(if_disabled == '1') $('.s-hide').remove();
+								$(".input_checkbox", "#mbackup_list").iCheck({
+									checkboxClass: 'icheckbox_minimal-blue',
+									radioClass: 'iradio_minimal-blue',
+									increaseArea: '0' // optional
+								});
+
+								if (paging >= fenye) {									//可能是删除了一批数据后刷新
+									paging = fenye;										//导致paging大于总页数
+								}
+								document.frm_mbackup.paging.value = paging;
+								document.getElementById("user_page").value = paging;		//显示当前页数
+								$('#check_page').iCheck('uncheck');						//"全选"复选框设置为不选中
+								//各个备份任务的复选框设置为不选中
+								$("table tbody tr input").iCheck('uncheck');
+								check_show();	
+								////console.log(select_str);										//设置备份任务复选框的选中状态
+								check_num = select_str.length;
+								$("#select_total")[0].textContent = check_num;			//显示已选中的任务数
+							}
+							else {
+								$("#mbackup_list").empty();
+								$("#select_total").text('0');		//table标签后面没有div标签
+								$('#check_page').iCheck('uncheck');						//"全选"复选框设置为不选中
+								$("#user_total").text(total_all);
+								$("#totalpage").text(1);
+								document.getElementById("user_page").value = 1;
+							}
+						}
+					} else {
+						_alert(1, "数据备份", user_result.ErrMsg);
+						$("table tbody tr").children("td.in").children("div").children("input").iCheck('uncheck');
+						$("table").next("div.tab-i").children("div.il").find("span.select_total").text(0);
+						$("#user_total").text(0);
+						$("#totalpage").text(1);
+						document.getElementById("user_page").value = 1;
+						return false;
+					}
+				}
+			});
+		}
+
+		//分页刷新
+		function user_page(num) {
+			var paging = parseInt(document.frm_mbackup.paging.value) + num;
+			if (paging < 1) {
+				paging = 1;
+			}
+			select_save();
+			if (num == 0.1) {
+				paging = 1;
+			} else if (num == 0.9) {
+				paging = document.frm_mbackup.fenye.value;
+			}
+			document.getElementById("user_page").value = paging;
+			document.frm_mbackup.paging.value = paging;
+			show_mbackup_list();
+		}
+
+		//全选按钮
+		function select_all() {
+			//////console.log(select_str);
+			//////console.log(mbackup_array);
+			if (select_str.length == mbackup_array.length) {
+				select_str = new Array();
+			} else {
+				select_str = mbackup_array;
+			}
+			//////console.log(select_str);
+			show_mbackup_list();
+		}
+		//刷新
+		function refresh() {
+			$("table tbody tr").children("td.in").children("div").children("input").iCheck('uncheck');
+			$("#check_page").iCheck('uncheck');
+			select_str = new Array();
+			user_page(0);
+		}
+
+		function deleteItems(select_str_1, num) {
+			$.ajax({
+				url: '/bhost/del_lbackup',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: select_str_1,a2:'数据备份' },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						user_page(0)
+						_alert(0, "数据备份", "删除成功");
+					} else {
+						_alert(1, "数据备份", result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+
+		//删除按钮
+		function delete_lbackup() {
+			select_save();
+			if (select_str.length == 0) {
+				_alert(2, "数据备份", "请选择要删除的数据");
+				return false;
+			}
+
+			layer.open({
+				type: 1,
+				title: '数据备份',
+				content: '<div class="layer-alert"><i class="alert waring"></i>是否批量删除</div>',
+				btn: ['确&nbsp;&nbsp;认', '取&nbsp;&nbsp;消'],
+				btnAlign: 'c',
+				closeBtn: false,
+				skin: 'layer-custom',
+				area: ['380px', '310px'],
+				move: false,
+				resize: false,
+				yes: function (i) {
+					layer.close(i);
+					deleteItems(select_str.join(','), 2);
+				},
+				no: function (i) {
+					layer.close(i);
+				}
+			});
+		}
+
+		$(function () {
+
+			$("#archiving_strategy").on("click", function () {
+				archiving_strategy();
+			});
+			$("#manual_backup").on("click", function () {
+				location.reload();
+			});
+			$("#data_recovery").on("click", function () {
+				data_recovery();
+			});
+			$("#auto_archiving").on("click", function () {
+				auto_archiving();
+			});
+
+		});
+	</script> {% endblock %}

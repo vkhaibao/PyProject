@@ -1,0 +1,90 @@
+.flow-auth3 {
+    width: 454px;
+    height: 186px;
+    margin: 80px auto 0;
+}
+
+.flow-auth3-1 {
+    display: none;
+    background: url(../images/pwd_flow/flow-auth3-1.png) no-repeat 50% 0;
+}
+
+.flow-auth3-2 {
+    display: block;
+    background: url(../images/pwd_flow/flow-auth3-2.png) no-repeat 0 50%;
+}
+
+.flow-auth3-3 {
+    display: none;
+    background: url(../images/pwd_flow/flow-auth3-3.png) no-repeat 0 50%;
+}
+
+.flow-auth3 a.disable {
+    background-color: #AAA !important;
+    cursor: default;
+    text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+    color: #f0f0f0;
+}
+.flow-auth3 a{
+	    font-weight: 500;
+}
+
+.flow-auth3 a.m2 {
+    top: 86px;
+    left: 319px;
+    background-color: #b2768d;
+}
+
+.flow-auth3 a.m1 {
+    top: 0px;
+    right: 0px;
+}
+
+.flow-auth3 a.m3 {
+    top: 86px;
+    right: 0px;
+    background-color: #b2768d;
+}
+
+.flow-auth3 a.m4 {
+    top: 171px;
+    right: 0px;
+    background-color: #b2768d;
+}
+
+.flow-auth3 a.m6 {
+    top: 75px;
+    left: 295px;
+    background-color: #3FB7D2;
+}
+
+.flow-auth3 a i {
+    float: right;
+    margin: 3px 3px 3px -20px;
+    width: 30px;
+    height: 30px;
+    background: url(../images/flow3-icon.png);
+    z-index: 2;
+}
+
+.flow-auth3 a .m1-icon {
+    background-position: 0 0
+}
+
+.flow-auth3 a .m2-icon {
+    background-position: -30px 0
+}
+
+.flow-auth3 a .m3-icon {
+    background-position: -60px 0
+}
+
+.flow-auth3 a .m4-icon {
+    background-position: -90px 0
+}
+.flow-auth3 a.m5 {
+    top: 75px;
+    left: 295px;
+    background-color: #b2768d;
+}
+

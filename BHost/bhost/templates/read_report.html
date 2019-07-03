@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Logbase运维安全管理系统</title>
+		<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+		<link rel="stylesheet" href="/manage/css/select2.min.css">
+		<link rel="stylesheet" href="/manage/css/style.css">
+		<link rel="stylesheet" href="/manage/css/report-create.css">
+	</head>
+	<body>
+		<div class="report-wrap">
+			<div class="report-head">
+				<i class="icon"></i>
+				<span class="title" id="report_name"></span>
+			</div>
+			<div class="report-content">
+				<div class="circle-list">
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+					<i class="circle-item"></i>
+				</div>
+				<div class="report-tap">
+					<div class="create-time tap-item">
+						<p class="item-title">生成时间</p>
+						<div class="item-content">
+							<p class="item-message" id="htime"></p>
+						</div>
+					</div>
+					<div class="valid-data tap-item">
+						<p class="item-title">有效数据</p>
+						<div class="item-content">
+							<p class="item-message"><span id="total_count">0</span> 条</p>
+						</div>
+					</div>
+					<div class="suggest tap-item">
+						<p class="item-title">建议</p>
+						<div class="item-content">
+							<p class="item-message " id="message-suggest"></p>
+						</div>
+					</div>
+				</div>
+				<div class="report-abstract" id="report-abstract">
+					<div class="left-abstract">
+						<p class="title">摘要</p>
+						<p class="subheading">Summary</p>
+					</div>
+					<div class="right-abstract">
+						<div class="abstract-list" id="abstract_list">
+							<div class="list-item">
+								<i class="icon-circle"></i>
+								<p class="item-message">概要描述:</p>
+							</div>
+							
+						</div>
+					</div>
+					
+				</div>
+				<div class="chart-list" id="chart-list" style="display:none;">
+						<div class="list-item time" style="height: 310px" >
+							<div class="item-title">
+								<h3>日志时间分布</h3>
+							</div>
+							<div class="item-content" id="time" style="height: 310px;">
+								 <table class="mmg">
+			                        <tr>
+			                            <th rowspan="" colspan=""></th>
+			                        </tr>
+			                    </table>
+							</div>
+						</div>
+						<div class="list-item type" style="height: 310px">
+							<div class="item-title">
+								<h3>日志类型分布</h3>
+							</div>
+							<div class="item-content"id="type" style="height: 310px;">
+								 <table  class="mmg">
+			                        <tr>
+			                            <th rowspan="" colspan=""></th>
+			                        </tr>
+			                    </table>
+							</div>
+						</div>
+						<div class="list-item type" style="height: 310px">
+							<div class="item-title">
+								<h3>服务器分布</h3>
+							</div>
+							<div class="item-content"id="server" style="height:310px;">
+								 <table  class="mmg">
+			                        <tr>
+			                            <th rowspan="" colspan=""></th>
+			                        </tr>
+			                    </table>
+							</div>
+						</div>
+						<div class="list-item type" style="height: 310px">
+							<div class="item-title">
+								<h3>用户分布</h3>
+							</div>
+							<div class="item-content"id="user" style="height: 310px;">
+								 <table  class="mmg">
+			                        <tr>
+			                            <th rowspan="" colspan=""></th>
+			                        </tr>
+			                    </table>
+							</div>
+						</div>
+						
+						<div class="list-item top10" style="height: 310px">
+							<div class="item-title">
+								<h3>数据统计前10</h3>
+							</div>
+							<div class="item-content" id="top10" style="padding-top:5px;height: 310px;">
+								 
+							</div>
+						</div>
+						<div class="list-item top10" id="_last10" style="display:none;height: 310px">
+							<div class="item-title">
+								<h3>数据统计后10</h3>
+							</div>
+							<div class="item-content" id="last10" style="padding-top:5px;height: 310px;">
+								 
+							</div>
+						</div>
+						
+					</div>
+				<div class="reprot-total" id="reprot-total">
+					<div class="total-title">
+						<h3 class="title">
+							<span id="_stat">统计</span>
+						</h3>
+						<i class="icon-total"></i>
+					</div>
+					<div class="total-list" style="width: 98%;overflow: auto;">
+						<table>
+							<thead>
+								<tr id="field_tr">
+									
+								</tr>
+							</thead>
+
+							<tbody id="data_list">
+							</tbody>
+						</table>
+					</div>
+					<div class="tab-i tab-i2">
+						
+                        <div class="il">
+                            每页显示<span id="page_total">200</span>条 总数：<span id="report_total">0</span>
+                        </div>
+                    	
+
+                        <div class="ipage">
+                            <a href="javascript:;" class="nav2 begin" onclick="firstpage()"><i></i></a>
+                            <a href="javascript:;" class="nav prev" onclick="prevpage()"><i></i></a>
+                            <input type="text" value="1" id="curpage" onchange="jumppage()">/&nbsp;<span id="totalpage">1</span>
+                            <a href="javascript:;" class="nav next" onclick="nextpage()"><i></i></a>
+                            <a href="javascript:;" class="nav2 end" onclick="lastpage()"><i></i></a>
+                        </div>
+                    </div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="report-nav">
+				
+				<div class="catalogue">
+					<div class="icon-wrap">
+						<i></i>
+						<p>目录</p>
+					</div>
+				</div>
+				<a class="abstract nav-item" href="#report-abstract">
+					<p class="hover-item">摘要</p>
+				</a>
+				<a class="chart nav-item" href="#chart-list" id="cata_charts" style="display:none;">
+					<p class="hover-item">图表</p>
+				</a>
+				<a class="total nav-item" href="#reprot-total">
+					<p class="hover-item"><span id="cata_stat">统计</span></p>
+				</a>
+				<a class="download nav-item" href="#report-bottom">
+					<i></i>
+				</a>
+			</div>
+			<div id="report-bottom" style="height: 10px;"></div>
+		</div>
+		<style>
+		table th, table td{
+			overflow: hidden;
+			text-overflow:ellipsis;
+			white-space: normal;
+			word-break: break-all;
+		}
+		div.report-tap div.item-content p{
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		</style>
+		<script src="/manage/js/jquery.min.js"></script>
+	    <script src="/manage/js/jquery.easing.js"></script>
+	    <script src="/manage/js/layer.js"></script>
+	    <script src="/manage/js/common.js"></script>
+		<script src="/manage/js/common_e.js"></script>
+	    <script src="/manage/js/echarts.min.js"></script>
+	    <script src="/manage/js/icheck.min.js"></script>
+	    <script src="/manage/js/mmGrid.js"></script>
+	    <script src="/manage/js/mmPaginator.js"></script>
+	    <link rel="stylesheet" href="/manage/css/mmGrid.css">
+	    <script>
+			var path = '{{path}}';
+			var total = 0;
+			var stat = 1;
+			var chart = 1;
+			var lay = 1;
+			var page = 200;
+			var field = "";
+			var eindex = '{{eindex}}';
+			var exp = {{exp}};
+			var expand = 0;
+			var ifstatic = '{{ifstatic}}' ;
+			var level = ''
+			var taskid = '{{taskid}}';
+			var fmt = '{{fmt}}';
+			var xtime = '{{xtime}}'
+            //定位
+            var bodyoffsetleft = $('.report-wrap').offset().left;
+            $('.report-nav').css({'position':'fixed','left':bodyoffsetleft + 1000});
+            
+	    	//导航锚点
+	    	$(function(){
+				$(".last").each(function () {
+	    	        var th = $(this).height();
+					$(this).children("a.view").height(th+1);
+                })
+				
+			  $('.nav-item').click(function() {
+			    if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+			      var $target = $(this.hash);
+			      $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+			      if ($target.length) {
+			        var targetOffset = $target.offset().top - 150;
+			        var st = $('.report-wrap').offset().top;
+			        targetOffset -= st;
+			        $('html,body').animate({
+			          scrollTop: targetOffset
+			        },300);
+			        return false;
+			      }
+			    }
+			  });
+			  
+			  /*
+			  //获取 当前任务 是否是静态报表 和 下一次执行时间
+			  var n = 0;
+			  $.ajax({
+					url:'/bhost/get_taskinfo',
+					type:'post',
+					async:false,
+					data:{a0:{{se}},id:taskid},
+					success:function(result){
+						result = JSON.parse(result);
+						if(result.Result){
+							Type = 	result.Type;
+							nextExecTime = result.nextExecTime;
+						}else{
+							_alert(1,'查看报表',result.ErrMsg);
+							n = 1;
+							return 0;
+						}
+					}
+				})
+				if(n) return false;*/
+			  
+			});
+			function toten(d){
+				d=d.toString();
+				if(d.length == 1){
+					d = '0' + d;
+				}
+				return d;
+			}
+			function get_date(time_date){
+				time_date = new Date(time_date);
+				var year=time_date.getFullYear(); 
+				var month=toten(time_date.getMonth()+1); 
+				var date=toten(time_date.getDate()); 
+				var hour=toten(time_date.getHours()); 
+				var minute=toten(time_date.getMinutes()); 
+				var second=toten(time_date.getSeconds());
+				
+				return year+'-'+month+'-'+date+' '+hour+':'+minute+':'+second
+			}
+	    	var myChart1, myChart2, myChart3,myChart4,myChart5,myChart6,navscroll;
+		    $(function() {
+				/*{"Result":true,"info":{"report_name":"BBS访问主题信息统计报告","htime":" 2017-14-27","memo":"概要描述: ","total_count":"175","sugg":"\t","total":7,"cont":[{"condtion":"入库时间: 2017-10-20 00:00:00 至 2017-10-20 23:00:00\t\t2017-10-20 00:00:00 至 2017-10-20 23:00:03\t\t"}]},"charts":{"chart1":[{"data":"2017-10-20","count":175}],"chart2":[{"data":"SSH","count":97},{"data":"RLOGIN","count":42},{"data":"TELNET","count":36}],"chart3":[{"data":"test84server(192.168.0.84)","count":131},{"data":"86(192.168.0.86)","count":24},{"data":"linux83(192.168.0.83)","count":14},{"data":"85(192.168.0.85)","count":6}],"chart4":[{"data":"root","count":166},{"data":"test","count":6},{"data":"hjh","count":3}],"chart5":[{"data":"xd(192.168.0.108)(192.168.0.108)","count":10},{"data":"192.168.0.111(192.168.0.111)","count":6},{"data":"192.168.0.114(192.168.0.114)","count":91},{"data":"192.168.0.133(192.168.0.133)(192.168.0.133)","count":68}],"chart6":[]}}*/
+				//获取 摘要数据
+				$.ajax({
+					url:'/bhost/get_abstract',
+					type:'post',
+					async:true,
+					data:{a0:{{se}},z1:path,i1:eindex,e1:exp,is:ifstatic},
+					success:function(result){
+						result = JSON.parse(result); 
+						if(result.Result == true){
+							abstract_info = result.info;
+							$('#report_name').text(abstract_info.report_name);
+							$('#htime').text(abstract_info.htime);
+							$('#total_count').text(abstract_info.total_count);
+							$('#message-suggest').text(abstract_info.sugg).attr('title',abstract_info.sugg);
+							path = result.path;
+							total = abstract_info.total;
+							/*"path":"/flash/system/storage/.system/report/Dynamic/yt/1506009967_1514174323/","stat":1,"chart":1,"lay":1,"page":200,"field":"1,客户端地址;2,服务端地址;3,文件大小;3,统计值"*/
+							//console.log(total);
+							stat = result.stat;
+							expand = result.expand;
+							chart = result.chart;
+							lay = result.lay;
+							page = result.page;
+							field = result.field;
+							//console.log("field==" + field);
+							level = result.level;
+							//console.log(level);
+							if(chart && abstract_info.total_count >0){
+								$('#chart-list').show();
+								$('#cata_charts').show()
+							}
+							if(stat == 0){
+								$('#_stat').text('明细');
+								$('#cata_stat').text('明细');
+							}
+							
+							/*<div class="list-item"><i class="icon-circle"></i><p class="item-message">概要描述:</p></div>*/
+							
+							$('#abstract_list').empty().append('<div class="list-item"><i class="icon-circle"></i><p class="item-message" title="'+abstract_info.memo+'" >'+abstract_info.memo+'</p></div>');
+							//console.log(abstract_info.cont);
+							if(ifstatic == '1'){
+								s = "入库时间: "+get_date(parseInt(xtime.split('_')[0]))+' 至 '+ get_date(parseInt(xtime.split('_')[1]));
+								$('#abstract_list').append('<div class="list-item"><i class="icon-circle"></i><p class="item-message">'+s+'</p></div>');
+								
+								$(abstract_info.cont).each(function(i,item){
+									if(item.condtion.indexOf('入库时间') >=0 ) return true; 
+									$('#abstract_list').append('<div class="list-item"><i class="icon-circle"></i><p class="item-message">'+item.condtion+'</p></div>');
+								})
+							}else{
+									
+								$(abstract_info.cont).each(function(i,item){								
+									$('#abstract_list').append('<div class="list-item"><i class="icon-circle"></i><p class="item-message">'+item.condtion+'</p></div>');
+								})
+							}
+							_autoSize();
+							if(stat == 1){
+								charts = result.charts;
+								
+								if(charts !=-1){
+									//时间
+									Chart1(charts.chart1);
+									//日志类型分布
+									Chart2(charts.chart2);
+									//服务器分布
+									Chart3(charts.chart3);
+									//用户分布
+									Chart4(charts.chart4);
+									//top10
+									Chart5(charts.chart5);
+									if(charts.chart6.length > 0) {
+										$('#_last10').show();
+										Chart6(charts.chart6);
+									}
+									$(window).resize(function() {
+										
+										myChart1.resize();
+										myChart2.resize();
+										myChart3.resize();
+										myChart4.resize();
+										myChart5.resize();
+									   if(charts.chart6.length > 0) myChart6.resize();
+									});
+								}
+							}
+							// 获取 统计/明细 数据
+							//字段名
+							$('#field_tr').empty().append('<th style="width:12%">序号</th>');
+							$(field.split(';')).each(function(i,item){
+								$('#field_tr').append('<th width="80px">'+item+'</th>');																
+							})
+							if(expand) $('#field_tr').append('<th class="last" width="42">扩展</th>');
+							$('#page_total').text(page);
+							$("#report_total").text(total);
+							totalpage = Math.ceil(parseInt(total)/page);
+							if (totalpage < 1){
+								totalpage = 1;
+							}
+							$("#totalpage").text(totalpage.toString());
+							TableData();
+							
+						}else{
+							_alert(1,'查看报表',result.ErrMsg);
+						}
+					}
+				})	
+				$(window).resize(function() {
+					_autoSize();
+				});
+				
+				
+				/*
+		        $('body').on('mouseover', '.mmg-bodyWrapper tr', function() {
+		            var $_obj = $(this).find('.tab-ctr'),
+		                $_p = $(this).parents('.mmGrid');
+		            var w = $_p.width(),
+		                ow = $_obj.outerWidth();
+		            var sleft = $(this).parents('.mmg-bodyWrapper').scrollLeft();
+		
+		            var len = $_obj.children().length;
+		            $_obj.css({ 'left': w - ow + sleft, width: len * 24 });
+		        })*/
+		    });
+		
+		    
+		
+		    Array.prototype.max = function() {
+		        return Math.max.apply({}, this)
+		    };
+		
+		    function _autoSize() {
+		        var h = $(window).height();
+		        $('div.jksCont').css('height', h / 3 - 60);
+		        $('div.jkmCont').css('height', h / 2 - 80);
+		    }
+
+    		Array.prototype.max = function() {
+		        return Math.max.apply({}, this)
+		    };
+    		//日志时间分布
+    		function Chart1(data_tmp) {
+				var data1 = [];
+				var data2 = [];
+				$(data_tmp).each(function(i,item){
+					data1.push(item.data);
+					data2.push(item.count);
+				})
+		        var data_all = [
+		            data1,
+		            data2
+		        ];
+		        
+		        if (data_all == [[],[]]) {
+		            return false;
+		        }
+		        //$('#chartBar1').find('div').remove();
+		        myChart1 = echarts.init(document.getElementById('time'));
+		        myChart1.clear();
+					
+		        //myChart.setOption();
+		        var category = data_all[0];
+		        var lineData = data_all[1];
+				
+		        // option
+		        var option = {
+		            backgroundColor: 'transparent',
+		            tooltip: {
+		                trigger: 'axis',
+		                formatter: '<span style="font-size:12px">2017.{b}<br><i class="dot-fix"></i>数量: {c}</span>',
+		                axisPointer: {
+		                    type: 'shadow'
+		                },
+		                backgroundColor: 'rgba(62,60,88,0.6)'
+		            },
+		            legend: false,
+		            xAxis: {
+		                data: category,
+		                axisLine: {
+		                    lineStyle: {
+		                        color: '#666'
+		                    }
+		                }
+		            },
+		            yAxis: {
+		                splitLine: { show: false },
+		                axisLine: {
+		                    lineStyle: {
+		                        color: '#666'
+		                    }
+		                }
+		            },
+		            series: [{
+		                name: 'SSH',
+		                type: 'line',
+		                smooth: true,
+		                showAllSymbol: true,
+		                symbol: 'emptyCircle',
+		                symbolSize: 15,
+		                data: lineData
+		            }, {
+		                name: 'SSH',
+		                type: 'bar',
+		                barGap: '-100%',
+		                barWidth: 10,
+		                itemStyle: {
+		                    normal: {
+		                        color: new echarts.graphic.LinearGradient(
+		                            0, 0, 0, 1, [
+		                                { offset: 0, color: 'rgba(246,246,246,0)' },
+		                                { offset: 0.5, color: 'rgba(246,246,246,0.5)' },
+		                                { offset: 1, color: 'rgba(246,246,246,1)' }
+		                            ]
+		                        )
+		                    }
+		                },
+		                z: -8,
+		                data: lineData
+		            }, {
+		                name: 'SSH',
+		                type: 'pictorialBar',
+		                symbol: 'rect',
+		                itemStyle: {
+		                    normal: {
+		                        color: '#4593b5'
+		                    }
+		
+		                },
+		                symbolRepeat: true,
+		                symbolSize: [8, 1],
+		                symbolMargin: 1,
+		                z: -10,
+		                data: lineData
+		            }]
+		        };
+		
+		        myChart1.setOption(option);
+		    }
+    		//数据统计前10
+    		function Chart5(data_tmp) {
+				//[{"data":"xd(192.168.0.108)(192.168.0.108)","count":10},{"data":"192.168.0.111(192.168.0.111)","count":6},{"data":"192.168.0.114(192.168.0.114)","count":91},{"data":"192.168.0.133(192.168.0.133)(192.168.0.133)","count":68}]
+				var data1 = [];
+				var data2 = [];
+				$(data_tmp).each(function(i,item){
+					data1.push(item.data);
+					data2.push(item.count);
+				})
+		        var data_all = [
+		            data1,
+		            data2
+		        ];
+		        
+		        if (data_all == [[],[]]) {
+		            return false;
+		        }
+		        myChart5 = echarts.init(document.getElementById('top10'));
+		        myChart5.clear();
+		        var dataAxis = data_all[0];
+		        var data = data_all[1];
+		
+		        var yMax = Math.ceil(data.max() / 100) * 100;
+		        var dataShadow = [];
+		
+		        for (var i = 0; i < data.length; i++) {
+		            dataShadow.push(yMax);
+		        }
+		
+		        option = {
+		            title: false,
+		            xAxis: {
+		                data: dataAxis,
+		                axisLabel: {
+		                    textStyle: {
+		                        color: '#969696'
+		                    },
+							interval: 1,  
+							formatter:function(value)  
+							 {    
+								if(value.length > 20 ){
+									value = value.substring(0,20) + '......';
+								}
+								return value;
+								/*
+								 var ret = "";//拼接加\n返回的类目项  
+								 var maxLength = 50;//每项显示文字个数  
+								 var valLength = value.length;//X轴类目项的文字个数  
+								 var rowN = Math.ceil(valLength / maxLength); //类目项需要换行的行数  
+								 if (rowN > 1)//如果类目项的文字大于3,  
+								 {  
+									 for (var i = 0; i < rowN; i++) {  
+										 var temp = "";//每次截取的字符串  
+										 var start = i * maxLength;//开始截取的位置  
+										 var end = start + maxLength;//结束截取的位置  
+										 //这里也可以加一个是否是最后一行的判断，但是不加也没有影响，那就不加吧  
+										 temp = value.substring(start, end) + "\n";  
+										 ret += temp; //凭借最终的字符串  
+									 }  
+									 return ret;  
+								 }  
+								 else {  
+									 return value;  
+								 } */ 
+							 }  
+                              
+							
+		                },
+		                axisTick: {
+		                    show: false
+		                },
+		                axisLine: {
+		                    show: false
+		                },
+		                z: 1
+		            },
+		            yAxis: {
+		                axisLine: {
+		                    show: false
+		                },
+		                axisTick: {
+		                    show: false
+		                },
+		                axisLabel: {
+		                    textStyle: {
+		                        color: '#969696'
+		                    }
+		                },
+		                splitLine: {
+		                    lineStyle: {
+		                        color: '#DDD'
+		                    }
+		                },
+		            },
+		            tooltip: {
+		                trigger: 'axis',
+		                formatter: '<span style="font-size:12px">{b}<br><i class="dot-fix"></i>数量：{c1}</span>',
+		                axisPointer: {
+		                    lineStyle: {
+		                        color: 'transparent'
+		                    }
+		                },
+		                backgroundColor: 'rgba(62,60,88,0.6)'
+		            },
+		            series: [{ // For shadow
+		                    type: 'bar',
+		                    itemStyle: {
+		                        normal: { color: 'rgba(0,0,0,0.05)' }
+		                    },
+		                    barGap: '-100%',
+		                    barCategoryGap: '70%',
+		                    data: dataShadow,
+		                    animation: false
+		                },
+		                {
+		                    type: 'bar',
+		                    itemStyle: {
+		                        normal: {
+		                            color: new echarts.graphic.LinearGradient(
+		                                0, 0, 0, 1, [
+		                                    { offset: 0, color: '#46ddff' },
+		                                    { offset: 0.5, color: '#59abdb' },
+		                                    { offset: 1, color: '#716dae' }
+		                                ]
+		                            ),
+		                            backgroundColor: '#b8b8b8'
+		                        },
+		                        emphasis: {
+		                            color: new echarts.graphic.LinearGradient(
+		                                0, 0, 0, 1, [
+		                                    { offset: 0, color: '#87e8fe' },
+		                                    { offset: 0.5, color: '#377f9b' },
+		                                    { offset: 1, color: '#292439' }
+		                                ]
+		                            )
+		                        }
+		                    },
+		                    data: data
+		                }
+		            ]
+		        };
+		
+		        myChart5.setOption(option);
+		    }
+    		//日志类型分布
+    		function Chart2(service_data) {
+				//var service_data = [{ "value": 10, "name": "SERVICE1" }, { "value": 5, "name": "SERVICE2" }, { "value": 15, "name": "SERVICE3" }, { "value": 10, "name": "SERVICE4" }, { "value": 15, "name": "SERVICE5" }, { "value": 25, "name": "SERVICE6" }, { "value": 20, "name": "SERVICE7" }, { "value": 35, "name": "SERVICE8" }];
+				if (service_data.length == 0) {
+					return false;
+				}
+				var category = new Array();
+				for(var i in service_data){
+					if (service_data[i].name == ""){
+						service_data[i].name = ' ';
+					}	
+					category.push(service_data[i].name);
+				}
+				myChart2 = echarts.init(document.getElementById('type'));
+				myChart2.clear();
+				var option = {
+					title: false,
+					color: ['#4572A7','#AA4643','#89A54E','#80699B','#3D96AE','#DB843D','#92A8CD','#A47D7C','#B5CA92','#6699CC'],
+					tooltip: {
+						trigger: 'item',
+						formatter: '<span style="font-size:12px">{b} <br>{c} ({d}%)</span>',
+						backgroundColor: 'rgba(62,60,88,0.6)'
+					},
+					legend: {
+						height:"300px",
+		            	data: category,
+		            	orient: 'vertical',
+		            	align: 'right',
+				        right: '10%',
+				        top: 30
+		            },
+					toolbox: false,
+					calculable: true,
+					series: [{
+						name: '面积模式',
+						type: 'pie',
+						radius: [20, 80],
+						center: ['40%', '50%'],
+						roseType: 'area',
+						data: service_data,
+						itemStyle: {
+							normal: {
+								//shadowColor: 'rgba(0, 0, 0, 0.8)',
+								//shadowBlur: 24
+							},
+							emphasis: {
+								opacity: 0.8
+							}
+						}
+					}]
+				};
+		
+				myChart2.setOption(option);
+			}
+			
+			//服务器分布
+    		function Chart3(service_data) {
+				//var service_data = [{ "value": 10, "name": "SERVICE1" }, { "value": 5, "name": "SERVICE2" }, { "value": 15, "name": "SERVICE3" }, { "value": 10, "name": "SERVICE4" }, { "value": 15, "name": "SERVICE5" }, { "value": 25, "name": "SERVICE6" }, { "value": 20, "name": "SERVICE7" }, { "value": 35, "name": "SERVICE8" }];
+				if (service_data.length == 0) {
+					return false;
+				}
+				myChart3 = echarts.init(document.getElementById('server'));
+				myChart3.clear();
+				var category = new Array();
+				for(var i in service_data){
+					if (service_data[i].name == ""){
+						service_data[i].name = ' ';
+					}						
+					category.push(service_data[i].name);
+				}
+				var option = {
+					title: false,
+					color: ['#4572A7','#AA4643','#89A54E','#80699B','#3D96AE','#DB843D','#92A8CD','#A47D7C','#B5CA92','#6699CC'],
+					tooltip: {
+						trigger: 'item',
+						formatter: '<span style="font-size:12px">{b} <br>{c} ({d}%)</span>',
+						backgroundColor: 'rgba(62,60,88,0.6)'
+					},
+					legend: {
+						height:"300px",
+		            	data: category,
+		            	orient: 'vertical',
+		            	align: 'right',
+				        right: '10%',
+				        top: 30
+		            },
+					toolbox: false,
+					calculable: true,
+					series: [{
+						name: '面积模式',
+						type: 'pie',
+						radius: [20, 80],
+						center: ['40%', '50%'],
+						roseType: 'area',
+						data: service_data,
+						itemStyle: {
+							normal: {
+								//shadowColor: 'rgba(0, 0, 0, 0.8)',
+								//shadowBlur: 24
+							},
+							emphasis: {
+								opacity: 0.8
+							}
+						}
+					}]
+				};
+		
+				myChart3.setOption(option);
+			}
+			//用户分布
+    		function Chart4(service_data) {
+				//var service_data = [{ "value": 10, "name": "SERVICE1" }, { "value": 5, "name": "SERVICE2" }, { "value": 15, "name": "SERVICE3" }, { "value": 10, "name": "SERVICE4" }, { "value": 15, "name": "SERVICE5" }, { "value": 25, "name": "SERVICE6" }, { "value": 20, "name": "SERVICE7" }, { "value": 35, "name": "SERVICE8" }];
+				if (service_data.length == 0) {
+					return false;
+				}
+				myChart4 = echarts.init(document.getElementById('user'));
+				myChart4.clear();
+				var category = new Array();
+				for(var i in service_data){
+					if (service_data[i].name == ""){
+						service_data[i].name = ' ';
+					}	
+					category.push(service_data[i].name);
+				}
+				var option = {
+					title: false,
+					color: ['#4572A7','#AA4643','#89A54E','#80699B','#3D96AE','#DB843D','#92A8CD','#A47D7C','#B5CA92','#6699CC'],
+					tooltip: {
+						trigger: 'item',
+						formatter: '<span style="font-size:12px">{b} <br>{c} ({d}%)</span>',
+						backgroundColor: 'rgba(62,60,88,0.6)'
+					},
+					legend: {
+						height:"300px",
+		            	data: category,
+		            	orient: 'vertical',
+		            	align: 'right',
+				        right: '10%',
+				        top: 30
+		            },
+					toolbox: false,
+					calculable: true,
+					series: [{
+						name: '面积模式',
+						type: 'pie',
+						radius: [20, 80],
+						center: ['40%', '50%'],
+						roseType: 'area',
+						data: service_data,
+						itemStyle: {
+							normal: {
+								//shadowColor: 'rgba(0, 0, 0, 0.8)',
+								//shadowBlur: 24
+							},
+							emphasis: {
+								opacity: 0.8
+							}
+						}
+					}]
+				};
+		
+				myChart4.setOption(option);
+			}
+			//last10分布
+			function Chart6(data_tmp) {
+	        // $('#chartBar2').empty(); 
+		        var data1 = [];
+				var data2 = [];
+				$(data_tmp).each(function(i,item){
+					data1.push(item.data);
+					data2.push(item.count);
+				})
+		        var data_all = [
+		            data1,
+		            data2
+		        ];
+		        
+		        if (data_all == [[],[]]) {
+		            return false;
+		        }
+		        myChart6 = echarts.init(document.getElementById('last10'));
+		        myChart6.clear();
+		        var dataAxis = data_all[0];
+		        var data = data_all[1];
+		
+		        var yMax = Math.ceil(data.max() / 100) * 100;
+		        var dataShadow = [];
+		
+		        for (var i = 0; i < data.length; i++) {
+		            dataShadow.push(yMax);
+		        }
+		
+		        option = {
+		            title: false,
+		            xAxis: {
+		                data: dataAxis,
+		                axisLabel: {
+		                    textStyle: {
+		                        color: '#969696'
+		                    },
+							interval: 1,  
+							formatter:function(value)  
+							 {    
+								if(value.length > 20 ){
+									value = value.substring(0,20) + '......';
+								}
+								return value;
+							 }
+		                },
+		                axisTick: {
+		                    show: false
+		                },
+		                axisLine: {
+		                    show: false
+		                },
+		                z: 1
+		            },
+		            yAxis: {
+		                axisLine: {
+		                    show: false
+		                },
+		                axisTick: {
+		                    show: false
+		                },
+		                axisLabel: {
+		                    textStyle: {
+		                        color: '#969696'
+		                    }
+		                },
+		                splitLine: {
+		                    lineStyle: {
+		                        color: '#DDD'
+		                    }
+		                },
+		            },
+		            tooltip: {
+		                trigger: 'axis',
+		                formatter: '<span style="font-size:12px">{b}<br><i class="dot-fix"></i>数量：{c1}</span>',
+		                axisPointer: {
+		                    lineStyle: {
+		                        color: 'transparent'
+		                    }
+		                },
+		                backgroundColor: 'rgba(62,60,88,0.6)'
+		            },
+		            series: [{ // For shadow
+		                    type: 'bar',
+		                    itemStyle: {
+		                        normal: { color: 'rgba(0,0,0,0.05)' }
+		                    },
+		                    barGap: '-100%',
+		                    barCategoryGap: '70%',
+		                    data: dataShadow,
+		                    animation: false
+		                },
+		                {
+		                    type: 'bar',
+		                    itemStyle: {
+		                        normal: {
+		                            color: new echarts.graphic.LinearGradient(
+		                                0, 0, 0, 1, [
+		                                    { offset: 0, color: '#46ddff' },
+		                                    { offset: 0.5, color: '#59abdb' },
+		                                    { offset: 1, color: '#716dae' }
+		                                ]
+		                            ),
+		                            backgroundColor: '#b8b8b8'
+		                        },
+		                        emphasis: {
+		                            color: new echarts.graphic.LinearGradient(
+		                                0, 0, 0, 1, [
+		                                    { offset: 0, color: '#87e8fe' },
+		                                    { offset: 0.5, color: '#377f9b' },
+		                                    { offset: 1, color: '#292439' }
+		                                ]
+		                            )
+		                        }
+		                    },
+		                    data: data
+		                }
+		            ]
+		        };
+		
+		        myChart6.setOption(option);
+		    }
+	    	
+			
+			
+			function TableData(){
+				//console.log(field);
+				//console.log(stat);
+				if(lay ==0){
+					$('#reprot-total').hide();
+					return 0;
+				}
+				$.ajax({
+					url:'/bhost/get_data_report',
+					type:'post',
+					async:true,
+					data:{a0:{{se}},p1:path,c_p1:$("#curpage").val(),m_p1:$('#page_total').text(),f1:field,e1:exp,i1:eindex,s1:stat,is:ifstatic,v1:level},// l1:lay,i1:eindex
+					success:function(result){
+						$('#total-list').empty();
+						data_result = JSON.parse(result);
+						/*{"Result":true,"info":[{"data":[{"field":"xd(192.168.0.108)","rowspan":2},{"field":"linux83(192.168.0.83)","rowspan":1},{"field":"0","rowspan":1},{"field":"8","rowspan":1}],"eindex":"-"},{"data":[{"field":"","rowspan":1},{"field":"test84server(192.168.0.84)","rowspan":1},{"field":"0","rowspan":1},{"field":"2","rowspan":1}],"eindex":"-"},{"data":[{"field":"192.168.0.111","rowspan":1},{"field":"linux83(192.168.0.83)","rowspan":1},{"field":"0","rowspan":1},{"field":"6","rowspan":1}],"eindex":"-"},{"data":[{"field":"192.168.0.114","rowspan":1},{"field":"test84server(192.168.0.84)","rowspan":1},{"field":"0","rowspan":1},{"field":"91","rowspan":1}],"eindex":"-"},{"data":[{"field":"192.168.0.133(192.168.0.133)","rowspan":3},{"field":"test84server(192.168.0.84)","rowspan":1},{"field":"0","rowspan":1},{"field":"38","rowspan":1}],"eindex":"-"},{"data":[{"field":"","rowspan":1},{"field":"85(192.168.0.85)","rowspan":1},{"field":"0","rowspan":1},{"field":"6","rowspan":1}],"eindex":"-"},{"data":[{"field":"","rowspan":1},{"field":"86(192.168.0.86)","rowspan":1},{"field":"0","rowspan":1},{"field":"24","rowspan":1}],"eindex":"-"}]}*/
+						if(data_result.Result == true){
+							data_report = data_result.info;
+							$('#data_list').empty();
+							/*<tr><td>1</td><td rowspan="4">192.168.1.1</td><td>审核失败</td><td>123</td><td>user</td><td>hostname</td><td class="last"><a href="#" class="view"></a></td></tr>*/
+							ind = (parseInt($('#curpage').val())-1) * parseInt($('#page_total').text());
+							$(data_report).each(function(i,item){
+								td_str = "";
+								$(item.data).each(function(i1,item1){
+									if(item1.field == "") return true;
+									td_str = td_str + "<td rowspan=\""+item1.rowspan+"\">"+item1.field+"</td>"
+								})
+								if(expand) td_str = td_str + "<td class=\"last\"><a href=\"/bhost/read_report?z1="+path+"&a0={{se}}&i1="+item.eindex+"&e1=1&is="+ifstatic+"&id="+taskid+"&xt="+xtime+"\" target=\"_blank\" class=\"view\"></a></td>"
+								$('#data_list').append('<tr><td>'+(ind + i+ 1)+'</td>'+td_str+'</tr>');
+							})
+							$(".last").each(function () {
+								var th = $(this).height();
+								$(this).children("a.view").height(th+1);
+							})
+						}else{
+							_alert(1,'查看报表',data_result.info);
+							return false;
+						}
+					}
+				})
+			}
+			
+			//下一页
+			function nextpage(){
+				var cpage = $("#curpage").val();
+				
+				var npage = 0;
+				if (parseInt($('#totalpage').text()) == cpage){
+					return;
+				}else{
+					npage = parseInt(cpage)+1;
+				}
+				$("#curpage").val(npage);
+				TableData()
+			}
+
+			//上一页
+			function prevpage(){
+				var cpage = $("#curpage").val();
+				var ppage = 0;
+				if (parseInt(cpage) == 1){
+					return;
+				}else{
+					ppage = parseInt(cpage)-1;
+				}
+				$("#curpage").val(ppage);
+				TableData();
+			}
+			//首页
+			function firstpage(){
+				$("#curpage").val(1);
+				TableData();
+
+			}
+			//末页
+			function lastpage(){
+				var cpage = $("#curpage").val();
+				var lpage = $("#totalpage").text();
+				if (cpage == lpage){
+					return;
+				}
+				$("#curpage").val(lpage);
+				TableData();
+				
+			}
+			//跳页
+			function jumppage(){
+				var cur = $("#curpage").val();
+				var numReg = /\D/;
+				if (numReg.test(cur)){
+					$("#curpage").val(1);
+				}
+				if (parseInt(cur) < 1 || cur == ""){
+					$("#curpage").val(1);
+				}
+				TableData()	;
+				
+			}
+			
+			//有导航跟随滚动
+//			$('body').scroll(function () {
+//				var scrollTop = $('body').scrollTop();
+//				var offsetTop = $('.report-nav').offset().top;
+//				if(scrollTop > offsetTop){
+//				    //console.log(111);
+//                    $('.report-nav').animate({
+//                        'position': 'fixed',
+//                        'top': 0
+//                    }, 2000);
+//				}else{
+////                    $(".report-nav").css({"position":"static"});
+//                }
+//
+////                //console.log(offsetTop,scrollTop);
+//			});
+
+	    </script>
+	</body>
+</html>

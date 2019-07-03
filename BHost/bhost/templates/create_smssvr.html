@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3>短信网关</h3>
+				-->
+				<div class="manual-head" style="width:10%;float:left;">
+					<div class="manual-title">
+						<span id="smssvr_reload" style="cursor: pointer;">短信网关</span>
+						<i class="smssvr_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-form" style="padding-bottom:10px;padding: 10px 0 0;">
+						<div class="form">	
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>配置名称：</span>
+								<div class="form-c">
+									<input id="SmsSvrConfigName" name="SmsSvrConfigName" style="width: 267px;" class="form-text" type="text" onblur="NameCheck(this);" maxlength="128"><i class="v-check"></i>
+									<p class="form-tip" style="width: 270px;margin-left: -5px;">特殊字符仅支持下划线、横杠、小数点</p>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>数据库类型：</span>
+								<div class="form-c">
+									<select name="" id="SmsSvrDBType" class="type-select" style="width:299px">
+										<option value="1">ORACLE</option>
+										<option value="2">MSSQL</option>
+										<option value="3">MYSQL</option>
+										<option value="4">SYBASE</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>服务器地址：</span>
+								<div class="form-c">
+									<input id="SmsSvrDBServerIP" name="SmsSvrDBServerIP" class="form-text" type="text" style="width: 124px;" onblur="IPCheck(this);"><i class="v-check" style="margin-top: 9px;" maxlength="64"></i>
+									<span style="width: 50px;text-align: right;color: #000;line-height: 28px;"><em class="imp" style="color: #F00;font-style: normal;">*</em>端口：</span>
+									<input id="SmsSvrDBPort" name="SmsSvrDBPort" class="form-text" type="text" maxlength="5" style="width: 47px;" onblur="NumCheck(this);"><i class="v-check" style="margin-top: 9px;"></i><p class="form-tip" style="width: 78px;margin-left: 216px;">0-65535之间</p>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>账号：</span>
+								<div class="form-c">
+									<input id="SmsSvrDBUserName" name="SmsSvrDBUserName" style="width: 267px;" class="form-text" type="text" onblur="NameCheck(this);" maxlength="128"><i class="v-check"></i>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>密码：</span>
+								<div class="form-c">
+									<input id="SmsSvrDBPassword" name="SmsSvrDBPassword" class="form-text" type="password" style="width: 291px;padding: 0 3px 0px 3px;" maxlength="32">
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>数据库：</span>
+								<div class="form-c">
+									<input id="SmsSvrDBDatabase" name="SmsSvrDBDatabase" class="form-text" type="text" maxlength="128" style="width: 267px;">
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>短信sql语句模板：</span>
+								<div class="form-c">
+									<input id="SmsSvrDBInsertTemp" name="SmsSvrDBInsertTemp" class="form-text" type="text" onblur="temp_check(this);" maxlength="1024" style="width: 267px;"><i class="v-check"></i>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag" style=""><em class="imp">*</em>编码方式：</span>
+								<div class="form-c" style="">
+									<select class="filter-select" id="EnCode" style="width:90px;">
+										<option value="0">UTF-8</option>
+										<option value="1">GBK</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag" style=""><em class="imp">*</em>方式：</span>
+								<div class="form-c" style="">
+									<select class="filter-select" id="Flag" style="width:90px;">
+										<option value="2">默认</option>
+										<option value="1">备用</option>
+										<option value="0">其他</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-item tab-t s-hide" style="padding:20px 0 10px;">
+								<div class="ctr" style="margin-left:121px;width:76px;">
+									<a class="btn" href="javascript:;" style="line-height: 26px;" onclick="test_smssvr();">测试</a>
+								</div>
+								<div class="form-c" style="float:left;padding: 0px 0 0 0;margin-left:4px;">
+									<input placeholder="请输入手机号码" id="revicer_phone" name="revicer_phone" class="form-text" maxlength="11" type="text" style="width:267px;">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="btns s-hide">
+						<a href="javascript:;" class="btn btn-normal" onclick="smsvr_save();">保&nbsp;&nbsp;存</a>
+						<!--
+						<a href="javascript:;" class="btn btn-normal" onclick="test_smssvr();">测&nbsp;&nbsp;试</a>
+						-->
+					</div>
+					<div class="c-form">
+						
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="back(1);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<form action="/bhost/manager_smssvr" method="POST" name="frm_smsvr" id="frm_smsvr">
+		<input type="hidden" name="tasktype" id = "tasktype" value="" />
+		<input type="hidden" name="z1" id = "z1" value="" />		
+		<input type="hidden" name="z2" id = "z2" value=""/>
+		<input type="hidden" name="z3" id = "z3" value=""/>
+		<input type="hidden" name="z4" id = "z4" value=""/>
+		<input type="hidden" name="a0" value=""/>
+	</form>
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+$('.type-select,.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+<style>
+.form-item{
+	padding: 15px 0 10px;
+}
+</style>
+
+<script>
+var smssvset = {
+	"SmsSvrConfigId": 0,
+    "SmsSvrConfigName": "短信网关配置1",
+    "SmsSvrDBType": 2, 
+    "SmsSvrDBServerIP": "192.168.0.1",        
+    "SmsSvrDBPort": 1433,
+    "SmsSvrDBUserName": "root",       
+    "SmsSvrDBPassword": "d106f6959747b5ac",
+    "SmsSvrDBDatabase": "mysql",
+    "SmsSvrDBInsertTemp": null,
+	"Flag":0,
+	"EnCode":0
+}
+var now="{{now}}";
+var keyword_re = {{keyword|safe}};
+var edit = {{edit|safe}};
+var selectid = {{selectid|safe}}
+var se;
+$(function(){
+	_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+	if(_if_disable == '1'){
+		$('.s-hide').remove();
+	}
+
+	$("#smssvr_reload").on("click",function(){
+		//back(1);
+		document.frm_smsvr.action = '/bhost/create_smssvr';
+		document.frm_smsvr.z1.value = now;
+		document.frm_smsvr.z2.value = JSON.stringify(keyword_re);
+		if (edit != "None" && edit != ""){
+			document.frm_smsvr.z3.value = JSON.stringify(edit);
+		}else{
+			document.frm_smsvr.z3.value = "None";
+		}
+		document.frm_smsvr.z4.value = JSON.stringify(selectid);
+		document.frm_smsvr.a0.value = se;
+		document.frm_smsvr.submit();
+	});
+	se = window.parent.document.frm.se.value;
+	$("#SmsSvrDBPort").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	if (edit != "None"){
+		smssvset.SmsSvrConfigId=edit.data[0].SmsSvrConfigId;
+		$("#SmsSvrConfigName").val(edit.data[0].SmsSvrConfigName);
+		$("#SmsSvrConfigName").prop("disabled",true);
+		$("#SmsSvrDBType").val(edit.data[0].SmsSvrDBType).trigger('change');
+		$("#SmsSvrDBServerIP").val(edit.data[0].SmsSvrDBServerIP);
+		$("#SmsSvrDBPort").val(edit.data[0].SmsSvrDBPort);
+		$("#SmsSvrDBUserName").val(edit.data[0].SmsSvrDBUserName);
+		$("#SmsSvrDBPassword").val(edit.data[0].SmsSvrDBPassword);
+		$("#SmsSvrDBDatabase").val(edit.data[0].SmsSvrDBDatabase);
+		if (edit.data[0].SmsSvrDBInsertTemp != null){
+			$("#SmsSvrDBInsertTemp").val(edit.data[0].SmsSvrDBInsertTemp);
+		}
+		$("#Flag").val(edit.data[0].Flag).trigger('change');
+		$("#EnCode").val(edit.data[0].EnCode).trigger('change');
+		if (edit.data[0].Flag == 2){
+			$.ajax({
+				url:'/bhost/get_smssvr_flag',
+				type:'post',
+				async:false,
+				data:{a0:se},
+				success:function(result){
+					var smssvr_flag = JSON.parse(result);
+					if (smssvr_flag.Result){
+						if (smssvr_flag.count_smssvr == 2){
+							$("#Flag").attr('disabled',true);
+						}
+					}
+				}
+			})
+		}
+	}else{
+		smssvset.SmsSvrConfigId=0;
+		$.ajax({
+			url:'/bhost/get_smssvr_flag',
+			type:'post',
+			async:false,
+			data:{a0:se},
+			success:function(result){
+				var smssvr_flag = JSON.parse(result);
+				if (smssvr_flag.Result){
+					if (smssvr_flag.count_smssvr == 1){
+						$("#Flag").val(2).trigger('change');
+						$("#Flag").attr('disabled',true);
+					}else if (smssvr_flag.def_smssvr == 0){
+						$("#Flag").val(2).trigger('change');
+					}else if (smssvr_flag.spare_smssvr == 0){
+						$("#Flag").val(1).trigger('change');
+					}else{
+						$("#Flag").val(0).trigger('change');
+					}
+				}
+			}
+		})
+	}
+	parent._switchBtn(0);//掩藏按钮
+})
+var numCheck = /\D/;
+var ipcheck_route=/(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+var nameCheck = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+function IPCheck(obj){
+	var ip = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check');
+	if (!ipcheck_route.test(ip)){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+function NameCheck(obj){
+	var Name = $(obj).val();
+	var $i = $(obj).next('i.v-check');
+	if (!nameCheck.test(Name)){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+function NumCheck(obj){
+	var num = $(obj).val();
+	var $i = $(obj).next('i.v-check');
+	if (numCheck.test(num) || num == ""){
+		$i.show().attr('class','v-check v-wrong');
+		return false;
+	}else{
+		if (parseInt(num) > 65534){
+			$i.show().attr('class','v-check v-wrong');
+			return false;
+		}
+		if (parseInt(num) < 1){
+			$i.show().attr('class','v-check v-wrong');
+			return false;
+		}
+		$i.show().attr('class','v-check v-right');
+	}
+}
+function temp_check(obj){
+	var v = $(obj).val();
+	var $i = $(obj).next('i.v-check');
+	if (v.indexOf("%phone%") === -1 || v.indexOf("%content%") === -1){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+
+
+//保存配置
+function smsvr_save(){
+	var SmsSvrConfigName = $("#SmsSvrConfigName").val();
+	var SmsSvrDBType = $("#SmsSvrDBType").val();
+	var SmsSvrDBServerIP = $("#SmsSvrDBServerIP").val();
+	var SmsSvrDBPort = $("#SmsSvrDBPort").val();
+	var SmsSvrDBUserName = $("#SmsSvrDBUserName").val();
+	var SmsSvrDBPassword = $("#SmsSvrDBPassword").val();
+	var SmsSvrDBDatabase = $("#SmsSvrDBDatabase").val();
+	var SmsSvrDBInsertTemp = $("#SmsSvrDBInsertTemp").val();
+	if (SmsSvrConfigName == ""){
+		_alert(2,"短信网关","请输入名称",$("#SmsSvrConfigName"));
+		return false;
+	}else{
+		if (!nameCheck.test(SmsSvrConfigName)){
+			_alert(1,"短信网关","名称格式不正确",$("#SmsSvrConfigName"));
+			return false;
+		}
+	}
+	if (SmsSvrDBServerIP == ""){
+		_alert(2,"短信网关","请输入服务器地址",$("#SmsSvrDBServerIP"));
+		return false;
+	}else{
+		if (!ipcheck_route.test(SmsSvrDBServerIP)){
+			_alert(1,"短信网关","服务器地址格式不正确",$("#SmsSvrDBServerIP"));
+			return false;
+		}
+	}
+	if (SmsSvrDBPort == ""){
+		_alert(2,"短信网关","请输入端口",$("#SmsSvrDBPort"));
+		return false;
+	}else{
+		if (numCheck.test(parseInt(SmsSvrDBPort))){
+			_alert(1,"短信网关","端口格式不正确",$("#SmsSvrDBPort"));
+			return false;
+		}
+		if (parseInt(SmsSvrDBPort) > 65534){
+			_alert(1,"短信网关","端口不能大于65534",$("#SmsSvrDBPort"));
+			return false;
+		}
+		if (parseInt(SmsSvrDBPort) < 1){
+			_alert(1,"短信网关","端口不能小于1",$("#SmsSvrDBPort"));
+			return false;
+		}
+	}
+	if (SmsSvrDBUserName == ""){
+		_alert(2,"短信网关","请输入账号",$("#SmsSvrDBUserName"));
+		return false;
+	}else{
+		if (!nameCheck.test(SmsSvrDBUserName)){
+			_alert(1,"短信网关","账号格式不正确",$("#SmsSvrDBUserName"));
+			return false;
+		}
+	}
+	if (SmsSvrDBPassword == ""){
+		_alert(2,"短信网关","请输入密码",$("#SmsSvrDBPassword"));
+		return false;
+	}
+	if (SmsSvrDBDatabase == ""){
+		_alert(2,"短信网关","请输入数据库",$("#SmsSvrDBDatabase"));
+		return false;
+	}
+	if (SmsSvrDBInsertTemp == ""){
+		_alert(2,"短信网关","请输入短信sql语句模板",$("#SmsSvrDBInsertTemp"));
+		return false;
+	}else{
+		if (SmsSvrDBInsertTemp.indexOf("%phone%") === -1 || SmsSvrDBInsertTemp.indexOf("%content%") === -1){
+			_alert(1,"短信网关","模板格式不正确",$("#SmsSvrDBInsertTemp"));
+			return false;
+		}
+	}
+	smssvset.SmsSvrConfigName = SmsSvrConfigName;
+	smssvset.SmsSvrDBType = SmsSvrDBType;
+	smssvset.SmsSvrDBServerIP = SmsSvrDBServerIP;
+	smssvset.SmsSvrDBPort = parseInt(SmsSvrDBPort);
+	smssvset.SmsSvrDBUserName = SmsSvrDBUserName;
+	smssvset.SmsSvrDBPassword = SmsSvrDBPassword;
+	smssvset.SmsSvrDBDatabase = SmsSvrDBDatabase;
+	smssvset.SmsSvrDBInsertTemp = SmsSvrDBInsertTemp;
+	smssvset.Flag = parseInt($("#Flag").val());
+	smssvset.EnCode = parseInt($("#EnCode").val());
+	msstr = aceg(JSON.stringify(smssvset),se);
+	$.ajax({
+		url:'/bhost/save_smssvr',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:JSON.stringify(smssvset),m1:msstr},
+		success:function(result){
+			data = JSON.parse(result);
+			if (data.Result == true){
+				parent.layer.open({
+					type:1,
+					title:"短信网关",
+					content:'<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn:['确&nbsp;&nbsp;定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					btn1:function(i){
+						parent.layer.close(i);
+						back(2,smssvset.Flag,data.SmsSvrConfigId);
+					},
+					btn2:function(i){
+						parent.layer.close(i);
+					}
+				});	
+			}else{
+				_alert(1,"短信网关","执行失败：" + data.ErrMsg);
+			}
+		}
+	});
+}
+//返回
+function back(type,flag,id){
+	if (type == 2){
+		if (flag == 2){
+			now = 1;
+		}else{
+			$.ajax({
+				url:'/bhost/get_index',
+				type:'post',
+				async:false,
+				data:{a0:se,z1:id,z2:21},
+				success:function(result){
+					now = Math.ceil(parseInt(result)/MAX_PAGE);
+				}
+			});
+			/*
+			if (edit != "None"){
+				$.ajax({
+					url:'/bhost/get_index',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:edit.data[0].SmsSvrConfigId,z2:21},
+					success:function(result){
+						now = Math.ceil(parseInt(result)/MAX_PAGE);
+					}
+				});
+			}else{
+				$.ajax({
+					url:'/bhost/select_smssvr_all',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:-1},
+					success:function(result){
+						var result = JSON.parse(result);
+						var remain = parseInt(result.totalrow) % MAX_PAGE;
+						if (remain > 0){
+							now = Math.ceil(parseInt(result.totalrow)/MAX_PAGE);
+						}else{
+							now = parseInt(result.totalrow)/MAX_PAGE + 1;
+						}
+					}
+				});
+			}
+			*/
+		}
+	}
+	var deliver = JSON.stringify(keyword_re);
+	document.frm_smsvr.z1.value = now;
+	document.frm_smsvr.z2.value = deliver;
+	document.frm_smsvr.z3.value = JSON.stringify(selectid);
+	document.frm_smsvr.a0.value = se;
+	document.frm_smsvr.action='/bhost/manage_smssvr';
+	document.frm_smsvr.submit();
+}
+
+function limitCheck(obj){
+	obj.value = obj.value.replace(/\D/g,"");
+	var v = obj.value.trim();
+	if (v == ""){
+		obj.value = '0';
+	}
+}
+function test_smssvr(){
+	var MasterConfigSet = {
+		"MasterConfig":{
+			"SmsSvrConfigId": 0,
+			"SmsSvrConfigName": "短信网关配置1",
+			"SmsSvrDBType": 2, 
+			"SmsSvrDBServerIP": "192.168.0.1",        
+			"SmsSvrDBPort": 1433,
+			"SmsSvrDBUserName": "root",       
+			"SmsSvrDBPassword": "d106f6959747b5ac",
+			"SmsSvrDBDatabase": "mysql",
+			"SmsSvrDBInsertTemp": null,
+			"Flag":0,
+			"EnCode":0
+		}
+	}
+	var SmsSvrConfigName = $("#SmsSvrConfigName").val();
+	var SmsSvrDBType = $("#SmsSvrDBType").val();
+	var SmsSvrDBServerIP = $("#SmsSvrDBServerIP").val();
+	var SmsSvrDBPort = $("#SmsSvrDBPort").val();
+	var SmsSvrDBUserName = $("#SmsSvrDBUserName").val();
+	var SmsSvrDBPassword = $("#SmsSvrDBPassword").val();
+	var SmsSvrDBDatabase = $("#SmsSvrDBDatabase").val();
+	var SmsSvrDBInsertTemp = $("#SmsSvrDBInsertTemp").val();
+	if (SmsSvrConfigName == ""){
+		_alert(2,"短信网关","请输入名称",$("#SmsSvrConfigName"));
+		return false;
+	}else{
+		if (!nameCheck.test(SmsSvrConfigName)){
+			_alert(1,"短信网关","名称格式不正确",$("#SmsSvrConfigName"));
+			return false;
+		}
+	}
+	if (SmsSvrDBServerIP == ""){
+		_alert(2,"短信网关","请输入服务器地址",$("#SmsSvrDBServerIP"));
+		return false;
+	}else{
+		if (!ipcheck_route.test(SmsSvrDBServerIP)){
+			_alert(1,"短信网关","服务器地址格式不正确",$("#SmsSvrDBServerIP"));
+			return false;
+		}
+	}
+	if (SmsSvrDBPort == ""){
+		_alert(2,"短信网关","请输入端口",$("#SmsSvrDBPort"));
+		return false;
+	}else{
+		if (numCheck.test(parseInt(SmsSvrDBPort))){
+			_alert(1,"短信网关","端口格式不正确",$("#SmsSvrDBPort"));
+			return false;
+		}
+		if (parseInt(SmsSvrDBPort) > 65534){
+			_alert(1,"短信网关","端口不能大于65534",$("#SmsSvrDBPort"));
+			return false;
+		}
+		if (parseInt(SmsSvrDBPort) < 1){
+			_alert(1,"短信网关","端口不能小于1",$("#SmsSvrDBPort"));
+			return false;
+		}
+	}
+	if (SmsSvrDBUserName == ""){
+		_alert(2,"短信网关","请输入账号",$("#SmsSvrDBUserName"));
+		return false;
+	}else{
+		if (!nameCheck.test(SmsSvrDBUserName)){
+			_alert(1,"短信网关","账号格式不正确",$("#SmsSvrDBUserName"));
+			return false;
+		}
+	}
+	if (SmsSvrDBPassword == ""){
+		_alert(2,"短信网关","请输入密码",$("#SmsSvrDBPassword"));
+		return false;
+	}
+	if (SmsSvrDBDatabase == ""){
+		_alert(2,"短信网关","请输入数据库",$("#SmsSvrDBDatabase"));
+		return false;
+	}
+	if (SmsSvrDBInsertTemp == ""){
+		_alert(2,"短信网关","请输入短信sql语句模板",$("#SmsSvrDBInsertTemp"));
+		return false;
+	}else{
+		if (SmsSvrDBInsertTemp.indexOf("%phone%") === -1 || SmsSvrDBInsertTemp.indexOf("%content%") === -1){
+			_alert(1,"短信网关","模板格式不正确",$("#SmsSvrDBInsertTemp"));
+			return false;
+		}
+	}
+	MasterConfigSet.MasterConfig.SmsSvrConfigName = SmsSvrConfigName;
+	MasterConfigSet.MasterConfig.SmsSvrDBType = SmsSvrDBType;
+	MasterConfigSet.MasterConfig.SmsSvrDBServerIP = SmsSvrDBServerIP;
+	MasterConfigSet.MasterConfig.SmsSvrDBPort = parseInt(SmsSvrDBPort);
+	MasterConfigSet.MasterConfig.SmsSvrDBUserName = SmsSvrDBUserName;
+	MasterConfigSet.MasterConfig.SmsSvrDBPassword = SmsSvrDBPassword;
+	MasterConfigSet.MasterConfig.SmsSvrDBDatabase = SmsSvrDBDatabase;
+	MasterConfigSet.MasterConfig.SmsSvrDBInsertTemp = SmsSvrDBInsertTemp;
+	MasterConfigSet.MasterConfig.Flag = parseInt($("#Flag").val());
+	MasterConfigSet.MasterConfig.EnCode = parseInt($("#EnCode").val());
+	revicer_phone = $("#revicer_phone").val();
+	if (revicer_phone == ""){
+		_alert(1,"短信网关","请输入手机号码",$("#revicer_phone"));
+		return false;
+	}
+	if (numCheck.test(revicer_phone)){
+		_alert(1,"短信网关","手机号码格式不正确",$("#revicer_phone"));
+		return false;
+	}
+	_showLoading();
+	$.ajax({
+		url:'/bhost/test_smssvr',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:JSON.stringify(MasterConfigSet),z2:3,z3:revicer_phone},
+		success:function(result){
+			var re_test = JSON.parse(result);
+			if (re_test.Result){
+				setTimeout(function () {
+					$.ajax({
+						url:'/bhost/get_test_flag',
+						type:'post',
+						async:false,
+						data:{a0:se,z1:3},
+						success:function(result){
+							var test_re = JSON.parse(result);
+							_closeLoading();
+							if (test_re.Result){
+								_alert(0,"短信网关","测试成功");
+								return false;
+							}else{
+								_alert(1,"短信网关","测试失败");
+								return false;
+							}
+						}
+					});
+				}, 10000);
+				return false;
+			}else{
+				_closeLoading();
+				_alert(1,"短信网关","测试失败");
+				return false;
+			}
+		}
+	})
+}
+
+</script>

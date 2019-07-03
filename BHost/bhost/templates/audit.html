@@ -1,0 +1,209 @@
+
+{% extends  "left.html" %}
+<!---->
+{% block main %}
+<style>
+	.flow-auth4 a.s1 {
+		top: 44px;
+    	left: -164px;
+		background-color: #3fb7d2;
+	}
+	.flow-auth4 a.s3 {
+		top: 86px;
+    	left: 187px;
+	}
+	.flow-auth4 a.s2 {
+		top: 0px;
+   		left: 187px;
+		background-color: #3fb7d2;
+	}
+</style>
+	<div class="mainer">
+		<div class="flow">
+			<div class="f-title">
+				<h2 style="padding-top: 15px;">运维审计流程</h2>
+				<div class="f-wrap" style="width:100%">
+					<div class="f-ww" style="width:100%">
+						<div class="f-cont flow-auth4" id="audit_icon_class" style="margin: 100px auto 0px;width: 187px; background: none;">
+							<!-- <a style="display:none;" href="javascript:;" onclick="search_index();" class="s0">创建检索<i class="s0-icon"></a> -->
+							{%if (11 in _power_sonid) or (8 in _power_sonid) or (9 in _power_sonid) %}
+							<a href="javascript:;" class="s1 flow-auth4-11" onclick="manage_report();" style="display:none;">生成报表<i class="s1-icon"></i></a>
+							{% endif %}
+							{%if 12 in _power_sonid %}
+							<a href="javascript:;" class="s2 flow-auth4-12" onclick="location.href = '/bhost/manage_template?a0={{se}}&z1=0&z2=0'" style="display:none;" >模板管理<i class="s3-icon"></i></a>
+							{% endif %}
+							{%if 12 in _power_sonid %}
+							<a href="javascript:;" class="s3 flow-auth4-12" onclick="report_material();" style="display:none;" >报表素材<i class="material-icon"></i></a>
+							{% endif %}
+							<!-- <a style="display:none;" href="javascript:;" class="y0" style="cursor: default;">审计</a> -->
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+		<div class="f-btns">
+			<div class="f-title">
+				<h2 data-modeid="11" style="padding-top: 15px;">查看与管理</h2>
+			</div>
+
+			<div class="btns1 btns-s" style="padding: 15px 0;" data-modeid="11">
+				<!-- <a href="javascript:;" class="btn btn-normal" onclick="search_task();">历史检索</a> -->
+				{%if (11 in _power_sonid) or (8 in _power_sonid) or (9 in _power_sonid) %}
+				<a href="javascript:;" class="btn btn-normal" onclick="history_report();">历史报表</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<!-- <div id="bBtn" style="">
+		<a href="资源管理.html" class="btn"><i class="icon2"></i>资源管理 </a>
+	</div> -->
+	<form action="/bhost/audit_list" method="POST" name="frm_audit">
+		<input type="hidden" name="tasktype" id = "tasktype" value="" />
+		<input type="hidden" name="se" id = "" value="{{se}}" />
+		<input type="hidden" name="us" id = "" value="{{us}}" />
+		<input type="hidden" name="user" id = "" value="{{us}}" />
+		<input type="hidden" name="a0" id = "" value="{{se}}" />
+		<input type="hidden" name="a1" id = "" value="" />
+		<input type="hidden" name="a2" id = "" value="" />
+		<input type="hidden" name="a3" id = "" value="" />
+		<input type="hidden" name="a4" id = "" value="" />
+		<input type="hidden" name="a5" id = "" value="" />
+		<input type="hidden" name="a6" id = "" value="" />
+		<input type="hidden" name="i1" id = "" value="" />
+		<input type="hidden" name="z2" id = "" value="" />
+	</form>
+{% endblock  %}
+
+{% block script %}
+<script>
+/*
+{
+        "Mode": 2,
+        "SubMenuId": 11,
+        "SubMenuName": "报表生成",
+        "SystemMenuId": 2,
+        "SystemMenuName": "运维审计"
+    },
+    {
+        "Mode": 2,
+        "SubMenuId": 12,
+        "SubMenuName": "报表管理",
+        "SystemMenuId": 2,
+        "SystemMenuName": "运维审计"
+    },
+*/
+var _power={{_power|safe}};
+$(function(){
+	_flowLoad();
+	//
+	_audit_power_SubMenuId = [];
+	var flag_dis = false;
+	$(_power).each(function(i,item){
+		if(item.SubMenuId == 8){
+			flag_dis = true;
+			_audit_power_SubMenuId.push(item.SubMenuId);
+			return true;
+		}
+		if(item.SubMenuId == 9 && flag_dis == false ) {
+			flag_dis = true;
+			_audit_power_SubMenuId.push(item.SubMenuId);
+			return true;
+		}
+		if(item.SubMenuId == 11 && flag_dis == false ) {
+			flag_dis = true;
+			_audit_power_SubMenuId.push(item.SubMenuId);
+			return true;
+		}
+		if(item.SubMenuId == 12) _audit_power_SubMenuId.push(item.SubMenuId);
+	})
+	/*
+	$('h2[data-modeid=11]').hide();
+        $('div[data-modeid=11]').hide();
+	$('h2[data-modeid=12]').hide();
+        $('div[data-modeid=12]').hide();
+	*/
+	//console.log(_audit_power_SubMenuId);
+	if(_audit_power_SubMenuId.length == 1){
+		$('div.f-cont a').hide();
+		if($.inArray(11,_audit_power_SubMenuId)>=0 || $.inArray(8,_audit_power_SubMenuId)>=0 || $.inArray(9,_audit_power_SubMenuId)>=0){
+			$('a.flow-auth4-11').show();
+			$('h2[data-modeid=11]').show();
+			$('div[data-modeid=11]').show();
+			$('#audit_icon_class').css('background','none');
+			$('div.flow-auth4 a.flow-auth4-11').css("left","18px");
+		}else{
+			$('h2[data-modeid=11]').hide();
+			$('div[data-modeid=11]').hide();
+			$('a.flow-auth4-11').hide();
+			$('a.flow-auth4-12').show();
+			$('div.flow-auth4 a.flow-auth4-12').css("left","367px");
+			$('#audit_icon_class').css('background','url(/manage/images/flow-auth4-12.png) no-repeat 50% 0px').css('width','440px');
+		}
+	}else{
+		$('#audit_icon_class').css('background','url(/manage/images/flow-auth4.png) no-repeat 0 0');
+		$('div.f-cont a').show();
+		
+	}
+	/*
+	$(_power).each(function(i,item){
+		if(item.Mode == 1){
+			if(item.SubMenuId == 12) return true;
+			$('div.f-cont a.flow-auth4-'+item.SubMenuId).addClass('disable').removeAttr('onclick');
+		}
+	})	*/
+	
+})
+$(window).resize(function(){
+	_flowLoad();
+});
+function _flowLoad(){
+	var w = $(window).width();
+	// $('.f-wrap').width(2*w);
+	// $('.f-ww').width(w-75);
+}
+
+function _scroll(i){
+	var w = $(window).width();
+	if(i==0){
+		$('.f-ww').eq(0).stop().animate({'margin-left':-w+75});
+	}else if(i==1){
+		$('.f-ww').eq(0).stop().animate({'margin-left':0});
+	}
+}
+function search_index(){
+	document.frm_audit.tasktype.value='0';
+	document.frm_audit.action = '/bhost/_search_index'
+	document.frm_audit.submit();
+}
+function search_task(){
+	document.frm_audit.tasktype.value='0';
+	document.frm_audit.i1.value='task';
+	document.frm_audit.action = '/bhost/_search_index';
+	document.frm_audit.submit();
+}
+
+function history_report(){
+	document.frm_audit.action = '/bhost/report_task';
+	document.frm_audit.submit();
+}
+
+function report_material(){
+	document.frm_audit.action = '/bhost/report_material_show';
+	document.frm_audit.submit();
+}
+
+function manage_report(){
+	document.frm_audit.action = '/bhost/manage_report';
+	document.frm_audit.submit();
+}
+/*
+function modify_template(){
+	document.frm_audit.action = '/bhost/modify_template';
+	document.frm_audit.z2.value = 0;
+	document.frm_audit.submit();
+}
+*/
+</script>
+{% endblock  %}

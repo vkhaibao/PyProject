@@ -1,0 +1,840 @@
+{% extends  "index.html" %}
+{% block head %}
+<!--icheck-->
+        <script src="/manage/js/icheck.min.js"></script>
+        <script src="/manage/js/select2.full.min.js"></script>
+        <script src="/manage/js/common_e.js"></script>
+        <link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+        <link rel="stylesheet" href="/manage/css/select2.min.css">
+        <link rel="stylesheet" href="/manage/css/new-head.css">
+{% endblock  %}
+{% block main %}
+<!---->
+		<div class="mainer">	
+			<div class="container1">
+				<div class="c-top">
+					<div class="c-title">
+						<!--<a href="javascript:;" onclick="refresh()"><h3>配置备份</h3></a>
+						<a href="javascript:;" onclick="config_recover()"><h3 class="unsel">配置恢复</h3></a>
+						<a href="javascript:;" onclick="backup_strategy()"><h3 class="unsel">自动备份策略</h3></a>	-->
+						<div  class="manual-title-other title-item"  onclick="refresh()" id="frist" >
+							<span id="config_backup">配置备份</span>
+							<i  class="config_manage_icon" ></i>
+						</div>
+						<div class="manual-title-other title-item" onclick="config_recover()" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+							<span id="config_recover">配置恢复</span>
+							<i style="display: none;"></i>
+						</div>
+
+						<!--<div class="manual-title-other title-item" onclick="backup_strategy()" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+							<span id="backup_strategy">自动备份策略</span>
+							<i  style="display: none;"></i>
+						</div>-->
+
+						<div class="ctr">
+							<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+						</div>
+					</div>
+				</div>
+
+				<div class="c-wrap">
+						<div class="c-table">
+							<div class="tab-t">
+								<div class="ctr">
+									{% if _power_mode == 2%}
+									<a href="javascript:;" class="btn btn-default btn-normal" onclick="select_all()">全选</a>
+									<a href="javascript:;" class="btn btn-default btn-normal" onclick="delete_backup()">删除</a>
+									{%endif%}
+									<a href="javascript:;" class="btn btn-default btn-normal" onclick="refresh()">刷新</a>
+								</div>
+								{% if _power_mode == 2%}
+								<div class="ctr" style="float: right">
+									<a href="javascript:;" class="btn btn-default btn-normal" onclick="backup()" style="float: right">立即备份</a>
+								</div>
+								{%endif%}
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0" id="r_list">
+									<thead>
+										<tr>
+											{% if _power_mode == 2%}
+											<th width="50"><input type="checkbox" class="form-checkbox" id="check_page"/></th>
+											{%endif%}
+											<th width="60">序&nbsp;&nbsp;号</th>
+											<th>操作方式</th>
+											<th>备份时间</th>
+											<th>备注</th>
+											<th width="80">状态</th>
+											{% if _power_mode == 2%}
+											<th width="101"></th>
+											{%else%}
+											<th width="26"></th>
+											{%endif%}
+										<tr>
+									</thead>
+
+									<tbody name="backup_list" id="backup_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">每页显示10条 总数：
+								<span id = "user_total">25</span>  选中：
+								<span id="select_total">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="begin" onclick="user_page(0.1)"><i></i></a>
+									<a href="javascript:;" class="nav prev" id="prev" onclick="user_page(-1)" ><i></i></a>
+									<input type="text" value="1" id="user_page" onchange="showMsg()">/&nbsp;<span id="totalpage">25</span>
+									<a href="javascript:;" class="nav next" id="next" onclick="user_page(1)" ><i></i></a>
+									<a href="javascript:;" class="nav2 end" id="end" onclick="user_page(0.9)" ><i></i></a>
+								</div>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<!--
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-cancel btn-normal">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn btn-cancel" style="float: right;"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+			</div>
+		</div>
+	<!--分类-->
+	<div class="dialog-cont" id="remarks_suspend" style="display:none;">
+		<div class="c-cont2" style="max-height:300px;height: 210px;">
+			<div class="c-form" style="padding-bottom:10px;width: 460px;padding-top: 16px;" id="">
+				<div class="form">
+					<div class="sel-type1" style="float: left;width: 100%;">
+						<div class="form-item" style="float:left;">
+							<span class="form-tag" style="width: 90px;">备注信息：</span>
+							<div class="form-c" style="padding: 0 0;">
+								<input id="remarks_text" name="remarks_text" class="form-text" style="width:300px;padding-right: 8px;" type="text" onblur="" maxlength="1024">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="c-form" style="width: auto;">
+					<div class="btns" style="margin-bottom: -20px;width: 640px;margin-left: -20px;">
+							<a href="javascript:;" class="btn btn-normal btn-submit">保&nbsp;&nbsp;存</a>
+							<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+					</div>
+			</div>
+		</div>
+	</div>
+
+	<form action="/bhost /backup_list" method="POST" name="frm_backup" id="frm_backup">
+			<input type="hidden" name="tasktype" id = "tasktype" value="" />
+			<!--创建 编辑 列表-->
+			<input type="hidden" name="page_num" id = "page_num" value="10" />
+			<!--每页显示数-->
+			<input type="hidden" name="total_all" id = "total_all" value="" />
+			<!--总数-->
+			<input type="hidden" name="paging" id = "paging" value="1" />
+			<!--页码-->
+			<input type="hidden" name="search_typeall" id = "search_typeall" value="" />
+			<!--查询要求，查询内容，查询类型-->
+			<input type="hidden" name="userid" id = "userid" value="" />
+			<!--需要查询的id-->
+			<input type="hidden" name="fenye" id = "fenye" value="" />
+			<!--总页数-->
+			<input type="hidden" name="user" id = "user" value="lh" />
+			<input type="hidden" name="a0" value="{{se}}" />
+	</form>
+	<form action="/bhost/down_backupfile" method="POST" name="frmdown" enctype="multipart/form-data">
+		<input type="hidden" name="filename"  value="" />
+		<input type="hidden" name="a0"  value="" />
+		<input type="hidden" name="a99"  value="" />
+	</form>
+
+{%  endblock  %}
+{%  block script %}
+<style>
+	.tab-t .ctr {
+	    float: left;
+	    width: 350px;
+	}
+</style>
+<script type="text/javascript">
+var select_str = "";
+var check_num = 0;
+var backup_array=null;
+var sess = window.parent.document.frm.se.value;
+var if_disabled = "{{_power_mode}}";
+var first_style = '';
+$(function(){
+	if(if_disabled =='1'){
+		first_style="style=\"border-left: 1px solid #FFF;\"";
+	}
+    $('.form-checkbox,.form-radio').iCheck({
+        checkboxClass:'icheckbox_minimal-blue',
+        radioClass:'iradio_minimal-blue',
+        increaseArea:'0'
+    });
+
+	$('div.cbi-tag input[type=checkbox]').on('ifChecked',function(){
+		var $s = $(this).parents('div.cbi-tag').next('div.cbi-sel');
+		$s.show();
+		_checkAllStatus(this);
+	}).on('ifUnchecked',function(){
+		var $s = $(this).parents('div.cbi-tag').next('div.cbi-sel');
+		$s.hide();
+		_checkAllStatus(this);
+	});
+
+	$('div.cbi-t input[type=checkbox]').on('ifChecked',function(){
+		var $d = $(this).parents('div.cbi-t').next('div.cbi-cont');
+		$('input[type=checkbox]',$d).iCheck('check');
+	}).on('ifUnchecked',function(){
+		var $d = $(this).parents('div.cbi-t').next('div.cbi-cont');
+		$('input[type=checkbox]',$d).iCheck('uncheck');
+	});
+	_checkStatus();
+    $("a.btn-cancel").unbind().bind("click",function(){
+    	window.parent._closePage(null);
+    });
+	$("#backup_list").on('dblclick','tr',function(e){
+		x=e.target;
+		if (x.nodeName != "INS"){
+			$(this).children('td:last').find('.edit').click();
+		}
+	}
+	).on("click", "tr", function (e){  
+		x=e.target;
+	});
+	$('#check_page').on('ifClicked',function(e){
+		if(!$('#check_page').prop('checked')){
+			$("#r_list").children('tbody').find('input[type=checkbox]:enabled').iCheck('check');
+		}else{
+			$("#r_list").children('tbody').find('input[type=checkbox]').iCheck('uncheck');
+		}
+	});
+	$("#backup_list").on("ifChecked",function(e){
+		check_num++;
+		$("#select_total").text(check_num);	
+		if($("table tbody tr").children("td.in").children("div").children("input:checked").length==$("#backup_list tr").find('input[type=checkbox]:enabled').length){
+			$('#check_page').iCheck('check');
+		}
+	}).on("ifUnchecked",function(e){
+		check_num--;
+		$("#select_total").text(check_num);	
+		$('#check_page').iCheck('uncheck');	
+	});
+	parent._switchBtn(1);//显示按钮
+})
+function config_recover(){
+	document.frm_backup.tasktype.value= 2;
+	document.frm_backup.action = '/bhost/config_show';
+	// document.frm_backup.d.value=search_typeall_r;	
+	document.frm_backup.submit();
+}
+function backup_strategy(){
+	document.frm_backup.tasktype.value= 3;	
+	document.frm_backup.action = '/bhost/config_show';
+	document.frm_backup.submit();
+}
+function backup(){
+	var jsondata = {
+        "ConfigBackupTaskId": 0, 
+        "TaskType": 1,            //1-手工备份，2-自动备份            
+        "Status": 3
+	}
+	var msstr = aceg(JSON.stringify(jsondata),sess);
+	$.ajax({
+		url:"/bhost/save_backup",
+		type:"POST",
+		async:false,
+		data:{a0:sess,jsondata:JSON.stringify(jsondata),m1:msstr},
+		success:function(Result){
+			data = JSON.parse(Result);
+			if (data.Result){
+				_alert(0,"配置备份",'备份成功');
+				refresh();
+			}
+			else{
+				_alert(1,"配置备份",data.ErrMsg);
+			}
+		}
+	})
+}
+
+function _checkStatus(){
+	$('div.cbi-tag input[type=checkbox]').each(function(){
+		var c = $(this).prop('checked');
+		var $s = $(this).parents('div.cbi-tag').next('div.cbi-sel');
+		if(c){
+			$s.show();
+		}else{
+			$s.hide();
+		}
+	});
+}
+//编辑页面全选
+function _checkAllStatus(obj){
+	var $c = $(obj).parents('div.cbi-cont');
+	var len = $('div.cbi-s',$c).length, clen = $('input[type=checkbox]:checked',$c).length;
+	var $i = $c.prev('div.cbi-t').find('input[type=checkbox]');
+	if(len != clen){
+		$i.prop('checked',false);
+		$i.parent().removeClass('checked');
+	}else{
+		$i.prop('checked',true);
+		$i.parent().addClass('checked');
+	}		
+}
+//选中字段存储
+function select_save(){
+	////console.log('select_save');
+	var select_str_s=select_str.split(",");
+	if(select_str_s[select_str_s.length-1] == ""){
+		select_str_s.splice(select_str_s.length-1,1);
+	}
+	////console.log(select_str_s);
+	$(">tr","#backup_list").each(function(){
+		var input  = $(this).find("input[type='checkbox']");
+		var select_item=$(">td",this).eq(1).text();
+		////console.log(select_item);
+		if($(input).is(':checked')){
+			if($.inArray(select_item,select_str_s)<0){
+				// select_str=select_str+select_item+",";
+				select_str_s.push(select_item);
+			}
+		}else{
+			var index_d=$.inArray(select_item,select_str_s);
+			if(index_d>=0){
+				// select_str=select_str+select_item+",";
+				select_str_s.slice(index_d,1);
+			}
+		}
+	});
+	select_str=select_str_s.join(',')+',';
+	////console.log(select_str);
+}
+//check显示
+function check_show(){
+	$(">tr","#backup_list").each(function(){
+		var input=$(this).find("input[type='checkbox']");
+		var select_str_s=select_str.split(",");
+		var check_id=$(">td",this).eq(1).text();
+		$.each(select_str_s,function(i,item){
+			if(item==check_id){
+				$(input).iCheck('check');
+				return false;
+			}
+		});
+	});
+}
+//input回车触发事件
+function showMsg(){
+	var cur = $("#user_page").val();
+	var totalpage = $("#totalpage")[0].textContent;
+	if (parseInt(cur) < 1){
+		$("#user_page").val(1);
+		document.frm_backup.paging.value=1;
+	}else if(parseInt(cur) > parseInt(totalpage)){
+		document.frm_backup.paging.value=totalpage;
+	}else{
+		document.frm_backup.paging.value=cur;
+	}
+	show_backup_list();
+}
+
+function update_array(){
+	var paging = document.frm_backup.paging.value;
+	var page_num = MAX_PAGE;
+	var tasktype = "";
+	$.ajax({
+		url:'/bhost/get_backup_list1',
+		type:'post',
+		async:false,
+		data:{a0:sess,a1:page_num,a2:paging,a3:tasktype},
+		success:function(result){
+			var user_result = JSON.parse(result);
+			if (user_result.Result){
+				var user_data = user_result.info;
+				backup_array=user_data.data.filter(function (params) {
+					return params.Status!=0;
+				});
+				if(select_str!=''){
+					var select_str_s=select_str.split(',');
+					if(select_str_s[select_str_s.length-1] == ""){
+						select_str_s.splice(select_str_s.length-1,1);
+					}
+					////console.log(select_str_s);
+					select_str='';
+					$.each(select_str_s,function(i,item){
+						item=parseInt(item);
+						////console.log(item);
+						$.each(backup_array,function(i1,item1){
+							if(item1.ConfigBackupTaskId==item){
+								////console.log(item);
+								////console.log(item1.ConfigBackupTaskId);
+								select_str=select_str+item+',';
+								return false;
+							}
+						});
+					});
+					////console.log(select_str);
+				}
+			}
+		}
+	})
+}
+
+function selView(){
+	var $sel = $('#filterWW');
+	var len = $('li',$sel).length;
+
+	if(len == 0){
+		$sel.hide();
+	}else if(len == 1){
+		$("#filterWW").show();
+		$('>span.ww',$sel).show();
+		$sel.addClass('selector-multiple');
+	}else{
+		$("#filterWW").show();
+		$('>span.ww',$sel).show();
+		$sel.addClass('selector-multiple');
+	}
+}
+//每页显示数
+function show_page_num(){
+	select_save();
+	var page_nums = document.getElementById("page_nums");
+	var num = page_nums.options[page_nums.selectedIndex].value;
+	document.frm_backup.page_num.value=num;
+	document.frm_backup.paging.value=1;
+	show_backup_list();
+}
+
+//以每页显示数显示列表函数
+function show_backup_list(){
+	////console.log(document.frm_backup.search_typeall.value);
+
+	var paging = document.frm_backup.paging.value;
+	var page_num = MAX_PAGE;
+	var tasktype = "";
+	$.ajax({
+		url: "/bhost/get_backup_list",
+		type:"POST",
+		async:false,
+		data:{a0:sess,a1:page_num,a2:paging,a3:tasktype},
+		success:function(result){
+			var user_result = JSON.parse(result);
+			if (user_result.Result==true){
+				var user_data = user_result.info;
+				var total_all = user_data.totalrow;
+				if(user_data.data=="" && paging!="1"){
+					user_page(-1);
+				}else{
+					total=0
+					total_num = (parseInt(paging)-1)*10;
+					document.frm_backup.total_all.value = total_all;
+					if(total_all){
+						$("#backup_list").empty();
+							$.each(user_data.data,function(i,item){
+								if (total<page_num){
+									total++;
+									total_num++;
+									if (item.TaskType == 1){
+										var p = "手工备份";
+									}else{
+										var p = "自动备份";
+									}
+									var Status_value='';
+									switch (item.Status) {
+										case 0:
+											Status_value='执行中'
+											break;
+										case 1:
+											Status_value='成功'
+											break;
+										case 2:
+											Status_value='失败'
+											break;
+										case 3:
+											Status_value='队列中'
+											break;
+									}
+									var date = item.SubmitTime.split('T')[0];
+									var time = item.SubmitTime.split('T')[1];
+									var filedate = date.split('-').join('') + time.split(':').join('');
+									item.SubmitTime=item.SubmitTime.replace(/T/g,' ');
+									if (item.RemarksText==null){
+										item.RemarksText='';
+									}
+									$("#backup_list").append("<tr>"+
+										"<td class=\"in s-hide\"><input type=\"checkbox\" class=\"input_checkbox\" "+(item.Status != 0?"":"disabled")+"/></td>"+
+										"<td style = \"display:none\">"+item.ConfigBackupTaskId+"</td>"+
+										"<td "+first_style+"><title=\""+total_num+"\" style=\"width:200px;\">"+total_num+"</div></td>"+
+										"<td style = \"display:none\">"+filedate+"</td>"+
+										"<td><title=\""+p+"\" style=\"width:200px;\">"+p+"</div></td>"+
+										"<td><title=\""+item.SubmitTime+"\" style=\"width:200px;\">"+item.SubmitTime+"</div></td>"+
+										"<td><title=\""+item.RemarksText+"\" style=\"\">"+item.RemarksText+"</div></td>"+
+										"<td><title=\""+Status_value+"\" style=\"\">"+Status_value+"</div></td>"+
+										"<td id=\"on\"><div class=\"tab-ctr\" id=\"tab\">"+
+										"<a href=\"javascript:;\" class=\"edit s-hide\" title=\"编辑备注信息\" id=\"edit\" onclick=\"edit_fun("+item.ConfigBackupTaskId+",'"+item.RemarksText+"')\"></a>"+
+										"<a href=\"javascript:;\" class=\"icon6"+(item.Status == 1?"":" disabled")+"\" title=\"下载\" id=\"download\" "+(item.Status == 1?'onclick="_download(\''+filedate+'\')"':'')+"></a>"+
+										"<a href=\"javascript:;\" class=\"icon8 s-hide"+(item.Status == 1?"":" disabled")+"\" title=\"恢复\" id=\"recovery\" "+(item.Status == 1?'onclick="_recovery(\''+filedate+'\')"':'')+"></a>"+
+										"<a href=\"javascript:;\" class=\"del s-hide"+(item.Status != 0?"":" disabled")+"\" title=\"删除\" id=\"del\" "+(item.Status != 0?'onclick="delete_fun('+item.ConfigBackupTaskId+');"':'')+"></a></div></div></td></tr>");
+								}
+							})
+						
+						//tabArr();	
+						if(if_disabled == '1') $('.s-hide').remove();						
+						$(".input_checkbox","#backup_list").iCheck({
+							checkboxClass: 'icheckbox_minimal-blue',
+							radioClass: 'iradio_minimal-blue',
+							increaseArea: '0' // optional
+						});
+						$("#user_total").text(total_all);
+						if(total_all % page_num == 0){
+							fenye = parseInt(total_all/page_num)
+						}else{
+							fenye = parseInt(total_all/page_num+1)
+						}
+						if(paging>=fenye){
+							paging=fenye;
+						}
+						document.frm_backup.paging.value=paging;
+						document.getElementById("user_page").value=paging;
+						$("#totalpage").text(fenye);
+						document.frm_backup.fenye.value=fenye;
+						$('#check_page').iCheck('uncheck');
+						$("table tbody tr").children("td.in").children("div").children("input").iCheck('uncheck');
+						check_show();
+						var select_str_s=select_str.split(",");
+						check_num=select_str_s.length-1;
+						$("#select_total")[0].textContent = check_num;
+					}
+					else{
+						$("table").next("div.tab-i").children("div.il").find("span.select_total").text(0);
+						$("table tbody tr").children("td.in").children("div").children("input").iCheck('uncheck');
+						$("#backup_list").empty();
+						$("#user_total").text(total_all);
+						$("#totalpage").text(1);
+						document.getElementById("user_page").value=1;
+					}	
+				}
+			}else{
+				_alert(1,"配置备份任务列表查询",user_result.info);
+				$("table tbody tr").children("td.in").children("div").children("input").iCheck('uncheck');
+				$("table").next("div.tab-i").children("div.il").find("span.select_total").text(0);
+				$("#user_total").text(0);
+				$("#totalpage").text(1);
+				document.getElementById("user_page").value=1;
+				return false;
+			}
+		}
+	});
+	update_array();
+}
+//显示列表
+$(document).ready(function(){
+	$("#page_nums option:eq(10)").prop("selected",true);
+	show_backup_list();
+})
+//分页刷新
+function user_page(num){
+	var paging=parseInt(document.frm_backup.paging.value)+num;
+	if(paging==0 /*|| paging==document.frm_backup.fenye.value+1*/){
+		paging=1;
+		//return false;
+	}
+	select_save();
+	var backup_list_s = [];
+	if (num == 0.1){
+		paging = 1;
+	}else if(num == 0.9){
+		paging = document.frm_backup.fenye.value;
+	}
+	// $("table").next("div.tab-i").children("div.il").find("span.select_total").text(0);
+	document.getElementById("user_page").value=paging;
+	document.frm_backup.paging.value=paging;
+	show_backup_list();
+}
+//备注消息弹框
+function edit_fun(id_value,text_value) {
+	//清除input框内容
+	$('#remarks_text').val(text_value);
+	var $dialogCont = $("#remarks_suspend").show();
+	var d = dialog({ 
+		title:"备注信息",
+		content:$dialogCont,
+		id:"remarks_suspend",
+		width:"600px"
+	});
+	d.addEventListener('close', function () {
+		$dialogCont.appendTo("body").hide();
+	});
+	d.showModal();
+	var t_id;
+	var name;
+	$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+		$('#remarks_text').val(text_value);
+	});
+
+	$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+		var remarks_text=$('#remarks_text').val();
+		if(remarks_text.length>1024){
+			_alert(1,'备注信息','备注信息长度不能大于1024');
+		}
+		$.ajax({
+			url: '/bhost/save_remarks_text',
+			type: "POST",
+			async:false,
+			data: {a0:sess,a1:remarks_text,a2:id_value},
+			success: function(result) {
+				var result = JSON.parse(result);
+				if(result.Result == true){
+					_alert(0,"备注信息","保存成功");
+					refresh();
+					d.close().remove();
+				}else{
+					_alert(1,"备注信息",result.ErrMsg);	
+					return false;
+				}	
+			}
+		});
+
+	});
+
+}
+
+//全选按钮
+function select_all(){
+	select_save();
+	if(select_str==','){
+		select_str='';
+	}
+	var select_array = select_str.split(',');
+	if(select_array[select_array.length-1] == ""){
+		select_array.splice(select_array.length-1,1);
+	}
+	if(select_array.length == backup_array.length){
+		select_str = '';
+	}else{
+		select_str='';
+		$.each(backup_array,function(i,item){
+			select_str=select_str+item.ConfigBackupTaskId+',';
+		});
+
+	}
+	show_backup_list();
+
+}
+//刷新
+function refresh(){
+	user_page(0);
+	$("table tbody tr").children("td.in").children("div").children("input").iCheck('uncheck');
+	$("#check_page").iCheck('uncheck');
+	select_str="";
+	check_num=0;
+	$("#select_total")[0].textContent = 0;
+}
+function user_manage(){
+	document.frm_backup.tasktype.value= 1;
+	document.frm_backup.action = '/bhost/user_p';
+	document.frm_backup.submit();
+}
+//删除函数
+function delete_fun(select_str){
+	layer.open({
+		type:1,
+		title: '配置备份',
+		content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+		btn:['确&nbsp;&nbsp;认','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		yes:function(i){
+			layer.close(i);
+			$.ajax({
+				url: '/bhost/del_backup',
+				type: "POST",
+				async:false,
+				data: {a0:sess,a1:select_str},
+				success: function(result) {
+					var result = JSON.parse(result);
+					if(result.Result == true){
+						refresh();
+						_alert(0,"配置备份","删除成功");
+					}else{
+						_alert(1,"配置备份",result.ErrMsg);	
+						return false;
+					}	
+				}
+			})
+		}
+	}); 
+}
+function deleteItems(select_str){
+	$.ajax({
+		url: '/bhost/del_backup',
+		type: "POST",
+		async:false,
+		data: {a0:sess,a1:select_str},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				refresh();
+				_alert(0,"配置备份","删除成功");
+			}else{
+				_alert(1,"配置备份",result.ErrMsg);	
+				return false;
+			}	
+		}
+	});
+}
+//删除按钮
+function delete_backup(){
+	select_save();
+		////console.log(select_str);
+		if(select_str == ""){
+			_alert(2,"配置备份","请选择要删除的数据");
+			return false;
+		}
+	
+	layer.open({
+		type:1,
+		title: '配置备份',
+		content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['确&nbsp;&nbsp;认','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		yes:function(i){
+			layer.close(i);
+			select_str = select_str.substr(0,select_str.length-1);
+			deleteItems(select_str); 
+			select_str="";
+			check_num=0;
+			$("#select_total")[0].textContent = 0;
+		},
+		no:function(i){
+			layer.close(i);
+		}
+	});  
+}
+var use_BH=window.parent.parent.document.frm.use_BH.value;
+function _download(filedate){
+	_showLoading();
+	time_1=setInterval(function () {
+		$.ajax({
+			url: '/bhost/down_backupfile_exist',
+			type: "POST",
+			async:false,
+			data: {a0:sess,filename:filedate},
+			success:function(result){
+				var result = JSON.parse(result);
+				if(result.Result == true){
+					if (result.info==1){
+						clearInterval(time_1);
+						if(use_BH=='0'){
+							_closeLoading();
+							document.frmdown.action='/bhost/down_backupfile';
+							document.frmdown.a0.value = sess;
+							document.frmdown.a99.value = use_BH;
+							document.frmdown.filename.value = filedate;
+							document.frmdown.submit();
+							return 0;
+						}
+						
+						$.ajax({
+							url: '/bhost/down_backupfile',
+							type: "POST",
+							async:false,
+							data: {a0:sess,filename:filedate,a99:use_BH},
+							success:function(result){
+								var result = JSON.parse(result);
+								if(result.Result){
+									var sesstimet = (new Date()).valueOf();
+									var referrer_arr=document.referrer.toString().split('/');
+									referrer_arr.pop();
+									var referrer=referrer_arr.join('/');
+									var json_download = {
+											"Type": "Download",
+											"Url": referrer,
+											"Path": result.Path,
+											"Filename": result.Filename,
+											"Session": sess,
+											"sesstimet":sesstimet
+									}
+									var if_html_client = false;
+									var base64_str = '';
+									$.ajax({
+											url: "/bhost/get_base64",
+											type:"POST",
+											async:false,
+											data:{a0:sess,z1:JSON.stringify(json_download)},
+											success:function(result){
+													var result=JSON.parse(result);
+													if(result.Result){
+															if_html_client = result.info;
+															base64_str = result.b64;
+													}else{
+															_alert(1,"配置备份",result.ErrMsg); 
+													}
+											}
+									})
+									if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(json_download));
+									else{
+										get_regedit('bhost', window.parent.document.frm.se.value,'',sesstimet);
+										$('#YuFrame1').remove();
+										$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+										$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+									}
+								}else{
+									_alert(1,"配置备份",result.info);
+								}
+							}
+						});
+						_closeLoading();
+					}else{
+						clearInterval(time_1);
+						_alert(1,"配置备份",'文件不存在');
+						_closeLoading();
+					}
+				}else{
+					_alert(1,"配置备份",result.ErrMsg);	
+					return false;
+				}	
+			}
+		});
+	},1000);
+	
+	
+}
+function _recovery(filedate){
+	// var filedate = $(obj).parents('tr').children('td').eq(3).text();
+	////console.log("filedate:"+filedate);
+	$.ajax({
+		url: '/bhost/recover_config',
+		type: "POST",
+		async:false,
+		data: {a0:sess,a1:filedate},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				refresh();
+				_alert(0,"配置备份","恢复任务生成成功");
+			}else{
+				_alert(1,"配置备份",result.ErrMsg);	
+				return false;
+			}	
+		}
+	});
+}
+</script>
+{% endblock  %}
+			

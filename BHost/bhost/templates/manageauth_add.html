@@ -1,0 +1,5250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+	<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />
+	<link rel="stylesheet" href="/manage/css/G-style.css" type="text/css" />
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/xSelect.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<script src="/manage/js/jquery.datepick.js"></script>
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+	<script src="/manage/js/my_scrollbar.js"></script>
+</head>
+<style>
+	.h-content2 ul li {
+		width: max-content;
+	}
+	.hosttree span.authtype {
+		display: inline;
+	}
+	.h-name-son{
+		display: inline-block;
+	}
+	.btns {
+		background-color: rgba(255,255,255,1);
+	}
+	.ani_dot {
+		font-family: simsun;    
+	}
+	.filter1 .selector.selector-multiple:after {
+		position: fixed;
+		margin: 11px 0px 0px 11.8em;
+		float: left;
+	}
+	.filter2 .selector.selector-multiple:after {
+		left: -33px;
+	}
+	.ss{
+		padding-bottom: 10px;
+	}
+	:root .ani_dot {
+		display: inline-block;
+		width: 1.5em;
+		vertical-align: bottom;
+		overflow: hidden;
+	}
+	@-webkit-keyframes dot {
+		0% { width: 0; margin-right: 1.5em; }
+		33% { width: .5em; margin-right: 1em; }
+		66% { width: 1em; margin-right: .5em; }
+		100% { width: 1.5em; margin-right: 0;}
+	}
+	.ani_dot {
+		-webkit-animation: dot 3s infinite step-start;
+	}
+
+	@keyframes dot {
+		0% { width: 0; margin-right: 1.5em; }
+		33% { width: .5em; margin-right: 1em; }
+		66% { width: 1em; margin-right: .5em; }
+		100% { width: 1.5em; margin-right: 0;}
+	}
+	.ani_dot {
+		animation: dot 3s infinite step-start;
+	}
+	.h-content2 span.checkbox:not(.disabled) {
+		cursor: pointer;
+	}
+	.h-content2 span.disabled {
+		cursor: default;
+	}
+</style>
+<script>
+	var perm={{perm}};
+    if (perm==0) parent.$('#nav-s1 a.active').click();
+</script>
+<body style="overflow:hidden;" class="bg-white">
+	<!---->
+	<div class="rwrap">
+		<!---->
+		<div class="mainer">
+			<div class="container">
+				<div class="c-top">
+					<div class="manual-head">
+						<div class="manual-title" style='cursor: pointer;'>
+							<span onclick="manageauth_add();">管理授权</span>
+							<i class='manage_icon'></i>
+						</div>
+					</div>
+				</div>
+
+				<div class="c-cont" name="manage_add_user" id="manage_add_user">
+					<div class="c-wrap" style="padding: 10px 0 0">
+						<div class="c-exp">
+							<div class="h-explorer h-explorer3" style="width: 1323px;">
+								<div class="h-top">
+									<div class="h-tit">
+										<div class="form-item form-nm" style="    padding-left: 9px;">
+											<div class="form-tag"><em class="imp">*</em>名称：</div>
+											<div class="form-c">
+												<input type="text" class="form-text" style="width:160px;" maxlength="128" name="ManageAuthName" id="ManageAuthName" onblur="regCheck(this,nameReg);">
+												<i class="v-check" style="margin: 11px 0px 0px -27px;"></i>
+												<span style="font-size: 12px;">特殊字符仅支持下划线、横杠、小数点</span>
+											</div>
+
+										</div>
+									</div>
+								</div>
+								<div style="overflow: auto;width: 1323px;">
+									<div class="h-content2" style="width: 438px;float:left;padding: 0 0 0 0;">
+										<div class="h-top" style="background-color: #fff;">
+											<div class="filter filter1 filter2" style="float:right;min-width:auto;">
+												<div id="waitTip" class="waitTipuser" style="float: right;margin-top: 7px;margin-left: -20px;"></div>
+												<div class="search" style="border-left: 0px;">
+													<select name="user_select" id="user_select" class="filter-select">
+														<option value="all" selected>所有</option>
+														<option value="ugname">用户组</option>
+														<option value="usercode">账号</option>
+													</select>
+													<input type="text" class="filter-text" placeholder="输入关键字" 
+													name="user_text" id="user_text" maxlength="128" 
+													style="/*display:none;*/padding-right: 22px;width:71px;" 
+													onchange="if($('#user_text').val()==''){$('#user_text_check').hide();}else{$('#user_text_check').show();}"
+													onblur="if($('#user_text').val()=='' && search_typeall_new!=''){search_typeall_new='';find_usergroup();}"
+													onkeyup="if($('#user_text').val()==''){$('#user_text_check').hide();}else{$('#user_text_check').show();}"
+													onkeydown="if($('#user_text').val()==''){$('#user_text_check').hide();}else{$('#user_text_check').show();};if (event.keyCode == 13){_addFilter_user(this,false);return false;} else return; ">
+													<i class="v-check v-wrong" id="user_text_check" 
+													onclick="_clearFilter_user(this,1)" 
+													style="display:none;cursor: pointer;float: left;position: static;"></i>
+													<button class="btn filter-btn" onclick="_addFilter_user(this,false);"><i class="add-filter"></i></button>
+													<button class="btn filter-btn" onclick="_addFilter_user(this,true)"><i class="append-filter"></i></button>
+												</div>
+												<div class="search" id="clearFilter_user" style="margin: 0px 15px 0px -16px;display:none;">
+													<button class="filter-btn" onclick="_clearFilter_user(this)"><i class="clear-filter"></i></button>
+												</div>
+												<div class="selector selector-multiple" id="filterWW_user" style="display: none;width: 100px;">
+													<span class="ww" style="width: 87px;">搜索条件</span>
+													<ul style="padding-left: 0px;width: 100px;"></ul>
+												</div>
+											</div>
+										</div>
+										<div style="overflow: auto;width:100%;height:90%;" id="usertree_div">
+											<h5 style="padding-left: 4px;font-size: 14px;padding-top: 7px;"><em class="imp" style="color: red;font-style: normal;">*</em>用户：</h5>
+											<ul id="userTree" class="hosttree" style="padding-left: 17px;    padding-top: 8px;"></ul>
+										</div>
+										
+									</div>
+
+									<div class="h-catelog h-catelog2 h-content3" style="width: 421px;float:left;padding:10px;background-color:#ffffff;border-left: 1px solid #CCC;">
+										<h5 style="font-size: 14px;padding:0px;">客户端登录：</h5>
+										<div name="module_client_all" id="module_client_all" style="    width: 375px;padding-left:20px;">
+											<div class="item" style="padding-top:0px;width: 175px;">
+												<div class="xSelect" id="module_client_select" style="float:left;"></div>
+												<i class="ctrl add" style="margin-left: 4px;float:left;margin-top: 6px;" onclick="_addModule(this)"></i>
+											</div>
+										</div>
+									</div>
+									<div class="h-catelog h-catelog2 h-content3" style="    width: 421px;float:left;padding:10px;background-color:#ffffff;border-right: 0px;">
+										<h5 style="font-size: 14px;padding:0px;">服务器管理：</h5>
+										<div name="module_server_all" id="module_server_all" style="    width: 375px;padding-left:20px;">
+											<div class="item" style="padding-top:0px;width: 175px;">
+												<div class="xSelect" id="module_server_select" style="float:left;"></div>
+												<i class="ctrl add" style="margin-left: 4px;float:left;margin-top: 6px;" onclick="_addModule(this)"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+						<div class="btns" id="_finish_" style="display:none;">
+							<a href="javascript:;" class="btn btn-normal" onclick="_finish();">保&nbsp;&nbsp;存</a>
+						</div>
+						<script>
+							if (perm==1) $('#_finish_').remove();
+							else $('#_finish_').show();
+						</script>
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="back(0);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<form action="/bhost/index" method="POST" name="frm_manage_add" id="frm_manage_add">
+		<input type="hidden" name="tasktype" id="tasktype" value="{{ tasktype }}" />
+		<!--创建 编辑 列表-->
+		<input type="hidden" name="manageauthId" id="manageauthId" value="{{ manageauthId }}" />
+		<!--serverId-->
+		<input type="hidden" name="paging" id="paging" value="{{paging}}" />
+		<!--页码-->
+		<input type="hidden" name="user" id="user" value="{{user}}" />
+		<input type="hidden" name="us" id="us" value="{{user}}" />
+		<input type="hidden" name="search_typeall" id="search_typeall" value="{{search_typeall}}" />
+		<!--search_typeall-->
+		<input type="hidden" name="se" id="se" value="{{se}}" />
+		<!--f0-->
+		<input type="hidden" name="e" id="e" value="{{e}}" />
+		<!--e-->
+	</form>
+	<!--客户端集合-->
+	<div class="dialog-cont" id="client_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+			<div class="c-cont" style="padding: 0px; height: 281px;">
+				<div class="c-wrap" style="padding: 0px 0 0">
+					<div class="c-exp" style="padding: 0px;">
+						<div class="h-explorer1 h-explorer2" style="border-width: 1px;border-style: solid;border-color: rgb(204, 204, 204);border-image: initial;margin: 0px auto;max-height:410px;height:auto;">
+							<div class="h-top">
+								<div class="form-item" style="padding: 0 0 0 19px;float:left;width:auto;margin:3px;">
+									<span class="form-tag" style="float:left;width:auto;"><em class="imp">*</em>名称：</span>
+									<div class="form-c" style="float:left;padding-left:0px;">
+										<input type="text" class="form-text" id="d_n" name="d_n" style="width:160px;" maxlength="128" onblur="regCheck(this,nameReg);">
+										<i class="v-check" style="    margin: 7px 0 0 -26px;"></i>
+										<span>特殊字符仅支持下划线、横杠、小数点</span>
+									</div>
+								</div>
+							</div>
+							<div class="h-catelog h-catelog2 h-catelog2_tmp" style="width: 497px;max-height: 375px; background: none; height: 224px;padding: 0px;padding-left: 7px;">
+								<h2 style="font-size: 14px;padding: 14px 0 0 0;font-weight: 100;float: left;width: 63px;">IP地址：</h2>
+								<div id="ip_n1" name="ip_n1" class="form-c c-form-host" style="float: left;padding-left:8px;width: 370px;min-width:300px;"
+									value="0">
+									<span class="ss ss-add" id="ip_span1" value="0" style="float:left;position:static;padding-bottom: 10px;">
+										<input type="text" class="form-text" style="width:124px;padding-right:8px;">
+										<i class="ctr ctr-add" onclick="_addIp1(this,1);" style="margin-left: 5px;"></i>
+									</span>
+								</div>
+								<h2 style="font-size: 14px;padding:0px;font-weight: 100;float: left;width: 63px;">IP区间：</h2>
+								<div id="ip_n" name="ip_n" class="form-c c-form-host" style="float: left;padding-left: 8px;width: 370px;min-width:300px;margin-top: -13px;"
+									value="0">
+									<span class="ss ss-add" id="ip_span" value="0" style="float:left;position:static;padding-bottom: 10px;">
+										<input type="text" class="form-text"placeholder="起始IP地址" style="width:124px;padding-right:8px;">
+										<span style="vertical-align:middle;">-</span>
+									<input type="text" class="form-text" placeholder="结束IP地址" style="width:124px;padding-right:8px;">
+									<i class="ctr ctr-add" onclick="_addIp(this,1);" style="margin-left: 5px;"></i>
+									</span>
+								</div>
+							</div>
+							<div class="h-catelog2 h-catelog2_tmp" style="max-height: 375px; height: 224px;float: left;width: 486px;overflow: auto;padding: 0;overflow-x: hidden;padding-left: 7px;">
+								<h2 style="font-size: 14px;padding: 14px 0 0 0;    font-weight: 100;float: left;width: 82px;">MAC地址：</h2>
+								<div id="MACAddress" name="MACAddress" class="form-c c-form-host" style="float: left;padding-left: 0px;width: 370px;min-width:300px;"
+									value="0">
+									<span class="ss ss-add" value="0" style="float:left;position:static;padding-bottom: 10px;width: 175px;">
+										<input type="text" class="form-text" maxlength="17" style="width:122px;padding-right:8px;">
+										<i class="ctr ctr-add" onclick="_addMAC(this)" style=" margin-left: 5px;"></i>
+									</span>
+								</div>
+								<h2 style="font-size: 14px;padding:0px;font-weight: 100;float: left;width: 82px;">MAC区间：</h2>
+								<div id="MACAddress1" name="MACAddress1" class="form-c c-form-host" style="float: left;padding-left: 0px;width: 365px;min-width:300px;margin-top: -13px;"
+									value="0">
+									<span class="ss ss-add" value="0" style="float:left;position:static;padding-bottom: 10px;">
+										<input type="text" class="form-text" maxlength="17" placeholder="起始MAC地址" style="width:122px;padding-right:8px;">
+										<span style="vertical-align:middle;">-</span>
+									<input type="text" class="form-text" maxlength="17" placeholder="结束MAC地址" style="width:122px;padding-right:8px;">
+									<i class="ctr ctr-add" onclick="_addMAC1(this)" style=" margin-left: 5px;"></i>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:1040px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit">保&nbsp;&nbsp;存</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!--服务器集合-->
+	<div class="dialog-cont" id="server_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+			<div class="c-cont" style="padding: 0px; height: 281px;">
+				<div class="c-wrap" style="padding: 0px 0 0">
+					<div class="c-exp" style="padding: 0px;">
+						<div class="h-explorer1" style="border-width: 1px;border-style: solid;border-color: rgb(204, 204, 204);border-image: initial;margin: 0px auto;">
+							<div class="h-top">
+								<div class="form-item" style="padding: 0 0 0 19px;float:left;width:auto;margin:3px;">
+									<span class="form-tag" style="float:left;width:auto;"><em class="imp">*</em>名称：</span>
+									<div class="form-c" style="float:left;padding-left:0px;">
+										<input type="text" class="form-text" id="d_ns" name="d_ns" style="width:160px;" maxlength="128" onblur="regCheck(this,nameReg);">
+										<i class="v-check" style="    margin: 7px 0 0 -26px;"></i>
+										<span>特殊字符仅支持下划线、横杠、小数点</span>
+									</div>
+								</div>
+							</div>
+							<div class="h-catelog h-catelog2 h-catelog2_tmp" style="width: 387px;max-height: 375px; background: none; height: 224px; padding: 0;">
+								<div class="h-top" style="background-color: white;">
+									<span class="form-tag" style="float:left;width:auto;padding: 4px 0px 0px 15px;">IP限制：</span>
+									<input type="checkbox" class="form-checkbox" name="" id="part1" value="" style="margin-top: 9px; float: right;position: relative;" checked="checked" >
+									<h2 style="font-size: 13px;padding: 8px 6px 0px 0px;font-weight: 100;float: right;">启用</h2>
+								</div>
+								<h2 style="font-size: 14px;padding: 12px 0 0 14px; font-weight: 100;float: left;">地址：</h2>
+								<div id="ip_n1s" name="ip_n1s" class="form-c c-form-host" style="float: left;padding-left:22px; width: 343px;min-width:300px;"
+									value="0">
+									<span class="ss ss-add" id="ip_span1s" value="0" style="float:left;position:static;padding-bottom: 10px;">
+											<input type="text" class="form-text" style="width:124px;padding-right:8px;">
+											<i class="ctr ctr-add" onclick="_addIp1(this,2)" style="margin-left: 5px;"></i>
+										</span>
+								</div>
+								<h2 style="font-size: 14px;padding:0px 0 0 14px; font-weight: 100;float: left;">区间：</h2>
+								<div id="ip_ns" name="ip_ns" class="form-c c-form-host" style="float: left;padding-left:22px; width: 335px;min-width:300px;"
+									value="0">
+									<span class="ss ss-add" id="ip_spans" value="0" style="float:left;position:static;padding-bottom: 10px;">
+										<input type="text" class="form-text"placeholder="起始IP地址" style="width:124px;padding-right:8px;">
+										<span style="vertical-align:middle;">-</span>
+										<input type="text" class="form-text" placeholder="结束IP地址" style="width:124px;padding-right:8px;">
+										<i class="ctr ctr-add" onclick="_addIp(this,2);" style="margin-left: 5px;"></i>
+									</span>
+								</div>
+							</div>
+							<div class="h-content2 h-catelog2_tmp" style="overflow: hidden;max-height: 375px; height: 224px;padding-top: 0px;">
+								<div class="h-top" style="background-color: #fff;">
+									<div class="filter filter1" style="float:right;min-width: auto;">
+										<div id="waitTip" class="waitTipserver" style="float: right;margin-top: 7px;margin-left: -20px;"></div>
+										<div class="search">
+											<select name="server_select" id="server_select" class="filter-select">
+													<option value="all" selected>所有</option>
+													<option value="hgname">组名</option>
+													<option value="hostname">主机名</option>
+													<option value="ip">IP</option>
+												</select>
+											
+											<input type="text"  style="/*display:none;*/padding-right: 22px;width: 8em;" 
+											class="filter-text" placeholder="输入关键字" 
+											name="server_text" id="server_text" maxlength="128"
+											onchange="if($('#server_text').val()==''){$('#server_text_check').hide();}else{$('#server_text_check').show();}"
+											onblur="if($('#server_text').val()=='' && search_typeall_server_new!=''){search_typeall_server_new='';find_hostgroup();}"
+											onkeyup="if($('#server_text').val()==''){$('#server_text_check').hide();}else{$('#server_text_check').show();}"
+											onkeydown="if($('#server_text').val()==''){$('#server_text_check').hide();}else{$('#server_text_check').show();};if (event.keyCode == 13){_addFilter_server(this,false);return false;} else return; ">
+											<i class="v-check v-wrong" id="server_text_check" 
+											onclick="_clearFilter_server(this)" 
+											style="display:none;cursor: pointer;float: left;position: static;"></i>
+											<button class="btn filter-btn" onclick="_addFilter_server(this,false);"><i class="add-filter"></i></button>
+											<button class="btn filter-btn" onclick="_addFilter_server(this,true)"><i class="append-filter"></i></button>
+											
+										</div>
+										<div class="search" id="clearFilter_server" style="margin: 0px 15px 0px -16px;display:none;">
+											<button class="filter-btn" onclick="_clearFilter_server(this)"><i class="clear-filter"></i></button>
+										</div>
+										<div class="selector selector-multiple" id="filterWW_server" style="display: none;width: 180px;">
+											<span class="ww" style="">搜索条件</span>
+											<ul style="padding-left: 0px;width: 180px;"></ul>
+										</div>
+									</div>
+								</div>
+								<div style="overflow: auto;width:100%;height:90%;" id="hosttree_div">
+									<h2 style="font-size: 14px;    padding-top: 10px;">主机：</h2>
+									<ul id="userTrees" class="hosttree" style="padding: 10px 0 0 56px;float: none;"></ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:1040px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit">保&nbsp;&nbsp;存</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<style>
+		.c-form-host span.ss {
+			float: left;
+			width: 171px;
+			line-height: 28px;
+			position: relative;
+		}
+		
+	</style>
+	<script>
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+		$('.filter-select').select2({ minimumResultsForSearch: -1 });
+	</script>
+	<!--搜索关键字-->
+	<script>
+		var search_typeall_r='';
+		var search_typeall_server='';
+		var search_typeall_server_new='';
+		//加入搜索
+		function _addFilter_server(obj,type) {
+			if(find_host_group_loading){
+				_alert(2, "搜索", "正在搜索中，请先等待搜索完成");
+				return false;
+			}
+			var id = $(obj).parent().children('select').children('option:selected').val();
+			var v1 = $(obj).parent().children('select').children('option:selected').text();
+			if (id=='all'){
+				v1='';
+			}else{
+				v1=v1+'-';
+			}
+			var v2 = $(obj).parent().children('input[type=text]').val().trim();
+			if (v2 == '') {
+				 $(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+				return false;
+			} else {
+				switch(id){
+					case 'hgname':
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'hostname':
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'ip':
+						var Reg=/^[0-9\.\s]+$/;
+						break;
+				}
+				if(id!='all' && !Reg.test(v2)){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if(search_typeall_server.indexOf(id+'-'+v2+'\t')>=0){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(2,'相同的关键字已存在','关键字重复', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if(type){
+					var type_value=(search_typeall_server_new==id + '-' + v2 + '\t');
+					search_typeall_server=search_typeall_server+id+'-'+v2+'\t';
+					search_typeall_server_new = '';
+					$('#filterWW_server>ul').append('<li style="height: 18px;"><span style = "display:none;">' + id + '-'+v2+'</span><span style="width: 146px;" class="ww" title="' + v1 + v2 + '">' + v1 + v2 + '</span><i class="del" style="margin-top: 2px;" onclick="_delFilter_server(this);"></i></li>')
+					$("#server_text").val("");
+					$('#server_text_check').hide();
+					selView_server(type_value);
+				}else{
+					if(search_typeall_server_new == id+'-'+v2+'\t'){
+						return false;
+					}
+					search_typeall_server_new = id+'-'+v2+'\t';
+					find_hostgroup();
+				}
+				
+			}
+		}
+		//删除搜索
+		function _delFilter_server(obj) {
+			if(find_host_group_loading){
+				_alert(2, "搜索", "正在搜索中，请先等待搜索完成");
+				return false;
+			}
+			var id = $(obj).parent().find("span");
+			var ids=$(id).eq(0).text();
+			search_typeall_server = search_typeall_server.replace(ids+'\t','');
+			var server_text=$('#server_text').val().trim();
+			$(obj).parent().remove();
+			selView_server();
+		}
+		function _clearFilter_server(obj,num){
+			if(find_host_group_loading){
+				_alert(2, "搜索", "正在搜索中，请先等待搜索完成");
+				return false;
+			}
+			if(num==1){
+				$('#server_text').val('');
+			$('#server_text_check').hide();
+			search_typeall_server_new='';
+			selView_server();
+			return;
+			}
+			$('#clearFilter_server').next().children('ul').empty();
+			$('#server_text').val('');
+			$('#clearFilter_server').hide();
+			$('#server_text_check').hide();
+			search_typeall_server='';
+			search_typeall_server_new='';
+			selView_server();
+		}
+		
+		//显示搜索条件
+		function selView_server(type_value) {
+			if(find_host_group_loading){
+				_alert(2, "搜索", "正在搜索中，请先等待搜索完成");
+				return false;
+			}
+			var $sel = $('#filterWW_server');
+			var len = $('li',$sel).length;
+			if (len == 0) {
+				$sel.hide();
+				$('#clearFilter_server').hide();
+			}  else {
+				$("#filterWW_server").show();
+				$('#clearFilter_server').show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			}
+			if(type_value!=true){
+				find_hostgroup();
+			}
+		}
+		var data_array_Path_server=null;
+		var server_find_json={
+			"loginusercode": null,
+			"hgid": 0,  
+			"type": 1,
+			"id": null,    
+    		"istree": true,
+			"hgname": "",   
+			"hostname": "",    
+			"hostip": "", 
+			"searchstring":'',
+			"limitrow":null,
+			"offsetrow":null  
+		}
+		function red_to_no_red_and_open_to_red(obj, num) {
+			for (var i = 0; i < tmp_list.length; i++) {
+				var item = tmp_list[i];
+				var pass = true;
+				find_host_arry = (search_typeall_server + search_typeall_server_new).split('\t');
+				for (var jm = 0; jm < find_host_arry.length; jm++) {
+					if (find_host_arry[jm] == '' || find_host_arry[jm] == undefined || find_host_arry[jm] == null) {
+						continue;
+					}
+					var pass_one = false;
+					var jm_index_=find_host_arry[jm].indexOf('-');
+					var search_arr = find_host_arry[jm].substr(jm_index_ + 1, find_host_arry[jm].length).split(' ');
+					$.each(search_arr, function (i1, item1) {
+						if (item1 != '') {
+							if(find_host_arry[jm].substr(0,jm_index_)=='hostname'){
+								var Name=item.Name.split('\t')[1];
+								if (item.Type!=2){
+									return false;
+								}
+							}else if(find_host_arry[jm].substr(0,jm_index_)=='ip'){
+								var Name=item.Name.split('\t')[0];
+								if (item.Type!=2){
+									return false;
+								}
+							}else if(find_host_arry[jm].substr(0,jm_index_)=='hgname'){
+								var Name=item.Name;
+								if (item.Type!=1){
+									return false;
+								}
+							}else if(find_host_arry[jm].substr(0,jm_index_)=='accountname'){
+								var Name=item.Name;
+								if (item.Type!=4){
+									return false;
+								}
+							}else{
+								var Name=item.Name;
+							}
+							if (coverString(item1, Name)) {
+								pass_one = true;
+								return false;
+							}
+						}
+					});
+					if (pass_one == false) {
+						pass = false;
+						break;
+					}
+				}
+				if (pass == true) {
+					open_and_make_red(item);
+				} else {
+				}
+			}
+			li_red_to_no_red(obj);
+			//定位
+			top_to_move(obj);
+		}
+		function open_and_make_red(item) {
+			var Path_array = item.Path.split('/');
+			var len = Path_array.length;
+			if (len == 2) {//主机层
+				//show
+				$('#HGId-' + item.Id).parent('li').show();
+				$('#HGId-' + item.Id).siblings('span.h-name').addClass('h-name-red');
+			} else {
+				if (item.Type == 3 || item.Type == 4) { //服务/账号
+
+				} else {
+					for (var j = 1; j < len - 1; j++) {
+						var id = Path_array[j].split(',')[1];
+						//show
+						$('#HGId-' + id).parent('li').show();
+						$i_item = $('#HGId-' + id).prev('i');
+						if (($i_item.attr('class').indexOf('h-aicon-d')) == -1) {
+							filter_flag_append = true;
+							$i_item.trigger('click');
+						}
+					}
+					if (item.Type == 1) {
+						//show
+						$('#HGId-' + item.Id).parent('li').show();
+						$('#HGId-' + item.Id).siblings('span.h-name').addClass('h-name-red');
+					} else {
+						//show
+
+						$('#HostId-' + Path_array[j - 1].split(',')[1] + '-' + item.Id).parent('li').show();
+
+						$('#HostId-' + Path_array[j - 1].split(',')[1] + '-' + item.Id).siblings('span.h-name').addClass('h-name-red');
+					}
+				}
+			}
+		}
+		function top_to_move(obj) {
+			var top_arr = $(obj).find('span.h-name-red');
+			if (top_arr.length != 0) {
+				//非红隐藏
+				li_hide_while_no_red(obj, 0);
+				$('#hosttree_div').scrollTop(top_arr.eq(0).offset().top - 200);
+				_waitDone($('.waitTipserver'),0);
+			} else {
+				obj.children('li').hide();
+				$("#server_text").blur();
+				_alert(0, '搜索', '无搜索结果', $("#server_text"));
+				_waitDone($('.waitTipserver'),0);
+			}
+		}
+		var ajax_find_host_doing=false;
+		var find_host_group_loading=false;
+		function find_hostgroup(){
+			find_host_group_loading=true;
+			var search_typeall_all = search_typeall_server + search_typeall_server_new;
+			find_host_arry = search_typeall_all.split('\t');
+			for (var i = 0; i < find_host_arry.length; i++) {
+				if (find_host_arry[i] == '') {
+					find_host_arry.splice(i, 1);
+					i--;
+				}
+			}
+			$('#hosttree_div').scrollTop(0);
+			_getWait($('.waitTipserver'));
+			//先清空之前的过滤信息 
+			click_h1();
+		}
+		function red_to_font(obj,type){
+			var find_array; 
+			if (type == 2){
+				find_array = find_use_arry;
+			}else if (type == 1){
+				find_array = (search_typeall_r + search_typeall_new).split('\t');
+			}else if (type == 0){
+				find_array = find_host_arry;
+			}
+			$(obj).each(function(i,item){
+				var span_obj=$(item).siblings('span.h-name');
+				var item_name=span_obj.siblings('input').attr('data-name');
+				var Type = span_obj.siblings('input').attr('id');
+				var $span_son_font=$('.h-name-son',span_obj).find('font');
+
+				if (type == 0){
+					if(Type.indexOf('nodeh')<0){
+						var span_son_name=item_name.toLowerCase();
+					}else{
+						var host_span_arr=item_name.split('\t');
+						var span_son_name=(host_span_arr[0]+'('+host_span_arr[1]+')').toLowerCase();
+					}
+				}else if (type == 1){
+					if(Type.indexOf('HostId')<0){
+						var span_son_name=item_name.toLowerCase();
+					}else{
+						var host_span_arr=item_name.split('\t');
+						var span_son_name=(host_span_arr[0]+'('+host_span_arr[1]+')').toLowerCase();
+					}
+				}else if (type == 2){
+					var span_son_name=item_name.toLowerCase();
+				}
+				for(var jm=0;jm<find_array.length;jm++){
+					var jm_index_ = find_array[jm].indexOf('-');
+					if (type == 1){
+						if (find_array[jm] == '' || find_array[jm] == undefined || find_array[jm] == null) {
+							continue;
+						}
+						var search_arr = find_array[jm].substr(jm_index_ + 1, find_array[jm].length).split(' ');
+					}else if (type == 2){
+						var search_arr = find_array[jm].substr(jm_index_ + 1, find_array[jm].length).split(' ');
+					}else{
+						var search_arr = find_array[jm].substr(jm_index_ + 1, find_array[jm].length).split(' ');
+					}
+					$.each(search_arr,function(i1,item1){
+						if(item1==''){
+							return true;
+						}
+						if (type == 1){
+							if (find_array[jm].substr(0, jm_index_) == 'hostname') {
+								Name = item_name.split('\t')[1];
+								if(Type.indexOf('HostId')<0){
+									return true;
+								}
+							} else if (find_array[jm].substr(0, jm_index_) == 'ip') {
+								Name = item_name.split('\t')[0];
+								if(Type.indexOf('HostId')<0){
+									return true;
+								}
+							} else if (find_array[jm].substr(0, jm_index_) == 'hgname'){
+								Name = item_name;
+								if(Type.indexOf('HGId')<0){
+									return true;
+								}
+							}else{
+								Name = item_name;
+							}
+						}
+						if (type == 0){
+							if (find_array[jm].substr(0, jm_index_) == '组名'){
+								Name = item_name;
+								if(Type.indexOf('nodehg')<0){
+									return true;
+								}
+							}else if (find_array[jm].substr(0, jm_index_) == '主机名') {
+								Name = item_name.split('\t')[1];
+								if(Type.indexOf('nodeh')<0 || Type.indexOf('nodehg')>=0){
+									return true;
+								}
+								/*
+								if(Type.indexOf('nodeh')<0){
+									return true;
+								}
+								*/
+							} else if (find_array[jm].substr(0, jm_index_) == 'IP'){
+								Name = item_name.split('\t')[0];
+								if(Type.indexOf('nodeh')<0 || Type.indexOf('nodehg')>=0){
+									return true;
+								}
+								/*
+								if(Type.indexOf('nodeh')<0){
+									return true;
+								}
+								*/
+							}else if (find_array[jm].substr(0, jm_index_) == '服务'){
+								Name = item_name;
+								if(Type.indexOf('nodes')<0){
+									return true;
+								}
+							}else if (find_array[jm].substr(0, jm_index_) == '账号'){
+								Name = item_name;
+								if(Type.indexOf('nodea')<0){
+									return true;
+								}
+							}else{
+								Name = item_name;
+							}
+						}
+						
+						if (type == 2){
+							Name = item_name;
+							if (find_array[jm].substr(0, jm_index_) == '组名') {
+								if(Type.indexOf('nodeug')<0){
+									return true;
+								}
+							} else if (find_array[jm].substr(0, jm_index_) == '账号') {
+								if(Type.indexOf('nodeug')>=0){
+									return true;
+								}
+								/*
+								if(Type.indexOf('nodeu')<0){
+									return true;
+								}
+								*/
+							}
+						}
+						if(coverString(item1,Name)){
+							if (type == 0 || type == 1){
+								item1=item1.toLowerCase();
+								if(find_array[jm].substr(0, jm_index_).toLowerCase() == '主机名'){
+									var index_start=span_son_name.indexOf('(');
+									var index_true=span_son_name.indexOf(item1,index_start);
+									if(index_true>=0){
+										for(var i_red_span=index_true;i_red_span<index_true+item1.length;i_red_span++){
+											$span_son_font.eq(i_red_span).addClass('font-red');
+										}
+									}
+								}else{
+									var index_true=span_son_name.indexOf(item1);
+									if(index_true>=0){
+										for(var i_red_span=index_true;i_red_span<index_true+item1.length;i_red_span++){
+											$span_son_font.eq(i_red_span).addClass('font-red');
+										}
+									}
+								}
+							}else if (type == 2){
+								item1=item1.toLowerCase();
+								var index_true=span_son_name.indexOf(item1);
+								if(index_true>=0){
+									for(var i_red_span=index_true;i_red_span<index_true+item1.length;i_red_span++){
+										$span_son_font.eq(i_red_span).addClass('font-red');
+									}
+								}
+							}
+						}
+					});
+				}
+			});
+		}
+
+		function find_append(){
+			var i = 0;
+			var t_do1;
+			index_f = 0;
+			function _do1(){
+				clearTimeout(t_do1);
+				for(i = index_f; i< index_f + 50;i++){
+					if (i >= host_path_all.length) {    //
+						if (host_path_all.length == 0) {
+							//过滤结束 开始标红
+							scrollTop_check_server1();
+							return false;
+						} else {
+							index_f = 0;
+							t_do1 = setTimeout(function () { _do1(); }, 1);
+							return false;
+						}
+					}
+					if(host_path_all[i].Type!=1 && host_path_all[i].Type!=2){
+						host_path_all.splice(i,1);	
+						continue;
+					}
+					var Path_array=host_path_all[i].Path.split('/');
+					var len=Path_array.length;
+					if (len == 2){//主机层
+						//数据未完全展开 留在 host_path_all，下次继续执行
+						if($('#HGId-'+host_path_all[i].Id).length == 0) continue;//
+						$('#HGId-' + host_path_all[i].Id).parent('li').show();
+						$('#HGId-' + host_path_all[i].Id).siblings('span.h-name').addClass('h-name-red');
+						red_to_font($('#HGId-' + host_path_all[i].Id));
+						$('#HGId-' + host_path_all[i].Id).siblings('ul').find('li').show();
+					}else{
+						s = 0;
+						for(var j=1;j<len-1;j++){
+							var id=Path_array[j].split(',')[1];
+							if($('#HGId-'+id).length == 0) {
+								s = 1;
+								break;//
+							}
+							if(flag_loading == true) {
+								s = 1;
+								break;
+							}
+							$('#HGId-' + id).parent('li').show();
+							$i_item=$('#HGId-'+id).prev('i');
+							
+							if($i_item.attr('class') == "h-blank"){ //
+								host_path_all.splice(i,1);	
+								s = 1;
+								break;//
+							}
+							if (push_hgid.indexOf(Path_array[j - 1].split(',')[1] + ':true') != -1) {
+								continue;
+							}
+							if (push_hgid.indexOf(Path_array[j - 1].split(',')[1] + ':false') != -1) {
+								continue;
+							}
+							if($('#HGId-'+id).length >0){
+								red_to_font($('#HGId-'+id));
+								if(($i_item.attr('class').indexOf('h-aicon-d')) == -1){
+									filter_flag_append = true;
+									$i_item.trigger('click');
+								}		
+							}
+						}
+						if(s) continue;
+						if(host_path_all[i].Type==1){
+							if($('#HGId-'+host_path_all[i].Id).length == 0) continue;//
+							$('#HGId-' + host_path_all[i].Id).parent('li').show();
+							red_to_font($('#HGId-' + host_path_all[i].Id));
+							$('#HGId-' + host_path_all[i].Id).siblings('span.h-name').addClass('h-name-red');
+							$('#HGId-' + host_path_all[i].Id).siblings('ul').find('li').show();;
+						}else if (host_path_all[i].Type==2){
+							if($('#HostId-'+Path_array[j-1].split(',')[1]+'-'+host_path_all[i].Id).length == 0) continue;//
+							$('#HostId-' + Path_array[j - 1].split(',')[1] + '-' + host_path_all[i].Id).parent('li').show();
+							red_to_font($('#HostId-' + Path_array[j - 1].split(',')[1] + '-' + host_path_all[i].Id));
+							$('#HostId-' + Path_array[j - 1].split(',')[1] + '-' + host_path_all[i].Id).siblings('span.h-name').addClass('h-name-red');
+							$('#HostId-' + Path_array[j - 1].split(',')[1] + '-' + host_path_all[i].Id).siblings('ul').find('li').show();
+						}else{
+						}
+					}
+					//数据展开后 从host_path_all删除掉，并且放在old_path_all，为标红和定位准备
+					old_path_all.push(host_path_all[i]);
+					host_path_all.splice(i,1);	
+					
+				}
+				index_f = i;
+				index_f = i;
+				get_msg();
+				t_do1 = setTimeout(function () { _do1(); }, 1);
+			}
+			_do1();
+		}
+		var global_time=Date.parse(new Date())/1000;
+		function get_msg() {
+			var n = 0;
+			$.ajax({
+				url: '/bhost/get_msg',
+				type: "post",
+				async: false,
+				data: { a0: $("input[name=se]").val() },
+				success: function (result) {
+					var result = JSON.parse(result);
+					global_time = Date.parse(new Date())/1000;	
+					if (result.Result == false) {
+						if (result.info.indexOf('系统异常') >= 0 || result.info.indexOf('非法访问') >= 0 || result.info.indexOf('系统超时') >= 0) {
+							_alert(2, '系统', result.info);
+						} else {
+							_alert(2, '系统', result.info);
+						}
+					}
+					else {
+					}
+				}
+			})
+			if (n) return false;
+		}
+		function click_h1(){
+			//清空数据
+			var i = 0;
+			index = 0;
+			flag_ajax_true = true;
+			$('#userTrees').find('li').hide();
+			$('#userTrees').find('i.h-aicon-d').removeClass('h-aicon-d');
+			$('#userTrees').find('ul').hide();
+			$("#userTrees").find('font.font-red').removeClass('font-red');
+			$("#userTrees").find('span.h-name-red').removeClass('h-name-red');
+			host_path_all = [];
+			old_path_all = [];
+			click_h0();
+		}
+
+		var mtr=null;
+		var flag_ajax_true = false;
+		var tmp_list=null;
+		String.prototype.ResetBlank=function(){
+			var regEx = /\s+/g; 
+			return this.replace(regEx, ' '); 
+		};
+		function click_h0(){
+			if(mtr!=null){
+				mtr.abort();
+				mtr=null;
+			}
+			flag_ajax_true = true;
+			//条件没有的情况 直接返回
+			if (find_host_arry.length == 0){
+				_waitDone($('.waitTipserver'),0);
+				$('#hosttree_div').scrollTop(0);
+				$('#userTrees').children('li').show();
+				tmp_list = null;
+				first_find_index = null;
+				$('#userTrees').find('li').show();
+				$("#userTrees").find('i.h-aicon-d').removeClass('h-aicon-d');
+				$("#userTrees").find('ul').hide();
+				$("#userTrees").find('font.font-red').removeClass('font-red');
+				$("#userTrees").find('span.h-name-red').removeClass('h-name-red');
+				find_host_group_loading=false;
+				return false;
+			}
+			_getWait($('.waitTipserver'));
+			var hgname_str='';
+			var hostname_str='';
+			var hostip_str='';
+			var searchstring_str='';
+			flag_ajax_true = true;
+			$.each(find_host_arry,function(i,item){
+				var item_id = item.indexOf('-');
+				switch (item.substr(0, item_id)) {
+					case 'hgname':
+						hgname_str+=(item.substring(item_id+1)+'\n');
+						break;
+					case 'hostname':
+						hostname_str+=(item.substring(item_id+1)+'\n');
+						break;
+					case 'ip':
+						hostip_str+=(item.substring(item_id+1)+'\n');
+					case 'all':
+						searchstring_str+=(item.substring(item_id+1)+'\n');
+						break;
+				}
+			});
+			hgname_str=hgname_str.substr(0,hgname_str.length-1).ResetBlank();
+			hostname_str=hostname_str.substr(0,hostname_str.length-1).ResetBlank();
+			hostip_str=hostip_str.substr(0,hostip_str.length-1).ResetBlank();
+			searchstring_str=searchstring_str.substr(0,searchstring_str.length-1).ResetBlank();
+			server_find_json.hgname=hgname_str;
+			server_find_json.hostname=hostname_str;
+			server_find_json.hostip=hostip_str;
+			server_find_json.searchstring=searchstring_str;
+			mtr=$.ajax({
+				url: '/bhost/find_hostgroup',
+				type: "POST",
+				async: true,
+				data: {a0:$("input[name=se]").val(),a1:JSON.stringify(server_find_json)},
+				success: function(result){
+					ajax_find_host_doing = true;
+					mtr = null;
+					tmp_list = null;
+					flag_ajax_true = false;
+					var result = JSON.parse(result);
+					$('#userTrees').find('li').show();
+					$('#userTrees').children('li').hide();
+					if (result.Result) {
+						tmp_list=result.info;
+						if(tmp_list.length!=0){
+							host_path_all=JSON.parse(JSON.stringify(tmp_list));
+							flag_ajax_true = false;
+							//开始过滤
+							find_append();
+						}else{
+							flag_ajax_true = true;
+							ajax_find_host_doing = false;
+							find_host_group_loading=false;
+							$("#server_text").blur();
+							_alert(0,'搜索','无搜索结果',$("#server_text"));
+							_waitDone($('.waitTipserver'),0);//延迟5秒退出
+							return false;
+						}
+					}else{
+						flag_ajax_true = true;
+						ajax_find_host_doing = false;
+						find_host_group_loading=false;
+						_alert(1,'服务器集合',result.ErrMsg);
+						_waitDone($('.waitTipserver'),0);
+						return false;
+					}
+				}
+			});
+		}
+		function coverString(subStr, str) {
+			var reg = eval("/" + subStr + "/ig");
+			return reg.test(str);
+		}
+		function li_red_to_no_red(obj) {
+			var red_input = $(obj).find('span.h-name-red');
+			for (var im = 0; im < red_input.length; im++) {
+				var item = red_input.eq(im);
+				var pass = true;
+				var item_name = item.siblings('input').attr('data-name');
+				var Type = item.siblings('input').attr('id');
+				find_host_arry = (search_typeall_server + search_typeall_server_new).split('\t');
+				var $span_son_font=$('.h-name-son',item).find('font');
+                if(Type.indexOf('HostId')<0){
+                    var span_son_name=item_name.toLowerCase();
+                }else{
+                    var host_span_arr=item_name.split('\t');
+                    var span_son_name=(host_span_arr[0]+'('+host_span_arr[1]+')').toLowerCase();
+                }
+				for (var jm = 0; jm < find_host_arry.length; jm++) {
+					if (find_host_arry[jm] == '' || find_host_arry[jm] == undefined || find_host_arry[jm] == null) {
+						continue;
+					}
+					var pass_one = false;
+					var jm_index_=find_host_arry[jm].indexOf('-');
+					var search_arr = find_host_arry[jm].substr(jm_index_ + 1, find_host_arry[jm].length).split(' ');
+					$.each(search_arr, function (i1, item1) {
+						if(find_host_arry[jm].substr(0,jm_index_)=='hostname'){
+							var Name=item_name.split('\t')[1];
+							if (Type.indexOf('HostId')<0){
+								return false;
+							}
+						}else if(find_host_arry[jm].substr(0,jm_index_)=='ip'){
+							var Name=item_name.split('\t')[0];
+							if (Type.indexOf('HostId')<0){
+								return false;
+							}
+						}else if(find_host_arry[jm].substr(0,jm_index_)=='hgname'){
+							var Name=item_name;
+							if (Type.indexOf('HGId')<0){
+								return false;
+							}
+						}
+						else{
+							var Name=item_name;
+						}
+						if (coverString(item1, Name)) {
+							item1=item1.toLowerCase();
+                            if(find_host_arry[jm].substr(0, jm_index_) == 'ip'){
+                                var index_start=span_son_name.indexOf('(');
+                                var index_true=span_son_name.indexOf(item1,index_start);
+                                if(index_true>=0){
+                                    for(var i_red_span=index_true;i_red_span<index_true+item1.length;i_red_span++){
+                                        $span_son_font.eq(i_red_span).addClass('font-red');
+                                    }
+                                }
+                            }else{
+                                var index_true=span_son_name.indexOf(item1);
+                                if(index_true>=0){
+                                    for(var i_red_span=index_true;i_red_span<index_true+item1.length;i_red_span++){
+                                        $span_son_font.eq(i_red_span).addClass('font-red');
+                                    }
+                                }
+                            }
+							pass_one = true;
+							return false;
+						}
+					});
+					if (pass_one == false) {
+						pass = false;
+						break;
+					}
+				}
+				if (pass == false) {
+					item.removeClass('h-name-red');
+					$span_son_font.removeClass('font-red');
+				} else {
+				}
+			}
+		}	
+		function scrollTop_check_server1(){
+			var i = 0;
+			var index_i = 0;
+			li_hide_while_no_red($('#userTrees'), 0);
+			if ($('#userTrees').find('span.h-name-red').length == 0) {
+				$("#server_text").blur();
+				_alert(0, '搜索', '无搜索结果', $("#server_text"));
+				_waitDone($('.waitTipserver'),0);
+				flag_ajax_true = true;
+				ajax_find_host_doing = false;
+				find_host_group_loading=false;
+				return false;
+			} else {
+				ajax_find_host_doing = false;
+				flag_ajax_true = true;
+				old_path_all = new Array();
+				find_host_group_loading=false;
+				$('#hosttree_div').scrollTop($('#userTrees').find('span.h-name-red').eq(0).offset().top - 200);
+				_waitDone($('.waitTipserver'),3000);
+				return false;
+			}
+		}
+
+		var search_typeall_new='';
+		function _addFilter_user(obj,type) {
+			if(find_user_group_loading){
+				_alert(2, "搜索", "正在搜索中，请先等待搜索完成");
+				return false;
+			}
+			var id = $(obj).parent().children('select').children('option:selected').val();
+			var v1 = $(obj).parent().children('select').children('option:selected').text();
+			var v2 = $(obj).parent().children('input[type=text]').val().trim();
+			if (id=='all'){
+				v1='';
+			}else{
+				v1=v1+'-';
+			}
+			if (v2 == '') {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+				return false;
+			} else {
+				switch (id) {
+					case 'ugname':
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'usercode':
+						var Reg=/^[a-zA-Z\d_\-\.\s]+$/;
+						break;
+				} 
+				if(id!='all' && !Reg.test(v2)){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if(search_typeall_r.indexOf(id+'-'+v2+'\t')>=0){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(1,'搜索','关键字重复', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if(type){
+					var type_value=(search_typeall_new==id + '-' + v2 + '\t');
+					search_typeall_r=search_typeall_r+id+'-'+v2+'\t';
+					search_typeall_new = '';
+					$('#filterWW_user>ul').append('<li style="height: 18px;"><span style = "display:none;">' +id+'-'+v2+ '</span><span class="ww" style="width: 65px;" title="'+v1+ v2+'" >' +v1+ v2 + '</span><i class="del" style="margin-top: 2px;" onclick="_delFilter_user(this);"></i></li>')
+					$("#user_text").val("");
+					$('#user_text_check').hide();
+					selView_user(type_value);
+				}else{
+					if(search_typeall_new == id + '-' + v2 + '\t'){
+						return false;
+					}
+					if(v2!='') search_typeall_new =id+'-'+v2+'\t';
+					else search_typeall_new='';
+					find_usergroup();
+				}
+				
+			}
+
+		}
+		function _delFilter_user(obj) {
+			if(find_user_group_loading){
+				_alert(2, "搜索", "正在搜索中，请先等待搜索完成");
+				return false;
+			}
+			var id = $(obj).parent().find("span");
+			var ids=$(id).eq(0).text();
+			search_typeall_r = search_typeall_r.replace(ids+'\t','');
+			var user_text=$('#user_text').val().trim();
+			$(obj).parent().remove();
+			selView_user();
+		}
+		function _clearFilter_user(obj,num){
+			if(find_user_group_loading){
+				_alert(2, "搜索", "正在搜索中，请先等待搜索完成");
+				return false;
+			}
+			if(num==1){
+				$('#user_text').val('');
+				$('#user_text_check').hide();
+				search_typeall_new='';
+				selView_user();
+				return;
+			}
+			$('#clearFilter_user').next().children('ul').empty();
+			$('#user_text').val('');
+			$('#user_text_check').hide();
+			search_typeall_new='';
+			search_typeall_r='';
+			selView_user();
+		}
+		function selView_user(type_value) {
+			
+			var $sel = $('#filterWW_user');
+			var len = $('li',$sel).length;
+			if (len == 0) {
+				$sel.hide();
+				$('#clearFilter_user').hide();
+			}else {
+				$("#filterWW_user").show();
+				$('#clearFilter_user').show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			}
+			if(!type_value){
+				find_usergroup();
+			}
+		}
+		//搜索回显
+		var data_array_Path=null;
+		var user_find_json={
+			"ugid": 0,
+			"istree": true,
+			"ugname": "",                //--搜索条件，用户组名
+    		"usercode": "",
+			"searchstring": "", 
+			"limitrow":null, 
+			"offsetrow":null 
+		}
+		var xhr=null;
+		function _jScrollBar(scid) {
+			////console.log('_jScrollBar');
+			////console.log(scid);
+			var myBar = new MyScrollBar({
+				selId:scid,
+				hasX:true,
+				hasY:false,
+				width:6,
+				// enterShow:false,
+			})
+		}
+		function li_hide_while_no_red(obj,num){
+			var li_visible=$(obj).children('li');
+			for(var i=num;i<num+100;i++){
+				if(i>=li_visible.length){
+					break;
+				}
+				var item=li_visible.eq(i);
+				var span_red_time=$(item).find('span.h-name-red').length;
+				if(span_red_time==0){
+					$(item).hide();
+					$(item).find('font.font-red').removeClass('font-red');
+				}else if(span_red_time>0){
+					$(item).show();
+					var children_red_time=$(item).children('span.h-name-red').length;
+					if(children_red_time>0 && span_red_time==1){
+						$(item).find('i.h-aicon-d').removeClass('h-aicon-d');
+						$(item).find('ul').hide();
+						$(item).find('li').show();
+					}
+					else if(children_red_time>0 && span_red_time>1){
+						$(item).find('li').show();
+					}
+					else if (children_red_time==0) {
+						var $children_ul=$(item).children('ul');
+						li_hide_while_no_red($children_ul,0);
+					}
+				}
+			}
+			if(i<li_visible.length){
+				setTimeout(function () {li_hide_while_no_red(obj,i);},1);
+			}
+		}
+		function red_to_font_user(obj){
+			var item=$(obj).siblings('span.h-name');
+			var item_name = item.siblings('input').attr('data-name');
+			var Type = item.siblings('input').attr('id');
+			var $span_son_font=$('.h-name-son',item).find('font');
+			var span_son_name=item_name.toLowerCase();
+			var find_user_arry=(search_typeall_r+search_typeall_new).split('\t');
+			////console.log(find_user_arry);
+			for (var jm = 0; jm < find_user_arry.length; jm++) {
+				if(find_user_arry[jm]==''){
+					continue;
+				}
+				////console.log(find_user_arry[jm]);
+				var pass_one = false;
+				var jm_index_ = find_user_arry[jm].indexOf('-');
+				var search_arr = find_user_arry[jm].substr(jm_index_ + 1, find_user_arry[jm].length).split(' ');
+				////console.log(search_arr);
+				$.each(search_arr, function (i1, item1) {
+					if(item1==''){
+						return true;
+					}
+						if (find_user_arry[jm].substr(0, jm_index_) == 'ugname'){
+							var Name = item_name;
+							if(Type.indexOf('UGId')<0){
+								return true;
+							}
+						}else if (find_user_arry[jm].substr(0, jm_index_) == 'usercode') {
+							var Name = item_name;
+							if(Type.indexOf('UserId')<0){
+								return true;
+							}
+						}else{
+							var Name = item_name;
+						}
+						////console.log(item1);
+					if (coverString(item1, Name)) {
+						item1=item1.toLowerCase();
+						var index_true=span_son_name.indexOf(item1);
+						if(index_true>=0){
+							for(var i_red_span=index_true;i_red_span<index_true+item1.length;i_red_span++){
+								$span_son_font.eq(i_red_span).addClass('font-red');
+							}
+						}
+					}
+				});
+			}
+		}
+		var find_user_group_loading=false;
+		function find_usergroup(){
+			find_user_group_loading=true;
+			_getWait($('.waitTipuser'));
+			$('#userTree').find('li').show();
+			if(data_array_Path!=null){
+				$('#userTree').find('font.font-red').removeClass('font-red');
+				$('#userTree').find('span.h-name-red').removeClass('h-name-red');
+	       		$('#userTree').find('i.h-aicon-d').removeClass('h-aicon-d');
+				$('#userTree').find('ul').hide();
+			}
+			$('#userTree').find('li').hide();
+			$('#usertree_div').scrollTop(0);
+			if(xhr!=null){
+				xhr.abort();
+				xhr=null;
+			}
+			var search_typeall_all=search_typeall_r+search_typeall_new;
+			if(search_typeall_all!=''){
+				var searchstring_str='';
+				var ugname_str='';
+				var usercode_str='';
+				$.each(search_typeall_all.split('\t'),function(i,item){
+					if(item=='' || item==null){
+						return true;
+					}
+					var index=item.indexOf('-');
+					switch (item.substring(0,index)) {
+						case 'all':
+							searchstring_str+=(item.substring(index+1)+'\n');
+							break;
+						case 'ugname':
+							ugname_str+=(item.substring(index+1)+'\n');
+							break;
+						case 'usercode':
+							usercode_str+=(item.substring(index+1)+'\n');
+							break;
+						
+					}
+				});
+				// if(ugname_str!=''){
+				// 	if(usercode_str==''){
+				// 		searchstring_str+=ugname_str;
+				// 	}else{
+				// 		searchstring_str+=usercode_str;
+				// 	}
+				// }else{
+				// 	if(usercode_str==''){
+				// 	}else{
+				// 		searchstring_str+=usercode_str;
+				// 	}
+				// }
+				searchstring_str=searchstring_str.substr(0,searchstring_str.length-1).ResetBlank();
+				ugname_str=ugname_str.substr(0,ugname_str.length-1).ResetBlank();
+				usercode_str=usercode_str.substr(0,usercode_str.length-1).ResetBlank();
+				user_find_json.searchstring=searchstring_str;
+				user_find_json.ugname=ugname_str;
+				user_find_json.usercode=usercode_str;
+				xhr=$.ajax({
+					url: '/bhost/find_usergroup',
+					type: "POST",
+					async: true,
+					data: { a0: $("input[name=se]").val(), a1: JSON.stringify(user_find_json)},
+					success: function (result) {
+						//////console.log(Date())
+						var result = JSON.parse(result);
+						if (result.Result) {
+							data_array_Path=result.info;
+							if(data_array_Path.length!=0){
+								$.each(data_array_Path,function(i,item){
+									if(item.Name == "admin"){
+										data_array_Path.splice(i,1);
+										if(data_array_Path.length == 0){
+											$("#user_text").blur();
+											$('#userTree').find('li').hide();
+											_waitDone($('.waitTipuser'),0);
+											_alert(0,' 搜索','无搜索结果',$("#user_text"));
+											find_user_group_loading=false;
+										}
+										return false;
+									}
+								})
+								$.each(data_array_Path,function(i,item){
+									var Path_array=item.Path.split('/');
+									var len=Path_array.length;
+									for(var j=1;j<len-1;j++){
+										var id=Path_array[j].split(',')[1];
+										$i_item=$('#UGId-'+id).siblings('i.h-aicon');
+										red_to_font_user($('#UGId-'+id));
+										if(($i_item.attr('class').indexOf('h-aicon-d'))==-1){
+											$i_item.parent('li').show();
+											$i_item.trigger('click');
+											$i_item.siblings('ul').find('li').hide();
+										}
+									}
+									if(item.Type==1){
+										$('#UGId-'+item.Id).parent('li').show();
+										$('#UGId-'+item.Id).siblings('span.h-name').addClass('h-name-red');
+										red_to_font_user($('#UGId-'+item.Id));
+									}else{
+										$('#UserId-'+item.Parent+'-'+item.Id).parent('li').show();
+										$('#UserId-'+item.Parent+'-'+item.Id).siblings('span.h-name').addClass('h-name-red');
+										red_to_font_user($('#UserId-'+item.Parent+'-'+item.Id));
+									}
+								});
+								li_hide_while_no_red($('#userTree'),0);
+								scrollTop_check();
+								_waitDone($('.waitTipuser'),3000);
+								find_user_group_loading=false;
+							}else{
+								$("#user_text").blur();
+								$('#userTree').find('li').hide();
+								_waitDone($('.waitTipuser'),0);
+								_alert(0,' 搜索','无搜索结果',$("#user_text"));
+								find_user_group_loading=false;
+								return false;
+							}
+						}else{
+							_alert(1,'搜索',result.ErrMsg);
+							_waitDone($('.waitTipuser'),0);
+							find_user_group_loading=false;
+							return false;
+						}
+					}
+				});
+			}else{
+				_waitDone($('.waitTipuser'),0);
+				$('#userTree').find('li').show();
+				data_array_Path=null;
+				find_user_group_loading=false;
+			}
+		}
+		//返回第一个标红处
+		function scrollTop_check(){
+			if(data_array_Path.length!=0){
+				$('#usertree_div').scrollTop($('#userTree').find('span.h-name-red') - 150);
+			}
+		}
+		var $focusObj;
+		function _autoView(obj, num) {
+			$(document)[0].onclick = null;
+			$focusObj = $(obj);
+			var v = $.trim($(obj).val());
+			var id = $(obj).attr('id');
+			var $view;
+			if ($('#autoView').length == 0) {
+				$('body').append('<div id="autoView" />');
+			}
+			$view = $('#autoView');
+			var c = '';
+			if(num>=60){
+				num=num-60;
+				v='';
+			}
+			switch (num) {
+				case 1:
+					client_get_array();
+					$.each(client_get, function (i, item) {
+						if (item == null || i == 0) {
+							return true;
+						}
+						if (v == '') {
+							c += '<li><i class="edit" onclick="_editNode(this)" /><a href="javascript:;" onclick="_setVal(this)" id="client-' + i + '" style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">' + item.ClientScopeName + '</a></li>';
+						} else if (item.ClientScopeName.indexOf(v) >= 0) {
+							c += '<li><i class="edit" onclick="_editNode(this)" /><a href="javascript:;" onclick="_setVal(this)" id="client-' + i + '" style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">' + item.ClientScopeName + '</a></li>';
+						}
+					});
+					break;
+				case 2:
+					server_get_array();
+					$.each(server_get, function (i, item) {
+						if (item == null || i == 0) {
+							return true;
+						}
+						if (v == '') {
+							c += '<li><i class="edit" onclick="_editNode(this)" /><a href="javascript:;" onclick="_setVal(this)" id="server-' + i + '" style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">' + item.ServerScopeName + '</a></li>';
+						} else if (item.ServerScopeName.indexOf(v) >= 0) {
+							c += '<li><i class="edit" onclick="_editNode(this)" /><a href="javascript:;" onclick="_setVal(this)" id="server-' + i + '" style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">' + item.ServerScopeName + '</a></li>';
+						}
+					});
+					break;
+			}
+			if (num == 1) {
+				$view.html('<ul>' + c + '</ul><li><a href="javascript:;" onclick="_addNew(\'_client\')">创建客户端集合</li>');
+			} else {
+				$view.html('<ul>' + c + '</ul><li><a href="javascript:;" onclick="_addNew(\'_server\')">创建服务器集合</li>');
+			}
+
+			var offset = $(obj).offset();
+			var w = $(obj).outerWidth();
+			$view.css({
+				top: offset.top + 24,
+				left: offset.left,
+				width: w - 12
+			}).show();
+
+			$(obj).parents('.g-tsel').addClass('on');
+		}
+	</script>
+	<!--公共-->
+	<script>
+		var type = 3;
+		var types = 1;
+		var usercode = "";
+		var ip_client_all_str = "";
+		var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+		var ipReg = /(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+		var MACReg = /([A-Fa-f0-9]{2}:){5}[A-Fa-f0-9]{2}/;
+		var module_client_str = "";
+		var option_client_str = '<option value="0" selected>请选择</option>';
+		var module_server_str = "";
+		var option_server_str = '<option value="0" selected>请选择</option>';
+		var server_get = [];
+		var client_get = [];
+		var server_check = [];
+		var client_check = [];
+		var manageauth = {
+			"ManageAuthId": 0,
+			"ManageAuthName": "", // --如果是从用户编辑那边添加的，会没有"ManageAuthName"
+			"ManageScopeMode": 2,
+			"UserSet": [],
+			"MScopeSet": [],
+			"CScopeSet": []
+		}
+		var manageauth_edit = null;
+		var last_object=null;
+		var edit_id=null;
+		var top1=9007199254740991;
+		var data_array_Path=null;
+		var search_typeall_new='';
+		var host_path_all =[];
+		var index_f = 0;
+		var push_hgid = [];
+		var push_hid = [];
+		var hdata=null;
+		var filter_flag_append = false;
+		var flag_loading=false;
+		var loading_hgid=0;
+		var find_host_arry=[];
+		var find_host_flag = 0;
+		var old_path_all = [];
+		$(function () {
+			$("#server_select").change(function(){
+				var type = $(this).val();
+				if(type == 0){
+					$("#server_text").hide();
+					$('#filterWW_server').hide();
+					$('#clearFilter_server').hide();
+				}else{
+					$("#server_text").show();
+					if($('#filterWW_server ul li').length){
+						$('#filterWW_server').show();
+						$('#clearFilter_server').show();
+					}
+				}
+			});
+			usercode = window.parent.document.frm.us.value;
+			server_find_json.loginusercode=usercode;
+			var tasktype = document.frm_manage_add.tasktype.value;
+			$.ajax({
+				url:'/bhost/_get_userid',
+				type:'post',
+				async:false,
+				data:{a0:$("input[name=se]").val(),a1:usercode},
+				success:function(result){
+					data = JSON.parse(result);
+					userid = data.info;
+
+				}
+			})
+			if (tasktype == "2") {
+				var manageauthId = document.frm_manage_add.manageauthId.value;
+				$.ajax({
+					url: "/bhost/get_manageauth_list",
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: manageauthId },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result) {
+							var data = result.info.data[0];
+							manageauth_edit = data;
+							$("#ManageAuthName").val(data.ManageAuthName);
+							$("#ManageAuthName").attr("disabled", true);
+						}else{
+							_alert(1,'管理授权',result.ErrMsg);
+							return false;
+						}
+					}
+				});
+				$('.form-checkbox,.form-radio').iCheck({
+					checkboxClass: 'icheckbox_minimal-blue',
+					radioClass: 'iradio_minimal-blue',
+					increaseArea: '0' // optional
+				});
+				$.ajax({
+					url:'/bhost/PUpdateUNodeSelectedForQuick',
+					type:'post',
+					async:false,
+					data:{a0:$("input[name=se]").val(),z1:manageauthId,z2:3},
+					success:function(result){
+						var data = JSON.parse(result)
+						if(data.Result != true){
+							_alert(1, "管理授权", "数据刷新失败");
+							return false;
+						}
+					}
+				})
+				last_u_tmp  = manageauth_edit.UserSet == null ? [] : manageauth_edit.UserSet;
+				last_user_set = [];
+				$(last_u_tmp).each(function(i,item){
+					if(item.Type == 2) last_user_set.push(item)
+				})				
+			}
+			utreelist = [];
+			if (tasktype == "2") {
+				$.each(manageauth_edit.UserSet,function(i,item){
+					if(item.Type == 1){
+						utreelist.push(item.Id +':false');
+					}
+				})
+			}
+			//console.log(utreelist);
+			client_get_array();server_get_array();
+			////console.log(client_get);
+			xSelect_json={
+				width: 147,
+				defaultText: '请选择',
+				items:client_get,
+				edit: function(item,obj){
+					$('.'+$('.xSelect-show',$('#module_client_select')).data('id')).hide();
+					_editNode(item,'client');
+				},
+				check: function(item,obj){
+					$('.'+$('.xSelect-show',$('#module_client_select')).data('id')).hide();
+					_editNode(item,'client');
+				},
+				delete: function(item,obj){
+				},
+				btn:[
+					
+				]
+			};
+			if(perm==2){
+				xSelect_json.btn.push({
+						'name':'新增',
+						'event': function(items,obj){
+							_addNew('_client');
+						}
+					});
+			}
+			$('#module_client_select').xSelect(xSelect_json);
+			xSelect_json={
+				width: 147,
+				defaultText: '请选择',
+				items:server_get,
+				edit: function(item,obj){
+					$('.'+$('.xSelect-show',$('#module_server_select')).data('id')).hide();
+					_editNode(item,'server');
+				},
+				check: function(item,obj){
+					$('.'+$('.xSelect-show',$('#module_server_select')).data('id')).hide();
+					_editNode(item,'server');
+				},
+				delete: function(item,obj){
+				},
+				btn:[
+					
+				]
+			};
+			if(perm==2){
+				xSelect_json.btn.push({
+						'name':'新增',
+						'event': function(items,obj){
+							_addNew('_server');
+						}
+					});
+			}
+			$('#module_server_select').xSelect(xSelect_json);
+			if (manageauth_edit != null && manageauth_edit.CScopeSet!=null) {
+				for(var i=0;i<manageauth_edit.CScopeSet.length-1;i++){
+					var item=manageauth_edit.CScopeSet[i];
+					var $c = $('<div class="item" style="padding-top:0px;width:175px;" value/>');
+					$c.html('<input type="text" class="form-text " style="width: 129px;padding-right:8px;" disabled="true" value="' + item.ClientScopeName + '" name="module_client_select-' + item.ClientScopeId + '"><i class="ctrl del" style="" onclick="_delModule(this)"></i>');
+					$('#module_client_select').parents('div.item').after($c);
+					client_check[item.ClientScopeId] = client_get[item.ClientScopeId];
+					delete client_get[item.ClientScopeId];
+				}
+				$('#module_client_select .xSelect-show-text').text(manageauth_edit.CScopeSet[i].ClientScopeName);
+				$('#module_client_select').data('value',manageauth_edit.CScopeSet[i].ClientScopeId);
+			}
+			if (manageauth_edit != null && manageauth_edit.MScopeSet!=null) {
+				for(var i=0;i<manageauth_edit.MScopeSet.length-1;i++){
+					var item=manageauth_edit.MScopeSet[i];
+					var $c = $('<div class="item" style="padding-top:0px;width:175px;" value/>');
+					$c.html('<input type="text" class="form-text " style="width: 129px;padding-right:8px;" disabled="true" value="' + item.ServerScopeName + '" name="module_server_select-' + item.ServerScopeId + '"><i class="ctrl del" style="" onclick="_delModule(this)"></i>');
+					$('#module_server_select').parents('div.item').after($c);
+					server_check[item.ServerScopeId] = server_get[item.ServerScopeId];
+					delete server_get[item.ServerScopeId];
+				}
+				$('#module_server_select .xSelect-show-text').text(manageauth_edit.MScopeSet[i].ServerScopeName);
+				$('#module_server_select').data('value',manageauth_edit.MScopeSet[i].ServerScopeId);
+			}
+			update_select();
+			update_select1();
+			$("#part1").on('ifChecked',function(){
+				$("#ip_n1s").find("input").attr("disabled",false);
+				$("#ip_ns").find("input").attr("disabled",false);
+				$("#ip_n1s").find(".ctr.ctr-add").attr("onclick","_addIp1(this,2)");
+				$("#ip_ns").find(".ctr.ctr-add").attr("onclick","_addIp(this,2)");
+			}).on('ifUnchecked',function(){
+				$("#ip_n1s").find("input").attr("disabled",true);
+				$("#ip_ns").find("input").attr("disabled",true);
+				$("#ip_n1s").find(".ctr.ctr-add").attr("onclick","");
+				$("#ip_ns").find(".ctr.ctr-add").attr("onclick","");
+			})
+			$("#part1").parent().attr("style","float: right; margin-top: 9px; position: relative;");
+		});
+		function client_get_array() {
+			$.ajax({
+				url: "/bhost/get_client_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val() },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						var data = result.info;
+						$.each(data.data, function (i, item) {
+							if($('input[name=module_client_select-'+item.ClientScopeId+']').length==0){
+								client_get[item.ClientScopeId] = JSON.parse('{"value":'+item.ClientScopeId+',"name":"'+item.ClientScopeName+'","type":"'+(perm==2?'edit':'check')+'"}');
+							}
+						});
+					} else {
+						_alert(1, "客户端集合", result.ErrMsg);
+					}
+				}
+			});
+			////console.log(client_get);
+		}
+		function server_get_array() {
+			$.ajax({
+				url: "/bhost/get_server_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(),a5:'true' },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						var data = result.info;
+						$.each(data.data, function (i, item) {
+							if($('input[name=module_server_select-'+item.ServerScopeId+']').length==0){
+								server_get[item.ServerScopeId] = JSON.parse('{"value":'+item.ServerScopeId+',"name":"'+item.ServerScopeName+'","type":"'+(perm==2?'edit':'check')+'"}');
+							}
+							
+						});
+					} else {
+						_alert(1, "服务器集合", result.ErrMsg);
+					}
+				}
+			});
+		}
+		var flag_save = 0;
+		function _finish() {
+			var ManageAuthName = $('#ManageAuthName').val();
+			var $i = $("#ManageAuthName").next('i.v-check');
+			if (ManageAuthName == "") {
+				_alert(2, ' 管理授权', '请输入名称', $("#ManageAuthName"));
+				return false;
+			}
+			if ($i.hasClass("v-check v-wrong")) {
+				_alert(1, ' 管理授权', '名称格式不正确', $("#ManageAuthName"));
+				return false;
+			}
+			namecheck = 0;
+			$.ajax({
+				url: '/bhost/get_authname_m',
+				type: 'post',
+				async: false,
+				data: { a0: $("input[name=se]").val(), z1: ManageAuthName },
+				success: function (result) {
+					if (result != '0') {
+						if (manageauth_edit == null) {
+							next_add = 1;
+							_alert(1, "管理授权", "相同的授权名称已存在", $("#ManageAuthName"));
+							namecheck = 1;
+							return;
+						} else {
+							if (manageauth_edit.ManageAuthId != parseInt(result)) {
+								next_add = 1;
+								_alert(1, "管理授权", "相同的授权名称已存在", $("#ManageAuthName"));
+								namecheck = 1;
+								return;
+							}
+						}
+					}
+				}
+			});
+			if (namecheck == 1) {
+				return;
+			}
+			manageauth.UserSet = new Array();
+			save_user($("#userTree"), 0);
+			//////console.log(manageauth);
+			if (manageauth.UserSet.length == 0) {
+				_alert(2, ' 管理授权', '请选择用户');
+				return false;
+			}
+			var client_pass = 1;
+			var server_pass = 1;
+			var sel = $("#module_client_select").data('value');
+			if ((sel == undefined|| sel =='') && $('#module_client_all').find('div[value]').length == 0) {
+				client_pass = 0;
+			}
+			var sel1 = $("#module_server_select").data('value');
+			if ((sel1 == "" || sel1==undefined) && $('#module_server_all').find('div[value]').length == 0) {
+				server_pass = 0;
+			}
+			if (server_pass == 0 && client_pass == 0) {
+				_alert(2, ' 管理授权', '请选择客户端集合或服务端集合', $("#module_client_select"));
+				return false;
+			}
+			var manageauthId = document.frm_manage_add.manageauthId.value;
+			manageauth.ManageAuthId = parseInt(manageauthId);
+			var ManageAuthName = $('#ManageAuthName').val();
+			manageauth.ManageAuthName = ManageAuthName;
+			manageauth.CScopeSet = new Array();
+			if(sel != undefined && sel !=''){
+				var json_a = '{"ClientScopeId":' + parseInt(sel) + ',"Type":1,"IPList":null}';
+				manageauth.CScopeSet.push(JSON.parse(json_a));
+			}
+			var $client_list=$('>div', '#module_client_all');
+			for(var i=1;i<$client_list.length;i++){
+				var $input = $client_list.eq(i).find('input');
+				var input_id = $input.attr('name');
+				if (input_id.indexOf('-') >= 0) {
+					var json_a = '{"ClientScopeId":' + parseInt(input_id.split('-')[1]) + ',"Type":1,"IPList":null}';
+					manageauth.CScopeSet.push(JSON.parse(json_a));
+				}
+			}
+			manageauth.MScopeSet = new Array();
+			if(sel1 != undefined && sel1 !=''){
+				var json_a = '{"ServerScopeId":' + parseInt(sel1) + ',"Type":1,"HostList":null,"IPList":null}';
+					manageauth.MScopeSet.push(JSON.parse(json_a));
+			}
+			var $server_list=$('>div', '#module_server_all');
+			for(var i=1;i<$server_list.length;i++){
+				var $input = $server_list.eq(i).find('input');
+				var input_id = $input.attr('name');
+				if (input_id.indexOf('-') >= 0) {
+					var json_a = '{"ServerScopeId":' + parseInt(input_id.split('-')[1]) + ',"Type":1,"HostList":null,"IPList":null}';
+					manageauth.MScopeSet.push(JSON.parse(json_a));
+				}
+			}
+			_showLoading();
+			flag_save = 1;
+			msstr = aceg(JSON.stringify(manageauth),$("input[name=se]").val());
+			$.ajax({
+				url: '/bhost/add_manageauth',
+				type: "POST",
+				async: true,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(manageauth), m1: msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						_closeLoading();
+						$('.btn').blur();parent.layer.open({
+							type: 1,
+							title: ' 管理授权',
+							content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+							btn: ['确&nbsp;&nbsp;定'],
+							btnAlign: 'c',
+							closeBtn: false,
+							skin: 'layer-custom',
+							area: ['380px', '310px'],
+							move: false,
+							resize: false,
+							yes: function (i) {
+								parent.layer.close(i);
+								back(1,result.ManageAuthId);
+							}
+						});
+					} else {
+						_closeLoading();
+						flag_save = 0;
+						_alert(1, " 管理授权", result.ErrMsg, $('#ManageAuthName'));
+						return false;
+					}
+				}
+			});
+
+		}
+		function back(num,id) {
+			var tasktype = document.frm_manage_add.tasktype.value;
+			if (tasktype == "4") {
+				document.frm_manage_add.tasktype.value = 3;
+				document.frm_manage_add.submit();
+			} else {
+				if(num==1){
+					$.ajax({
+						url: '/bhost/PGetRecordRownum',
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val(), a1: id,a2:16 },
+						success: function (result) {
+							var result = JSON.parse(result);
+							if (result.Result == true) {
+								if(result.info%MAX_PAGE==0){
+									document.frm_manage_add.paging.value=parseInt(result.info/MAX_PAGE);
+								}else{
+									document.frm_manage_add.paging.value=parseInt(result.info/MAX_PAGE)+1;
+								}
+							}
+						}
+					});
+					document.frm_manage_add.search_typeall.value = '';
+					document.frm_manage_add.e.value = ':';
+				}
+				document.frm_manage_add.tasktype.value = 3;
+				document.frm_manage_add.action = '/bhost/manage_auth_add';
+				document.frm_manage_add.submit();
+			}
+
+		}
+		function save_user(obj, id) {
+			$(">li", obj).children('input').each(function () {
+				var input_id = $(this).attr('id');
+				var input_str = input_id.split('-');
+				var input_state = $(this).next('span.checkbox').attr('class');
+				var radio_value = $(this).siblings('span.authtype').find('input');
+				var $u = $(this).parent().children('ul');
+				if (input_state.indexOf('checked') > 0) {
+					if (radio_value.is(':checked')) {
+						var json_a = '{"Id":' + input_str[1] + ',"Type": 2,"IsGroupAuth":true}';
+						manageauth.UserSet.push(JSON.parse(json_a));
+					} else {
+						if (input_str[0] == "UGId") {
+							var json_a = '{"Id":' + input_str[1] + ',"Type": 2,"IsGroupAuth":false}';
+							manageauth.UserSet.push(JSON.parse(json_a));
+							if ($u.text() != "Loading..." && $u.text() != "") {
+								save_user($u, input_str[1]);
+							}
+						} else {
+							var json_a = '{"Id":' + input_str[2] + ',"Type": 1}';
+							manageauth.UserSet.push(JSON.parse(json_a));
+						}
+					}
+				} else if (input_state.indexOf('half') > 0) {
+					if ($u.text() != "Loading..." && $u.text() != "") {
+						save_user($u, input_str[1]);
+					}else{
+						$(this).siblings('i.h-aicon').click();
+						$(this).siblings('i.h-aicon').click();
+						save_user($u, input_str[1]);
+					}
+				}
+			});
+		}
+		$(function () {
+			_initSize();
+			_initList();
+			$('#userTree,#userTrees').on('change','span.authtype input',function(){
+				var checked = $(this).prop('checked');
+				_authTypeTheme($(this));
+				if(checked){
+					var $input1 = $(this).parent().parent().siblings('ul').find('span.authtype input');
+					var $input2 = $(this).parent().parent().siblings('ul').find('input.zcheck');
+					var $input3 = $(this).parent().parent().siblings('input.zcheck');
+					$input2.attr("data-loadlast", 2);
+					$input3.attr("data-loadlast",2);
+					$(this).attr('data-ifselect', true);
+					$input1.prop('disabled',true);
+					_authTypeTheme($input1);
+					$input2.prop('checked',true).prop('disabled',true);
+					$(this).parent().parent().siblings('input.zcheck').prop('checked', true).next('span.checkbox').attr('class', 'checkbox checked');
+					$.each($input2,function(){
+						$(this).next('span.checkbox').attr('class','checkbox checked disabled');
+					});
+					_checkEvent($(this).parent().parent().siblings('input.zcheck'));
+				}else{
+					var $input1 = $(this).parent().parent().siblings('ul').children('li').find('span.authtype').find('input');
+					var $input2 = $(this).parent().parent().siblings('ul').children('li').find('input.zcheck');
+					$(this).attr('data-ifselect', false);
+					$input1.prop('disabled',false);
+					_checkEvent1($(this));
+					authtype_click = 1;
+				}
+			}).on('click', 'i.h-aicon', function () {
+				var $item = $(this);
+				var id = $item.data('id').split('-')[1];
+				var arr_name=$item.data('id').split('-')[0];
+				var $u = $item.parent().children('ul');
+				if ($u.is(':hidden')) {
+					$item.addClass('h-aicon-d');
+					$u.show();
+					if ($u.text() == "Loading...") {
+						var v = 2, d;
+						var $input = $(this).siblings('span.checkbox');
+						if ($(this).siblings('span.authtype').find('input').is(':checked')) {
+							d = 0;
+						} else {
+							d = 1;
+						}
+
+						if ($input.attr('class').indexOf('disabled') > 0) {
+							d = 0;
+						}
+						var c = $input.attr('class');
+						if (c.indexOf('checked') > 0) {
+							v = 1;
+						} else if (c == 'checkbox') {
+							v = 0;
+						}
+
+						_initHTMLs($u, id, v, d,arr_name);
+					}
+				} else {
+					$item.removeClass('h-aicon-d');
+					$u.hide();
+				}
+			}).on('dblclick','i.h-eicon,span.h-name',function () {
+				var i_class_arr = $(this).siblings('i.h-aicon');
+				if (i_class_arr.length == 0) {
+					return false;
+				}
+				var $item = i_class_arr;
+				var id = $item.data('id').split('-')[1];
+				var arr_name=$item.data('id').split('-')[0];
+				var $u = $item.parent().children('ul');
+				if ($u.is(':hidden')) {
+					$item.addClass('h-aicon-d');
+					$u.show();
+					if ($u.text() == "Loading...") {
+						var v = 2, d;
+						var $input = $(this).siblings('span.checkbox');
+						if ($(this).siblings('span.authtype').find('input').is(':checked')) {
+							d = 0;
+						} else {
+							d = 1;
+						}
+
+						if ($input.attr('class').indexOf('disabled') > 0) {
+							d = 0;
+						}
+						var c = $input.attr('class');
+						if (c.indexOf('checked') > 0) {
+							v = 1;
+						} else if (c == 'checkbox') {
+							v = 0;
+						}
+
+						_initHTMLs($u, id, v, d,arr_name);
+					}
+				} else {
+					$item.removeClass('h-aicon-d');
+					$u.hide();
+				}
+			});
+		});
+		
+		$(window).resize(function () {
+			_initSize();//加载长度
+		});
+		//加载长度
+		function _initSize() {
+			////console.log('_initSize');
+			var h = $(window).height();
+			$('.h-catelog').height(h - 200);
+			$('.h-content2').height(h - 202);
+			$('.h-content3').height(h - 218); 
+			$('#usertree_div').height(h - 270);
+			$('.h-explorer2').height($('.c-cont').height() - 90);
+			$('.h-explorer3').height($('.c-cont').height() - 40);
+			$('.h-catelog2_tmp').height(h - 250);
+		}
+		//加载树
+		function _initList() {
+			_viewHTMLs('#userTree','UG');
+		}
+		function _checkEvent1(obj){
+			if($(obj).length == 0) return false;
+			var _run1 = function(){
+				_input = $(obj).parent().parent().siblings('input.zcheck');
+				
+				_ul = _input.siblings('ul');
+				if(_input.length>0 && (_ul.children('li').length >0)){
+					$inp = _ul.children('li').children('input.zcheck');
+					$($inp).each(function(i,item){	
+						$parent = $(item).parent().parent().siblings('span.authtype').find('input');
+						v = $($parent).prop("checked");
+						$spanp = $(item).siblings('span.authtype');
+						//如果发现父节点还是disabled
+						if($($parent).prop("disabled") == true) v = true;
+						if(v == false){
+							$(item).prop("disabled",false);
+							$(item).siblings('span.checkbox').removeClass("disabled");
+							$spanp.find('input').prop("disabled",false);
+							$spanp.find('span').removeClass("disabled");
+							if($spanp.length == 0) {
+								_checkEvent2($(item).siblings('ul').children('li').children('input.zcheck'));
+							}
+							else {
+								if($(item).prop('checked') == false) $spanp.find('input').prop('checked',false).next('span').removeClass('checked');
+								_checkEvent1($spanp.find('input'));
+							}
+						}else{
+							$(item).prop("checked",true).prop("disabled",true);
+							$(item).siblings('span.checkbox').addClass("disabled");
+							$spanp.find('input').prop("disabled",true);
+							$spanp.find('span').addClass("disabled");
+							if($spanp.length == 0) _checkEvent2($(item).siblings('ul').children('li').children('input.zcheck'));
+							else _checkEvent1($spanp.find('input'));
+							
+						}
+					})
+				}else{
+					return;
+				}	
+			}
+			_run1();
+		}
+
+		function _checkEvent2(obj){
+			if(obj.length == 0) return false;
+			var _run2 = function(){
+				_input = $(obj).parent().parent().siblings('input.zcheck');;
+				if($(_input).prop('disabled') == true){
+					$(obj).prop("checked",true).prop("disabled",true);
+					$(obj).siblings('span.checkbox').addClass("disabled");
+				}else{
+					$(obj).prop("disabled",false);
+					$(obj).siblings('span.checkbox').removeClass("disabled");
+				}
+				_checkEvent2($(obj).siblings('ul').children('li').children('input.zcheck'));
+			}
+
+			_run2();
+		}
+		//选中后树的input check变化
+		function _checkEvent(obj){
+			var _run = function(){
+				var $li = $(obj).parent().parent().parent();
+				var tagname = $li[0].tagName.toLowerCase();
+				var v = $(obj).prop('checked');
+				if(tagname == 'li'){
+					var c1=0,c2=0;
+					var len = $(obj).parent().parent().children('li').length;
+					$(obj).parent().parent().children('li').each(function(){
+						var c = $(this).children('span.checkbox').attr('class');
+						if(c.indexOf('checked')>0){
+							c1++;
+						}else if(c.indexOf('half')>0){
+							c2++;
+						}
+		
+						if(c1 == len){
+							var span_class = $li.children('input.zcheck').prop('checked', false).siblings('span.checkbox').attr('class');
+							var d_class = "";
+							if (span_class.indexOf('disabled') != -1) {
+								d_class = 'disabled';
+							}
+							var attr_class = 'checkbox checked ' + d_class;
+							$li.children('input.zcheck').prop('checked', true).siblings('span.checkbox').attr('class', attr_class);
+							$li.children('input.zcheck').attr("data-loadlast",2);
+						}else if(c1==0 && c2==0){
+							$li.children('input.zcheck').prop('checked', false).prop('disabled', false).siblings('span.checkbox').attr('class', 'checkbox').removeClass('disabled');
+							$li.children('input.zcheck').attr("data-loadlast",0);
+					$li.children('input.zcheck').siblings('span.authtype').children('input').prop('checked',false).siblings('span.checkbox').attr('class','checkbox');
+						}else{
+							var span_class = $li.children('input.zcheck').prop('checked', false).siblings('span.checkbox').attr('class');
+							var d_class = "";
+							if (span_class.indexOf('disabled') != -1) {
+								d_class = 'disabled';
+							}
+							var attr_class = 'checkbox half ' + d_class;
+							$li.children('input.zcheck').prop('checked', false).siblings('span.checkbox').attr('class', attr_class);
+							$li.children('input.zcheck').attr("data-loadlast",1);
+						}
+					});
+					_checkEvent($li.children('input.zcheck'));
+				}else{
+					return;
+				}
+			}
+		
+			_run();
+		}
+
+		//选中
+		function _setVal(obj) {
+			var val = $(obj).text();
+			var value = $(obj).attr('id');
+			//////console.log("value" + value);
+			$focusObj.val(val);
+			$focusObj.attr('name', $($focusObj).attr('id') + '-' + value.split('-')[1]);
+			$view = $('#autoView');
+			$view.hide();
+
+		}
+		function _getWait(obj){
+			if(typeof waitDonelayer != 'undefined'){
+				layer.close(waitDonelayer);
+			}
+			$(obj).removeClass('done').show().unbind().on('mouseover',function(){
+				waitlayer = layer.tips('搜索中',this,{
+					tips:1,
+					time:0,
+					skin: 'waitlayer'
+				});
+			}).on('mouseout',function(){
+				if(typeof waitlayer != 'undefined'){
+					layer.close(waitlayer);
+				}
+			});
+		}
+		function _waitDone(obj,num){
+			if(typeof waitlayer != 'undefined'){
+				layer.close(waitlayer);
+			}
+			if(num==0){
+				$(obj).stop();
+				$(obj).hide();
+			}else{
+				$(obj).fadeOut(num);
+			}
+			
+			if(typeof waitDonelayer != 'undefined'){
+				layer.close(waitDonelayer);
+			}
+		}
+		var client_item_id = 0;
+		var server_item_id = 0;
+		var server = {
+			"ServerScopeId": 0,
+			"ServerScopeName": "",
+			"IsApplyToClientScope": false,
+			"HostList": [],
+			"EnableIPLimit":1,
+			"IPList": {
+				"IPSetId": 0,
+				"Set": []
+			}
+		};
+		var client = {
+			"ClientScopeId": 0,
+			"ClientScopeName": "",
+			"IsApplyToServerScope": false,
+			"IPList": {
+				"IPSetId": 0,
+				"Set": new Array()
+			},
+			"MACList": {
+				"MACSetId": 0,
+				"Set": new Array()
+			}
+		};
+		var _name = "";
+		var d = null;
+		function _addNew(id) {
+			if (id.indexOf('client') >= 0) {
+				var title = "客户端集合";
+				var $dialogCont = $("#client_suspend").show();
+				var dialog_id = 'client_suspend';
+				client_item_id = 0;
+			} else {
+				var title = '服务器集合';
+				var $dialogCont = $("#server_suspend").show();
+				var dialog_id = 'server_suspend';
+				server_item_id = 0;
+			}
+			d = dialog({
+				title: title,
+				content: $dialogCont,
+				id: dialog_id,
+				width: "1000px"
+			});
+			d.addEventListener('close', function () {
+				clear_server();
+				$dialogCont.appendTo("body").hide();
+			});
+			d.showModal();
+			if (id.indexOf('client') >= 0) {
+				client_main();
+			} else {
+				server_main();
+			}
+			$("a.btn-cancel", $dialogCont).unbind().bind("click", function () {
+				// d.close().remove();
+				if (id.indexOf('client') >= 0) {
+					client_main();
+				} else {
+					// ajax_find_host_doing = false;
+					// flag_ajax_true = true;
+					clear_server();
+					// ////console.log('_showLoading');
+					// _viewHTMLs_fun=true;
+					// select_checkbox_fun_run=true;
+					_showLoading();
+					server_main();
+					var t;
+					function run_() {
+						clearTimeout(t);
+						////console.log('_viewHTMLs_fun:'+_viewHTMLs_fun+'|select_checkbox_fun_run:'+select_checkbox_fun_run);
+						if(_viewHTMLs_fun==false && select_checkbox_fun_run==false){
+							if(flag_save == 0){
+								_closeLoading();
+							}
+							////console.log('_closeLoading');
+						}else{
+							t=setTimeout(function(){run_();},10);
+						}
+					}
+					run_();
+				}
+				
+			});
+			$("a.btn-submit", $dialogCont).unbind().bind("click", function () {
+				if (id.indexOf('client') >= 0) {
+					client_add();
+				} else {
+					server_add();
+				}
+			})
+		}
+		/* 
+		* 处理过长的字符串，截取并添加省略号 
+		* 注：半角长度为1，全角长度为2 
+		*  
+		* pStr:字符串 
+		* pLen:截取长度 
+		*  
+		* return: 截取后的字符串 
+		*/
+		function autoAddEllipsis(pStr, pLen) {
+
+			var _ret = cutString(pStr, pLen);
+			var _cutFlag = _ret.cutflag;
+			var _cutStringn = _ret.cutstring;
+
+			if ("1" == _cutFlag) {
+				return _cutStringn + "...";
+			} else {
+				return _cutStringn;
+			}
+		}
+		/* 
+		* 取得指定长度的字符串 
+		* 注：半角长度为1，全角长度为2 
+		*  
+		* pStr:字符串 
+		* pLen:截取长度 
+		*  
+		* return: 截取后的字符串 
+		*/
+		function cutString(pStr, pLen) {
+
+			// 原字符串长度  
+			var _strLen = pStr.length;
+
+			var _tmpCode;
+
+			var _cutString;
+
+			// 默认情况下，返回的字符串是原字符串的一部分  
+			var _cutFlag = "1";
+
+			var _lenCount = 0;
+
+			var _ret = false;
+
+			if (_strLen <= pLen / 2) {
+				_cutString = pStr;
+				_ret = true;
+			}
+
+			if (!_ret) {
+				for (var i = 0; i < _strLen; i++) {
+					if (isFull(pStr.charAt(i))) {
+						_lenCount += 2;
+					} else {
+						_lenCount += 1;
+					}
+
+					if (_lenCount > pLen) {
+						_cutString = pStr.substring(0, i);
+						_ret = true;
+						break;
+					} else if (_lenCount == pLen) {
+						_cutString = pStr.substring(0, i + 1);
+						_ret = true;
+						break;
+					}
+				}
+			}
+
+			if (!_ret) {
+				_cutString = pStr;
+				_ret = true;
+			}
+
+			if (_cutString.length == _strLen) {
+				_cutFlag = "0";
+			}
+
+			return { "cutstring": _cutString, "cutflag": _cutFlag };
+		}
+
+		/* 
+		* 判断是否为全角 
+		*  
+		* pChar:长度为1的字符串 
+		* return: true:全角 
+		*          false:半角 
+		*/
+		function isFull(pChar) {
+			if ((pChar.charCodeAt(0) > 128)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		function _editNode(obj,obj_name) {
+			var id = obj.value;
+			if (obj_name.indexOf('client') >= 0) {
+				var $dialogCont = $("#client_suspend").show();
+				var dialog_id = 'client_suspend';
+				var title='客户端集合';
+			} else {
+				var $dialogCont = $("#server_suspend").show();
+				var dialog_id = 'server_suspend';
+				var title='服务器集合';
+			}
+			d = dialog({
+				title: title,
+				content: $dialogCont,
+				id: dialog_id,
+				width: "1000px"
+			});
+			d.addEventListener('close', function () {
+				clear_server();
+				$dialogCont.appendTo("body").hide();
+			});
+			d.showModal();
+			if (obj_name.indexOf('client') >= 0) {
+				client_item_id = id;
+				client_main();
+			} else {
+				server_item_id = id;
+				server_main();
+			}
+			$("a.btn-cancel", $dialogCont).unbind().bind("click", function () {
+				
+				// d.close().remove();
+				if (obj_name.indexOf('client') >= 0) {
+					client_item_id = id;
+					client_main();
+				} else {
+					ajax_find_host_doing = false;
+					flag_ajax_true = true;
+					_waitDone($('.waitTipserver'), 0);
+					clear_server();
+					////console.log('_showLoading');
+					_viewHTMLs_fun=true;
+					select_checkbox_fun_run=true;
+					_showLoading();
+					server_item_id = id;
+					server_main();
+					var t;
+					function run_() {
+						clearTimeout(t);
+						////console.log('_viewHTMLs_fun:'+_viewHTMLs_fun+'|select_checkbox_fun_run:'+select_checkbox_fun_run);
+						if(_viewHTMLs_fun==false && select_checkbox_fun_run==false){
+							if(flag_save == 0){
+								_closeLoading();
+							}
+							////console.log('_closeLoading');
+						}else{
+							t=setTimeout(function(){run_();},10);
+						}
+					}
+					run_();
+				}
+			});
+			$("a.btn-submit", $dialogCont).unbind().bind("click", function () {
+				if (obj_name.indexOf('client') >= 0) {
+					client_add();
+				} else {
+					server_add();
+				}
+			})
+		}
+		var client = {
+			"ClientScopeId": 0,
+			"ClientScopeName": "",
+			"IsApplyToServerScope": false,
+			"IPList": {
+				"IPSetId": 0,
+				"Set": new Array()
+			},
+			"MACList": {
+				"MACSetId": 0,
+				"Set": new Array()
+			}
+		};
+		function clear_client() {
+			client.ClientScopeId = 0;
+			client.ClientScopeName = '';
+			client.IsApplyToServerScope = false;
+			client.IPList.IPSetId = 0;
+			client.IPList.Set = new Array();
+			client.MACList.MACSetId = 0;
+			client.MACList.Set = new Array();
+			$('#d_n').val('');
+			$('#d_n').attr('disabled', false);
+			$('#d_n').next('i.v-check').attr('class','v-check');
+			$('#ip_n1').find('span[class=ss]').remove();
+			$('#ip_span1').find('input').val('');
+			$('#ip_n').find('span[class=ss]').remove();
+			$('#ip_span').find('input').val('');
+			$('#MACAddress').find('span[class=ss]').remove();
+			$('#MACAddress').find('span[class="ss ss-add"]').find('input').val('');
+			$('#MACAddress1').find('span[class=ss]').remove();
+			$('#MACAddress1').find('span[class="ss ss-add"]').find('input').val('');
+		}
+
+		function clear_server() {
+			server.ServerScopeId = 0;
+			server.ServerScopeName = '';
+			server.IsApplyToClientScope = false;
+			server.HostList = new Array();
+			server.IPList.IPSetId = 0;
+			server.IPList.Set = new Array();
+			$('#filterWW_server').hide();
+			$('#clearFilter_server').next().children('ul').empty();
+			$('#clearFilter_server').hide();
+			search_typeall_server='';
+			search_typeall_server_new='';
+			$("#d_ns").val('');
+			$("#d_ns").attr("disabled", false);
+			$("#d_ns").next('i.v-check').attr('class','v-check');
+			$('#ip_n1s').find('span[class=ss]').remove();
+			$('#ip_span1s').find('input').val('');
+			$('#ip_ns').find('span[class=ss]').remove();
+			$('#ip_spans').find('input').val('');
+			$('#server_text').val('');
+			$('#server_select').val('all').trigger('change');
+			$('#server_text_check').hide();
+			$('#hosttree_div').scrollTop(0);
+			$('#d_ns').next('i.v-check').removeClass('v-wrong').removeClass('v-right');
+			$('#part1').iCheck('check');
+			ajax_find_host_doing = false;
+			flag_ajax_true = true;
+			_viewHTMLs_fun=true;
+			select_checkbox_fun_run=true;
+			first_find_index=null;
+			tmp_list=null;
+			mtr=null;
+		}
+		function client_main() {
+			clear_client();
+			var client_data;
+			if (client_item_id != 0) {
+				$.ajax({
+					url: "/bhost/get_client_list",
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(),a1:client_item_id },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result) {
+							client_data = result.info.data[0];
+						} else {
+							_alert(1, "客户端集合", result.ErrMsg);
+							return false;
+						}
+					}
+				});
+				$("#d_n").val(client_data.ClientScopeName);
+				$("#d_n").attr("disabled", true);
+				client.ClientScopeId = client_data.ClientScopeId;
+				if (client_data.IPList != null) {
+					client.IPList.IPSetId = client_data.IPList.IPSetId;
+					if(client_data.IPList.Set!=null){
+						var IPset_group=client_data.IPList.Set.filter(function (params) {
+							return params.StartIP != params.EndIP
+						});
+						var IP_group=client_data.IPList.Set.filter(function (params) {
+							return params.StartIP == params.EndIP
+						});
+						for(var i=0;i<IPset_group.length-1;i++){
+							var item=IPset_group[i];
+							$("#ip_span").after( createIntervalTag(item.IPSetMemberId, item.StartIP, item.EndIP));
+						}
+						if(IPset_group.length!=0){
+							$('#ip_span').attr('value',IPset_group[i].IPSetMemberId);
+							var $ip_input=$('#ip_span').find('input');
+							$ip_input.first().val(IPset_group[i].StartIP);
+							$ip_input.last().val(IPset_group[i].EndIP);
+						}
+						for(var i=0;i<IP_group.length-1;i++){
+							var item=IP_group[i];
+							$("#ip_span1").after( createIPTag(item.IPSetMemberId, item.StartIP));
+						}
+						if(IP_group.length!=0){
+							$('#ip_span1').attr('value',IP_group[i].IPSetMemberId);
+							$('#ip_span1').find('input').val(IP_group[i].StartIP);
+						}
+					}
+				}
+				if (client_data.MACList != null) {
+					client.MACList.MACSetId = client_data.MACList.MACSetId;
+					if(client_data.MACList.Set!=null){
+						var MACset_group=client_data.MACList.Set.filter(function (params) {
+							return params.StartMACAddress != params.EndMACAddress
+						});
+						var MAC_group=client_data.MACList.Set.filter(function (params) {
+							return params.StartMACAddress == params.EndMACAddress
+						});
+						for(var i=0;i<MACset_group.length-1;i++){
+							var item=MACset_group[i];
+							$("#MACAddress1").find("span[class='ss ss-add']").after( createMACInterval(item.MACSetMemberId, item.StartMACAddress, item.EndMACAddress));
+						}
+						if(MACset_group.length!=0){
+							$("#MACAddress1").find("span[class='ss ss-add']").attr('value',MACset_group[i].MACSetMemberId);
+							var $mac_input=$("#MACAddress1").find("span[class='ss ss-add']").find('input');
+							$mac_input.first().val(MACset_group[i].StartMACAddress);
+							$mac_input.last().val(MACset_group[i].EndMACAddress);
+						}
+						for(var i=0;i<MAC_group.length-1;i++){
+							var item=MAC_group[i];
+							$("#MACAddress").find("span[class='ss ss-add']").after( createMACTag(item.MACSetMemberId, item.StartMACAddress));
+						}
+						if(MAC_group.length!=0){
+							$("#MACAddress").find("span[class='ss ss-add']").attr('value',MAC_group[i].MACSetMemberId);
+							$("#MACAddress").find("span[class='ss ss-add']").find('input').val(MAC_group[i].StartMACAddress);
+						}
+					}
+				}
+			} else {
+				$("#d_n").val('');
+			}
+		}
+		function server_main() {
+			clear_server();
+			if (server_item_id != 0) {
+				var server_data =null;
+				$.ajax({
+					url: "/bhost/get_server_list",
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: server_item_id },
+					success: function (result) {
+						var server_result = JSON.parse(result);
+						if (server_result.Result == true) {
+							server_data=server_result.info.data[0];
+						}
+					}
+				})
+				last_object=server_data.HostList;
+				edit_id=server_data.ServerScopeId;
+				server_find_json.id = edit_id;
+				$("#d_ns").val(server_data.ServerScopeName);
+				$("#d_ns").attr("disabled", true);
+				server.ServerScopeId = server_data.ServerScopeId;
+				if (server_data.IPList != null) {
+					server.IPList.IPSetId = server_data.IPList.IPSetId;
+					if (server_data.IPList.Set!=null) {
+						var IPset_group=server_data.IPList.Set.filter(function (params) {
+							return params.StartIP != params.EndIP
+						});
+						var IP_group=server_data.IPList.Set.filter(function (params) {
+							return params.StartIP == params.EndIP
+						});
+						for(var i=0;i<IPset_group.length-1;i++){
+							var item=IPset_group[i];
+							$("#ip_spans").after(createIntervalTag(item.IPSetMemberId, item.StartIP, item.EndIP));
+						}
+						if (IPset_group.length!=0) {
+							$('#ip_spans').attr('value',IPset_group[i].IPSetMemberId);
+							var $ip_input=$('#ip_spans').find('input');
+							$ip_input.first().val(IPset_group[i].StartIP);
+							$ip_input.last().val(IPset_group[i].EndIP);
+						}
+						for(var i=0;i<IP_group.length-1;i++){
+							var item=IP_group[i];
+							$('#ip_span1s').after( createIPTag(item.IPSetMemberId, item.StartIP));
+						}
+						if (IP_group.length!=0) {
+							$('#ip_span1s').attr('value',IP_group[i].IPSetMemberId);
+							$('#ip_span1s').find('input').val(IP_group[i].StartIP);
+						}
+					}
+				}
+				if(server_data.EnableIPLimit == 0){
+					$('#part1').iCheck('uncheck');
+				}
+			} else {
+				$("#d_ns").val('');
+				edit_id=0;
+			}
+
+			_initSizes();
+			_initLists();
+			
+		}
+		$(window).resize(function () {
+			_initSizes();//加载长度
+		});
+		//加载长度
+		function _initSizes() {
+			var h = $(window).height();
+		}
+		//获取host
+		function get_hostdirectory(){
+			$.ajax({
+				url:'/bhost/get_hostdirectory',
+				type:'POST',
+				async:false,
+				data:{a0: $("input[name=se]").val(),a2: "0", a5:edit_id, a6: types},
+				success:function(result){
+					hdata = JSON.parse(result).info.data;
+					if(edit_id > 0 ){
+						$(hdata.HGroup).each(function(i,item){
+							if(push_hgid.indexOf(item.HGId) <0){
+								push_hgid.push(item.HGId + ":false");
+							}
+						})
+					}
+				}
+			})
+				
+		}
+		//加载树
+		function _initLists() {
+			get_hostdirectory();
+			_viewHTMLs('#userTrees','HG');
+			//下拉按钮触发
+		}
+		//加载下拉树
+		function _initHTMLs(obj, id, v, d,strtype) {
+			var tasktype = document.frm_manage_add.tasktype.value;
+			if(strtype=='HG'){
+				//过滤中 不需要 showloading
+				if(filter_flag_append == true) filter_flag_append=false;
+				else _showLoading();			
+				flag_loading = true;
+				var loading_hgid;
+				$.ajax({
+					url: '/bhost/get_hostdirectory',
+					type:'post',
+					async:true,
+					data: { a0: $("input[name=se]").val(), a2: id, a5: edit_id, a6: types,a7: ajax_find_host_doing ? 'true' : 'false' },
+					success:function(result){
+						var hdata_ = JSON.parse(result).info.data;
+						loading_hgid = id;
+						$(obj).empty();
+						if(edit_id >0 && ajax_find_host_doing == false) disabled_flag = "disabled";
+						else disabled_flag = "";
+						var loadfirst = 0;
+						var loadlast = 0;
+						var parent_id = $(obj).siblings('input').attr('id').split('-')[1];
+						var _p_loadfirst = $(obj).siblings('input').attr('data-loadfirst');
+						var _p_loadlast = $(obj).siblings('input').attr('data-loadlast');
+						var auth_type_checked = false;
+						if ($(obj).siblings('span.authtype').find('input').length != 0) {
+							auth_type_checked = $(obj).siblings('span.authtype').find('input').prop('checked');
+						}
+						if ((_p_loadfirst == 0) && (_p_loadlast == 0)) {
+						}
+						if (auth_type_checked) {
+							disabled_flag = "";
+						}
+						if (_p_loadfirst == _p_loadlast) {
+							if (_p_loadlast == 2) {
+								loadfirst = 2
+								loadlast = 2;
+							}
+						} else {
+							if (_p_loadlast == 2) {
+								loadlast = 2;
+							}
+							if (_p_loadfirst == 2) {
+								loadfirst = 2;
+							}
+
+						}
+						if(hdata_.HGroup == null) hdata_.HGroup = [];
+						$.each(hdata_.HGroup, function (i, item) {
+							item.Mode == 2;
+							if (item.Mode == 2) var $auth = '<label><input type="checkbox" name="check' + item.HGId + '" data-ifselect=false ' + disabled_flag + ' data-mode="' + item.Mode + '" >组授权</label>';
+							else var $auth = '<label style="display:none"><input type="checkbox" name="check' + item.HGId + '" data-ifselect=false ' + disabled_flag + ' data-mode="' + item.Mode + '" >组授权</label>';
+							if (ajax_find_host_doing == true && $(obj).siblings('span.h-name-red').length == 0) {
+								var $H = $('<li style="display: none;"></li>');
+							} else {
+								var $H = $('<li></li>');
+							}
+							if ((item.MemberNum + item.HostNum) == 0) i_class = "h-blank";
+							else i_class = "h-aicon";
+							if (v == 1 && d == 0) {
+								disabled_flag = "disabled";
+								if (item.Mode == 2) $auth = '<label><input type="checkbox" name="check' + item.HGId + '" data-ifselect=false ' + disabled_flag + ' data-mode="' + item.Mode + '" >组授权</label>';
+								else $auth = '<label style="display:none;"><input type="checkbox" name="check' + item.HGId + '" data-ifselect=false ' + disabled_flag + ' data-mode="' + item.Mode + '" >组授权</label>';
+								$H.html('<i class="' + i_class + '" data-id="HG-' + item.HGId + '" />'+
+								'<input type="checkbox" checked="checked" id="HGId-' + item.HGId + '" data-check="1" class="zcheck zcheck-g" ' + disabled_flag + ' data-loadfirst=' + loadfirst + ' data-loadlast=' + loadlast + ' data-mode="2" data-name="' + item.HGName + '">'+
+								'<i class="h-eicon h-eicon-g"></i>'+
+								'<span class="h-name" id="'+strtype+'spanHG-' + item.HGId + '" style="width: 12em;">' + 
+								'<span class="h-name-son" style="">' + 
+									item.HGName.split('').map(function (params) {
+										return '<font>'+params+'</font>'    
+									}).join('') + 
+								'</span>'+
+								'</span>'+
+								'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+								'<ul style="display:none">Loading...</ul>');
+							} else if (v == 1) { //v == 1 d ==1
+								$H.html('<i class="' + i_class + '" data-id="HG-' + item.HGId + '" />'+
+								'<input type="checkbox" checked="checked" id="HGId-' + item.HGId + '" data-check="1" class="zcheck zcheck-g" data-loadfirst=' + loadfirst + ' data-loadlast=' + loadlast + ' data-mode="2" data-name="' + item.HGName + '">'+
+								'<i class="h-eicon h-eicon-g"></i>'+
+								'<span class="h-name" id="'+strtype+'spanHG-' + item.HGId + '" style="width: 12em;">' + 
+								'<span class="h-name-son" style="">' + 
+									item.HGName.split('').map(function (params) {
+										return '<font>'+params+'</font>'    
+									}).join('') + 
+								'</span>'+
+								'</span>'+
+								'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+								'<ul style="display:none">Loading...</ul>');
+							} else if (v == 0) {
+								$H.html('<i class="' + i_class + '" data-id="HG-' + item.HGId + '" />'+
+								'<input type="checkbox" id="HGId-' + item.HGId + '" data-check="0" class="zcheck zcheck-g" data-loadfirst=' + loadfirst + ' data-loadlast=' + loadlast + ' data-mode="2" data-name="' + item.HGName + '">'+
+								'<i class="h-eicon h-eicon-g"></i>'+
+								'<span class="h-name" id="'+strtype+'spanHG-' + item.HGId + '" style="width: 12em;">' + 
+								'<span class="h-name-son" style="">' + 
+									item.HGName.split('').map(function (params) {
+										return '<font>'+params+'</font>'    
+									}).join('') + 
+								'</span>'+
+								'</span>'+
+								'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+								'<ul style="display:none">Loading...</ul>');
+							} else {
+								$H.html('<i class="' + i_class + '" data-id="HG-' + item.HGId + '" />'+
+								'<input type="checkbox" id="HGId-' + item.HGId + '" data-check="0" class="zcheck zcheck-g" ' + disabled_flag + ' data-loadfirst=' + loadfirst + ' data-loadlast=' + loadlast + ' data-ifselect=false data-mode="2" data-name="' + item.HGName + '">'+
+								'<i class="h-eicon h-eicon-g"></i>'+
+								'<span class="h-name" id="'+strtype+'spanHG-' + item.HGId + '" style="width: 12em;">' + 
+								'<span class="h-name-son" style="">' + 
+									item.HGName.split('').map(function (params) {
+										return '<font>'+params+'</font>'    
+									}).join('') + 
+								'</span>'+
+								'</span>'+
+								'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+								'<ul style="display:none">Loading...</ul>');
+	
+							}
+	
+							if (edit_id > 0) {
+								if (!auth_type_checked) {
+									if (push_hgid.indexOf(item.HGId + ":false") < 0) {
+										push_hgid.push(item.HGId + ":false");
+									}
+								}
+							}
+							$(obj).append($H);
+							setTimeout(function () {
+								_jScrollBar(strtype+'spanHG-' + item.HGId);
+							},1000);
+						});
+						_checkView_host(obj);
+						if(edit_id > 0 ){
+							select_checkbox("HGroup",parent_id);	 //只有编辑情况下 才需要判断 select 
+						}		
+						if(hdata_.Host == null) {
+							hdata_.Host = [];
+							flag_loading = false;
+							if(flag_save == 0){
+								_closeLoading();
+							}
+							return false;
+						}
+						var i = 0;
+						var index = 0;
+						html_str = "";
+						$.each(hdata_.Host, function (i, item) {
+							item.Mode=2;
+							if ((item.Selected == 0 && item.Mode == 0 && ajax_find_host_doing == true) || (edit_id <= 0 && item.Mode == 0)) {
+								return true;
+							}
+							if (ajax_find_host_doing == true && $(obj).siblings('span.h-name-red').length == 0) {
+								var $H = $('<li style="display: none;"></li>');
+							} else {
+								var $H = $('<li></li>');
+							}
+							i_class = "h-blank";
+							// var HostName_h = autoAddEllipsis(item.HostName, '12');
+							var HostName_h = item.HostName;
+							if (v == 1 && d == 0) {
+								$H.html('<i class="' + i_class + '" data-id="arrH-' + item.HostId + '" />'+
+								'<input type="checkbox" checked="checked" id="HostId-' + parent_id + '-' + item.HostId + '" data-check="1" class="zcheck zcheck-g" data-loadfirst=' + loadfirst + ' data-loadlast=' + loadlast + ' data-ifselect=false disabled data-mode="' + item.Mode + '" data-name="' + item.HostIP + '\t' + item.HostName + '">'+
+								'<i class="h-eicon h-eicon-u"></i>'+
+								'<span class="h-name" id="'+strtype+'spanHG-' + parent_id + '-' + item.HostId + '" style="width: 12em;">' + 
+								'<span class="h-name-son" style="">' + 
+								( item.HostIP+ '(' + HostName_h + ')').split('').map(function (params) {
+									return '<font>'+params+'</font>'    
+								}).join('') +
+								'</span>'+
+								'</span>'+
+								'<ul style="display:none">Loading...</ul>');
+
+							} else if (v == 1) {
+								$H.html('<i class="' + i_class + '" data-id="arrH-' + item.HostId + '" />'+
+								'<input type="checkbox" checked="checked" id="HostId-' + parent_id + '-' + item.HostId + '" data-check="1" class="zcheck zcheck-g" data-loadfirst=' + loadfirst + ' data-loadlast=' + loadlast + ' data-ifselect=false data-mode="' + item.Mode + '" data-name="' + item.HostIP + '\t' + item.HostName + '">'+
+								'<i class="h-eicon h-eicon-u"></i>'+
+								'<span class="h-name" id="'+strtype+'spanHG-' + parent_id + '-' + item.HostId + '" style="width: 12em;">' + 
+								'<span class="h-name-son" style="">' + 
+									( item.HostIP+ '(' + HostName_h + ')').split('').map(function (params) {
+										return '<font>'+params+'</font>'    
+									}).join('') +
+								'</span>'+
+								'</span>'+
+								'<ul style="display:none">Loading...</ul>');
+							} else if (v == 0) {
+								$H.html('<i class="' + i_class + '" data-id="arrH-' + item.HostId + '" />'+
+								'<input type="checkbox" id="HostId-' + parent_id + '-' + item.HostId + '" data-check="0" class="zcheck zcheck-g" data-loadfirst=' + loadfirst + ' data-loadlast=' + loadlast + ' data-ifselect=false data-mode="' + item.Mode + '" data-name="' + item.HostIP + '\t' + item.HostName + '">'+
+								'<i class="h-eicon h-eicon-u"></i>'+
+								'<span class="h-name" id="'+strtype+'spanHG-' + parent_id + '-' + item.HostId + '" style="width: 12em;">' + 
+								'<span class="h-name-son" style="">' + 
+									( item.HostIP+ '(' + HostName_h + ')').split('').map(function (params) {
+										return '<font>'+params+'</font>'    
+									}).join('') +
+								'</span>'+
+								'</span>'+
+								'<ul style="display:none">Loading...</ul>');
+							} else {
+								if (ajax_find_host_doing == false) {
+									$H.html('<i class="' + i_class + '" data-id="arrH-' + item.HostId + '" />'+
+									'<input type="checkbox" id="HostId-' + parent_id + '-' + item.HostId + '" data-check="0" class="zcheck zcheck-g" data-loadfirst=0  data-loadlast=' + loadlast + ' ' + disabled_flag + ' data-ifselect=false data-mode="' + item.Mode + '" data-name="' + item.HostIP + '\t' + item.HostName + '">'+
+									'<i class="h-eicon h-eicon-u" class="zcheck"></i>'+
+									'<span class="h-name" id="'+strtype+'spanHG-' + parent_id + '-' + item.HostId + '" style="width: 12em;">' + 
+									'<span class="h-name-son" style="">' + 
+									( item.HostIP+ '(' + HostName_h + ')').split('').map(function (params) {
+										return '<font>'+params+'</font>'    
+									}).join('') +
+									'</span>'+
+									'</span>'+
+									'<ul style="display:none">Loading...</ul>');
+								}
+								else {
+									switch (item.Selected) {
+										case 0:
+											$H.html('<i class="' + i_class + '" data-id="arrH-' + item.HostId + '" />'+
+											'<input type="checkbox" id="HostId-' + parent_id + '-' + item.HostId + '" data-check="0" class="zcheck zcheck-g" data-ifselect=false data-loadfirst=0 data-loadlast=' + item.Selected + ' data-mode="' + item.Mode + '" data-name="' + item.HostIP + '\t' + item.HostName + '">'+
+											'<i class="h-eicon h-eicon-u" class="zcheck"></i>'+
+											'<span class="h-name" id="'+strtype+'spanHG-' + parent_id + '-' + item.HostId + '" style="width: 12em;">' + 
+											'<span class="h-name-son" style="">' + 
+											( item.HostIP+ '(' + HostName_h + ')').split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') +
+											'</span>'+
+											'</span>'+
+											'<ul style="display:none">Loading...</ul>');
+											break;
+										case 1:
+											$H.html('<i class="' + i_class + '" data-id="arrH-' + item.HostId + '" />'+
+											'<input type="checkbox" id="HostId-' + parent_id + '-' + item.HostId + '" data-check="2" class="zcheck zcheck-g" data-ifselect=false data-loadfirst=1 data-loadlast=' + item.Selected + ' data-mode="' + item.Mode + '" data-name="' + item.HostIP + '\t' + item.HostName + '">'+
+											'<i class="h-eicon h-eicon-u" class="zcheck"></i>'+
+											'<span class="h-name" id="'+strtype+'spanHG-' + parent_id + '-' + item.HostId + '" style="width: 12em;">' + 
+											'<span class="h-name-son" style="">' + 
+											( item.HostIP+ '(' + HostName_h + ')').split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') +
+											'</span>'+
+											'</span>'+
+											'<ul style="display:none">Loading...</ul>');
+											break;
+										case 2:
+											$H.html('<i class="' + i_class + '" data-id="arrH-' + item.HostId + '" />'+
+											'<input type="checkbox" checked="checked" id="HostId-' + parent_id + '-' + item.HostId + '" data-check="1" class="zcheck zcheck-g" data-ifselect=false data-loadfirst=2 data-loadlast=' + item.Selected + ' data-mode="' + item.Mode + '" data-name="' + item.HostIP + '\t' + item.HostName + '">'+
+											'<i class="h-eicon h-eicon-u" class="zcheck"></i>'+
+											'<span class="h-name" id="'+strtype+'spanHG-' + parent_id + '-' + item.HostId + '" style="width: 12em;">' + 
+											'<span class="h-name-son" style="">' + 
+											( item.HostIP+ '(' + HostName_h + ')').split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') +
+											'</span>'+
+											'</span>'+
+											'<ul style="display:none">Loading...</ul>');
+											break;
+									}
+								}
+							}
+							if (edit_id > 0) {
+								if (!auth_type_checked) {
+									if (push_hid.indexOf(parent_id + ':' + item.HostId) < 0) {
+										if (ajax_find_host_doing == false) {
+											push_hid.push(parent_id + ':' + item.HostId + ":false");
+										}
+									}
+								}
+							}
+							$(obj).append($H);
+							setTimeout(function () {
+								_jScrollBar(strtype+'spanHG-' + parent_id + '-' + item.HostId);
+							},1000);
+							_checkView1($('#HostId-' + parent_id + '-' + item.HostId));
+						});
+						if(flag_save == 0){
+							_closeLoading();
+						}
+						if (ajax_find_host_doing == false) {
+							select_checkbox("Host", parent_id);
+						}
+						flag_loading = false;
+					}
+				});
+				return true;
+			}else{
+				$.ajax({
+					url: '/bhost/get_userdirectory',
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(),  a2: id, a5: document.frm_manage_add.manageauthId.value, a6: type },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result) {
+							var user_data = result.info;
+							var total_all = user_data.totalrow;
+							$(obj).empty();
+							$.each(user_data.data.UGroup, function (i, item) {
+								var $H = $('<li></li>');
+								var $auth = '<label><input type="checkbox" name="check' + item.UGId + '"  data-mode="'+ item.Mode + '" >组授权</label>';
+								if (manageauth_edit != null) {
+									$.each(manageauth_edit.UserSet, function (i1, item1) {
+										if (item1.Id == item.UGId && item1.Type == 2) {
+											$auth = '<label><input type="checkbox" name="check' + item.UGId + '" checked="checked"  data-mode="'+ item.Mode + '" >组授权</label>';
+											return false;
+										}
+									});
+								}
+								if (item.MemberNum + item.UserNum) {
+									var i_class='class="h-aicon"';
+								} else {
+									var i_class='class="h-blank"';
+								}
+								if (v == 1) {
+									$H.html('<i '+i_class+' data-id="UG-' + item.UGId + '" />'+
+									'<input type="checkbox" checked="checked" id="UGId-' + item.UGId + '" data-check="1" class="zcheck zcheck-g" data-name="'+item.UGName+'">'+
+									'<i class="h-eicon h-eicon-s"></i>'+
+									'<span class="h-name" id="'+strtype+'spanHG-' + item.UGId + '" style="width: 12em;">' + 
+									'<span class="h-name-son" style="">' + 
+										item.UGName.split('').map(function (params) {
+											return '<font>'+params+'</font>'    
+										}).join('') +
+									'</span>'+
+									'</span>'+
+									'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+									'<ul style="display:none">Loading...</ul>');
+									$(obj).append($H);
+								}else if (v == 0) {
+									$H.html('<i '+i_class+' data-id="UG-' + item.UGId + '" />'+
+									'<input type="checkbox" id="UGId-' + item.UGId + '" data-check="0" class="zcheck zcheck-g" data-name="'+item.UGName+'">'+
+									'<i class="h-eicon h-eicon-s"></i>'+
+									'<span class="h-name" id="'+strtype+'spanHG-' + item.UGId + '" style="width: 12em;">' + 
+									'<span class="h-name-son" style="">' + 
+									item.UGName.split('').map(function (params) {
+										return '<font>'+params+'</font>'    
+									}).join('') +
+									'</span>'+
+									'</span>'+
+									'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+									'<ul style="display:none">Loading...</ul>');
+									$(obj).append($H);
+								}else {
+									//switch (item.Selected) {
+										$H.html('<i '+i_class+' data-id="UG-' + item.UGId + '" />'+
+										'<input type="checkbox" id="UGId-' + item.UGId + '" data-check="' + item.Selected + '" class="zcheck zcheck-g" data-name="'+item.UGName+'">'+
+										'<i class="h-eicon h-eicon-s"></i>'+
+										'<span class="h-name" id="'+strtype+'spanHG-' + item.UGId + '" style="width: 12em;">' + 
+										'<span class="h-name-son" style="">' + 
+										item.UGName.split('').map(function (params) {
+											return '<font>'+params+'</font>'
+										}).join('') + 
+										'</span>'+
+										'</span>'+
+										'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+										'<ul style="display:none">Loading...</ul>');
+										$(obj).append($H);
+										if(tasktype == "2"){
+											ugtreelist.push(item.UGId +':false');
+										}
+										/*case 1:
+											item.Selected = 2;
+											$H.html('<i '+i_class+' data-id="UG-' + item.UGId + '" />'+
+											'<input type="checkbox" id="UGId-' + item.UGId + '" data-check="' + item.Selected + '" class="zcheck zcheck-g" data-name="'+item.UGName+'">'+
+											'<i class="h-eicon h-eicon-s"></i>'+
+											'<span class="h-name" id="'+strtype+'spanHG-' + item.UGId + '" style="width: 12em;">' + 
+											'<span class="h-name-son" style="">' + 
+											item.UGName.split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') + 
+											'</span>'+
+											'</span>'+
+											'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+											'<ul style="display:none">Loading...</ul>');
+											$(obj).append($H);
+											$u = $(obj).find('li').find('input[type=checkbox][id=UGId-' + item.UGId + ']').siblings('ul');
+											break;
+										case 2:
+											item.Selected = 1;
+											$H.html('<i '+i_class+' data-id="UG-' + item.UGId + '" />'+
+											'<input type="checkbox" checked="checked" id="UGId-' + item.UGId + '" data-check="' + item.Selected + '" class="zcheck zcheck-g" data-name="'+item.UGName+'">'+
+											'<i class="h-eicon h-eicon-s"></i>'+
+											'<span class="h-name" id="'+strtype+'spanHG-' + item.UGId + '" style="width: 12em;">' + 
+											'<span class="h-name-son" style="">' + 
+												item.UGName.split('').map(function (params) {
+													return '<font>'+params+'</font>'    
+												}).join('') + 
+											'</span>'+
+											'</span>'+
+											'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+											'<ul style="display:none">Loading...</ul>');
+											$(obj).append($H);
+											break;*/
+								}
+								setTimeout(function () {
+									_jScrollBar(strtype+'spanHG-' + item.UGId);
+								},1000);
+							});
+							var parent_id = $(obj).siblings('input').attr('id').split('-')[1];
+							$.each(user_data.data.User, function (i, item) {
+								if(item.UserCode == "admin") return true;
+								if (v == 1 && d == 0) {
+									$(obj).append('<li><i class="h-blank" />'+
+										'<input type="checkbox" checked="checked" id="UserId-'+parent_id+'-' + item.UserId + '" class="zcheck zcheck-g" data-name="'+item.UserCode+'">'+
+										'<i class="h-eicon h-eicon-r"></i>'+
+										'<span class="h-name" id="'+strtype+'spanHG-'+parent_id+'-' + item.UserId + '" style="width: 12em;">' +
+										'<span class="h-name-son" style="">' + 
+											item.UserCode.split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') + 
+										'</span>'+
+										'</span>'+
+										'</li>');
+								} 
+								else if (v == 1) {
+									$(obj).append('<li><i class="h-blank" />'+
+										'<input type="checkbox" checked="checked" id="UserId-'+parent_id+'-' + item.UserId + '" class="zcheck zcheck-g" data-name="'+item.UserCode+'">'+
+										'<i class="h-eicon h-eicon-r"></i>'+
+										'<span class="h-name" id="'+strtype+'spanHG-'+parent_id+'-' + item.UserId + '" style="width: 12em;">' +
+										'<span class="h-name-son" style="">' + 
+											item.UserCode.split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') + 
+										'</span>'+
+										'</span>'+
+										'</li>');
+								} 
+								else if (v == 0) {
+									$(obj).append('<li><i class="h-blank" />'+
+										'<input type="checkbox" id="UserId-'+parent_id+'-' + item.UserId + '" class="zcheck zcheck-g" data-name="'+item.UserCode+'">'+
+										'<i class="h-eicon h-eicon-r"></i>'+
+										'<span class="h-name" id="'+strtype+'spanHG-'+parent_id+'-' + item.UserId + '" style="width: 12em;">' +
+										'<span class="h-name-son" style="">' + 
+											item.UserCode.split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') + 
+										'</span>'+
+										'</span>'+
+										'</li>');
+								} 
+								else {
+									if (item.Selected == 2) {
+										var $H = $('<li><i class="h-blank" />'+
+											'<input type="checkbox"  checked="checked" id="UserId-'+parent_id+'-' + item.UserId + '" class="zcheck zcheck-g" data-name="'+item.UserCode+'">'+
+											'<i class="h-eicon h-eicon-r"></i>'+
+											'<span class="h-name" id="'+strtype+'spanHG-'+parent_id+'-' + item.UserId + '" style="width: 12em;">' +
+											'<span class="h-name-son" style="">' + 
+											item.UserCode.split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') +  
+											'</span>'+
+											'</span>'+
+											'</li>');
+									} 
+									else {
+										var $H = $('<li><i class="h-blank" />'+
+											'<input type="checkbox" id="UserId-'+parent_id+'-' + item.UserId + '" class="zcheck zcheck-g" data-name="'+item.UserCode+'">'+
+											'<i class="h-eicon h-eicon-r"></i>'+
+											'<span class="h-name" id="'+strtype+'spanHG-'+parent_id+'-' + item.UserId + '" style="width: 12em;">' +
+											'<span class="h-name-son" style="">' + 
+											item.UserCode.split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') +  
+											'</span>'+
+											'</span>'+
+											'</li>');
+									}
+									$(obj).append($H);
+								}
+								/*setTimeout(function () {
+									_jScrollBar(strtype+'spanHG-'+parent_id+'-' + item.UserId);
+								},1000);*/
+							});
+							if(flag_save == 0){
+								_closeLoading();
+							}
+							//console.log(tasktype);
+							//console.log("tasktype: "+tasktype);
+							if(tasktype == "2"){
+								select_checkbox("UGroup");
+								select_checkbox("User",parent_id);
+							}
+						}else{
+							_alert(1,'管理授权',result.ErrMsg);
+							return false;
+						}
+					}
+				});
+				if(d==0){
+					$(obj).find('input').prop('disabled',true);
+				}
+				_checkView_user(obj);
+			}
+		}
+		function _checkView1(obj){
+			_authTypeTheme($(obj).parent().find('span.authtype input'));
+			$(obj).each(function(){
+				var $s = $('<span class="checkbox"></span>');
+				$(this).after($s);
+				var v = $(this).prop('checked');
+				if(v){
+					$s.addClass('checked');
+				}else{
+					var c = $(this).data('check');
+					if(c && c==2){
+						$s.addClass('half');
+					}
+				}
+
+				var d = $(this).prop('disabled');
+				if(d){
+					$s.addClass('disabled');
+				}
+			}).on('change',function(){
+				var v = $(this).prop('checked');
+				var $s = $(this).next('span.checkbox');
+				var $u = $(this).parent().children('ul');
+				var d;
+				if($(this).siblings('span.authtype').find('input').is(':checked')){
+					d = 0;
+				}else{
+					d = 1;
+				}
+			
+				if(v){
+					$s.attr('class','checkbox checked');
+					$('input.zcheck',$u).prop('checked',true);
+					$('span.checkbox',$u).attr('class','checkbox checked');			
+					$(this).attr("data-loadlast","2");	
+					
+				}else{
+					$s.attr('class','checkbox');
+					$('input.zcheck',$u).prop('checked',false);
+					$('span.checkbox',$u).attr('class','checkbox');
+					$(this).siblings('span.authtype').find('input').prop('checked',false);
+					$(this).siblings('span.authtype').find('span').attr('class','checkbox');
+					$(this).siblings('span.authtype').find('span').trigger('change');
+					$(this).attr("data-loadlast","0");
+				}
+				if(d==0){
+					$('span.checkbox',$u).addClass('disabled');
+				}
+
+				_checkEvent(this);
+			});
+		}
+		var ugtreelist = [];
+		var utreelist = [];
+		var _viewHTMLs_fun=false;
+		//回显下拉树
+		function _viewHTMLs(obj,strtype) {
+			var tasktype = document.frm_manage_add.tasktype.value;
+			if(strtype=='HG'){
+				$(obj).empty();
+				disabled_flag = "";
+				if(edit_id > 0 ) disabled_flag = "disabled";
+				$.each(hdata.HGroup, function (i, item) {
+					item.Mode =2; 
+					if (item.Mode == 2)
+						var $auth = '<label><input type="checkbox" name="check' + item.HGId + '" data-ifselect=false ' + disabled_flag + ' data-mode="' + item.Mode + ' " >组授权</label>';
+					else
+						var $auth = '';
+					if (item.HGId == 1)
+						var $auth = '';
+					var $H = $('<li></li>');
+					if ((item.MemberNum + item.HostNum) == 0) i_class = "h-blank";
+					else i_class = "h-aicon";
+					$H.html('<i class="' + i_class + '" data-id="HG-' + item.HGId + '" />'+
+					'<input type="checkbox" id="HGId-' + item.HGId + '" data-check="0" class="zcheck zcheck-g" ' + disabled_flag + ' data-loadfirst=0 data-loadlast=0 data-ifselect=false data-mode="2" data-name="' + item.HGName + '">'+
+					'<i class="h-eicon h-eicon-g" ></i>'+
+					'<span class="h-name" id="'+strtype+'spanHG-' + item.HGId + '" style="width: 12em;">' + 
+					'<span class="h-name-son" style="">' + 
+						item.HGName.split('').map(function (params) {
+							return '<font>'+params+'</font>'    
+						}).join('') + 
+					'</span>'+
+					'</span>'+
+					'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+					'<ul style="display:none">Loading...</ul>');
+					$(obj).append($H);
+					setTimeout(function () {
+						_jScrollBar(strtype+'spanHG-' + item.HGId);
+					},1000);
+					if (edit_id > 0) {
+						if (push_hgid.indexOf(item.HGId) < 0) {
+							push_hgid.push(item.HGId + ":false");
+						}
+					}
+				});
+				_checkView_host(obj);
+				if(edit_id > 0 ){
+					select_checkbox("HGroup",0);	 //只有编辑情况下 才需要判断 select 
+				}else{
+					select_checkbox_fun_run=false;
+				}
+				_viewHTMLs_fun=false;
+			}else{
+				$.ajax({
+					url: '/bhost/get_userdirectory',
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(),  a2: "0", a5: document.frm_manage_add.manageauthId.value, a6: type },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result) {
+							var user_data = result.info;
+							var total_all = user_data.totalrow;
+							$(obj).empty();
+							ugtreelist = [];
+							$.each(user_data.data.UGroup, function (i, item) {
+								var $H = $('<li></li>');
+								if (item.UGId == 1) {
+									var $auth = '';
+								} else {
+									var $auth = '<label><input type="checkbox" name="check' + item.UGId + '">组授权</label>';
+									if (manageauth_edit != null) {
+										$.each(manageauth_edit.UserSet, function (i1, item1) {
+											if (item1.Id == item.UGId && item1.Type == 2) {
+												$auth = '<label><input type="checkbox" name="check' + item.UGId + '" checked="checked">组授权</label>';
+												return false;
+											}
+										});
+									}
+								}
+								if (tasktype == "2") {
+									ugtreelist.push(item.UGId +':false');
+								}
+								var i_class='class="h-blank"';
+								if(item.MemberNum + item.UserNum){
+									var i_class='class="h-aicon"';
+								}
+								switch (item.Selected) {
+									case 0:
+										$H.html('<i '+i_class+' data-id="UG-' + item.UGId + '" />'+
+										'<input type="checkbox" id="UGId-' + item.UGId + '" data-check="' + item.Selected + '" class="zcheck zcheck-g" data-name="'+item.UGName+'">'+
+										'<i class="h-eicon h-eicon-s"></i>'+
+										'<span class="h-name" id="'+strtype+'spanHG-' + item.UGId + '" style="width: 12em;">' + 
+										'<span class="h-name-son" style="">' + 
+											item.UGName.split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') + 
+										'</span>'+
+										'</span>'+
+										'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+										'<ul style="display:none">Loading...</ul>');
+										break;
+									case 1:
+										item.Selected = 2;
+										$H.html('<i '+i_class+' data-id="UG-' + item.UGId + '" />'+
+										'<input type="checkbox" id="UGId-' + item.UGId + '" data-check="' + item.Selected + '" class="zcheck zcheck-g" data-name="'+item.UGName+'">'+
+										'<i class="h-eicon h-eicon-s"></i>'+
+										'<span class="h-name" id="'+strtype+'spanHG-' + item.UGId + '" style="width: 12em;">' + 
+										'<span class="h-name-son" style="">' + 
+											item.UGName.split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') + 
+										'</span>'+
+										'</span>'+
+										'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+										'<ul style="display:none">Loading...</ul>');
+										break;
+									case 2:
+										item.Selected = 1;
+										$H.html('<i '+i_class+' data-id="UG-' + item.UGId + '" />'+
+										'<input type="checkbox" checked="checked" id="UGId-' + item.UGId + '" data-check="' + item.Selected + '" class="zcheck zcheck-g" data-name="'+item.UGName+'">'+
+										'<i class="h-eicon h-eicon-s"></i>'+
+										'<span class="h-name" id="'+strtype+'spanHG-' + item.UGId + '" style="width: 12em;">' + 
+										'<span class="h-name-son" style="">' + 
+											item.UGName.split('').map(function (params) {
+												return '<font>'+params+'</font>'    
+											}).join('') + 
+										'</span>'+
+										'</span>'+
+										'<span class="authtype" style="display:inline-block">' + $auth + '</span>'+
+										'<ul style="display:none">Loading...</ul>');
+										break;
+								}
+								$(obj).append($H);
+								setTimeout(function () {
+									_jScrollBar(strtype+'spanHG-' + item.UGId);
+								},1000);
+							});
+							if(tasktype == "2"){
+								select_checkbox("UGroup");
+							}
+						}else{
+							_alert(1,'管理授权',result.ErrMsg);
+							return false;
+						}
+					}
+				});
+				_checkView_user(obj);
+
+			}
+		}
+		function _checkView_user(obj){
+			_authTypeTheme($('span.authtype input',obj));
+			$('input.zcheck',obj).each(function(){
+				var $s = $('<span class="checkbox"></span>');
+				$(this).after($s);
+				var v = $(this).prop('checked');
+				if(v){
+					$s.addClass('checked');
+				}else{
+					var c = $(this).data('check');
+					if(c && c==2){
+						$s.addClass('half');
+					}
+				}
+				var d = $(this).prop('disabled');
+				if(d){
+					$s.addClass('disabled');
+				}
+			}).on('change',function(){
+				var v = $(this).prop('checked');
+				var $s = $(this).next('span.checkbox');
+				var $u = $(this).parent().children('ul').find('li');
+				var $authInput = $(this).siblings('span.authtype').find('input');
+				if(v){
+					$s.attr('class','checkbox checked');
+					$('input.zcheck',$u).prop('checked',true);
+					$('span.checkbox:first',$u).attr('class','checkbox checked');
+					$(this).attr("data-loadlast",2);
+					$('input.zcheck',$u).attr("data-loadlast",2);	
+					$u.each(function(){
+						if ($(this).children('span.authtype').find('input').prop('checked')){
+							var $u_li = $(this).children('ul').find('li');
+							$('input.zcheck',$u_li).prop('disabled',true);
+							$('span.checkbox:first',$u_li).addClass('disabled');
+						};
+					});		
+				}else{
+					$s.attr('class','checkbox');
+					$('input',$u).prop('checked',false).prop('disabled',false);
+					$('span.checkbox',$u).attr('class','checkbox');
+					$(this).attr("data-loadlast",0);
+					$('input.zcheck',$u).attr("data-loadlast",0);
+
+					$authInput.prop('checked',false).trigger('change');
+					$(this).siblings('span.authtype').find('span').attr('class','checkbox');			
+				}
+				_checkEvent(this);
+			});
+		}
+		var atr = null;
+		var atr_flag = 0;
+		var select_checkbox_fun_run=false;
+		///// 绑定 主机组状态
+		function select_checkbox(select_flag,pid){
+			if(select_flag == "HGroup"){ //主机组 
+				var i = 0;
+				var index_w = 0;
+				var indx = 0;
+				var c_count = 1;
+				var index_a = 0;				
+				function _doselect(){
+					for(i = index_w; i< index_w + 200;i+=1){ //每次只加载一个 根据情况定
+						if(i >= push_hgid.length){
+							if (push_hgid.length == 0){
+							clearInterval(if_select);
+								return false;
+							}else{	
+								index_w = 0;
+								return false;
+							}
+						}
+						var PGetHNodeSelected_json = {
+							"type": 1,
+							"id": edit_id,
+							"ishost": false,
+							"hnodeset": new Array()
+						}
+						for(var m=i;m<i+100;m++){
+							if (m >= push_hgid.length) {
+								break;
+							}
+							var hg_id = push_hgid[m].split(":")[0];
+							var falg_sec = push_hgid[m].split(":")[1];
+							var $hg_pinput = $("#nodehg-" + hg_id).parent().parent().siblings('input');
+							var hg_pid = 0;
+							if ($hg_pinput.length != 0) {
+								hg_pid = $hg_pinput.attr('id').split('-')[1];
+								if (push_hgid.indexOf(hg_id + ':true') >= 0) {
+									continue;
+								}
+								if (push_hgid.indexOf(hg_pid + ':false') >= 0) {
+									continue;
+								}
+								if (push_hgid.indexOf(hg_pid + ':true') >= 0) {
+									continue;
+								}
+							}
+							if (falg_sec == 'false') {
+								PGetHNodeSelected_json.hnodeset.push(JSON.parse('{"parentid": null,"hid": ' + hg_id + '}'));
+								push_hgid[m] = hg_id + ":" + "true";
+							}
+						}
+						if(PGetHNodeSelected_json.hnodeset.length > 0){
+							$.ajax({
+								url:'/bhost/PGetHNodeSelected',
+								type:'post',
+								async:true,
+								data: { a0: $("input[name=se]").val(), z1: JSON.stringify(PGetHNodeSelected_json) },//hg_id
+								success:function(result){
+									var result = JSON.parse(result);
+									var data=result.info;
+									$.each(data, function (i, item) {
+										var _currentId = $("#HGId-" + item.hid);
+										var _span_authtype = _currentId.siblings('span.authtype');
+										var mode = parseInt(_span_authtype.find('input').attr("data-mode"));
+										var p_id;
+										if (_currentId.parent().parent().siblings("input").length > 0)
+											p_id = _currentId.parent().parent().siblings("input").attr('id').split('-')[1];
+										else p_id = 0;
+										var if_change_parent = false; //主机组是否改变
+										var loadlast = 0;
+										var _p_loadfirst = $('#HGId-' + p_id).attr("data-loadfirst");
+										var _p_loadlast = $('#HGId-' + p_id).attr("data-loadlast");
+										if (_p_loadfirst == _p_loadlast) { //没改变		
+										} else {
+											if_change_parent = true;
+											loadlast = _p_loadlast;
+										}
+										var gl_selected = false;
+										if (item.selected == 0) {
+											_currentId.next('span').attr("class", "checkbox");
+											_currentId.prop('checked', false);
+											_currentId.attr('data-loadfirst', item.selected);
+											if (if_change_parent == false) { _currentId.attr('data-loadlast', item.selected); }
+											else _currentId.attr('data-loadlast', loadlast);
+										} else if (item.selected == 1) {
+											_currentId.next('span').attr("class", "checkbox half");
+											_currentId.prop('checked', false);
+											_currentId.attr('data-loadfirst', item.selected);
+											if (if_change_parent == false) _currentId.attr('data-loadlast', item.selected);
+											else _currentId.attr('data-loadlast', loadlast);
+										} else {
+											_currentId.next('span').attr("class", "checkbox checked");
+											_currentId.prop('checked', true);
+											_currentId.attr('data-loadfirst', item.selected);
+											if (if_change_parent == false) _currentId.attr('data-loadlast', item.selected);
+											else _currentId.attr('data-loadlast', loadlast);
+
+											//判断该主机组是否是 按组授权
+											$.each(last_object, function (i1, item1) {
+												if (item1.HGId == item.hid) {
+													if (item1.HostId == null) {
+														gl_selected = true;
+														return false;
+													}
+												}
+											})
+										}
+										if (gl_selected) {
+											_span_authtype.find('input').attr('data-ifselect', true);
+											_currentId.attr('data-ifselect', true);
+										} else {
+											_span_authtype.find('input').attr('data-ifselect', false);
+											_currentId.attr('data-ifselect', false);
+										}
+										//判断是否隐藏按组授权
+
+										if (mode == 0 && item.selected == 0) { //隐藏按组授权
+											_span_authtype.children('label').hide();
+										} else if (mode == 0 && item.selected == 1) { //隐藏按组授权
+											_span_authtype.children('label').hide();
+										} else if (mode == 0 && item.selected == 2) {
+											if (gl_selected) _span_authtype.children('label').show();
+											else _span_authtype.children('label').hide();
+										} else if (mode == 2) {
+											_span_authtype.children('label').show();
+										}
+										//如果父节点的状态改变了
+										if (if_change_parent == true) {
+											if (_p_loadlast == 0) { //1-0 2-0
+												_currentId.next('span').attr("class", "checkbox");
+												_currentId.prop('checked', false);
+												_span_authtype.find('span').attr("class", "checkbox");
+												_span_authtype.find('input').prop("checked", false);
+
+												if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == false) {
+													_span_authtype.find('input').prop("disabled", false);
+													_currentId.prop('disabled', false);
+												}
+												_currentId.attr('data-loadfirst', item.selected);
+
+												if (_p_loadfirst == 2) _currentId.attr('data-loadfirst', 2);
+											} else if (_p_loadlast == 2) {	 // 0-2	 1-2							
+												_currentId.prop('checked', true);
+
+												//父节点 按组授权
+												if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == true) {
+													_currentId.prop('disabled', true);//input
+													_currentId.next('span').attr("class", "checkbox checked disabled");
+													//<<<< 
+													_currentId.attr("data-loadlast", "2");
+													_span_authtype.find('span').attr('class', "checkbox disabled");
+													_span_authtype.find('input').prop('disabled', true);
+
+												} else { // 1-0 1-2
+													_currentId.prop('disabled', false);//input
+													_currentId.next('span').attr("class", "checkbox checked");
+													_currentId.attr("data-loadlast", "2");
+													if (gl_selected) {
+														_span_authtype.find('span').attr('class', "checkbox checked");
+														_span_authtype.find('input').prop('checked', true).prop('disabled', false);
+													} else {
+														_span_authtype.find('input').prop('disabled', false);
+														_span_authtype.find('span').attr('class', 'checkbox');
+													}
+												}
+											}
+										} else {
+											//父节点 按组授权
+											if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == true) {
+												_currentId.prop('disabled', true);//input
+												_currentId.prop('checked', true);
+												_currentId.next('span').attr("class", "checkbox checked disabled");
+
+												if (_p_loadlast == 2) {
+													_currentId.attr("data-loadlast", "2");
+												}
+												if (gl_selected) {
+													_span_authtype.find('span').attr('class', "checkbox checked disabled");
+													_currentId.siblings('span.authtype').find('input').prop('checked', true).prop('disabled', true);
+												} else {
+													_span_authtype.find('input').prop('disabled', true);
+													_span_authtype.find('span').attr('class', 'checkbox disabled');
+												}
+											} else {
+												_currentId.attr('disabled', false);//input
+												_currentId.next('span').removeClass("disabled");
+												if (_p_loadlast == 2) {
+													_currentId.prop('checked', true);
+													_currentId.attr("data-loadlast", "2");
+												_currentId.attr("data-loadfirst", "2");
+													_currentId.next('span').attr("class", "checkbox checked");
+												}
+												if (gl_selected) {
+													_span_authtype.find('span').attr('class', "checkbox checked");
+													_span_authtype.find('input').prop('checked', true).prop('disabled', false);
+												} else {
+													_span_authtype.find('input').prop('disabled', false);
+													_span_authtype.find('span').attr('class', 'checkbox');
+												}
+											}
+										}
+										if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('disabled')) {
+											_currentId.prop('checked', true);
+											_currentId.prop('disabled', true);//input
+											_currentId.next('span').attr("class", "checkbox checked disabled");
+											//<<<< 
+											_span_authtype.find('span').addClass("disabled");
+											_span_authtype.find('input').prop('disabled', true);
+										}
+
+
+
+
+										var ind = push_hgid.indexOf(item.hid + ":" + "true");
+										if (ind != -1) {
+											push_hgid.splice(ind, 1);
+											i = 0;
+										}
+									})
+								},
+								error:function(XmlHttpRequest,textStatus, errorThrown){
+									// var ind = push_hgid.indexOf(hg_id + ":" + "true");
+									// if(ind >=0){
+									// 	push_hgid.splice(ind,1);
+									// 	push_hgid.push(hg_id + ":" + "false");
+									// }
+									// t_doselect = setTimeout(function () { _doselect(); }, 1);
+									return false;
+								}
+							});
+						}
+					}
+					index_w = i;
+				}
+				var if_select = setInterval(function(){
+					if (push_hgid.length == 0){  //
+						clearInterval(if_select);
+						return false;
+					}
+					var f = false;
+					$.each(push_hgid,function(i1,item1){
+						if(item1.split(':')[1] == "false"){
+							f = true;
+						}	
+					})
+					if(f ==false){
+						//console.log('fffff')
+						clearInterval(if_select);
+						return false;
+							
+					}
+					_doselect();
+					//console.log(global_time);
+					//console.log(Date.parse(new Date())/1000)
+					if(Date.parse(new Date())/1000 - global_time >=1)
+						setTimeout("get_msg()", 100);	
+				},50);
+			}else if(select_flag == "Host"){ //主机
+				var i = 0;
+				var index_w = 0;
+				var indx = 0;
+				var c_count = 700; 
+				function _doselect1(){
+					for (i = index_w; i < index_w + 20; i+=1) { //每次只加载一个 根据情况定
+						if (i >= push_hid.length) {
+							if (push_hid.length == 0) {
+								clearInterval(if_select1);
+								return false;
+							} else {
+								index_w = 0;
+								i = 0;
+								return false;
+							}
+						}
+						var PGetHNodeSelected_json = {
+							"type": 1,
+							"id": edit_id,
+							"ishost": true,
+							"hnodeset": new Array()
+						}
+						for (var m = i; m < i + 5; m++) {
+							if (m >= push_hid.length) {
+								break;
+							}
+							var pid_h = push_hid[m].split(":")[0];
+							var h_id = push_hid[m].split(":")[1];
+							var falg_sec = push_hid[m].split(":")[2];
+							if (push_hid.indexOf(pid_h + ':' + h_id + ":" + "true") >= 0) {
+								continue;
+							}
+							if (push_hgid.indexOf(pid_h + ':false') >= 0) {
+								continue;
+							}
+							if (push_hgid.indexOf(pid_h + ':true') >= 0) {
+								continue;
+							}
+							if (falg_sec == 'false') {
+								PGetHNodeSelected_json.hnodeset.push(JSON.parse('{"parentid": ' + pid_h + ',"hid": ' + h_id + '}'));
+								push_hid[m] = pid_h + ':' + h_id + ":" + "true";
+							}
+						}
+						if(PGetHNodeSelected_json.hnodeset.length > 0){
+							atr = $.ajax({
+								url:'/bhost/PGetHNodeSelected',
+								type:'post',
+								async:true,
+								data: { a0: $("input[name=se]").val(), z1: JSON.stringify(PGetHNodeSelected_json) },//hg_id
+								success:function(result){
+									var result = JSON.parse(result);
+									var data = result.info;
+									$.each(data, function (i, item) {
+										var p_id = item.parentid;//当前组所在的父组id
+										_currentId = $("#HostId-" + p_id + '-' + item.hid);//当前id
+										atr_flag = 1;
+										if (_currentId.length == 0) {
+											return false;
+										}
+										var _span_authtype = _currentId.siblings('span.authtype');//当前按组授权
+										var li_currentId = _currentId.parent();
+										var mode = parseInt(_currentId.attr("data-mode"));
+
+										var if_change_parent = false; //主机组是否改变
+										var loadlast = 0;
+										var _p_loadfirst = $('#HGId-' + p_id).attr("data-loadfirst");
+										var _p_loadlast = $('#HGId-' + p_id).attr("data-loadlast");
+										if (_p_loadfirst == _p_loadlast) { //没改变		
+										} else {
+											if_change_parent = true;
+											loadlast = _p_loadlast;
+										}
+
+										//绑定 data-loadfirst状态 和 data-loadlast
+										var gl_selected = false;
+										if (item.selected == 0) {
+											_currentId.next('span').attr("class", "checkbox");
+											_currentId.prop('checked', false);
+											_currentId.attr('data-loadfirst', item.selected);
+
+											if (if_change_parent == false) _currentId.attr('data-loadlast', item.selected);
+											else _currentId.attr('data-loadlast', loadlast);
+										} else if (item.selected == 1) {
+											_currentId.next('span').attr("class", "checkbox half");
+											_currentId.prop('checked', false);
+											_currentId.attr('data-loadfirst', item.selected);
+
+											if (if_change_parent == false) _currentId.attr('data-loadlast', item.selected);
+											else _currentId.attr('data-loadlast', loadlast);
+
+										} else {
+											_currentId.next('span').attr("class", "checkbox checked");
+											_currentId.prop('checked', true);
+											_currentId.attr('data-loadfirst', item.selected);
+
+											if (if_change_parent == false) _currentId.attr('data-loadlast', item.selected);
+											else _currentId.attr('data-loadlast', loadlast);
+											$.each(last_object, function (i1, item1) {
+												if (item1.HostId == item.hid && item1.HGId == p_id) {
+													gl_selected = true;
+													return false;
+												}
+											})
+										}
+										//绑定是否按组授权状态
+										if (gl_selected) {
+											_span_authtype.find('input').attr('data-ifselect', true);
+											_currentId.attr('data-ifselect', true);
+										} else {
+											_span_authtype.find('input').attr('data-ifselect', false);
+											_currentId.attr('data-ifselect', false);
+										}
+										//判断是否隐藏主机 因为存在 当前用户的管理权限 加了这个
+
+										if (tmp_list == null) {
+											if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == true) {
+												if (mode != 0 || item.selected != 0) {
+													_currentId.attr('data-mode', '2');
+													li_currentId.show();
+												} else {
+													li_currentId.remove();
+												}
+
+											} else {
+												if (mode == 0 && item.selected == 0) { //隐藏主机
+													li_currentId.remove();
+												} else if (mode == 0 && item.selected == 1) { //隐藏主机
+													_currentId.attr('data-mode', '2');
+													li_currentId.show();
+												} else if (mode == 0 && item.selected == 2) {
+													_currentId.attr('data-mode', '2');
+													li_currentId.show();
+												} else if (mode == 2) {
+													li_currentId.show();
+												}
+											}
+										} else {
+											li_currentId.hide();
+											if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == true) {
+												if (mode != 0 || item.selected != 0) {
+													_currentId.attr('data-mode', '2');
+													li_currentId.show();
+												} else {
+													li_currentId.remove();
+												}
+
+											} else {
+												if (mode == 0 && item.selected == 0) { //隐藏主机
+													li_currentId.remove();
+												} else if (mode == 0 && item.selected == 1) { //隐藏主机
+													_currentId.attr('data-mode', '2');
+													li_currentId.show();
+												} else if (mode == 0 && item.selected == 2) {
+													_currentId.attr('data-mode', '2');
+													li_currentId.show();
+												} else if (mode == 2) {
+													li_currentId.show();
+												}
+											}
+										}
+										//查看 父节点 是否是 1、全选还是空 2、是否按组授权 勾选 / disabled
+										if (if_change_parent) {
+											if (_p_loadlast == 0) {
+												_currentId.next('span').attr("class", "checkbox");
+												_currentId.prop('checked', false);
+												_span_authtype.find('span').attr("class", "checkbox");
+												_span_authtype.find('input').prop("checked", false);
+												if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == false) {
+													_span_authtype.find('input').prop("disabled", false);
+													_currentId.prop('disabled', false);
+												}
+												if (_p_loadfirst == 2) _currentId.attr('data-loadfirst', 2);
+
+											} else if (_p_loadlast == 2) {
+												_currentId.prop('checked', true);
+
+												//父节点 按组授权
+												if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == true) {
+													_currentId.prop('disabled', true);//input
+													_currentId.next('span').attr("class", "checkbox checked disabled");
+													_currentId.attr("data-loadlast", "2");
+													_span_authtype.find('input').prop('disabled', true);
+													_span_authtype.find('span').attr('class', 'checkbox disabled');
+
+												} else {
+													_currentId.prop('disabled', false);//input
+													_currentId.next('span').attr("class", "checkbox checked");
+													_currentId.attr("data-loadlast", "2");
+													if (gl_selected) {
+														_span_authtype.find('span').attr('class', "checkbox checked");
+														_span_authtype.find('input').prop('checked', true).prop('disabled', false);
+													} else {
+														_span_authtype.find('input').prop('disabled', false);
+														_span_authtype.find('span').attr('class', 'checkbox');
+													}
+												}
+											}
+										} else {
+											//父节点 按组授权
+											if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == true) {
+												_currentId.prop('disabled', true);//input
+												_currentId.next('span').attr("class", "checkbox checked disabled");
+												if (_p_loadlast == 2) {
+													_currentId.prop('checked', true);
+													_currentId.attr("data-loadlast", "2");
+												}
+												if (gl_selected) {
+													_span_authtype.find('span').attr('class', "checkbox checked disabled");
+													_span_authtype.find('input').prop('checked', true).prop('disabled', true);
+												} else {
+													_span_authtype.find('input').prop('disabled', true);
+													_span_authtype.find('span').attr('class', 'checkbox disabled');
+												}
+
+											} else {
+												_currentId.prop('disabled', false);//input
+												_currentId.next('span').removeClass("disabled");
+												if (_p_loadlast == 2) {
+													_currentId.prop('checked', true);
+													_currentId.next('span').attr("class", "checkbox checked");
+													_currentId.attr("data-loadlast", "2");
+												_currentId.attr("data-loadfirst", "2");
+												}
+												if (gl_selected) {
+													_span_authtype.find('span').attr('class', "checkbox checked");
+													_span_authtype.find('input').prop('checked', true).prop('disabled', false);
+												} else {
+													_span_authtype.find('input').prop('disabled', false);
+													_span_authtype.find('span').attr('class', 'checkbox');
+												}
+
+											}
+										}
+										//发现父主机组是disabled
+										if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('disabled')) {
+											_currentId.prop('checked', true);
+											_currentId.prop('disabled', true);//input
+											_currentId.next('span').attr("class", "checkbox checked disabled");
+											//<<<< 
+											_span_authtype.find('span').addClass("disabled");
+											_span_authtype.find('input').prop('disabled', true);
+										}
+										var ind = push_hid.indexOf(p_id + ':' + item.hid + ":" + "true");
+										if (ind != -1) {
+											push_hid.splice(ind, 1);
+											i = 0;
+										}
+									});
+								},
+								error:function(XmlHttpRequest,textStatus, errorThrown){
+									return false;
+								}
+							});
+						}
+					}
+					index_w = i;
+				}
+				var if_select1 = setInterval(function () {
+					if (push_hid.length == 0) {  //
+						clearInterval(if_select1);
+						return false;
+					}
+					var ff = false;
+					$.each(push_hid,function(i1,item1){
+						if(item1.split(':')[2] == "false"){
+							ff = true;
+						}	
+					})
+					if(ff ==false){
+						clearInterval(if_select1);
+						return false;
+					}
+					_doselect1();
+					setTimeout("get_msg()", 100);	
+				}, 50);
+			}else if(select_flag == "UGroup"){ //用户组
+				var i = 0;
+				var index_w = 0;
+				var indx = 0;
+				//console.log("111");
+				//console.log(ugtreelist);
+				function _doselect() {
+					for (i = index_w; i < index_w + 15; i+=5) { //每次只加载5个 根据情况定
+						if (i >= ugtreelist.length) {
+							if (ugtreelist.length == 0) {
+								clearInterval(if_select);
+								return false;
+							} else {
+								index_w = 0;
+								return false;
+							}
+						}
+						var PGetHNodeSelected_json={
+							"type":3,
+							"id":document.frm_manage_add.manageauthId.value,
+							"isuser": false,
+							"unodeset": new Array()
+						}
+						for(var m=i;m<i+5;m++){
+							if(m>=ugtreelist.length){
+								break;
+							}
+							var uid = ugtreelist[m].split(":")[0];
+							var falg_sec = ugtreelist[m].split(":")[1];
+							var $hg_pinput = $("#UGId-"+uid).parent().parent().siblings('input');
+							var hg_pid = 0;
+							if ($hg_pinput.length != 0){
+								hg_pid = $hg_pinput.attr('id').split('-')[1];
+								if(ugtreelist.indexOf(uid + ':true')>=0){
+									continue;
+								}
+								if(ugtreelist.indexOf(hg_pid + ':false')>=0){
+									continue;
+								}
+								if(ugtreelist.indexOf(hg_pid + ':true')>=0){
+									continue;
+								}
+							}
+							if(falg_sec == 'false'){
+								PGetHNodeSelected_json.unodeset.push(JSON.parse('{"uid": '+uid+'}'));
+								ugtreelist[m] = uid + ":" + "true";
+							}
+						}
+						if(PGetHNodeSelected_json.unodeset.length>0){
+							//ugtreelist[i] = hg_id + ":" + "true";
+							$.ajax({
+								url: '/bhost/PGetUNodeSelected',
+								type: 'post',
+								async: true,
+								data:{a0:$("input[name=se]").val(),z1:JSON.stringify(PGetHNodeSelected_json)},//hg_id
+								success: function (result) {
+									var result = JSON.parse(result);
+									var data = result.info;
+									$.each(data,function (i,item) {
+										var _currentId = $("#UGId-" + item.uid);
+										var _span_authtype = _currentId.siblings('span.authtype');
+										var mode = parseInt(_span_authtype.find('input').attr("data-mode"));
+										//
+										var p_id;
+										if (_currentId.parent().parent().siblings("input").length > 0)
+											p_id = _currentId.parent().parent().siblings("input").attr('id').split('-')[1];
+										else p_id = 0;
+										var if_change_parent = false; //主机组是否改变
+										var loadlast = 0;
+										var gl_selected = false;
+										if (item.selected == 0) {
+											_currentId.next('span').attr("class", "checkbox");
+											_currentId.prop('checked', false);
+
+										} else if (item.selected == 1) {
+											_currentId.next('span').attr("class", "checkbox half");
+											_currentId.prop('checked', false);
+										} else {
+											_currentId.next('span').attr("class", "checkbox checked");
+											_currentId.prop('checked', true);
+											//判断该组是否是 按组授权
+											$.each(last_user_set, function (i1, item1) {
+												if (item1.Id == item.uid && item1.Type == 2) {
+													gl_selected = true;
+													return false;
+												}
+											})
+											//
+										}
+
+										//父节点 按组授权
+										if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == true) {
+											_currentId.prop('disabled', true);//input
+											_currentId.prop('checked', true);
+											_currentId.next('span').attr("class", "checkbox checked disabled");
+
+												if (gl_selected) {
+													_span_authtype.find('span').attr('class', "checkbox checked disabled");
+													_currentId.siblings('span.authtype').find('input').prop('checked', true).prop('disabled', true);
+												} else {
+													_span_authtype.find('input').prop('disabled', true);
+													_span_authtype.find('span').attr('class', 'checkbox disabled');
+												}
+											} else {
+												_currentId.attr('disabled', false);//input
+												_currentId.next('span').removeClass("disabled");
+											if (gl_selected) {
+												_span_authtype.find('span').attr('class', "checkbox checked");
+												_span_authtype.find('input').prop('checked', true).prop('disabled', false);
+											} else {
+												_span_authtype.find('input').prop('disabled', false);
+												_span_authtype.find('span').attr('class', 'checkbox');
+											}
+										}
+										if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('disabled')) {
+											_currentId.prop('checked', true);
+											_currentId.prop('disabled', true);//input
+											_currentId.next('span').attr("class", "checkbox checked disabled");
+											//<<<< 
+											_span_authtype.find('span').addClass("disabled");
+											_span_authtype.find('input').prop('disabled', true);
+										}
+
+										var ind = ugtreelist.indexOf(item.uid + ":" + "true");
+										if (ind != -1) {
+											ugtreelist.splice(ind, 1);
+											i = 0;
+										}
+									});
+								},
+								error: function (XmlHttpRequest, textStatus, errorThrown) {
+									var ind = ugtreelist.indexOf(uid + ":" + "true");
+									if (ind >= 0) {
+										ugtreelist.splice(ind, 1);
+										ugtreelist.push(uid + ":" + "false");
+									}
+									return false;
+								}
+							});
+						}
+					}
+					index_w = i;
+				}
+				var if_select = setInterval(function(){
+					if (ugtreelist.length == 0){  //
+						clearInterval(if_select);
+						return false;
+					}
+					_doselect();	
+				},10);
+			}else if (select_flag == "User") { //用户
+				//console.log("1112");
+				//console.log(utreelist);
+				$.each($("#UGspanHG-"+pid).siblings('ul').find("input.zcheck"),function(i,item){
+					var host_id_tmp = $(item).attr('id').split('-')[2];
+					$.each(utreelist,function (i1,item1) {
+						if (item1.split(':')[0] == host_id_tmp) {
+							_currentId = $("#UserId-" + pid + '-' + host_id_tmp);//当前id
+							//绑定 data-loadfirst状态 和 data-loadlast
+							var gl_selected = false;
+							var if_change_parent = false;
+							_currentId.next('span').attr("class", "checkbox checked");
+							_currentId.prop('checked', true);
+							
+							//父节点 按组授权
+							if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('checked') == true) {
+								_currentId.prop('disabled', true);//input
+								_currentId.prop('checked', true);
+								_currentId.next('span').attr("class", "checkbox checked disabled");
+							} else {
+								_currentId.attr('disabled', false);//input
+								_currentId.next('span').removeClass("disabled");
+							}
+							//发现父主机组是disabled
+							if (_currentId.parent().parent().siblings('span.authtype').find('input').prop('disabled')) {
+								_currentId.prop('checked', true);
+								_currentId.prop('disabled', true);//input
+								_currentId.next('span').attr("class", "checkbox checked disabled");
+							}
+						}
+					});
+				})
+			}
+		}
+
+		//
+		var first_find_index = null;
+		function _authTypeTheme(obj){
+			$.each(obj,function(i,item){
+				var $_item = $(item);
+
+				if($_item.parent().children('span').length == 0){
+					$_item.after('<span class="checkbox"></span>');
+				}
+
+				var $s = $_item.next('span');
+				var checked = $_item.prop('checked');
+				var disabled = $_item.prop('disabled');
+
+				if(checked){
+					$s.addClass('checked');
+				}else{
+					$s.removeClass('checked');
+				}
+
+				if(disabled){
+					$s.addClass('disabled');
+				}else{
+					$s.removeClass('disabled');
+				}
+			})
+		}
+		function _checkView_host(obj){
+			_authTypeTheme($('span.authtype input',obj));
+			$('input.zcheck',obj).each(function(){
+				var $s = $('<span class="checkbox"></span>');
+				$(this).after($s);
+				var v = $(this).prop('checked');
+				if(v){
+					$s.addClass('checked');
+				}else{
+					var c = $(this).data('check');
+					if(c && c==2){
+						$s.addClass('half');
+					}
+				}
+
+				var d = $(this).prop('disabled');
+				if(d){
+					$s.addClass('disabled');
+				}
+			}).on('change',function(){
+				var v = $(this).prop('checked');
+				var $s = $(this).next('span.checkbox');
+				var $u = $(this).parent().children('ul').find('li');
+				var $authInput = $(this).siblings('span.authtype').find('input');
+
+				if(v){
+					$s.attr('class','checkbox checked');
+					$('input.zcheck',$u).prop('checked',true);
+					$('span.checkbox:first',$u).attr('class','checkbox checked');
+					$(this).attr("data-loadlast",2);
+					$('input.zcheck',$u).attr("data-loadlast",2);			
+					$u.each(function(){
+						if ($(this).children('span.authtype').find('input').prop('checked')){
+							var $u_li = $(this).children('ul').find('li');
+							$('input.zcheck',$u_li).prop('disabled',true);
+							$('span.checkbox:first',$u_li).addClass('disabled');
+						};
+					});		
+				}else{
+					$s.attr('class','checkbox');
+					$('input',$u).prop('checked',false).prop('disabled',false);
+					$('span.checkbox',$u).attr('class','checkbox');
+					$(this).attr("data-loadlast",0);
+					$('input.zcheck',$u).attr("data-loadlast",0);
+					
+					$authInput.prop('checked',false).trigger('change');
+					$(this).siblings('span.authtype').find('span').attr('class','checkbox');			
+				}
+				_checkEvent(this);
+			});
+		}
+
+		//删除模块
+		function _delModule(obj) {
+			var $c = $(obj).parent()
+			var m_i = $c.find('input').attr('name');
+			var id = m_i.split('-')[1]
+			if (m_i.indexOf('client') >= 0) {
+				client_get[id] = client_check[id];
+				delete client_check[id];
+				update_select();
+			} else {
+				server_get[id] = server_check[id];
+				delete server_check[id];
+				update_select1();
+			}
+			$c.fadeOut(function(){
+				$c.remove();
+				
+			});
+			
+		}
+		function _addMAC(obj) {
+			var pass = 1;
+			var v = $(obj).prev('input').val().trim();
+
+			if (v == '') {
+				_alert(2, "客户端集合", "请输入MAC地址", $(obj).prev())
+				return false;
+			} else if (!MACReg.test(v)) {
+				_alert(1, "客户端集合", "MAC地址格式不正确", $(obj).prev())
+				return false;
+			} else {
+				$("#MACAddress>span[class='ss']").each(function () {
+					mac_str = $(this).find("input").val().trim();
+					if (mac_str.toLowerCase() == v.toLowerCase()) {
+						_alert(2, "客户端集合", "相同的MAC地址已存在", $(obj).prev())
+						pass = 0;
+						return false;
+					}
+				});
+			}
+			var mac_id = $(obj).parent().attr("value");
+			//////console.log('mac_id' + mac_id);
+			if (pass == 1) {
+				$(obj).parent().after( createMACTag(mac_id, v));
+				$(obj).prev().val("");
+				$(obj).prev().focus();
+			}
+		}
+
+		function createMACTag(mac_id, macAddr) {
+			var contentBuf = [];
+			contentBuf.push('<span class="ss" value="' + mac_id + '" style="float:left;position:static;width:175px;">');
+			contentBuf.push('<input type="text" class="form-text" maxlength="17" style="width:122px;padding-right:8px" value="' + macAddr + '">');
+			contentBuf.push('<i class="ctr ctr-del" style="margin-top:4px;margin-left:-3px;" onclick="_delMAC(this)"></i>');
+			contentBuf.push('</span>');
+			return contentBuf.join('');
+		}
+
+		function _addMAC1(obj) {
+			var pass = 1;
+			var v1 = $(obj).prev().val().trim();
+			var v = $(obj).prev().prev().prev().val().trim();
+
+			if (v == '') {
+				_alert(2, "客户端集合", "请输入起始MAC地址", $(obj).prev().prev().prev())
+				return false;
+			} else if (!MACReg.test(v)) {
+				_alert(1, "客户端集合", "起始MAC地址格式不正确", $(obj).prev().prev().prev())
+				return false;
+			}
+			if (v1 == '') {
+				_alert(2, "客户端集合", "请输入结束MAC地址", $(obj).prev())
+				return false;
+			} else if (!MACReg.test(v1)) {
+				_alert(1, "客户端集合", "结束MAC地址格式不正确", $(obj).prev())
+				return false;
+			}
+			if (v.toLowerCase() == v1.toLowerCase()) {
+				_alert(1, '客户端集合', '起始MAC地址不能大于等于结束MAC地址', $(obj).prev().prev().prev());
+				return false;
+			}
+			var v_str = v.split(':');
+			var v1_str = v1.split(':');
+			for (var i = 0; i < 6; i++) {
+				//console.log(parseInt(v_str[i], 16));
+				//console.log(parseInt(v1_str[i], 16));
+				if (parseInt(v_str[i], 16) > parseInt(v1_str[i], 16)) {
+					_alert(1, '客户端集合', '起始MAC地址不能大于等于结束MAC地址', $(obj).prev().prev().prev());
+					return false;
+				} else if (parseInt(v_str[i], 16) < parseInt(v1_str[i], 16)) {
+					break;
+				}
+			}
+			$('#MACAddress1>span[class=ss]').each(function () {
+				var input1 = $(this).find('input').eq(0).val().trim();
+				var input2 = $(this).find('input').eq(1).val().trim();
+				if (input1.toLowerCase() == v.toLowerCase() && input2.toLowerCase() == v1.toLowerCase()) {
+					_alert(2, '客户端集合', '相同的MAC区间已存在', $(obj).prev().prev().prev())
+					pass = 0;
+					return false;
+				}
+			});
+			if (pass == 1) {
+				var mac_id = $(obj).parent().attr("value");
+				//////console.log('mac_id' + mac_id);
+				$(obj).parent().after( createMACInterval(mac_id, v, v1));
+				$(obj).prev('input').val("");
+				$(obj).prev('input').prev().prev('input').val("");
+				$(obj).prev('input').prev().prev('input').focus();
+			}
+		}
+
+		function createMACInterval(mac_id, macLow, macHigh) {
+			var contentBuf = [];
+			contentBuf.push('<span class="ss" value="' + mac_id + '" style="float:left;width: 350px;position:static;">');
+			contentBuf.push('<input type="text" class="form-text" maxlength="17"  value="' + macLow + '" style="width:122px;padding-right:8px">');
+			contentBuf.push('<span style="vertical-align:middle;padding-left:4px;padding-right:4px;">-</span>');
+			contentBuf.push('<input type="text" class="form-text" maxlength="17"  value="' + macHigh + '" style="width:122px;padding-right:8px">');
+			contentBuf.push('<i class="ctr ctr-del" style="margin-top: 4px;margin-left: -3px;" onclick="_delMAC(this)"></i>');
+			contentBuf.push('</span>');
+			return contentBuf.join('');
+		}
+		function _delMAC(obj) {
+			var $c = $(obj).parent();
+			$c.fadeOut(function(){
+				$c.remove();
+			});
+		}
+		//删除ip
+		function _delselect(obj) {
+			var $c = $(obj).parent();
+			$c.fadeOut(function(){
+				$c.remove();
+			});
+		}
+
+		function wrongIPFormat(ipStr) {
+			if ( !ipReg.test(ipStr)) {
+				return true;
+			}
+			return ipStr == "0.0.0.0" || ipStr == "255.255.255.255";
+		}
+
+		//加入ip
+		function _addIp(obj,num) {
+			var title_value=(num==1?'客户端集合':'服务器集合');
+			var ipStart = $(obj).prev().prev().prev(), ipEnd = $(obj).prev();
+			var ipLow = ipStart.val().trim();
+			var ipHigh = ipEnd.val().trim();
+
+			if (ipLow == '') {
+				_alert(2,title_value, '请输入起始IP地址', ipStart);
+				return false;
+			}
+			if (ipHigh == '') {
+				_alert(2,title_value, '请输入结束IP地址', ipEnd);
+				return false;
+			}
+			if ( !isGoodInterval(ipStart, ipEnd, num)) {
+				return false;
+			}
+
+			var isUnique = true;
+			$(obj).parent().nextAll().each(function(){
+				var ipInterval = $(this).find('input');
+				var input1 = ipInterval.eq(0).val();
+				var input2 = ipInterval.eq(1).val();
+				if(input1 == ipLow && input2 == ipHigh){
+					isUnique = false;
+					return false;
+				}
+			});
+			if( !isUnique){
+				_alert(2,title_value,'相同的IP区间已存在',ipStart);
+				return false;
+			}
+			var ip_id = $(obj).parent().attr("value");
+			$(obj).parent().after( createIntervalTag(ip_id, ipLow, ipHigh));
+			ipEnd.val("");
+			ipStart.val("");
+			ipStart.focus();
+			$(obj).parent().attr("value", "0");
+		}
+
+		function isGoodInterval(ipStartObj,ipEndObj, num) {
+			var title_value=(num==1?'客户端集合':'服务器集合');
+			var ipLow = ipStartObj.val(), ipHigh = ipEndObj.val();
+			if ( wrongIPFormat(ipLow)) {
+				ipStartObj.val('').val(ipLow);
+				_alert(1, title_value, '起始IP格式不正确', ipStartObj);
+				return false;
+			}
+			if ( wrongIPFormat(ipHigh)) {
+				ipEndObj.val('').val(ipHigh);
+				_alert(1, title_value, '结束IP格式不正确', ipEndObj);
+				return false;
+			}
+			if (ipLow == ipHigh) {
+				ipStartObj.val('').val(ipLow);
+				_alert(1, title_value, '起始IP不能大于等于结束IP', ipStartObj);
+				return false;
+			}
+			var v_str = ipLow.split(".");
+			var v1_str = ipHigh.split(".");
+			for (var i = 0; i < 4; i++) {
+				if (parseInt(v_str[i]) > parseInt(v1_str[i])) {
+					ipStartObj.val('').val(ipLow);
+					_alert(1, title_value, '起始IP不能大于等于结束IP', ipStartObj);
+					return false;
+				} else if (parseInt(v_str[i]) < parseInt(v1_str[i])) {
+					break;
+				}
+			}
+			return true;
+		}
+
+		function createIntervalTag(ip_id,ipLow,ipHigh) {
+			var contentBuf = [];
+			contentBuf.push('<span class="ss" value="' + ip_id + '" style="width:320px;float:left;position:static;">');
+			contentBuf.push('<input type="text" class="form-text" style="width:124px;padding-right:8px;" value="' + ipLow + '">');
+			contentBuf.push('<span style="vertical-align:middle;padding-left:4px;padding-right:4px">-</span>');
+			contentBuf.push('<input type="text" class="form-text" style="width:124px;padding-right:8px;" value="' + ipHigh + '">');
+			contentBuf.push('<i class="ctr ctr-del" onclick="_delselect(this)" style="margin-top:5px;margin-left:-3px;"></i>');
+			contentBuf.push('</span>');
+			return contentBuf.join('');
+		}
+		function manageauth_add(){
+			document.frm_manage_add.action = '/bhost/manage_auth_add';
+			document.frm_manage_add.submit();
+		}
+		//加入ip
+		function _addIp1(obj,num) {
+			var title_value=(num==1?"客户端集合":"服务器集合");
+			var inputArea = $(obj).prev();
+			var inputSpan = $(obj).parent();
+			var inputVal = inputArea.val().trim();
+			if (inputVal == '') {
+				_alert(2, title_value, '请输入IP地址', inputArea);
+				return false;
+			}
+			if ( wrongIPFormat(inputVal)) {
+				_alert(1, title_value, 'IP格式不正确', inputArea);
+				return false;
+			}
+
+			var isUnique = true;
+			inputSpan.nextAll().each(function () {
+				ip_str = $(this).find("input").val();
+				if (ip_str == inputVal) {
+					isUnique = false;
+					return false;
+				}
+			});
+			if ( !isUnique) {
+				_alert(2, title_value, '相同的IP地址已存在', inputArea);
+				return false;
+			}
+			var ip_id = inputSpan.attr("value");
+			inputSpan.after( createIPTag(ip_id, inputVal));
+			inputArea.val("");
+			inputArea.focus();
+			inputSpan.attr("value", "0");
+		}
+
+		function createIPTag(ip_id, ipAddr) {
+			var contentBuf = [];
+			contentBuf.push('<span class="ss" style="float:left;position:static;" value="' + ip_id + '">');
+			contentBuf.push('<input type="text" class="form-text" style="width:124px;padding-right:8px;" value="' + ipAddr + '">');
+			contentBuf.push('<i class="ctr ctr-del" onclick="_delselect(this)" style="margin-top:5px;margin-left:-3px;"></i>');
+			contentBuf.push('</span>');
+			return contentBuf.join('');
+		}
+
+		function save_server_hg_host(obj, id) {
+			$(">li", obj).children('input').each(function () {
+				var input_id = $(this).attr('id');
+				var input_str = input_id.split('-');
+				var input_state = $(this).next('span.checkbox').attr('class');
+				var radio_value = $(this).siblings('span.authtype').find('input');
+				var $u = $(this).parent().children('ul');
+				if (input_state.indexOf('checked') > 0 ) {
+					if (radio_value.is(':checked') && input_str[0] == "HGId" && input_str[1] != "1") {
+						var json_a = '{"HGId":' + input_str[1] + ',"HostId":null,"IsGroupAuth": true}';
+						//////console.log(json_a);
+						server.HostList.push(JSON.parse(json_a));
+					} else {
+						if (input_str[0] == "HGId") {
+							var json_a = '{"HGId":' + input_str[1] + ',"HostId":null,"IsGroupAuth": false}';
+							server.HostList.push(JSON.parse(json_a));
+							if ($u.text() != "Loading..." && $u.text() != "") {
+								save_server_hg_host($u, input_str[1]);
+							}
+						} else {
+							var json_a = '{"HGId":' + id + ',"HostId":' + input_str[2] + '}';
+							server.HostList.push(JSON.parse(json_a));
+						}
+					}
+				} else if (input_state.indexOf('half') > 0) {
+					if ($u.text() != "Loading..." && $u.text() != "") {
+						save_server_hg_host($u, input_str[1]);
+					}else{
+						////console.log('last_object');
+						////console.log(last_object);
+						$.each(last_object,function (i,item) {
+							if(item.HGId==parseInt(input_str[1]) && item.HostId!=null){
+								var json_a = '{"HGId":' + item.HGId + ',"HostId":' + item.HostId + '}';
+								server.HostList.push(JSON.parse(json_a));
+							}
+						});
+					}
+				}
+			});
+		}
+		//创建
+		function client_add() {
+			var ip_section = 1;
+			var mac_address = 1;
+			var ip_section1 = 1;
+			var mac_address1 = 1;
+			var pass = 1;
+			var no_pass = "";
+			var val = $("#d_n").val();
+			var $i = $("#d_n").next('i.v-check');
+			if (val == "") {
+				_alert(2, '客户端集合', '请输入名称', $("#d_n"));
+				return false;
+
+			} else if (!nameReg.test(val)) {
+				_alert(1, '客户端集合', '名称格式不正确', $("#d_n"));
+				return false;
+			}
+			var $all=$('#ip_n1').find('span.ss');
+			//////console.log($all.length);
+			for(var i=0;i<$all.length;i++){
+				var ip_str = $all.eq(i).find("input").val().trim();
+				//////console.log(i+':'+ip_str+':'+$all.length);
+				if(i==0 && ip_str=='' && $all.length==1){
+					ip_section1 = 0;
+				}else if(i!=0 && ip_str==''){
+					_alert(2, '客户端集合', '请输入IP地址',$all.eq(i).find("input"));
+					return false;
+				}else if(ip_str!='' && (!ipReg.test(ip_str) || ip_str=='0.0.0.0' || ip_str=='255.255.255.255')){
+					_alert(1, '客户端集合', 'IP地址格式不正确', $all.eq(i).find("input"));
+					return false;
+				}
+				for (var j=i+1;j<$all.length;j++){
+					var ip_str_2 = $all.eq(j).find("input").val().trim();
+					if(ip_str_2!='' && ip_str==ip_str_2){
+					_alert(2, '客户端集合', '相同的IP地址已存在',$all.eq(i).find("input"));
+					return false;
+					}
+				}
+			}
+			var $all=$('#ip_n').find('span.ss');
+			for (var i=0;i<$all.length;i++){
+				var input1 = $all.eq(i).find('input').first().val().trim();
+				var input2 = $all.eq(i).find('input').last().val().trim();
+				if(i==0 && input1=="" && input2=="" && $all.length==1){
+					ip_section = 0;
+				}else if(i!=0 && input1==""){
+					_alert(2, '客户端集合', '请输入起始IP地址', $all.eq(i).find('input').first());
+					return false;
+				}else if(input1!='' && (!ipReg.test(input1) || input1=='0.0.0.0' || input1=='255.255.255.255')){
+					_alert(1, '客户端集合', '起始IP格式不正确', $all.eq(i).find('input').first());
+					return false;
+				}else  if(i!=0 && input2==""){
+					_alert(2, '客户端集合', '请输入结束IP地址', $all.eq(i).find('input').last());
+					return false;
+				}else if(input2!='' && (!ipReg.test(input2) || input2=='0.0.0.0' || input2=='255.255.255.255')){
+					_alert(1, '客户端集合', '结束IP格式不正确', $all.eq(i).find('input').last());
+					return false;
+				}else if(input1!='' && input2!='' && input1==input2){
+					_alert(1, '客户端集合', '起始IP不能大于等于结束IP', $all.eq(i).find('input').first());
+					return false;
+				}else if(input1!='' && input2!=''){
+					var v_str = input1.split(".");
+					var v1_str = input2.split(".");
+					for (var m= 0; m < 4; m++) {
+						if (parseInt(v_str[m]) > parseInt(v1_str[m])) {
+							_alert(1, '客户端集合', '起始IP不能大于等于结束IP',$all.eq(i).find('input').first());
+							return false;
+						} else if (parseInt(v_str[m]) < parseInt(v1_str[m])) {
+							break;
+						}
+					}
+				}
+				for (var j=i+1;j<$all.length;j++){
+					var input1_j = $all.eq(j).find('input').first().val().trim();
+					var input2_j = $all.eq(j).find('input').last().val().trim();
+					if(input1!='' && input2!='' && input1==input1_j && input2==input2_j){
+					_alert(2, '客户端集合', '相同的IP地址已存在',$all.eq(i).find("input").first());
+					return false;
+					}
+				}
+			}
+			var $all=$('#MACAddress').find('span.ss');
+			for(var i=0;i<$all.length;i++){
+				var mac_str = $all.eq(i).find("input").val().trim();
+				if(i==0 && mac_str=='' && $all.length==1){
+					mac_address = 0;
+				}else if(i!=0 && mac_str==''){
+					_alert(2, '客户端集合', '请输入MAC地址',$all.eq(i).find("input"));
+					return false;
+				}else if(mac_str!='' && (!MACReg.test(mac_str))){
+					_alert(1, '客户端集合', 'MAC地址格式不正确', $all.eq(i).find("input"));
+					return false;
+				}
+				for (var j=i+1;j<$all.length;j++){
+					var mac_str_2 = $all.eq(j).find("input").val().trim();
+					if(mac_str_2!='' && mac_str.toLowerCase()==mac_str_2.toLowerCase()){
+					_alert(2, '客户端集合', '相同的MAC地址已存在',$all.eq(i).find("input"));
+					return false;
+					}
+				}
+			}
+			var $all=$('#MACAddress1').find('span.ss');
+			for (var i=0;i<$all.length;i++){
+				var input1 = $all.eq(i).find('input').first().val().trim();
+				var input2 = $all.eq(i).find('input').last().val().trim();
+				if(i==0 && input1=="" && input2=="" && $all.length==1){
+					mac_address1 = 0;
+				}else if(i!=0 && input1==""){
+					_alert(2, '客户端集合', '请输入起始MAC地址', $all.eq(i).find('input').first());
+					return false;
+				}else if(input1!='' && (!MACReg.test(input1))){
+					_alert(1, '客户端集合', '起始MAC地址格式不正确', $all.eq(i).find('input').first());
+					return false;
+				}else  if(i!=0 && input2==""){
+					_alert(2, '客户端集合', '请输入结束MAC地址', $all.eq(i).find('input').last());
+					return false;
+				}else if(input2!='' && (!MACReg.test(input2))){
+					_alert(1, '客户端集合', '结束MAC地址格式不正确', $all.eq(i).find('input').last());
+					return false;
+				}else if(input1!='' && input2!='' && input1.toLowerCase()==input2.toLowerCase()){
+					_alert(1, '客户端集合', '起始MAC地址不能大于等于结束MAC地址', $all.eq(i).find('input').first());
+					return false;
+				}else if(input1!='' && input2!=''){
+					var v_str = input1.split(":");
+					var v1_str = input2.split(":");
+					for (var m = 0; m < 6; m++) {
+						if (parseInt(v_str[m], 16) > parseInt(v1_str[m], 16)) {
+							_alert(1, '客户端集合', '起始MAC地址不能大于等于结束MAC地址',$all.eq(i).find('input').first());
+							return false;
+						} else if (parseInt(v_str[m], 16) < parseInt(v1_str[m], 16)) {
+							break;
+						}
+					}
+				}
+				for (var j=i+1;j<$all.length;j++){
+					var input1_j = $all.eq(j).find('input').first().val().trim();
+					var input2_j = $all.eq(j).find('input').last().val().trim();
+					if(input1!='' && input2!='' && input1.toLowerCase()==input1_j.toLowerCase() && input2.toLowerCase()==input2_j.toLowerCase()){
+					_alert(2, '客户端集合', '相同的MAC区间已存在',$all.eq(i).find("input").first());
+					return false;
+					}
+				}
+			}
+			if (mac_address == 0 && ip_section == 0 && mac_address1 == 0 && ip_section1 == 0) {
+				_alert(2, "客户端集合", "请输入IP或MAC地址", $("#ip_n1").find("span[class='ss ss-add']").children("input"));
+				return false;
+			}
+			client.ClientScopeName = val;
+			client.IPList.Set = new Array();
+			client.MACList.Set = new Array();
+			var i = 1;
+			var $all = $('#ip_n').find('span.ss');
+			var len = $all.length;
+			for (j = len - 1; j >= 0; j--) {
+				var ip_id = $all.eq(j).attr("value");
+				var input1 = $all.eq(j).find("input").eq(0).val().trim();
+				var input2 = $all.eq(j).find("input").eq(1).val().trim();
+				if((j==0 && input1!='' && input2!='')|| j!=0){
+					var json_a = '{"IPSetMemberId":' + ip_id + ',"Order":' + (i) + ',"StartIP":"' + input1 + '","EndIP":"' + input2 + '"}';
+					client.IPList.Set.push(JSON.parse(json_a));
+					i++;
+				}
+				
+			}
+			var $all = $('#ip_n1').find('span.ss');
+			var len = $all.length;
+			for (var j = len - 1; j >= 0; j--) {
+				var ip_id = $all.eq(j).attr("value");
+				var ip_str = $all.eq(j).find("input").val().trim();
+				if((j==0 && ip_str!='')|| j!=0){
+					var json_a = '{"IPSetMemberId":' + ip_id + ',"Order":' + (i) + ',"StartIP":"' + ip_str + '","EndIP":"' + ip_str + '"}';
+					client.IPList.Set.push(JSON.parse(json_a));
+					i++;
+				}
+			}
+			var i = 1;
+			var $all = $("#MACAddress").find('span.ss');
+			var len = $all.length;
+			for (var j = len - 1; j >= 0; j--) {
+				var mac_id = $all.eq(j).attr("value");
+				var mac_str = $all.eq(j).find("input").val().trim();
+				if((j==0 && mac_str!='') || j!=0){
+					var json_a = '{"MACSetMemberId":' + mac_id + ',"Order":' + (i) + ',"StartMACAddress":"' + mac_str + '","EndMACAddress":"' + mac_str + '"}';
+					client.MACList.Set.push(JSON.parse(json_a));
+					i++;
+				}
+			}
+			var $all = $('#MACAddress1').find('span.ss');
+			var len = $all.length;
+			for (var j = len - 1; j >= 0; j--) {
+				var mac_id = $all.eq(j).attr("value");
+				var mac_0 = $all.eq(j).find("input").eq(0).val().trim();
+				var mac_1 = $all.eq(j).find("input").eq(1).val().trim();
+				if((j==0 && mac_0!='' && mac_1!='')||j!=0){
+					var json_a = '{"MACSetMemberId":' + mac_id + ',"Order":' + (i) + ',"StartMACAddress":"' + mac_0 + '","EndMACAddress":"' + mac_1 + '"}';
+					client.MACList.Set.push(JSON.parse(json_a));
+					i++;
+				}
+			}
+			client.IsApplyToServerScope = false;
+			save_client(client);
+			update_select();
+			return false;
+		}
+		//创建server
+		function server_add() {
+			var ip_section = 1;
+			var ip_num = 1;
+			var host_group = 1;
+			var d_n = $('#d_ns').val();
+			if (d_n == "") {
+				_alert(2, '服务器集合', '请输入名称', $('#d_ns'));
+				return false;
+			} else if (!nameReg.test(d_n)) {
+				_alert(1, '服务器集合', '名称格式不正确', $('#d_ns'));
+				$("#d_ns").val("");
+				return false;
+			}
+
+			var ipInput = $("#ip_span1s").children("input");
+
+			var inputVal = ipInput.val().trim();
+			var enteredIP = $("#ip_n1s").children();
+			var ipSize = enteredIP.length;
+			var ipBuf = [];
+
+			if (inputVal != "") {									//如果ip输入框不为空，检查其格式是否合法
+				if ( wrongIPFormat(inputVal)) {
+					_alert(1, '服务器集合', 'IP地址格式不正确', ipInput);
+					return false;				
+				}
+				ipBuf.push(inputVal);
+			} else if ( ipSize == 1) {					//如果ip输入框为空，检查是否已经输入了IP地址
+				ip_num = 0;
+			}
+
+			for (var i = 1; i < ipSize; ++i) {
+				var ipBox = enteredIP.eq(i).find("input")
+				var ip_str = ipBox.val();
+
+				if ( wrongIPFormat(ip_str)){
+					ipBox.val('').val(ip_str);
+					_alert(1,'服务器集合','IP地址格式不正确',ipBox);
+					return false;
+				}
+				if (ip_str == inputVal){
+					ipInput.val('').val(inputVal);
+					_alert(2,'服务器集合','相同的IP地址已存在',ipInput);
+					return false;
+				}	
+				if ( ipBuf.indexOf(ip_str) != -1) {
+					ipBox.val('').val(ip_str);
+					_alert(2,'服务器集合','相同的IP地址已存在',ipBox);
+					return false;
+				}
+				ipBuf.push(ip_str);
+			}
+
+			var ipStart = $("#ip_spans").children("input").first();
+			var ipEnd = $("#ip_spans").children("input").last();
+
+			var ipLow = ipStart.val().trim();
+			var ipHigh = ipEnd.val().trim();
+			var enteredInterval = $('#ip_ns').children();
+			var intervalSize = enteredInterval.length;
+			var intervalBuf = [];								//保存ip区间 数组内容为 'ipLow-ipHigh' (字符串)
+
+			if (ipLow != "" || ipHigh != "") {
+				if (ipLow == '') {
+					_alert(2, '服务器集合', '请输入起始IP地址', ipStart);
+					return false;
+				}
+				if (ipHigh == '') {
+					_alert(2, '服务器集合', '请输入结束IP地址', ipEnd);
+					return false;
+				}
+				if ( !isGoodInterval(ipStart, ipEnd, 2)) {
+					return false;
+				}
+				intervalBuf.push(ipLow + '-' + ipHigh);
+			} else if (intervalSize == 1) {
+				ip_section = 0;
+			}
+			for (var i = 1; i < intervalSize; ++i) {
+				var lo_hi = enteredInterval.eq(i).find('input');
+				var loBox = lo_hi.eq(0);
+				var hiBox = lo_hi.eq(1);
+				var lo_str = loBox.val();
+				var hi_str = hiBox.val();
+				if ( !isGoodInterval(loBox,hiBox, 2)) {
+					return false;
+				}
+				if (lo_str == ipLow && hi_str == ipHigh) {
+					ipStart.val('').val(ipLow);
+					_alert(2, '服务器集合', '相同的IP区间已存在', ipStart);
+					return false;
+				}
+				if (intervalBuf.indexOf(lo_str + '-' + hi_str) != -1) {
+					loBox.val('').val(lo_str);
+					_alert(2, '服务器集合', '相同的IP区间已存在', loBox);
+					return false;
+				}
+				intervalBuf.push(lo_str + '-' + hi_str);
+			}
+
+			server.HostList = [];
+			save_server_hg_host($("#userTrees"), 0);
+			if (server.HostList.length == 0) {
+				host_group = 0;
+			}
+			if (host_group == 0 && ip_section == 0 && ip_num == 0 && $("#part1").prop('checked') == true) {
+				_alert(2, '服务器集合', '请输入IP或选择主机', ipInput);
+				return false;
+			}else if($("#part1").prop('checked') == false && host_group == 0){
+				_alert(2, '服务器集合', '请输入IP或选择主机');
+				return false;
+			}
+			server.ServerScopeName = d_n;
+
+			var orderCount = 1;
+
+			//添加IP区间 ipInputStr
+			intervalBuf.reverse();
+			var ipIntervalData = intervalBuf.map(function(item,idx){
+				var ip_id = enteredInterval.eq(intervalSize - idx-1).attr("value");
+				var strArr = item.split("-");
+				var json_a = '{"IPSetMemberId":' + ip_id
+							+ ',"Order":' + orderCount
+							+ ',"StartIP":"' + strArr[0]
+							+ '","EndIP":"' + strArr[1] + '"}';
+				++orderCount;
+				return JSON.parse(json_a);
+			});
+			//添加IP地址
+			ipBuf.reverse();
+			var ipData = ipBuf.map(function(item,idx){
+				var ip_id = enteredIP.eq(ipSize - idx-1).attr("value")
+				var json_a = '{"IPSetMemberId":' + ip_id
+							+ ',"Order":' + orderCount
+							+ ',"StartIP":"' + item
+							+ '","EndIP":"' + item + '"}';
+				++orderCount;
+				return JSON.parse(json_a);
+			});	
+			if($("#part1").prop('checked') == false){
+				server.EnableIPLimit = 0;
+			}else{
+				server.EnableIPLimit = 1;
+			}
+			server.IPList.Set = ipIntervalData.concat(ipData);
+			server.IsApplyToClientScope = false;
+			save_server(server);
+			update_select1();
+			return false;
+		}
+		function update_select(){
+			client_get_array();
+			var id_value=$('#module_client_select').data('value');
+			var text_value=$('.xSelect-show-text',$('#module_client_select')).text();
+			var id=$('#module_client_select').data('id');
+			$('#module_client_select').empty().data('xSelect','');
+			$(id).remove();
+			xSelect_json={
+				width: 147,
+				defaultText: '请选择',
+				items:client_get,
+				edit: function(item,obj){
+					$('.'+$('.xSelect-show',$('#module_client_select')).data('id')).hide();
+					_editNode(item,'client');
+				},
+				check: function(item,obj){
+					$('.'+$('.xSelect-show',$('#module_client_select')).data('id')).hide();
+					_editNode(item,'client');
+				},
+				delete: function(item,obj){
+				},
+				btn:[
+					
+				]
+			};
+			if(perm==2){
+				xSelect_json.btn.push({
+						'name':'新增',
+						'event': function(items,obj){
+							_addNew('_client');
+						}
+					});
+			}
+			$('#module_client_select').xSelect(xSelect_json);
+			$('#module_client_select').data('value',id_value);
+			$('.xSelect-show-text',$('#module_client_select')).text(text_value);
+		}
+		function update_select1(){
+			server_get_array();
+			var id_value=$('#module_server_select').data('value');
+			var text_value=$('.xSelect-show-text',$('#module_server_select')).text();
+			var id=$('#module_server_select').data('id');
+			$('#module_server_select').empty().data('xSelect','');
+			$(id).remove();
+			xSelect_json={
+				width: 147,
+				defaultText: '请选择',
+				items:server_get,
+				edit: function(item,obj){
+					$('.'+$('.xSelect-show',$('#module_server_select')).data('id')).hide();
+					_editNode(item,'server');
+				},
+				check: function(item,obj){
+					$('.'+$('.xSelect-show',$('#module_server_select')).data('id')).hide();
+					_editNode(item,'server');
+				},
+				delete: function(item,obj){
+				},
+				btn:[
+					
+				]
+			};
+			if(perm==2){
+				xSelect_json.btn.push({
+						'name':'新增',
+						'event': function(items,obj){
+							_addNew('_server');
+						}
+					});
+			}
+			$('#module_server_select').xSelect(xSelect_json);
+			$('#module_server_select').data('value',id_value);
+			$('.xSelect-show-text',$('#module_server_select')).text(text_value);
+		}
+		function save_client(client) {
+			var pass = true;
+			var msstr = aceg(JSON.stringify(client),$("input[name=se]").val());
+			$.ajax({
+				url: '/bhost/add_client',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(client), a2: "0", a3: "null" ,m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						$('.btn').blur();parent.layer.open({
+							type: 1,
+							title: '客户端集合',
+							content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+							btn: ['确&nbsp;&nbsp;定'],
+							btnAlign: 'c',
+							closeBtn: false,
+							skin: 'layer-custom',
+							area: ['380px', '310px'],
+							move: false,
+							resize: false,
+							yes: function (i) {
+								parent.layer.close(i);
+								d.close().remove();
+							}
+						});
+						//刷新下拉
+						var xselect_value=$('#module_client_select').data('value');
+						if(xselect_value=='0' || xselect_value=='' || xselect_value==undefined){
+							$('#module_client_select').data('value',result.ClientScopeId);
+							$('.xSelect-show-text',$('#module_client_select')).text(client.ClientScopeName);
+						}
+						// $('#module_client_select').data('value',result.ClientScopeId);
+						// $('.xSelect-show-text',$('#module_client_select')).text(client.ClientScopeName);
+					} else {
+						_alert(1, '客户端集合', result.ErrMsg, $("#d_n"));
+						pass = false;
+					}
+				}
+			});
+			return pass;
+		}
+		function save_server(server) {
+			var msstr = aceg(JSON.stringify(server),$("input[name=se]").val());
+			$.ajax({
+				url: '/bhost/add_server',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(server), m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						$('.btn').blur();parent.layer.open({
+							type: 1,
+							title: '服务器集合',
+							content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+							btn: ['确&nbsp;&nbsp;定'],
+							btnAlign: 'c',
+							closeBtn: false,
+							skin: 'layer-custom',
+							area: ['380px', '310px'],
+							move: false,
+							resize: false,
+							yes: function (i) {
+								parent.layer.close(i);
+								d.close().remove();
+							}
+						});
+						//刷新下拉
+						var select_value=$('#module_server_select').data('value');
+						if(select_value=='0' || select_value=='' || select_value==undefined){
+							$('#module_server_select').data('value',result.ServerScopeId);
+							$('.xSelect-show-text',$('#module_server_select')).text(server.ServerScopeName);
+						}
+						// $('#module_server_select').data('value',result.ServerScopeId);
+						// $('.xSelect-show-text',$('#module_server_select')).text(server.ServerScopeName);
+					} else {
+						_alert(1, '服务器集合', result.ErrMsg, $("#d_ns"));
+						return false;
+					}
+				}
+			});
+		}
+		//回显client
+		function client_return_get(id) {
+			$.ajax({
+				url: "/bhost/get_client_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: id },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						var data = result.info;
+						client_get[id] = data.data[0];
+						$('#module_client_select').val(data.data[0].ClientScopeName);
+						$('#module_client_select').attr('name', 'module_client_select-' + data.data[0].ClientScopeId);
+					} else {
+						_alert(1, "客户端集合", result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+		//回显server
+		function server_return_get(id) {
+			$.ajax({
+				url: "/bhost/get_server_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: id },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						var data = result.info;
+						server_get[id] = data.data[0];
+						$('#module_server_select').val(data.data[0].ServerScopeName);
+						$('#module_server_select').attr('name', 'module_server_select-' + data.data[0].ServerScopeId);
+					} else {
+						_alert(1, "服务器集合", result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+		//添加模块
+		function _addModule(obj) {
+			var m_i = $(obj).prev('.xSelect').find('.xSelect-show-text').text();
+			var str_id = $(obj).prev('.xSelect').data('value');
+			var input_id = $(obj).prev('.xSelect').attr('id');
+			//////console.log(m_i);
+			if (str_id == "" || str_id==undefined) {
+				_alert(2, ' 管理授权', '请选择集合');
+				return false;
+			}
+			var pass = '“'+m_i+'”不存在，是否新建';
+			if (input_id.indexOf('client') >= 0) {
+				$.each(client_check, function (i, item) {
+					if (item != null) {
+						if (item.ClientScopeName == m_i) {
+							pass = '客户端集合重复';
+							return false;
+						}
+					}
+				});
+			} else {
+				$.each(server_check, function (i, item) {
+					if (item != null) {
+						if (item.ServerScopeName == m_i) {
+							pass = '服务器集合重复';
+							return false;
+						}
+					}
+				});
+			}
+			if (pass == '服务器集合重复') {
+				_alert(2, '服务器集合', pass);
+				return false;
+			} else if (pass == '客户端集合重复') {
+				_alert(2, '客户端集合', pass);
+				return false;
+			} 
+			var $c = $('<div class="item" style="padding-top:0px;width:175px;" value/>');
+			$c.html('<input type="text" class="form-text " style="width: 129px;padding-right:8px;" disabled="true" value="' + m_i + '" name="' + input_id+'-'+str_id + '"><i class="ctrl del" style="margin-left: 4px;" onclick="_delModule(this)"></i>');
+			$(obj).parent().after($c);
+			$(obj).prev('.xSelect').data('value','');
+			$(obj).prev('.xSelect').find('.xSelect-show-text').text('请选择');
+			if (input_id.indexOf('client') >= 0) {
+				//////console.log(id);
+				client_check[str_id] = client_get[str_id];
+				client_get[str_id] = undefined;
+				update_select();
+			} else {
+				server_check[str_id] = server_get[str_id];
+				server_get[str_id] = undefined;
+				update_select1();
+			}
+		}
+	</script>
+
+</body>
+
+</html>

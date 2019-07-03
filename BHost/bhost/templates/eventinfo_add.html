@@ -1,0 +1,2494 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />
+	<link rel="stylesheet" href="/manage/css/G-style.css" type="text/css" />
+
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<script src="/manage/js/jquery.datepick.js"></script>
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<script src="/manage/js/xSelect.js"></script>
+
+	<style>
+		.form-text2 {
+			padding-right: 8px;
+		}
+
+		#smssvr_suspend .form-item {
+			float: left;
+		}
+
+		#smtp_suspend .form-item {
+			float: left;
+		}
+
+		#smsm_suspend .form-item {
+			float: left;
+		}
+
+		#syslog_suspend .form-item {
+			float: left;
+		}
+
+		#snmp_suspend .form-item {
+			float: left;
+		}
+		.form-tag_change{
+			width: 92px;
+		}
+		.form-tag_change_2{
+			width: 112px;
+		}
+		.form-c_change{
+			padding-left: 100px;
+		}
+		.form-c_change_2{
+			padding-left: 120px;
+		}
+		.span_color_000{
+			color:#000;
+		}
+	</style>
+</head>
+
+<body style="overflow:hidden;display:none;" class="bg-white">
+	<!--警告事件添加或编辑-->
+	<div class="rwrap">
+		<div class="mainer">
+			<div class="container">
+				<div class="c-top">
+					<div class="c-title">
+						<div class="manual-head" style="float:left;width:100px">
+							<div class="manual-title">
+								<span id="eventinfo_group" style="cursor: pointer;">事件告警</span>
+								<i class="syswarn_icon"></i>
+							</div>
+						</div>
+						<div class="ctr">
+							<a href="javascript:;" class="ret" onclick="parent._closePage(this)">
+								<i></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="c-cont">
+					<div class="c-wrap" style="padding: 10px 0 0">
+						<div class="c-exp" style="margin: -1px auto;">
+
+							<div class="h-explorer">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;基本信息</strong>
+								</div>
+
+								<div class="h-content2" style="height:auto;width: 100%;overflow: hidden;padding: 14px 0 14px;">
+									<div class="form-item" style="float: left;width: 375px;padding: 10px 0 10px;">
+										<span class="form-tag form-tag_change" style="">
+											<em class="imp">*</em>名称：</span>
+										<div class="form-c form-c_change" style="">
+											<input type="text" class="form-text" id="d_n" name="d_n" onblur="regCheck(this,nameReg);" maxlength="128">
+											<i class="v-check"></i>
+											<p class="form-tip">特殊字符仅支持下划线、横杠、小数点</p>
+										</div>
+									</div>
+									<div class="form-item" style="width: auto;float: left;padding: 10px 0 10px;">
+										<span class="form-tag form-tag_change" style="">
+											<em class="imp" id="Description_imp" style="display:none;">*</em>描述：</span>
+										<div class="form-c form-c_change" style="">
+											<input type="text" class="form-text form-text2" id="Description" name="Description" maxlength="1024" style="width: 187px;">
+										</div>
+									</div>
+									<div class="form-item" style="float: left;width: auto;padding: 10px 0 10px;">
+										<span class="form-tag form-tag_change" style="">等级：</span>
+										<div class="form-c form-c_change" style="">
+											<select class="filter-select" name="EventLevel" id="EventLevel" style="width:100px;">
+												<option value="0" selected>无</option>
+												<option value="1">低</option>
+												<option value="2">中</option>
+												<option value="3">高</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-item" style="width: auto;float: left;padding: 10px 0 10px;">
+										<span class="form-tag form-tag_change" style="">类型：</span>
+										<div class="form-c form-c_change" style="">
+											<select class="filter-select" name="EventType" id="EventType" style="width:100px;">
+												<option value="0" selected>无</option>
+												<option value="1">违规操作</option>
+												<option value="2">高危操作</option>
+												<option value="3">登录异常</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="c-exp" style="margin: -1px auto;">
+							<div class="h-explorer">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;方式</strong>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 14px 0 14px;">
+									<div class="form-item" style="float: left;padding: 10px 0 10px;width: auto;">
+										<span class="form-tag form-tag_change" style="">方式：</span>
+										<div class="form-c form-c_change" style="">
+											<select class="filter-select" name="AlarmAction" id="AlarmAction" style="width:154px;">
+												<option value="0" selected>无</option>
+												<option value="1">邮件</option>
+												<!-- <option value="2">短信猫</option> -->
+												<option value="3">短信</option>
+												<option value="4">SNMP</option>
+												<option value="5">SYSLOG</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-item" style="float: left;padding: 10px 0px;width: auto;display:none;">
+										<span class="form-tag form-tag_change" style="">默认：</span>
+										<div class="form-c form-c_change" style="">
+											<div class="xSelect xSelect_master"></div>
+										</div>
+									</div>
+									<div class="form-item" style="float: left;padding: 10px 0px;width: auto;display:none;">
+										<span class="form-tag form-tag_change" style="">备用：</span>
+										<div class="form-c form-c_change" style="">
+											<div class="xSelect xSelect_stand"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="c-exp" id="Receiver" style="margin: -1px auto;display: none;">
+							<div class="h-explorer">
+								<div class="G-top">
+									<div class="G-box1"></div>
+									<strong>&nbsp;接收者</strong>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 14px 0;">
+									<div class="form-item form-item-100" style="padding:10px 0px;float:left;">
+										<span class="form-tag form-tag_change" id="AlarmReceiver_span" name="AlarmReceiver_span" style="display:none;">
+											<em class="imp" id="AlarmReceiver_imp">*</em>已定义：</span>
+										<div class="h-content3" style="width: calc(100% - 120px);padding-left: 8px;float: left;display:none;padding-top: 0px;padding-bottom: 0px;"
+											name="label_list" id="label_list">
+											<!--<div class="form-c" style="width: 595px;overflow-y:auto;max-height:200px;padding-left:8px;display:none;" name="label_list" id="label_list">-->
+											<div class="item" style="padding-top:0px;width:215px;" id="admin_check" name="admin_check">
+												<select class="filter-select form-select2" name="admin_select" id="admin_select" style="width:180px;">
+													<option value="0" selected>请选择</option>
+												</select>
+												<i class="ctrl add" style="margin-left: 0px;" onclick="_addadmin(this)"></i>
+											</div>
+											<!--</div>-->
+										</div>
+										<div class="" style="width: 100%;float: left;padding: 15px 0px 0px 13px;display:none;min-height: 38px;" id="AlarmReceiver_div" name="AlarmReceiver_div">
+											<label class="form-label" name="AlarmReceiver" id="AlarmReceiver" style="float: left;padding-top: 5px;">
+												<input class="form-checkbox" type="checkbox" name="AlarmReceiver_check" id="AlarmReceiver_check">
+											</label>
+											<span id="AlarmReceiver_span" style="vertical-align:middle;font-size:14px;float: left;    margin-top: 6px;">自定义：</span>
+											<div class="h-content3" style="    width: calc(100% - 100px);padding: 0px 0 0 8px;display:none;" id="AlarmReceiver_text" name="AlarmReceiver_text">
+												<div id="AlarmReceiver_input" name="AlarmReceiver_input" class="item" style="padding-top: 0px;width: 215px;">
+													<input type="text" class="form-text form-text2" style="width: 162px;">
+													<i class="ctrl add" onclick="_addphone_or_email(this);" style="margin-left: 0px;"></i>
+												</div>
+											</div>
+										</div>
+										<div class="h-content3" style="width: calc(100% - 120px);padding-left: 8px;float: left;display:none;padding-top: 0px;padding-bottom: 0px;"
+											name="label_list1" id="label_list1">
+											<!--<div class="form-c" style="width: 595px;overflow-y:auto;max-height:200px;padding-left:8px;display:none;" name="label_list1" id="label_list1">-->
+											<div class="item" style="padding-top:0px;width:215px;" id="admin_check1" name="admin_check1">
+												<select class="filter-select form-select2" name="admin_select1" id="admin_select1" style="width:180px;">
+													<option value="0" selected>请选择</option>
+												</select>
+												<i class="ctrl add" style="margin-left: 0px;" onclick="_addadmin(this)"></i>
+											</div>
+										</div>
+										<div class="" style="width: 100%;float: left;padding: 15px 0px 0px 13px;display:none;min-height: 38px;" id="AlarmReceiver_div1" name="AlarmReceiver_div1">
+											<label class="form-label" name="AlarmReceiver1" id="AlarmReceiver1" style="float: left;padding-top: 5px;">
+												<input class="form-checkbox" type="checkbox" name="AlarmReceiver_check1" id="AlarmReceiver_check1">
+											</label>
+											<span id="AlarmReceiver_span1" style="vertical-align:middle;font-size:14px;float: left;    margin-top: 6px;">自定义：</span>
+											<div class="h-content3" style="    width: calc(100% - 100px);padding: 0px 0 0 8px;display:none;" id="AlarmReceiver_text1" name="AlarmReceiver_text1">
+												<div id="AlarmReceiver_input1" name="AlarmReceiver_input1" class="item" style="padding-top: 0px;width: 215px;">
+													<input type="text" class="form-text form-text2" style="width: 162px;">
+													<i class="ctrl add" onclick="_addphone_or_email(this);" style="margin-left: 0px;"></i>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="btns perm_disabled">
+					<a href="javascript:;" class="btn btn-normal" onclick="eventinfo_add();">保&nbsp;&nbsp;存</a>
+				</div>
+				<div id="bBtn" style="position: fixed;z-index:5;">
+					<a href="javascript:;" class="btn" style="float: right;" onclick="eventinfo_list(0);">
+						<i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<form action="/bhost/eventinfo_handle" method="POST" name="frm_eventinfo_add" id="frm_eventinfo_add">
+		<input type="hidden" name="tasktype" id="tasktype" value="{{ tasktype }}" />
+		<!--创建 编辑 列表-->
+		<input type="hidden" name="eventinfoId" id="eventinfoId" value="{{ eventinfoId }}" />
+		<!--eventinfoId-->
+		<input type="hidden" name="paging" id="paging" value="{{paging}}" />
+		<!--页码-->
+		<input type="hidden" name="search_typeall" id="search_typeall" value="{{search_typeall}}" />
+		<!--search_typeall-->
+		<input type="hidden" name="e" id="e" value="{{e}}" />
+		<!--e-->
+		<input type="hidden" name="se" id="se" value="{{se}}" />
+		<!--f0-->
+	</form>
+	<!--邮件  -->
+	<div class="dialog-cont" id="smtp_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+			<div class="c-cont" style="padding: 0px; height: 281px;">
+				<!-- <div class="" style="padding: 0px; height: 281px;"> -->
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="SmtpConfig_Master" name="SmtpConfig_Master">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>配置名称：</span>
+							<div class="form-c">
+								<input style="width: 224px;" maxlength="128" type="text" class="form-text" id="SmtpConfigName_Master" name="SmtpConfigName_Master"
+								 onblur="regCheck(this,nameReg);">
+								<i class="v-check" style=""></i>
+								<p class="form-tip" style="padding-left: 84px;">特殊字符仅支持下划线、横杠、小数点</p>
+							</div>
+						</div>
+
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>服务器地址：</span>
+							<div class="form-c">
+								<input style="padding-right: 8px;" type="text" class="form-text" id="SmtpServer_Master" name="SmtpServer_Master">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>发送邮箱地址：</span>
+							<div class="form-c">
+								<input style="padding-right: 8px;" 
+								onblur="if($('#Sender_Master').val()==''){$('#Sender_Master').val($('#SenderEmail_Master').val());}"
+								maxlength="128" type="text" class="form-text" id="SenderEmail_Master" name="SenderEmail_Master">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								服务器账号：</span>
+							<div class="form-c">
+								<input style="padding-right: 8px;" 
+								onblur="if($('#Sender_Master').val()==''){$('#Sender_Master').val($('#SenderEmail_Master').val());}"
+								maxlength="128" type="text" class="form-text" id="Sender_Master" name="Sender_Master">
+							</div>
+						</div>
+
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">服务器验证：</span>
+							<div class="form-c g-radios" id="ServerVerify_Master" name="ServerVerify_Master">
+								<label class="form-label" style="line-height: 30px;">
+									<input class="form-radio" type="radio" name="b" value="1" id="b1" checked="checked">否</label>
+								<label class="form-label" style="line-height: 30px;">
+									<input class="form-radio" type="radio" name="b" value="2" id="b2">是
+									<input type="password"
+										class="form-text" maxlength="64" value="" style="display: none;width: 156px;margin-top: -1px;padding-right: 8px;"
+										id="SenderEmailPass_Master" name="SenderEmailPass_Master">
+								</label>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>附件大小：</span>
+							<div class="form-c">
+								<input type="text" maxlength="5" class="form-text" onblur="limitCheck(this);" style="width: 82px;padding-right: 8px;" id="AttachMaxLimit_Master"
+								 name="AttachMaxLimit_Master"> M (应用于报表邮件抄送)
+							</div>
+						</div>
+
+						
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;"><em class="imp">*</em>编码方式：</span>
+							<div class="form-c">
+								<select name="smtpEnCode" id="smtpEnCode" class="filter-select" style="width: 100px" onchange="">
+									<option value="0" selected>UTF-8</option>
+									<option value="1">GBK</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;"><em class="imp">*</em>方式：</span>
+							<div class="form-c" style="">
+								<select name="smtpFlag" id="smtpFlag" class="filter-select" style="width: 100px" onchange="">
+									<option value="2">默认</option>
+									<option value="1">备用</option>
+									<option value="0">其他</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit perm_1_disabled">保&nbsp;&nbsp;存</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!-- 短信猫 -->
+	<div class="dialog-cont" id="smsm_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+			<div class="c-cont" style="padding: 0px; height: 281px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="SmtpConfig_Master" name="SmtpConfig_Master">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>配置名称：</span>
+							<div class="form-c">
+								<input style="width: 234px;" type="text" maxlength="128" class="form-text" id="SmsMConfigName" name="SmsMConfigName" onblur="regCheck(this,nameReg);">
+								<i class="v-check" style=""></i>
+								<p class="form-tip" style="padding-left: 84px;">特殊字符仅支持下划线、横杠、小数点</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>短信中心：</span>
+							<div class="form-c">
+								<input style="width: 100px;" type="text" maxlength="24" class="form-text" id="SmsMSender" name="SmsMSender" onblur="limitCheck(this);NumCheck1(this);">
+								<i class="v-check"></i>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>发送限制：</span>
+							<div class="form-c">
+								每月
+								<input style="width: 48px;padding-right: 8px;" maxlength="3" type="text" class="form-text" id="SmsMLimit" name="SmsMLimit"
+								 onblur="limitCheck(this);">条(0为不限制)
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;"><em class="imp">*</em>编码方式：</span>
+							<div class="form-c">
+								<select name="smsmEnCode" id="smsmEnCode" class="filter-select" style="width: 100px" onchange="">
+									<option value="0" selected>UTF-8</option>
+									<option value="1">GBK</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;"><em class="imp">*</em>方式：</span>
+							<div class="form-c" style="">
+								<select name="smsmFlag" id="smsmFlag" class="filter-select" style="width: 100px" onchange="">
+									<option value="2">默认</option>
+									<option value="1">备用</option>
+									<option value="0">其他</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit perm_1_disabled">保&nbsp;&nbsp;存</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!-- 短信网关 -->
+	<div class="dialog-cont" id="smssvr_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+			<div class="c-cont" style="padding: 0px; height: 281px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="SmtpConfig_Master" name="SmtpConfig_Master">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>配置名称：</span>
+							<div class="form-c">
+								<input style="width: 234px;" type="text" maxlength="128" class="form-text" id="SmsSvrConfigName" name="SmsSvrConfigName"
+								 onblur="regCheck(this,nameReg);">
+								<i class="v-check" style=""></i>
+								<p class="form-tip" style="padding-left: 84px;">特殊字符仅支持下划线、横杠、小数点</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>数据库类型：</span>
+							<div class="form-c">
+								<select name="SmsSvrDBType" id="SmsSvrDBType" class="filter-select" style="width: 100px" onchange="">
+									<option value="1">ORACLE</option>
+									<option value="2">MSSQL</option>
+									<option value="3">MYSQL</option>
+									<option value="4">SYBASE</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;width: 429px;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>服务器地址：</span>
+							<div class="form-c">
+								<input style="width: 110px;" type="text" class="form-text" id="SmsSvrDBServerIP" name="SmsSvrDBServerIP" onblur="IPCheck(this);">
+								<i class="v-check" style="margin-top: 6px;"></i>
+							</div>
+						</div>
+
+						<div class="form-item" style="padding: 10px 0;width: 123px;">
+							<span class="form-tag" style="width: 0;">
+								<em class="imp">*</em>端口：</span>
+							<div class="form-c" style="padding-left: 50px;">
+								<input style="width: 40px;" type="text" maxlength="5" class="form-text" id="SmsSvrDBPort" name="SmsSvrDBPort" onblur="limitCheck(this);NumCheck(this);">
+								<i class="v-check" style="margin-top: 6px;"></i>
+								<p class="form-tip" style="width: 78px;padding-left: 0px;">0-65535之间</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>账号：</span>
+							<div class="form-c">
+								<input style="width: 234px;" type="text" maxlength="128" class="form-text" id="SmsSvrDBUserName" name="SmsSvrDBUserName"
+								 onblur="NameCheck(this);">
+								<i class="v-check"></i>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>密码：</span>
+							<div class="form-c">
+								<input style="width: 248px;padding-right: 8px;" maxlength="64" type="password" class="form-text" onfocus="$(this).val('');"
+								 onblur="if($(this).val()==''){$(this).val(smssvrconfig_save.SmsSvrDBPassword_old);}" id="SmsSvrDBPassword" name="SmsSvrDBPassword">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>数据库：</span>
+							<div class="form-c">
+								<input style="width: 234px;" type="text" maxlength="128" class="form-text" id="SmsSvrDBDatabase" name="SmsSvrDBDatabase">
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>短信sql语句模板：</span>
+							<div class="form-c">
+								<input style="width: 234px;" type="text" maxlength="1024" class="form-text" id="SmsSvrDBInsertTemp" name="SmsSvrDBInsertTemp"
+								 onblur="temp_check(this);">
+								<i class="v-check"></i>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;width: 390px;">
+							<span class="form-tag" style="width: 285px;"><em class="imp">*</em>编码方式：</span>
+							<div class="form-c">
+								<select name="smssvrEnCode" id="smssvrEnCode" class="filter-select" style="width: 100px" onchange="">
+									<option value="0" selected>UTF-8</option>
+									<option value="1">GBK</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;width: 160px;">
+							<span class="form-tag" style="width: 61px;"><em class="imp">*</em>方式：</span>
+							<div class="form-c" style="padding-left: 43px;">
+								<select name="smssvrFlag" id="smssvrFlag" class="filter-select" style="width: 100px" onchange="">
+									<option value="2">默认</option>
+									<option value="1">备用</option>
+									<option value="0">其他</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit perm_1_disabled">保&nbsp;&nbsp;存</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!-- syslog -->
+	<div class="dialog-cont" id="syslog_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+			<div class="c-cont" style="padding: 0px; height: 281px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="SmtpConfig_Master" name="SmtpConfig_Master">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>配置名称：</span>
+							<div class="form-c">
+								<input style="width: 234px;" type="text" maxlength="128" class="form-text" id="SyslogConfigName" name="SyslogConfigName"
+								 onblur="regCheck(this,nameReg);">
+								<i class="v-check" style=""></i>
+								<p class="form-tip" style="padding-left: 84px;">特殊字符仅支持下划线、横杠、小数点</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>服务器地址：</span>
+							<div class="form-c">
+								<input style="width: 110px;" type="text" class="form-text" id="SyslogServerIP" name="SyslogServerIP" onblur="IPCheck(this);">
+								<i class="v-check" style="margin-top: 6px;"></i>
+							</div>
+						</div>
+
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>端口：</span>
+							<div class="form-c" style="">
+								<input style="width: 40px;" type="text" maxlength="5" class="form-text" id="SyslogPort" name="SyslogPort" onblur="limitCheck(this);NumCheck(this);">
+								<i class="v-check" style="margin-top: 6px;"></i>
+								<p class="form-tip" style="width: 78px;padding-left: 85px;">0-65535之间</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;"><em class="imp">*</em>编码方式：</span>
+							<div class="form-c">
+								<select name="syslogEnCode" id="syslogEnCode" class="filter-select" style="width: 100px" onchange="">
+									<option value="0" selected>UTF-8</option>
+									<option value="1">GBK</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;"><em class="imp">*</em>方式：</span>
+							<div class="form-c" style="">
+								<select name="syslogFlag" id="syslogFlag" class="filter-select" style="width: 100px" onchange="">
+									<option value="2">默认</option>
+									<option value="1">备用</option>
+									<option value="0">其他</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit perm_1_disabled">保&nbsp;&nbsp;存</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<!-- snmp -->
+	<div class="dialog-cont" id="snmp_suspend" style="display:none;max-height:500px">
+		<div class="container" style="margin-top: -10px;">
+			<div class="c-cont" style="padding: 0px; height: 281px;">
+				<div class="c-form ">
+					<div class="form">
+						<div class="form-item" style="padding: 10px 0;" id="SmtpConfig_Master" name="SmtpConfig_Master">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>配置名称：</span>
+							<div class="form-c">
+								<input style="width: 234px;" type="text" maxlength="128" class="form-text" id="SnmpConfigName" name="SnmpConfigName" onblur="regCheck(this,nameReg);">
+								<i class="v-check" style=""></i>
+								<p class="form-tip" style="padding-left: 84px;">特殊字符仅支持下划线、横杠、小数点</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>服务器地址：</span>
+							<div class="form-c">
+								<input style="width: 110px;" type="text" class="form-text" id="SnmpServerIP" name="SnmpServerIP" onblur="IPCheck(this);">
+								<i class="v-check" style="margin-top: 6px;"></i>
+							</div>
+						</div>
+
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;">
+								<em class="imp">*</em>端口：</span>
+							<div class="form-c" style="">
+								<input style="width: 40px;" type="text" maxlength="5" class="form-text" id="SnmpPort" name="SnmpPort" onblur="limitCheck(this);NumCheck(this);">
+								<i class="v-check" style="margin-top: 6px;"></i>
+								<p class="form-tip" style="width: 78px;padding-left: 85px;">0-65535之间</p>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;"><em class="imp">*</em>编码方式：</span>
+							<div class="form-c">
+								<select name="snmpEnCode" id="snmpEnCode" class="filter-select" style="width: 100px" onchange="">
+									<option value="0" selected>UTF-8</option>
+									<option value="1">GBK</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-item" style="padding: 10px 0;">
+							<span class="form-tag" style="width: 285px;"><em class="imp">*</em>方式：</span>
+							<div class="form-c" style="">
+								<select name="snmpFlag" id="snmpFlag" class="filter-select" style="width: 100px" onchange="">
+									<option value="2">默认</option>
+									<option value="1">备用</option>
+									<option value="0">其他</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="btns" style="margin-bottom: -20px;margin-left:-20px;width:840px;">
+			<a href="javascript:;" class="btn btn-normal btn-submit perm_1_disabled">保&nbsp;&nbsp;存</a>
+			<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+		</div>
+	</div>
+	<script>
+		var perm={{perm}};
+		var perm_1={{perm_1}};
+		if (perm==0) parent.parent.$('#nav-s1 a.active').click();
+		else{
+			$('.bg-white').show();
+			if(perm==1){
+				$('.perm_disabled').remove();
+			}
+		}
+		if(perm_1==1){
+			$('.perm_1_disabled').remove();
+		}
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+		$('.filter-select:not(.form-select2)').select2({ minimumResultsForSearch: -1 });
+		$('.form-select2').select2();
+	</script>
+	<script>
+		var eventinfo = {
+			"EventAlarmInfoId": 0,
+			"Name": "",
+			"EventLevel": 0,
+			"EventType": 0,
+			"EventDescription": null,
+			"AlarmAction": 0,
+			"AlarmReceiver": null,
+			"UserSet": new Array(),
+			"MasterConfig": null,
+			"StandByConfig": null
+		};
+		var smtpconfig_save = {
+			"SmtpConfigId": 0,
+			"SmtpConfigName": null,
+			"SmtpServer": null,
+			"DNS": null,
+			"Sender": null,
+			"SenderEmail": null,
+			"AttachMaxLimit": 20,
+			"ServerVerify": true,
+			"SenderEmailPass": null,
+			"Flag": 0,
+			"EnCode": 0
+		};
+		var smssvrconfig_save = {
+			"SmsSvrConfigId": 1,
+			"SmsSvrConfigName": "短信网关配置1",
+			"SmsSvrDBType": 2,
+			"SmsSvrDBServerIP": "192.168.0.1",
+			"SmsSvrDBPort": 1433,
+			"SmsSvrDBUserName": "root",
+			"SmsSvrDBPassword": "d106f6959747b5ac",
+			"SmsSvrDBPassword_old": null,
+			"SmsSvrDBDatabase": "mysql",
+			"SmsSvrDBInsertTemp": null,
+			"Flag": 0,         //--2-主，1-备，0-其它
+			"EnCode": 0
+		};
+		var smsmconfig_save = {
+			"SmsMConfigId": 1,
+			"SmsMConfigName": "短信猫配置1",
+			"SmsMSender": "13612345678",
+			"SmsMLimit": 0,
+			"SmsMSend": 0,
+			"Flag": 0,         //--2-主，1-备，0-其它
+			"EnCode": 0
+		};
+		var syslogconfig_save = {
+			"SyslogConfigId": 1,
+			"SyslogConfigName": "SYSLOG配置1",
+			"SyslogServerIP": "192.168.0.54",
+			"SyslogPort": 514,
+			"Flag": 0,        // --2-主，1-备，0-其它
+			"EnCode": 0
+		}
+		var snmpconfig_save = {
+			"SnmpConfigId": 1,
+			"SnmpConfigName": "SNMP配置1",
+			"SnmpServerIP": "192.168.0.55",
+			"SnmpPort": 162,
+			"Flag": 0,         //--2-主，1-备，0-其它
+			"EnCode": 0
+		}
+		var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+		var ipReg = /(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+		var phonecheck = /^[0-9]{11}$/;
+		var emailcheck = /^([a-zA-Z0-9_\.\-])+@(([a-zA-Z0-9_\-])+\.)+([a-zA-Z0-9])+$/;
+		var urlReg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+		var phone_or_emailcheck = null;
+		var phone_or_email = null;
+		var ip_all_str = "";
+		var xSelect_arr = new Array();
+		xSelect_arr[0] = new Array();
+		xSelect_arr[0][0] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		xSelect_arr[0][1] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		xSelect_arr[1] = new Array();
+		xSelect_arr[1][0] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		xSelect_arr[1][1] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		xSelect_arr[2] = new Array();
+		xSelect_arr[2][0] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		xSelect_arr[2][1] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		xSelect_arr[3] = new Array();
+		xSelect_arr[3][0] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		xSelect_arr[3][1] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		xSelect_arr[4] = new Array();
+		xSelect_arr[4][0] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		xSelect_arr[4][1] = {
+			"id": 0,
+			"name": '全局指定'
+		};
+		//加入ip
+		function _addphone_or_email(obj) {
+			var pass = 1;
+			var v = $(obj).prev('input').val().trim();
+			if (v == '') {
+				_alert(2, '事件告警', '请输入' + phone_or_email, $(obj).prev('input'));
+				$(obj).prev('input').focus();
+				return false;
+			} else if (!phone_or_emailcheck.test(v)) {
+				_alert(1, '事件告警', phone_or_email + '格式不正确', $(obj).prev('input'));
+				$(obj).prev('input').focus();
+				return false;
+			} else {
+				var AlarmAction = $('#AlarmAction').val();
+				if (AlarmAction == '1') {
+					var it = '';
+				} else {
+					var it = '1';
+				}
+				$(">div[value]", "#AlarmReceiver_text" + it).each(function () {
+					ip_str = $(this).find("input").val();
+					if (ip_str == v) {
+						_alert(2, '事件告警', phone_or_email + '重复', $(obj).prev('input'));
+						$(obj).prev('input').focus();
+						pass = 0;
+						return false;
+					}
+				});
+			}
+			if (pass == 1) {
+				var $c = $('<div id="" name="" class="item" style="padding-top: 0px;width: 215px;" value>');
+				$c.html('<input type="text" class="form-text form-text2" style="width: 162px;" value="' + v + '">'
+					+ '<i class="ctrl del" onclick="_delphone_or_email(this)"  style="margin-top: 0px;margin-left: 4px;"></i>');
+				$(obj).parent().after($c);
+				$(obj).prev('input').val("");
+				$(obj).prev('input').focus();
+			}
+		}
+		function _delphone_or_email(obj) {
+			var $c = $(obj).parent();
+			$c.fadeOut(function () {
+				$c.remove();
+			});
+		}
+		//删除接收人
+		function _deladmin(obj) {
+			var $c = $(obj).parent();
+			var m_i = $(obj).parent().attr('value');
+			$c.fadeOut(function () {
+				$c.remove();
+				var AlarmAction = $('#AlarmAction').val();
+				if (AlarmAction == '1') {
+					all_option_str_1[parseInt(m_i)] = check_option_str_1[parseInt(m_i)];
+					check_option_str_1[parseInt(m_i)] = null;
+					for (x in all_option_str_1) {
+						if (x > parseInt(m_i) && $('#admin_select option[value=' + x + ']').length > 0) {
+							$('#admin_select option[value=' + x + ']').before(all_option_str_1[m_i]);
+							break;
+						}
+						if (x == all_option_str_1.length - 1 && $('#admin_select option[value=' + x + ']').length == 0) {
+							$('#admin_select').append(all_option_str_1[m_i]);
+						}
+					}
+					$('#admin_select').trigger('change');
+				} else {
+					all_option_str_2[parseInt(m_i)] = check_option_str_2[parseInt(m_i)];
+					check_option_str_2[parseInt(m_i)] = null;
+					for (x in all_option_str_2) {
+						if (x > parseInt(m_i) && $('#admin_select1 option[value=' + x + ']').length > 0) {
+							$('#admin_select1 option[value=' + x + ']').before(all_option_str_2[m_i]);
+							break;
+						}
+						if (x == all_option_str_2.length - 1 && $('#admin_select1 option[value=' + x + ']').length == 0) {
+							$('#admin_select1').append(all_option_str_2[m_i]);
+						}
+					}
+					$('#admin_select1').trigger('change');
+				}
+			});
+
+		}
+		//添加接收人
+		function _addadmin(obj) {
+			var m_i = $(obj).parent().children('select').find("option:selected").val();
+			var text = $(obj).parent().children('select').find("option:selected").text();
+			if (m_i == "0") {
+				_alert(2, '事件告警', '请选择接收人');
+				return false;
+			}
+			var $c = $('<div class="item" style="padding-top:0px;width:215px;" value="' + m_i + '"/>');
+			$c.html('<input class="form-text form-text2" type="text" style="width: 162px;" value="' + text + '" disabled="true"><i style="margin-left: 4px;" class="ctrl del" onclick="_deladmin(this)"></i>');
+			$(obj).parent().after($c);
+			$(obj).parent().children('select').find('option[value=' + m_i + ']').remove();
+			$(obj).parent().children('select').val(0).trigger("change");
+			var AlarmAction = $('#AlarmAction').val();
+			if (AlarmAction == '1') {
+				check_option_str_1[parseInt(m_i)] = all_option_str_1[parseInt(m_i)];
+				all_option_str_1[parseInt(m_i)] = null;
+			} else {
+				check_option_str_2[parseInt(m_i)] = all_option_str_2[parseInt(m_i)];
+				all_option_str_2[parseInt(m_i)] = null;
+			}
+			//输入数字
+			$(".num").bind('keydown', function (e) {
+				DigitInput(e);
+			});
+		}
+		var check_option_str_1 = [];
+		var check_option_str_2 = [];
+		var all_option_str_1 = [];
+		var all_option_str_2 = [];
+		var $focusObj;
+		$(function () {
+			$("#SmsMLimit,#SmsMSender,#AttachMaxLimit_Master,#SmsSvrDBPort,#SyslogPort,#SnmpPort").bind('keydown', function (e) {
+				DigitInput(e);
+			}).on("input propertychange", function () {				//防止在输入法开启的情况下输入非数字
+				this.value = this.value.replace(/\D/g, "").trim();
+			});
+			$('.g-radios').on('ifChecked', 'input[type=radio]', function () {
+				var v = $(this).val();
+				if (v == 2 || v == 3) {
+					$(this).parents('.g-radios').find('input[type=text],input[type=password]').show();
+				} else {
+					$(this).parents('.g-radios').find('input[type=text],input[type=password]').hide();
+				}
+			}).on('ifChecked', 'input[type=checkbox]', function () {
+				$(this).parents('label').next('span.forCheck').show();
+			}).on('ifUnchecked', 'input[type=checkbox]', function () {
+				$(this).parents('label').next('span.forCheck').hide();
+			});
+			$('.xSelect').on('click', '.xSelect-show', function () {
+				$focusObj = $(this).parents('.xSelect');
+			});
+			document.frm_eventinfo_add.se.value = window.parent.document.frm.se.value;
+			parent._switchBtn(0);//隐藏按钮
+			$("#AlarmReceiver").on("ifChecked", function (e) {
+				$("#AlarmReceiver_text").show();
+				$("#AlarmReceiver_input").find('input').focus();
+				$('#AlarmReceiver_span').removeClass('span_color_000').addClass('span_color_000');
+			}).on("ifUnchecked", function (e) {
+				$("#AlarmReceiver_text").hide();
+				$("#AlarmReceiver_input").find('input').blur();
+				$('#AlarmReceiver_span').removeClass('span_color_000');
+			});
+			$("#AlarmReceiver1").on("ifChecked", function (e) {
+				$("#AlarmReceiver_text1").show();
+				$("#AlarmReceiver_input1").find('input').focus();
+				$('#AlarmReceiver_span1').removeClass('span_color_000').addClass('span_color_000');
+			}).on("ifUnchecked", function (e) {
+				$("#AlarmReceiver_text1").hide();
+				$("#AlarmReceiver_input1").find('input').blur();
+				$('#AlarmReceiver_span1').removeClass('span_color_000');
+			});
+			$("#AlarmAction").change(function () {
+				var AlarmAction_i = parseInt($(this).val());
+				
+				switch (AlarmAction_i) {
+					case 0:
+						$('#Receiver').hide();
+						$("#label_list1").hide();
+						$('#AlarmReceiver_div1').hide();
+						$("#label_list").hide();
+						$('#AlarmReceiver_div').hide();
+						$('#AlarmReceiver_span').hide();
+						$("#Description_imp").hide();
+						$('.xSelect_master').parents('.form-item').hide();
+						$('.xSelect_stand').parents('.form-item').hide();
+						break;
+					case 1:
+						$('#Receiver').show();
+						$("#label_list").show();
+						$('#AlarmReceiver_div').show();
+						$("#label_list1").hide();
+						$('#AlarmReceiver_div1').hide();
+						$('#AlarmReceiver_span').show();
+						phone_or_emailcheck = emailcheck;
+						phone_or_email = '邮件地址';
+						$("#Description_imp").show();
+						$('.xSelect_master').parents('.form-item').show();
+						$('.xSelect_stand').parents('.form-item').show();
+						break;
+					case 2:
+						$('#Receiver').show();
+						$("#label_list1").show();
+						$('#AlarmReceiver_div1').show();
+						$("#label_list").hide();
+						$('#AlarmReceiver_div').hide();
+						$('#AlarmReceiver_span').show();
+						phone_or_emailcheck = phonecheck;
+						phone_or_email = '手机号码';
+						$("#Description_imp").show();
+						$('.xSelect_master').parents('.form-item').show();
+						$('.xSelect_stand').parents('.form-item').show();
+						break;
+					case 3:
+						$('#Receiver').show();
+						$("#label_list1").show();
+						$('#AlarmReceiver_div1').show();
+						$("#label_list").hide();
+						$('#AlarmReceiver_div').hide();
+						$('#AlarmReceiver_span').show();
+						phone_or_emailcheck = phonecheck;
+						phone_or_email = '手机号码';
+						$("#Description_imp").show();
+						$('.xSelect_master').parents('.form-item').show();
+						$('.xSelect_stand').parents('.form-item').show();
+						break;
+					case 4:
+						$('#Receiver').hide();
+						$("#label_list1").hide();
+						$('#AlarmReceiver_div1').hide();
+						$("#label_list").hide();
+						$('#AlarmReceiver_div').hide();
+						$('#AlarmReceiver_span').hide();
+						$("#Description_imp").show();
+						$('.xSelect_master').parents('.form-item').show();
+						$('.xSelect_stand').parents('.form-item').show();
+						break;
+					case 5:
+						$('#Receiver').hide();
+						$("#label_list1").hide();
+						$('#AlarmReceiver_div1').hide();
+						$("#label_list").hide();
+						$('#AlarmReceiver_div').hide();
+						$('#AlarmReceiver_span').hide();
+						$("#Description_imp").show();
+						$('.xSelect_master').parents('.form-item').show();
+						$('.xSelect_stand').parents('.form-item').show();
+						break;
+				}
+				if (AlarmAction_i == 0) return false;
+				setSelect(AlarmAction_i);
+			});
+			$('#admin_select').on('change', function () {
+				////console.log('admin_selectchange');
+				if ($('#admin_select').find('option').length == 2 && $('#admin_select option:selected').val() != '0') {
+					_addadmin($('#admin_select').siblings('i'));
+					$('#admin_check').hide();
+				} else if ($('#admin_select').find('option').length == 1) {
+					$('#admin_check').hide();
+				} else {
+					$('#admin_check').show();
+				}
+			});
+			$('#admin_select1').on('change', function () {
+				////console.log('admin_select1change');
+				if ($('#admin_select1').find('option').length == 2 && $('#admin_select1 option:selected').val() != '0') {
+					_addadmin($('#admin_select1').siblings('i'));
+					$('#admin_check1').hide();
+				} else if ($('#admin_select1').find('option').length == 1) {
+					$('#admin_check1').hide();
+				} else {
+					$('#admin_check1').show();
+				}
+			});
+			//用户列表
+			$.ajax({
+				url: "/bhost/get_user_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), userid: null },
+				success: function (result) {
+					var userinfo_result = JSON.parse(result);
+					if (userinfo_result.Result == true) {
+						var userinfo_data = userinfo_result.info;
+						$.each(userinfo_data, function (i, item) {
+							if (item.Email != "" && item.Email != null) {
+								$("#admin_select").append("<option value=\"" + item.UserId + "\" index=\"0\">" + item.UserCode + "</option>");
+								all_option_str_1[item.UserId] = "<option value=\"" + item.UserId + "\" index=\"0\">" + item.UserCode + "</option>";
+							}
+							if (item.MobilePhone != "" && item.MobilePhone != null) {
+								$("#admin_select1").append("<option value=\"" + item.UserId + "\" index=\"0\">" + item.UserCode + "</option>");
+								all_option_str_2[item.UserId] = "<option value=\"" + item.UserId + "\" index=\"0\">" + item.UserCode + "</option>";
+							}
+						});
+					} else {
+						_alert(1, '事件告警', userinfo_result.ErrMsg);
+						return false;
+					}
+				}
+			});
+			//编辑页面
+			var tasktype = document.frm_eventinfo_add.tasktype.value;
+			if (tasktype == "2") {
+				var eventinfoId = document.frm_eventinfo_add.eventinfoId.value;
+				$.ajax({
+					url: "/bhost/get_eventinfo_list",
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: eventinfoId },
+					success: function (result) {
+						var eventinfo_result = JSON.parse(result);
+						if (eventinfo_result.Result == true) {
+							var eventinfo_data = eventinfo_result.info.data[0];
+							$("#d_n").val(eventinfo_data.Name);
+							$("#d_n").attr("disabled", true);
+							$("#Description").val(eventinfo_data.EventDescription);
+							$("#EventLevel").val(eventinfo_data.EventLevel).trigger("change");;
+							$("#EventType").val(eventinfo_data.EventType).trigger("change");;
+							if (eventinfo_data.AlarmAction != 0) {
+								xSelect_arr[eventinfo_data.AlarmAction - 1][0].id = eventinfo_data.MasterConfig || 0;
+								xSelect_arr[eventinfo_data.AlarmAction - 1][1].id = eventinfo_data.StandByConfig || 0;
+							}
+							$("#AlarmAction").val(eventinfo_data.AlarmAction).trigger("change");
+
+							if (eventinfo_data.AlarmAction == 1) {
+								var it = '';
+							} else if (eventinfo_data.AlarmAction == 2 || eventinfo_data.AlarmAction == 3) {
+								var it = '1';
+							}
+							if (eventinfo_data.AlarmReceiver != null) {
+								$("#AlarmReceiver_check" + it).iCheck('check');
+								var AlarmReceiver = eventinfo_data.AlarmReceiver.split(';');
+								for (var i = 0; i < AlarmReceiver.length - 1; i++) {
+									var $c = $('<div id="" name="" class="item" style="padding-top: 0px;width: 215px;" value>');
+									$c.html('<input type="text" class="form-text form-text2" style="width: 162px;" value="' + AlarmReceiver[i] + '">'
+										+ '<i class="ctrl del" onclick="_delphone_or_email(this)"  style="margin-top: 0px;margin-left: 4px;"></i>');
+									$('#AlarmReceiver_input' + it).after($c);
+								}
+								$('#AlarmReceiver_input' + it).find('input').val(AlarmReceiver[i]);
+								$('#AlarmReceiver_input' + it).find('input').blur();
+							}
+							if (eventinfo_data.UserSet != null) {
+								for (var i = 0; i < eventinfo_data.UserSet.length - 1; i++) {
+									var item = eventinfo_data.UserSet[i];
+									if (eventinfo_data.AlarmAction == 1) {
+										check_option_str_1[item.UserId] = all_option_str_1[item.UserId];
+										all_option_str_1[item.UserId] = null;
+									} else if (eventinfo_data.AlarmAction == 2) {
+										check_option_str_2[item.UserId] = all_option_str_2[item.UserId];
+										all_option_str_2[item.UserId] = null;
+									}
+									var $c = $('<div class="item" style="padding-top:0px;width:215px;" value="' + item.UserId + '"/>');
+									$c.html('<input class="form-text form-text2" type="text" style="width: 162px;" value="' + item.UserCode + '" disabled="true"><i style="margin-left: 4px;" class="ctrl del" onclick="_deladmin(this)"></i>');
+									$("#admin_select" + it).parent().after($c);
+									$("#admin_select" + it).find('option[value=' + item.UserId + ']').remove();
+									$("#admin_select" + it).trigger('change');
+								}
+								$("#admin_select" + it).val(eventinfo_data.UserSet[i].UserId).trigger('change');
+							}
+						} else {
+							_alert(1, '事件告警', eventinfo_result.ErrMsg);
+							return false;
+						}
+					}
+				});
+			}
+		});
+		//创建
+		function eventinfo_add() {
+			var val = $("#d_n").val();
+			var $i = $("#d_n").next('i.v-check');
+			//事件告警名
+			if (val == "") {
+				_alert(2, "事件告警", '请输入名称', $("#d_n"));
+				return false;
+			}
+			if (!nameReg.test(val)) {
+				_alert(1, "事件告警", '名称格式不正确', $("#d_n"));
+				return false;
+			}
+			//事件描述
+			var AlarmAction_i = $("#AlarmAction").val();
+			var Description = $("#Description").val().trim();
+			if (Description == "" && AlarmAction_i != "0") {
+				_alert(2, "事件告警", '请输入事件描述', $("#Description"));
+				return false;
+			}
+			if (AlarmAction_i == "1") {
+				var it = '';
+			} else {
+				var it = '1';
+			}
+			//信息接受者
+			if (AlarmAction_i == "1" || AlarmAction_i == "2" || AlarmAction_i == "3") {
+				if ($('#label_list' + it).find('div[value]').length == 0 && !$('#AlarmReceiver_check' + it).is(':checked') && $('#admin_select' + it).val() == '0') {
+					_alert(2, "事件告警", "请选择信息接受者");
+					return false;
+				}
+				//手动输入
+				if ($("#AlarmReceiver_check" + it).is(':checked')) {
+					if ($('#AlarmReceiver_text' + it).find('div[value]').length == 0 && $('#AlarmReceiver_input' + it).find('input').val().trim() == '') {
+						_alert(2, "事件告警", "请手动输入信息", $("#AlarmReceiver_input" + it));
+						return false;
+					}
+					var $input_array = $('#AlarmReceiver_text' + it).find('input');
+					var receiver_array = $input_array.map(function (params) {
+						return $(this).val();
+					}).get();
+					for (var m = 0; m < receiver_array.length; m++) {
+						if (m == 0 && receiver_array[m] == '') {
+							continue;
+						}
+						if (receiver_array[m] == '') {
+							_alert(2, '事件告警', '请输入' + phone_or_email, $input_array.eq(m));
+							return false;
+						} else if (!phone_or_emailcheck.test(receiver_array[m])) {
+							_alert(1, '事件告警', phone_or_email + '格式不正确', $input_array.eq(m));
+							return false;
+						}
+						var receiver_array_ll = receiver_array.join('\n').split('\n');
+						receiver_array_ll.splice(m, 1);
+						if ($.inArray(receiver_array[m], receiver_array_ll) >= 0) {
+							_alert(2, '事件告警', phone_or_email + '重复', $input_array.eq(m));
+							return false;
+						}
+					}
+					var $all = $('#AlarmReceiver_text' + it).find('div[value]');
+					var len = $all.length;
+					var AlarmReceiver_text = "";
+					for (var j = len - 1; j >= 0; j--) {
+						var input_txt = $all.eq(j).find('input').val();
+						AlarmReceiver_text = AlarmReceiver_text + input_txt + ';';
+					}
+					var AlarmReceiver_input = $('#AlarmReceiver_input' + it).find('input').val().trim();
+					if (AlarmAction_i == "1" && AlarmReceiver_input != "") {
+						if (emailcheck.test(AlarmReceiver_input)) {
+							AlarmReceiver_text = AlarmReceiver_text + AlarmReceiver_input + ';';
+						} else {
+							_alert(2, "事件告警", "邮箱格式不正确", $("#AlarmReceiver_input" + it).find('input'));
+							return false;
+						}
+					} else if ((AlarmAction_i == "2" || AlarmAction_i == "3") && AlarmReceiver_input != "") {
+						if (phonecheck.test(AlarmReceiver_input)) {
+							AlarmReceiver_text = AlarmReceiver_text + AlarmReceiver_input + ';';
+						} else {
+							_alert(2, "事件告警", "手机格式不正确", $("#AlarmReceiver_input" + it).find('input'));
+							return false;
+						}
+					}
+					AlarmReceiver_text = AlarmReceiver_text.substr(0, AlarmReceiver_text.length - 1);
+					var AlarmReceiver = AlarmReceiver_text;
+
+				}
+			} else {
+				var AlarmReceiver = null;
+			}
+			var eventinfoId = document.frm_eventinfo_add.eventinfoId.value;
+			eventinfo.EventAlarmInfoId = eventinfoId;
+			eventinfo.Name = val;
+			eventinfo.EventLevel = parseInt($("#EventLevel").children("option:selected").val());
+			eventinfo.EventType = parseInt($("#EventType").children("option:selected").val());
+			if (Description == "") {
+				Description = null;
+			}
+			eventinfo.EventDescription = Description;
+			eventinfo.AlarmAction = parseInt(AlarmAction_i);
+			eventinfo.AlarmReceiver = AlarmReceiver;
+			//////console.log(eventinfo);
+			eventinfo.UserSet = new Array();
+			if (AlarmAction_i == "1") {
+				var it = '';
+			} else if (AlarmAction_i == "2" || AlarmAction_i == "3") {
+				var it = '1';
+			}
+			var $all = $("#label_list" + it).find('div[value]');
+			var len = $all.length;
+			if (AlarmAction_i == "1" || AlarmAction_i == "2" || AlarmAction_i == "3") {
+				for (var j = len - 1; j >= 0; j--) {
+					var t_i = $all.eq(j).attr('value');
+					////console.log('t_i' + t_i);
+					if (t_i != '0') {
+						var json_a = '{"UserId":' + t_i + '}';
+						eventinfo.UserSet.push(JSON.parse(json_a));
+					}
+				}
+			}
+			var val = $('#admin_select' + it).val();
+			if (val != '0') {
+				var json_a = '{"UserId":' + val + '}';
+				eventinfo.UserSet.push(JSON.parse(json_a));
+			}
+			if (AlarmAction_i == '0') {
+				eventinfo.MasterConfig = null;
+				eventinfo.StandByConfig = null;
+			} else {
+				eventinfo.MasterConfig = $('.xSelect_master').data('value');
+				eventinfo.MasterConfigName = $('.xSelect_master .xSelect-show-text').text();
+				eventinfo.StandByConfig = $('.xSelect_stand').data('value');
+				eventinfo.StandByConfigName = $('.xSelect_stand .xSelect-show-text').text();
+			}
+			var msstr = aceg(JSON.stringify(eventinfo),$("input[name=se]").val());
+			$.ajax({
+				url: '/bhost/add_eventinfo',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(eventinfo), m1:msstr },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						$('.btn').blur(); parent.layer.open({
+							type: 1,
+							title: '事件告警',
+							content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+							btn: ['确&nbsp;&nbsp;定'],
+							btnAlign: 'c',
+							closeBtn: false,
+							skin: 'layer-custom',
+							area: ['380px', '310px'],
+							move: false,
+							resize: false,
+							yes: function (i) {
+								parent.layer.close(i);
+								eventinfo_list(1, result.EventAlarmInfoId);
+							}
+						});
+					} else {
+						_alert(1, "事件告警", result.ErrMsg, $("#d_n"));
+						return false;
+					}
+				}
+			});
+		}
+		//显示列表页面
+		function eventinfo_list(num, id) {
+			if (num == 1) {
+				$.ajax({
+					url: '/bhost/PGetRecordRownum',
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: id, a2: 15 },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result == true) {
+							if (result.info % MAX_PAGE == 0) {
+								document.frm_eventinfo_add.paging.value = parseInt(result.info / MAX_PAGE);
+							} else {
+								document.frm_eventinfo_add.paging.value = parseInt(result.info / MAX_PAGE) + 1;
+							}
+						}
+					}
+				});
+				document.frm_eventinfo_add.search_typeall.value = '';
+				document.frm_eventinfo_add.e.value = ':';
+			}
+			document.frm_eventinfo_add.tasktype.value = 3;
+			document.frm_eventinfo_add.action = '/bhost/eventinfo_handle'
+			document.frm_eventinfo_add.submit();
+		}
+		$(function () {
+
+			$("#eventinfo_group").on("click", function () {
+				location.reload();
+			});
+		});
+		var ajax_str;
+		var ajax_arr;
+		var ajax_arr1;
+		var data_all;
+		function setSelect(num) {
+			if (xSelect_arr[num - 1][0].id == 0) {
+				xSelect_arr[num - 1][0].name = '全局指定';
+			}
+			if (xSelect_arr[num - 1][1].id == 0) {
+				xSelect_arr[num - 1][1].name = '全局指定';
+			}
+			switch (num) {
+				case 1:
+					$.ajax({
+						url: "/bhost/get_smtpconfig",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val() },
+						success: function (result) {
+							var result = JSON.parse(result);
+							if (result.Result) {
+								var data = result.info;
+								data_all = result.info.data;
+								ajax_arr = new Array();
+								ajax_arr[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								ajax_arr1 = new Array();
+								ajax_arr1[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								$.each(data.data, function (i, item) {
+									if (item.SmtpConfigId == 0) {
+										return true;
+									}
+									if (item.SmtpConfigId == xSelect_arr[num - 1][0].id && xSelect_arr[num - 1][0].id != 0) {
+										xSelect_arr[num - 1][0].name = item.SmtpConfigName;
+									}
+									if (item.SmtpConfigId == xSelect_arr[num - 1][1].id && xSelect_arr[num - 1][1].id != 0) {
+										xSelect_arr[num - 1][1].name = item.SmtpConfigName;
+									}
+									ajax_arr[item.SmtpConfigId] = (JSON.parse('{"value":' + item.SmtpConfigId + ',"name":"' + item.SmtpConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+									ajax_arr1[item.SmtpConfigId] = (JSON.parse('{"value":' + item.SmtpConfigId + ',"name":"' + item.SmtpConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+								})
+							} else {
+								_alert(2, '邮件服务器查询', result.ErrMsg);
+								return false;
+							}
+						}
+					});
+					break;
+				case 2:
+					$.ajax({
+						url: "/bhost/get_smsmconfig",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val() },
+						success: function (result) {
+							var result = JSON.parse(result);
+							if (result.Result) {
+								var data = result.info;
+								data_all = result.info.data;
+								ajax_arr = new Array();
+								ajax_arr[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								ajax_arr1 = new Array();
+								ajax_arr1[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								$.each(data.data, function (i, item) {
+									if (item.SmsMConfigId == 0) {
+										return true;
+									}
+									if (item.SmsMConfigId == xSelect_arr[num - 1][0].id && xSelect_arr[num - 1][0].id != 0) {
+										xSelect_arr[num - 1][0].name = item.SmsMConfigName;
+									}
+									if (item.SmsMConfigId == xSelect_arr[num - 1][1].id && xSelect_arr[num - 1][1].id != 0) {
+										xSelect_arr[num - 1][1].name = item.SmsMConfigName;
+									}
+									ajax_arr[item.SmsMConfigId] = (JSON.parse('{"value":' + item.SmsMConfigId + ',"name":"' + item.SmsMConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+									ajax_arr1[item.SmsMConfigId] = (JSON.parse('{"value":' + item.SmsMConfigId + ',"name":"' + item.SmsMConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+								})
+							} else {
+								_alert(2, '短信猫查询', result.ErrMsg);
+								return false;
+							}
+						}
+					});
+
+					break;
+				case 3:
+					$.ajax({
+						url: "/bhost/get_smssvrconfig",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val() },
+						success: function (result) {
+							var result = JSON.parse(result);
+							if (result.Result) {
+								var data = result.info;
+								data_all = result.info.data;
+								ajax_arr = new Array();
+								ajax_arr[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								ajax_arr1 = new Array();
+								ajax_arr1[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								$.each(data.data, function (i, item) {
+									if (item.SmsSvrConfigId == 0) {
+										return true;
+									}
+									if (item.SmsSvrConfigId == xSelect_arr[num - 1][0].id && xSelect_arr[num - 1][0].id != 0) {
+										xSelect_arr[num - 1][0].name = item.SmsSvrConfigName;
+									}
+									if (item.SmsSvrConfigId == xSelect_arr[num - 1][1].id && xSelect_arr[num - 1][1].id != 0) {
+										xSelect_arr[num - 1][1].name = item.SmsSvrConfigName;
+									}
+									ajax_arr[item.SmsSvrConfigId] = (JSON.parse('{"value":' + item.SmsSvrConfigId + ',"name":"' + item.SmsSvrConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+									ajax_arr1[item.SmsSvrConfigId] = (JSON.parse('{"value":' + item.SmsSvrConfigId + ',"name":"' + item.SmsSvrConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+								})
+							} else {
+								_alert(2, '短信网关查询', result.ErrMsg);
+								return false;
+							}
+						}
+					});
+					break;
+				case 4:
+					$.ajax({
+						url: "/bhost/get_snmpconfig",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val() },
+						success: function (result) {
+							var result = JSON.parse(result);
+							if (result.Result) {
+								var data = result.info;
+								data_all = result.info.data;
+								ajax_arr = new Array();
+								ajax_arr[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								ajax_arr1 = new Array();
+								ajax_arr1[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								$.each(data.data, function (i, item) {
+									if (item.SnmpConfigId == 0) {
+										return true;
+									}
+									if (item.SnmpConfigId == xSelect_arr[num - 1][0].id && xSelect_arr[num - 1][0].id != 0) {
+										xSelect_arr[num - 1][0].name = item.SnmpConfigName;
+									}
+									if (item.SnmpConfigId == xSelect_arr[num - 1][1].id && xSelect_arr[num - 1][1].id != 0) {
+										xSelect_arr[num - 1][1].name = item.SnmpConfigName;
+									}
+									ajax_arr[item.SnmpConfigId] = (JSON.parse('{"value":' + item.SnmpConfigId + ',"name":"' + item.SnmpConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+									ajax_arr1[item.SnmpConfigId] = (JSON.parse('{"value":' + item.SnmpConfigId + ',"name":"' + item.SnmpConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+								})
+							} else {
+								_alert(2, 'SNMP查询', result.ErrMsg);
+								return false;
+							}
+						}
+					});
+					break;
+				case 5:
+					$.ajax({
+						url: "/bhost/get_syslogconfig",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val() },
+						success: function (result) {
+							var result = JSON.parse(result);
+							if (result.Result) {
+								var data = result.info;
+								data_all = result.info.data;
+								ajax_arr = new Array();
+								ajax_arr[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								ajax_arr1 = new Array();
+								ajax_arr1[0] = (JSON.parse('{"value":0,"name":"全局指定","type":null}'));
+								$.each(data.data, function (i, item) {
+									if (item.SyslogConfigId == 0) {
+										return true;
+									}
+									if (item.SyslogConfigId == xSelect_arr[num - 1][0].id && xSelect_arr[num - 1][0].id != 0) {
+										xSelect_arr[num - 1][0].name = item.SyslogConfigName;
+									}
+									if (item.SyslogConfigId == xSelect_arr[num - 1][1].id && xSelect_arr[num - 1][1].id != 0) {
+										xSelect_arr[num - 1][1].name = item.SyslogConfigName;
+									}
+									ajax_arr[item.SyslogConfigId] = (JSON.parse('{"value":' + item.SyslogConfigId + ',"name":"' + item.SyslogConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+									ajax_arr1[item.SyslogConfigId] = (JSON.parse('{"value":' + item.SyslogConfigId + ',"name":"' + item.SyslogConfigName + '","type":"'+(perm_1==2?'edit':'check')+'"}'));
+								})
+							} else {
+								_alert(2, 'SYSLOG查询', result.ErrMsg);
+								return false;
+							}
+						}
+					});
+					break;
+			}
+			$('.xSelect_master').empty().data('xSelect', '');
+			$('.' + $('.xSelect_master .xSelect-show').data('id')).remove();
+			if (xSelect_arr[num - 1][1].id != 0) {
+				delete ajax_arr[xSelect_arr[num - 1][1].id];
+			}
+			xSelect_json={
+				width: 154,
+				defaultText: '全局指定',
+				items: ajax_arr,
+				edit: function (item, obj) {
+					$('.' + $('.xSelect_master .xSelect-show').data('id')).hide();
+					get_dialog(item, 1, num);
+				},
+				check: function (item, obj) {
+					$('.' + $('.xSelect_master .xSelect-show').data('id')).hide();
+					get_dialog(item, 1, num);
+				},
+				delete: function (item, obj) {
+				},
+				btn: [
+					
+				],
+				setval: function (item, obj) {
+					xSelect_arr[num - 1][0].id = item.value;
+					setSelect(num);
+				}
+			};
+			if(perm_1==2){
+				xSelect_json.btn.push({
+						'name': '新增',
+						'event': function (items, obj) {
+							get_dialog(items, 2, num);
+						}
+					});
+			}
+			$('.xSelect_master').xSelect(xSelect_json);
+			$('.xSelect_master').data('value', xSelect_arr[num - 1][0].id);
+			$('.xSelect_master .xSelect-show-text').text(xSelect_arr[num - 1][0].name);
+			$('.xSelect_stand').empty().data('xSelect', '');
+			$('.' + $('.xSelect_stand .xSelect-show').data('id')).remove();
+			if (xSelect_arr[num - 1][0].id != 0) {
+				delete ajax_arr1[xSelect_arr[num - 1][0].id];
+			}
+			xSelect_json={
+				width: 154,
+				defaultText: '全局指定',
+				items: ajax_arr1,
+				edit: function (item, obj) {
+					$('.' + $('.xSelect_stand .xSelect-show').data('id')).hide();
+					get_dialog(item, 1, num);
+				},
+				check: function (item, obj) {
+					$('.' + $('.xSelect_stand .xSelect-show').data('id')).hide();
+					get_dialog(item, 1, num);
+				},
+				delete: function (item, obj) {
+				},
+				btn: [
+					
+				],
+				setval: function (item, obj) {
+					//console.log(item);
+					xSelect_arr[num - 1][1].id = item.value;
+					setSelect(num);
+				}
+			};
+			if(perm_1==2){
+				xSelect_json.btn.push({
+						'name': '新增',
+						'event': function (items, obj) {
+							get_dialog(items, 2, num);
+						}
+					});
+			}
+			$('.xSelect_stand').xSelect(xSelect_json);
+			$('.xSelect_stand').data('value', xSelect_arr[num - 1][1].id);
+			$('.xSelect_stand .xSelect-show-text').text(xSelect_arr[num - 1][1].name);
+		}
+		function get_dialog(obj, type, num) {
+			var title;
+			var ajax_url;
+			var dialogCont_id;
+			switch (num) {
+				case 1:
+					smtp_clear();
+					title = '邮件配置';
+					ajax_url = 'smtpconfig';
+					dialogCont_id = 'smtp_suspend';
+					smtpconfig_save.SmtpConfigId = 0;
+					smtpconfig_save.SenderEmailPass = null;
+					break;
+				case 2:
+					smsm_clear();
+					title = '短信猫配置';
+					ajax_url = 'smsmconfig';
+					dialogCont_id = 'smsm_suspend';
+					smsmconfig_save.SmsMConfigId = 0;
+					break;
+				case 3:
+					smssvr_clear();
+					title = '短信网关配置';
+					ajax_url = 'smssvrconfig';
+					dialogCont_id = 'smssvr_suspend';
+					smssvrconfig_save.SmsSvrConfigId = 0;
+					smssvrconfig_save.SmsSvrDBPassword_old = null;
+					break;
+				case 4:
+					snmp_clear();
+					title = 'SNMP配置';
+					ajax_url = 'snmpconfig';
+					dialogCont_id = 'snmp_suspend';
+					snmpconfig_save.SnmpConfigId = 0;
+					break;
+				case 5:
+					syslog_clear();
+					title = 'SYSLOG配置';
+					ajax_url = 'syslogconfig';
+					dialogCont_id = 'syslog_suspend';
+					syslogconfig_save.SyslogConfigId = 0;
+					break;
+			}
+			// var title_d;
+			if (type == 1) {
+				var id = obj.value;
+				// title_d = "编辑" + title;
+				$.ajax({
+					url: "/bhost/get_" + ajax_url,
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: id },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result) {
+							var data = result.info.data[0];
+							switch (num) {
+								case 1:
+									smtp_input(data);
+									break;
+								case 2:
+									smsm_input(data);
+									break;
+								case 3:
+									smssvr_input(data);
+
+									break;
+								case 4:
+									snmp_input(data);
+									break;
+								case 5:
+									syslog_input(data);
+									break;
+							}
+						} else {
+							_alert(1, title, result.ErrMsg);
+							return false;
+						}
+					}
+				});
+
+			} else {
+				// title_d = "创建" + title;
+			}
+			var $dialogCont = $("#" + dialogCont_id).show();
+
+			var d = dialog({
+				title: title,
+				content: $dialogCont,
+				id: dialogCont_id,
+				width: "800px"
+			});
+			d.addEventListener('close', function () {
+				$dialogCont.appendTo("body").hide();
+			});
+			d.showModal();
+			$("a.btn-cancel", $dialogCont).unbind().bind("click", function () {
+				switch (num) {
+					case 1:
+						smtp_clear();
+						break;
+					case 2:
+						smsm_clear();
+						break;
+					case 3:
+						smssvr_clear();
+						break;
+					case 4:
+						snmp_clear();
+						break;
+					case 5:
+						syslog_clear();
+						break;
+				}
+				if (type == 1) {
+					var id = obj.value;
+					$.ajax({
+						url: "/bhost/get_" + ajax_url,
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val(), a1: id },
+						success: function (result) {
+							var result = JSON.parse(result);
+							if (result.Result) {
+								var data = result.info.data[0];
+								switch (num) {
+									case 1:
+										smtp_input(data);
+										break;
+									case 2:
+										smsm_input(data);
+										break;
+									case 3:
+										smssvr_input(data);
+										break;
+									case 4:
+										snmp_input(data);
+										break;
+									case 5:
+
+										syslog_input(data);
+										break;
+								}
+							} else {
+								_alert(1, title, result.ErrMsg);
+								return false;
+							}
+						}
+					});
+				} else {
+				}
+			});
+
+			$("a.btn-submit", $dialogCont).unbind().bind("click", function () {
+				var pass = false;
+				switch (num) {
+					case 1:
+						if (save_smtp_date()) {
+							pass = save_smtpconfig();
+						}
+						break;
+					case 2:
+						if (save_smsm_date()) {
+							pass = save_smsmconfig();
+						}
+						break;
+					case 3:
+						if (save_smssvr_date()) {
+							pass = save_smssvrconfig();
+						}
+
+						break;
+					case 4:
+
+						if (save_snmp_date()) {
+							pass = save_snmpconfig();
+						}
+						break;
+					case 5:
+						if (save_syslog_date()) {
+							pass = save_syslogconfig();
+						}
+						break;
+				}
+				if (pass) {
+					$('.btn').blur(); parent.layer.open({
+						type: 1,
+						title: title,
+						content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+						btn: ['确&nbsp;&nbsp;定'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							parent.layer.close(i);
+							d.close().remove();
+						}
+					});
+				}
+			})
+		}
+		function smtp_input(data) {
+			smtpconfig_save.SmtpConfigId = data.SmtpConfigId;
+			$('#SmtpConfigName_Master').val(data.SmtpConfigName);
+			$('#SmtpConfigName_Master').attr("disabled", true);
+			$('#SmtpServer_Master').val(data.SmtpServer);
+			$('#Sender_Master').val(data.Sender);
+			$('#SenderEmail_Master').val(data.SenderEmail);
+			$('#AttachMaxLimit_Master').val(data.AttachMaxLimit);
+			if (data.ServerVerify) {
+				$('#b2').iCheck('check');
+				$('#SenderEmailPass_Master').val(data.SenderEmailPass);
+				smtpconfig_save.SenderEmailPass = data.SenderEmailPass;
+			} else {
+				$('#b1').iCheck('check');
+			}
+			$('#DNS_Master').val(data.DNS);
+			$('#test_Master').iCheck('uncheck');
+			$('#test_Master').parents('label').next('span.forCheck').hide();
+			$('#test_Master_input').val('');
+			$('#smtpEnCode').val(data.EnCode).trigger('change');
+			$('#smtpFlag').val(data.Flag).trigger('change');
+		}
+		function smssvr_input(data) {
+			smssvrconfig_save.SmsSvrConfigId = data.SmsSvrConfigId;
+			$('#SmsSvrConfigName').val(data.SmsSvrConfigName);
+			$('#SmsSvrConfigName').attr("disabled", true);
+			$('#SmsSvrDBType').val(data.SmsSvrDBType).trigger('change');
+			$('#SmsSvrDBServerIP').val(data.SmsSvrDBServerIP);
+			$('#SmsSvrDBPort').val(data.SmsSvrDBPort);
+			$('#SmsSvrDBUserName').val(data.SmsSvrDBUserName);
+			$('#SmsSvrDBPassword').val(data.SmsSvrDBPassword);
+			$('#SmsSvrDBDatabase').val(data.SmsSvrDBDatabase);
+			$('#SmsSvrDBInsertTemp').val(data.SmsSvrDBInsertTemp);
+			$('#smssvrEnCode').val(data.EnCode).trigger('change');
+			$('#smssvrFlag').val(data.Flag).trigger('change');
+			smssvrconfig_save.SmsSvrDBPassword_old = data.SmsSvrDBPassword;
+		}
+		function smsm_input(data) {
+			smsmconfig_save.SmsMConfigId = data.SmsMConfigId;
+			$('#SmsMConfigName').val(data.SmsMConfigName);
+			$('#SmsMConfigName').attr("disabled", true);
+			$('#SmsMSender').val(data.SmsMSender);
+			$('#SmsMLimit').val(data.SmsMLimit);
+			$('#smsmEnCode').val(data.EnCode).trigger('change');
+			$('#smsmFlag').val(data.Flag).trigger('change');
+		}
+		function syslog_input(data) {
+			syslogconfig_save.SyslogConfigId = data.SyslogConfigId;
+			$('#SyslogConfigName').val(data.SyslogConfigName);
+			$('#SyslogConfigName').attr("disabled", true);
+			$('#SyslogServerIP').val(data.SyslogServerIP);
+			$('#SyslogPort').val(data.SyslogPort);
+			$('#syslogEnCode').val(data.EnCode).trigger('change');
+			$('#syslogFlag').val(data.Flag).trigger('change');
+		}
+		function snmp_input(data) {
+			snmpconfig_save.SnmpConfigId = data.SnmpConfigId;
+			$('#SnmpConfigName').val(data.SnmpConfigName);
+			$('#SnmpConfigName').attr("disabled", true);
+			$('#SnmpServerIP').val(data.SnmpServerIP);
+			$('#SnmpPort').val(data.SnmpPort);
+			$('#snmpEnCode').val(data.EnCode).trigger('change');
+			$('#snmpFlag').val(data.Flag).trigger('change');
+		}
+		function smtp_clear() {
+			$('#smtp_suspend i.v-check').attr('class', 'v-check');
+			$('#SmtpConfigName_Master').attr("disabled", false);
+			$('#SmtpConfigName_Master').val('');
+			$('#SmtpConfigName_Master').next('i.v-check').attr('class', 'v-check');
+			$('#SmtpServer_Master').val('');
+			$('#Sender_Master').val('');
+			$('#SenderEmail_Master').val('');
+			$('#AttachMaxLimit_Master').val('');
+			$('#b1').iCheck('check');
+			$('#SenderEmailPass_Master').val('');
+			$('#test_Master').iCheck('uncheck');
+			$('#test_Master').parents('label').next('span.forCheck').hide();
+			$('#test_Master_input').val('');
+			$('#DNS_Master').val('');
+			$('#smtpEnCode').val(0).trigger('change');
+			var smtpconfig_data_all_Flag = data_all.map(function (params) {
+				return params.Flag;
+			});
+			if ($.inArray(2, smtpconfig_data_all_Flag) < 0) {
+				$('#smtpFlag').val(2).trigger('change');
+			} else if ($.inArray(1, smtpconfig_data_all_Flag) < 0) {
+				$('#smtpFlag').val(1).trigger('change');
+			} else {
+				$('#smtpFlag').val(0).trigger('change');
+			}
+		}
+		function smssvr_clear() {
+			$('#smssvr_suspend i.v-check').attr('class', 'v-check');
+			$('#SmsSvrConfigName').val('');
+			$('#SmsSvrConfigName').attr("disabled", false);
+			$('#SmsSvrDBType').val(1).trigger('change');
+			$('#SmsSvrDBServerIP').val('');
+			$('#SmsSvrDBPort').val('');
+			$('#SmsSvrDBUserName').val('');
+			$('#SmsSvrDBPassword').val('');
+			$('#SmsSvrDBDatabase').val('');
+			$('#SmsSvrDBInsertTemp').val('');
+			$('#smssvrEnCode').val(0).trigger('change');
+			var smtpconfig_data_all_Flag = data_all.map(function (params) {
+				return params.Flag;
+			});
+			if ($.inArray(2, smtpconfig_data_all_Flag) < 0) {
+				$('#smssvrFlag').val(2).trigger('change');
+			} else if ($.inArray(1, smtpconfig_data_all_Flag) < 0) {
+				$('#smssvrFlag').val(1).trigger('change');
+			} else {
+				$('#smssvrFlag').val(0).trigger('change');
+			}
+		}
+		function smsm_clear() {
+			$('#smsm_suspend i.v-check').attr('class', 'v-check');
+			$('#SmsMConfigName').val('');
+			$('#SmsMConfigName').attr("disabled", false);
+			$('#SmsMSender').val('');
+			$('#SmsMLimit').val('');
+			$('#smsmEnCode').val(0).trigger('change');
+			var smtpconfig_data_all_Flag = data_all.map(function (params) {
+				return params.Flag;
+			});
+			if ($.inArray(2, smtpconfig_data_all_Flag) < 0) {
+				$('#smsmFlag').val(2).trigger('change');
+			} else if ($.inArray(1, smtpconfig_data_all_Flag) < 0) {
+				$('#smsmFlag').val(1).trigger('change');
+			} else {
+				$('#smsmFlag').val(0).trigger('change');
+			}
+		}
+		function syslog_clear() {
+			$('#syslog_suspend i.v-check').attr('class', 'v-check');
+			$('#SyslogConfigName').val('');
+			$('#SyslogConfigName').attr("disabled", false);
+			$('#SyslogServerIP').val('');
+			$('#SyslogPort').val('');
+			$('#syslogEnCode').val(0).trigger('change');
+			var smtpconfig_data_all_Flag = data_all.map(function (params) {
+				return params.Flag;
+			});
+			if ($.inArray(2, smtpconfig_data_all_Flag) < 0) {
+				$('#syslogFlag').val(2).trigger('change');
+			} else if ($.inArray(1, smtpconfig_data_all_Flag) < 0) {
+				$('#syslogFlag').val(1).trigger('change');
+			} else {
+				$('#syslogFlag').val(0).trigger('change');
+			}
+		}
+		function snmp_clear() {
+			$('#snmp_suspend i.v-check').attr('class', 'v-check');
+			$('#SnmpConfigName').val('');
+			$('#SnmpConfigName').attr("disabled", false);
+			$('#SnmpServerIP').val('');
+			$('#SnmpPort').val('');
+			$('#snmpEnCode').val(0).trigger('change');
+			var smtpconfig_data_all_Flag = data_all.map(function (params) {
+				return params.Flag;
+			});
+			if ($.inArray(2, smtpconfig_data_all_Flag) < 0) {
+				$('#snmpFlag').val(2).trigger('change');
+			} else if ($.inArray(1, smtpconfig_data_all_Flag) < 0) {
+				$('#snmpFlag').val(1).trigger('change');
+			} else {
+				$('#snmpFlag').val(0).trigger('change');
+			}
+		}
+		function save_smtp_date() {
+			var SmtpConfigName_Master = $("#SmtpConfigName_Master").val();
+			if (SmtpConfigName_Master == '') {
+				_alert(2, '邮件配置', '请输入名称', $('#SmtpConfigName_Master'));
+				return false;
+			} else if (!nameReg.test(SmtpConfigName_Master)) {
+				_alert(1, '邮件配置', '名称格式不正确', $('#SmtpConfigName_Master'));
+				return false;
+			}
+			var SmtpServer = $('#SmtpServer_Master').val();
+			var DNS = $('#DNS_Master').val();
+			if (SmtpServer == "") {
+				_alert(2, '邮件配置', '请输入服务器地址', $('#SmtpServer_Master'));
+				return false;
+			} else if (!ipcheck_route.test(SmtpServer) && (!hostcheck1.test(SmtpServer)) && (!hostcheck2.test(SmtpServer))){
+				_alert(1, '邮件配置', '服务器地址格式不正确', $('#SmtpServer_Master'));
+				return false;
+			}
+			if (DNS == "") {
+				DNS = null;
+			}
+			var Sender = $('#Sender_Master').val();
+			if (Sender == "") {
+				_alert(2, '邮件配置', '请输入服务器账号', $('#Sender_Master'));
+				return false;
+			}
+			var SenderEmail = $('#SenderEmail_Master').val();
+			if (SenderEmail == "") {
+				_alert(2, '邮件配置', '请输入发送邮箱地址', $('#SenderEmail_Master'));
+				return false;
+			} else if (!urlReg.test(SenderEmail)) {
+				_alert(1, '邮件配置', '发送邮箱地址格式不正确', $('#SenderEmail_Master'));
+				return false;
+			}
+			var AttachMaxLimit = $('#AttachMaxLimit_Master').val();
+			if (AttachMaxLimit == "") {
+				_alert(2, '邮件配置', '请输入附件大小', $('#AttachMaxLimit_Master'));
+				return false;
+			}
+			var ServerVerify = ($('#ServerVerify_Master').find('input[type=radio]:checked').val() == '2');
+			var SenderEmailPass = "";
+			if (ServerVerify) {
+				SenderEmailPass = $('#SenderEmailPass_Master').val();
+				if (SenderEmailPass == "") {
+					_alert(2, '邮件配置', '请输入验证码', $('#SenderEmailPass_Master'));
+					return false;
+				}
+			} else {
+				SenderEmailPass = null;
+			}
+			smtpconfig_save.SmtpConfigName = SmtpConfigName_Master;
+			smtpconfig_save.SmtpServer = SmtpServer;
+			smtpconfig_save.DNS = DNS;
+			smtpconfig_save.Sender = Sender;
+			smtpconfig_save.SenderEmail = SenderEmail;
+			smtpconfig_save.AttachMaxLimit = AttachMaxLimit;
+			smtpconfig_save.ServerVerify = ServerVerify;
+			smtpconfig_save.SenderEmailPass = SenderEmailPass;
+			smtpconfig_save.EnCode = parseInt($('#smtpEnCode').val());
+			smtpconfig_save.Flag = parseInt($('#smtpFlag').val());
+			return true;
+		}
+		function save_smssvr_date() {
+			var SmsSvrConfigName = $("#SmsSvrConfigName").val();
+			var SmsSvrDBType = $("#SmsSvrDBType").val();
+			var SmsSvrDBServerIP = $("#SmsSvrDBServerIP").val();
+			var SmsSvrDBPort = $("#SmsSvrDBPort").val();
+			var SmsSvrDBUserName = $("#SmsSvrDBUserName").val();
+			var SmsSvrDBPassword = $("#SmsSvrDBPassword").val();
+			var SmsSvrDBDatabase = $("#SmsSvrDBDatabase").val();
+			var SmsSvrDBInsertTemp = $("#SmsSvrDBInsertTemp").val();
+			if (SmsSvrConfigName == "") {
+				_alert(2, "短信网关", "请输入名称", $("#SmsSvrConfigName"));
+				return false;
+			} else {
+				if (!nameCheck.test(SmsSvrConfigName)) {
+					_alert(1, "短信网关", "名称格式不正确", $("#SmsSvrConfigName"));
+					return false;
+				}
+			}
+			if (SmsSvrDBServerIP == "") {
+				_alert(2, "短信网关", "请输入服务器地址", $("#SmsSvrDBServerIP"));
+				return false;
+			} else {
+				if (!ipcheck_route.test(SmsSvrDBServerIP)) {
+					_alert(1, "短信网关", "服务器地址格式不正确", $("#SmsSvrDBServerIP"));
+					return false;
+				}
+			}
+			if (SmsSvrDBPort == "") {
+				_alert(2, "短信网关", "请输入端口", $("#SmsSvrDBPort"));
+				return false;
+			} else {
+				if (numCheck.test(parseInt(SmsSvrDBPort))) {
+					_alert(1, "短信网关", "端口格式不正确", $("#SmsSvrDBPort"));
+					return false;
+				}
+				if (parseInt(SmsSvrDBPort) > 65534) {
+					_alert(1, "短信网关", "端口不能大于65534", $("#SmsSvrDBPort"));
+					return false;
+				}
+				if (parseInt(SmsSvrDBPort) < 1) {
+					_alert(1, "短信网关", "端口不能小于1", $("#SmsSvrDBPort"));
+					return false;
+				}
+			}
+			if (SmsSvrDBUserName == "") {
+				_alert(2, "短信网关", "请输入账号", $("#SmsSvrDBUserName"));
+				return false;
+			} else {
+				if (!nameCheck.test(SmsSvrDBUserName)) {
+					_alert(1, "短信网关", "账号格式不正确", $("#SmsSvrDBUserName"));
+					return false;
+				}
+			}
+			if (SmsSvrDBPassword == "") {
+				_alert(2, "短信网关", "请输入密码", $("#SmsSvrDBPassword"));
+				return false;
+			}
+			if (SmsSvrDBDatabase == "") {
+				_alert(2, "短信网关", "请输入数据库", $("#SmsSvrDBDatabase"));
+				return false;
+			}
+			if (SmsSvrDBInsertTemp == "") {
+				_alert(2, "短信网关", "请输入短信sql语句模板", $("#SmsSvrDBInsertTemp"));
+				return false;
+			} else {
+				if (SmsSvrDBInsertTemp.indexOf("%phone%") === -1 || SmsSvrDBInsertTemp.indexOf("%content%") === -1) {
+					_alert(1, "短信网关", "模板格式不正确", $("#SmsSvrDBInsertTemp"));
+					return false;
+				}
+			}
+			smssvrconfig_save.SmsSvrConfigName = SmsSvrConfigName;
+			smssvrconfig_save.SmsSvrDBType = SmsSvrDBType;
+			smssvrconfig_save.SmsSvrDBServerIP = SmsSvrDBServerIP;
+			smssvrconfig_save.SmsSvrDBPort = parseInt(SmsSvrDBPort);
+			smssvrconfig_save.SmsSvrDBUserName = SmsSvrDBUserName;
+			smssvrconfig_save.SmsSvrDBPassword = SmsSvrDBPassword;
+			smssvrconfig_save.SmsSvrDBDatabase = SmsSvrDBDatabase;
+			smssvrconfig_save.SmsSvrDBInsertTemp = SmsSvrDBInsertTemp;
+			smssvrconfig_save.Flag = parseInt($("#smssvrFlag").val());
+			smssvrconfig_save.EnCode = parseInt($("#smssvrEnCode").val());
+			return true;
+		}
+		function save_smsm_date() {
+			var SmsMConfigName = $("#SmsMConfigName").val();
+			var SmsMSender = $("#SmsMSender").val();
+			var SmsMLimit = $("#SmsMLimit").val();
+			var EnCode = $("#smsmEnCode").val();
+			var Flag = $("#smsmFlag").val();
+			if (SmsMConfigName == "") {
+				_alert(2, "短信猫", "请输入名称", $("#SmsMConfigName"));
+				return false;
+			} else {
+				if (!nameCheck.test(SmsMConfigName)) {
+					_alert(1, "短信猫", "名称格式不正确", $("#SmsMConfigName"));
+					return false;
+				}
+			}
+			if (SmsMSender == "") {
+				_alert(2, "短信猫", "请输入短信中心", $("#SmsMSender"));
+				return false;
+			} else {
+				if (numCheck.test(SmsMSender)) {
+					_alert(1, "短信猫", "短信中心格式不正确", $("#SmsMSender"));
+					return false;
+				}
+			}
+			if (SmsMLimit == "") {
+				_alert(2, "短信猫", "请输入发送限制", $("#SmsMLimit"));
+				return false
+			} else {
+				if (numCheck.test(parseInt(SmsMLimit))) {
+					_alert(1, "短信猫", "短信猫格式不正确", $("#SmsMLimit"));
+					return false;
+				}
+			}
+			smsmconfig_save.SmsMConfigName = SmsMConfigName;
+			smsmconfig_save.SmsMSender = SmsMSender;
+			smsmconfig_save.SmsMLimit = parseInt(SmsMLimit);
+			smsmconfig_save.EnCode = parseInt(EnCode);
+			smsmconfig_save.Flag = parseInt(Flag);
+			return true;
+		}
+		function save_syslog_date() {
+			var SyslogConfigName = $("#SyslogConfigName").val();
+			var SyslogServerIP = $("#SyslogServerIP").val();
+			var SyslogPort = $("#SyslogPort").val();
+			var EnCode = $("#syslogEnCode").val();
+			var Flag = $("#syslogFlag").val();
+			if (SyslogConfigName == "") {
+				_alert(2, "SYSLOG", "请输入名称", $("#SyslogConfigName"));
+				return false;
+			} else {
+				if (!nameCheck.test(SyslogConfigName)) {
+					_alert(1, "SYSLOG", "名称格式不正确", $("#SyslogConfigName"));
+					return false;
+				}
+			}
+			if (SyslogServerIP == "") {
+				_alert(2, "SYSLOG", "请输入服务器地址", $("#SyslogServerIP"));
+				return false;
+			} else {
+				if (!ipcheck_route.test(SyslogServerIP)) {
+					_alert(2, "SYSLOG", "服务器地址不正确", $("#SyslogServerIP"));
+					return false;
+				}
+			}
+			if (SyslogPort == "") {
+				_alert(2, "SYSLOG", "请输入端口", $("#SyslogPort"));
+				return false
+			} else {
+				if (numCheck.test(parseInt(SyslogPort))) {
+					_alert(1, "SYSLOG", "端口不正确", $("#SyslogPort"));
+					return false;
+				}
+				if (parseInt(parseInt(SyslogPort)) < 1) {
+					_alert(1, "SYSLOG", "端口不能小于1", $("#SyslogPort"));
+					return false;
+				}
+				if (parseInt(parseInt(SyslogPort)) > 65534) {
+					_alert(1, "SYSLOG", "端口不能大于65534", $("#SyslogPort"));
+					return false;
+				}
+			}
+			syslogconfig_save.SyslogConfigName = SyslogConfigName;
+			syslogconfig_save.SyslogServerIP = SyslogServerIP;
+			syslogconfig_save.SyslogPort = parseInt(SyslogPort);
+			syslogconfig_save.EnCode = parseInt(EnCode);
+			syslogconfig_save.Flag = parseInt(Flag);
+			return true;
+		}
+		function save_snmp_date() {
+			var SnmpConfigName = $("#SnmpConfigName").val();
+			var SnmpServerIP = $("#SnmpServerIP").val();
+			var SnmpPort = $("#SnmpPort").val();
+			var EnCode = $("#snmpEnCode").val();
+			var Flag = $("#snmpFlag").val();
+			if (SnmpConfigName == "") {
+				_alert(2, "SNMP", "请输入名称", $("#SnmpConfigName"));
+				return false;
+			} else {
+				if (!nameCheck.test(SnmpConfigName)) {
+					_alert(1, "SNMP", "名称格式不正确", $("#SnmpConfigName"));
+					return false;
+				}
+			}
+			if (SnmpServerIP == "") {
+				_alert(2, "SNMP", "请输入服务器地址", $("#SnmpServerIP"));
+				return false;
+			} else {
+				if (!ipcheck_route.test(SnmpServerIP)) {
+					_alert(2, "SNMP", "服务器地址不正确", $("#SnmpServerIP"));
+					return false;
+				}
+			}
+			if (SnmpPort == "") {
+				_alert(2, "SNMP", "请输入端口", $("#SnmpPort"));
+				return false
+			} else {
+				if (numCheck.test(parseInt(SnmpPort))) {
+					_alert(1, "SNMP", "端口不正确", $("#SnmpPort"));
+					return false;
+				}
+				if (parseInt(parseInt(SnmpPort)) < 1) {
+					_alert(1, "SNMP", "端口不能小于1", $("#SnmpPort"));
+					return false;
+				}
+				if (parseInt(parseInt(SnmpPort)) > 65534) {
+					_alert(1, "SNMP", "端口不能大于65534", $("#SnmpPort"));
+					return false;
+				}
+			}
+			snmpconfig_save.SnmpConfigName = SnmpConfigName;
+			snmpconfig_save.SnmpServerIP = SnmpServerIP;
+			snmpconfig_save.SnmpPort = parseInt(SnmpPort);
+			snmpconfig_save.EnCode = parseInt(EnCode);
+			snmpconfig_save.Flag = parseInt(Flag);
+			return true;
+		}
+		function save_smtpconfig() {
+			var pass = true;
+			if (smtpconfig_save == null) {
+				return false;
+			}
+			msstr = aceg(JSON.stringify(smtpconfig_save),$("input[name=se]").val());
+			$.ajax({
+				url: "/bhost/add_smtpconfig",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(smtpconfig_save),a2:'运维管理>事件告警',m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						//刷新下拉
+						var focusObj_value = $focusObj.data('value');
+						if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_master') >= 0) {
+							xSelect_arr[0][0].id = result.SmtpConfigId
+						} else if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_stand') >= 0) {
+							xSelect_arr[0][1].id = result.SmtpConfigId
+						}
+						setSelect(1);
+					} else {
+						if (result.ErrMsg == "同名邮件服务器配置已存在") {
+							_alert(2, "邮件配置", result.ErrMsg, $('#SmtpConfigName_Master'));
+						} else {
+							_alert(2, "邮件配置", result.ErrMsg);
+						}
+						pass = false;
+					}
+				}
+			});
+			return pass;
+		}
+		function save_smssvrconfig() {
+			var pass = true;
+			if (smssvrconfig_save == null) {
+				return false;
+			}
+			var msstr = aceg(JSON.stringify(smssvrconfig_save),$('input[name=se]').val());
+			$.ajax({
+				url: "/bhost/add_smssvrconfig",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(smssvrconfig_save),a10:'运维管理>事件告警',m1:msstr },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						//刷新下拉
+						var focusObj_value = $focusObj.data('value');
+						if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_master') >= 0) {
+							xSelect_arr[2][0].id = result.SmsSvrConfigId
+						} else if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_stand') >= 0) {
+							xSelect_arr[2][1].id = result.SmsSvrConfigId
+						}
+						setSelect(3);
+					} else {
+						if (result.ErrMsg == "同名短信网关服务配置已存在") {
+							_alert(2, "短信网关", result.ErrMsg, $('#SmtpConfigName_Master'));
+						} else {
+							_alert(2, "短信网关", result.ErrMsg);
+						}
+						pass = false;
+					}
+				}
+			});
+			return pass;
+		}
+		function save_smsmconfig() {
+			var pass = true;
+			if (smsmconfig_save == null) {
+				return false;
+			}
+			msstr = aceg(JSON.stringify(smsmconfig_save),$("input[name=se]").val());
+			$.ajax({
+				url: "/bhost/add_smsmconfig",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(smsmconfig_save),a10:'运维管理>事件告警',m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						//刷新下拉
+						var focusObj_value = $focusObj.data('value');
+						if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_master') >= 0) {
+							xSelect_arr[1][0].id = result.SmsMConfigId
+						} else if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_stand') >= 0) {
+							xSelect_arr[1][1].id = result.SmsMConfigId
+						}
+						setSelect(2);
+					} else {
+						if (result.ErrMsg == "同名短信猫配置已存在") {
+							_alert(2, "短信猫", result.ErrMsg, $('#SmtpConfigName_Master'));
+						} else {
+							_alert(2, "短信猫", result.ErrMsg);
+						}
+						pass = false;
+					}
+				}
+			});
+			return pass;
+		}
+		function save_syslogconfig() {
+			var pass = true;
+			if (syslogconfig_save == null) {
+				return false;
+			}
+			msstr = aceg(JSON.stringify(syslogconfig_save),$("input[name=se]").val());
+			$.ajax({
+				url: "/bhost/add_syslogconfig",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(syslogconfig_save),a10:'运维管理>事件告警',m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						//刷新下拉
+						var focusObj_value = $focusObj.data('value');
+						if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_master') >= 0) {
+							xSelect_arr[4][0].id = result.SyslogConfigId
+						} else if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_stand') >= 0) {
+							xSelect_arr[4][1].id = result.SyslogConfigId
+						}
+						setSelect(5);
+					} else {
+						if (result.ErrMsg == "同名SYSLOG配置已存在") {
+							_alert(2, "SYSLOG", result.ErrMsg, $('#SmtpConfigName_Master'));
+						} else {
+							_alert(2, "SYSLOG", result.ErrMsg);
+						}
+						pass = false;
+					}
+				}
+			});
+			return pass;
+		}
+		function save_snmpconfig() {
+			var pass = true;
+			if (snmpconfig_save == null) {
+				return false;
+			}
+			msstr = aceg(JSON.stringify(snmpconfig_save),$("input[name=se]").val());
+			$.ajax({
+				url: "/bhost/add_snmpconfig",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(snmpconfig_save),a10:'运维管理>事件告警', m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						//刷新下拉
+						var focusObj_value = $focusObj.data('value');
+						if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_master') >= 0) {
+							xSelect_arr[3][0].id = result.SnmpConfigId
+						} else if (focusObj_value == 0 && $focusObj.attr('class').indexOf('xSelect_stand') >= 0) {
+							xSelect_arr[3][1].id = result.SnmpConfigId
+						}
+						setSelect(4);
+					} else {
+						if (result.ErrMsg == "同名SNMP配置已存在") {
+							_alert(2, "SNMP", result.ErrMsg, $('#SmtpConfigName_Master'));
+						} else {
+							_alert(2, "SNMP", result.ErrMsg);
+						}
+						pass = false;
+					}
+				}
+			});
+			return pass;
+		}
+		var numCheck = /\D/;
+		var ipcheck_route = /(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+		var hostcheck1=/^(https?:\/\/)?(w{3}\.)?([a-zA-Z0-9-_.])+\.(com|cn|gov|info|us|hk|tw|cc|tv|uk|org)$/;
+		var hostcheck2=/^(https?:\/\/)?((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/;
+		var nameCheck = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+		function IPCheck(obj) {
+			var ip = $(obj).val().trim();
+			var $i = $(obj).next('i.v-check');
+			if (!ipcheck_route.test(ip)) {
+				$i.show().attr('class', 'v-check v-wrong');
+			} else {
+				$i.show().attr('class', 'v-check v-right');
+			}
+		}	
+		function NameCheck(obj) {
+			var Name = $(obj).val();
+			var $i = $(obj).next('i.v-check');
+			if (!nameCheck.test(Name)) {
+				$i.show().attr('class', 'v-check v-wrong');
+			} else {
+				$i.show().attr('class', 'v-check v-right');
+			}
+		}
+		function NumCheck(obj) {
+			var num = $(obj).val();
+			var $i = $(obj).next('i.v-check');
+			if (numCheck.test(num) || num == "") {
+				$i.show().attr('class', 'v-check v-wrong');
+				return false;
+			} else {
+				if (parseInt(num) > 65534) {
+					$i.show().attr('class', 'v-check v-wrong');
+					return false;
+				}
+				if (parseInt(num) < 1) {
+					$i.show().attr('class', 'v-check v-wrong');
+					return false;
+				}
+				$i.show().attr('class', 'v-check v-right');
+			}
+		}
+		function NumCheck1(obj) {
+			var num = $(obj).val();
+			var $i = $(obj).next('i.v-check');
+			if (numCheck.test(num) || num == "") {
+				$i.show().attr('class', 'v-check v-wrong');
+				return false;
+			} else {
+				$i.show().attr('class', 'v-check v-right');
+			}
+		}
+		function temp_check(obj) {
+			var v = $(obj).val();
+			var $i = $(obj).next('i.v-check');
+			if (v.indexOf("%phone%") === -1 || v.indexOf("%content%") === -1) {
+				$i.show().attr('class', 'v-check v-wrong');
+			} else {
+				$i.show().attr('class', 'v-check v-right');
+			}
+		}
+		function limitCheck(obj) {
+			obj.value = obj.value.replace(/\D/g, "");
+			var v = obj.value.trim();
+		}
+	</script>
+</body>
+
+</html>

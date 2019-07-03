@@ -1,0 +1,761 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+
+
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+
+</head>
+<style>
+	.c-table table tr strong{
+		color: #666;
+	}
+	.c-table table tr:hover strong{
+		color: #000;
+	}
+	.filter-select2 + .select2-container--default >.selection > .select2-selection--single{
+		border-bottom-left-radius: 0;
+		border-top-left-radius: 0;
+		margin-left: -1px;
+	}
+</style>
+<body style="overflow:hidden;display:none;" class="bg-white">
+		<!--认证方式表-->
+		<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+				<!--<h3 onclick="parent.reload();">认证方式</h3> -->
+
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title" >
+							<span id="authtype" style="cursor: pointer;">认证方式</span>
+							<i class="authtype_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer" name="authtype" id="authtype" >
+
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr" style="width:288px;">
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="authtype_add();">创建</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="delete_list();">删除</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="click_all_list();">全选</a>
+									<a href="javascript:;" class="btn btn-default" onclick="clear_all();">刷新</a>
+								</div>
+
+								<div class="filter">
+									<div class="search">
+										<select name="authtype_select" id="authtype_select" class="filter-select">
+											<option value="all">所有</option>
+											<option value="AuthTypeName">名称</option>
+											<option value="MustAllModulesSucc">验证方式</option>
+											<option value="AuthModuleName">模块名</option>
+										</select>
+										<select name="MustAllModulesSucc" id="MustAllModulesSucc" class="filter-select filter-select2">
+											<option value="all" selected>所有</option>
+											<option value="true">全部通过</option>
+											<option value="false">任一通过</option>
+										</select>
+										<input type="text" style="/*display:none;*/padding-right: 22px;" class="filter-text" placeholder="输入关键字" 
+										name="authtype_text" id="authtype_text" maxlength="128" 
+										onchange="if($('#authtype_text').val()==''){$('#authtype_text_check').hide();}else{$('#authtype_text_check').show();}"
+										onkeyup="if($('#authtype_text').val()==''){$('#authtype_text_check').hide();}else{$('#authtype_text_check').show();}"
+										onblur="if($('#authtype_text').val()=='' && search_typeall_new!=''){search_typeall_new='';_addFilter(this,false,1);}"
+										onkeydown="if($('#authtype_text').val()==''){$('#authtype_text_check').hide();}else{$('#authtype_text_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return; ">
+										<i class="v-check v-wrong" id="authtype_text_check" onclick="_clearFilter(this,1)" style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<button class="btn filter-btn" onclick="_addFilter(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="btn filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th class="perm_disabled" width="50"><input type="checkbox" class="form-checkbox" id="check_one_page"/></th>
+											<th>名称</th>
+											<th>验证方式</th>
+											<th>密码分隔符</th>
+											<th>模块名</th>
+											<th id="authtype_list_th" width="55"></th>
+										</tr>
+									</thead>
+
+									<tbody name="authtype_list" id="authtype_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_nums">10</span>条 总数：<span id = "authtype_total">0</span><span class="perm_disabled">  选中：</span><span class="sum perm_disabled">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="authtype_begin" onclick="authtype_page(0.1);" ><i></i></a>
+									<a href="javascript:;" class="nav prev" id="authtype_prev" onclick="authtype_page(-1);" ><i></i></a>
+									<input type="text" id = "authtype_page" value="1" onblur="showMsg();" onchange="showMsg();">/&nbsp;<span id = "authtype_pages">1</span>
+									<a href="javascript:;" class="nav next" id="authtype_next" onclick="authtype_page(1);" ><i></i></a>
+									<a href="javascript:;" class="nav2 end" id="authtype_end" onclick="authtype_page(0.9);" ><i></i></a>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+						<!--
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal"onclick="save_authtype();">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="save_authtype();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form action="/bhost/get_authtype_list" method="POST" name="frm_authtype" id="frm_authtype">
+			<input type="hidden" name="tasktype" id = "tasktype" value="3" />
+			<!--创建 编辑 列表-->
+			<input type="hidden" name="authtypeId" id = "authtypeId" value="0" />
+			<!--需要查询id-->
+			<input type="hidden" name="paging" id = "paging" value="{{paging}}" />
+			<!--页码-->
+			<input type="hidden" name="search_typeall" id = "search_typeall" value="{{search_typeall}}" />
+			<!--search_typeall-->
+			<input type="hidden" name="e" id = "e" value="{{e}}" />
+			<!--e-->
+			<input type="hidden" name="se" id = "se" value="{{se}}" />
+			<!--e-->
+	</form>
+
+<script>
+	var perm={{perm}};
+	if (perm==0) parent.parent.$('#nav-s1 a.active').click();
+	else{
+		$('.bg-white').show();
+		if(perm==1){
+			$('.perm_disabled').remove();
+			$('#authtype_list_th').attr('width','25');
+		}
+	}
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+
+<script>
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+
+<script type="text/javascript">
+var delect_str = new Array();
+var check_num=0;
+var total_all_r=0;
+//总数
+var fenye_r=0;
+//总页码
+var authtype_array=null;
+var search_typeall_r=document.frm_authtype.search_typeall.value;
+//关键字
+//确认保存
+function save_authtype()
+{
+	window.parent._closePage(null);
+}
+var TimeFn=null;
+$(function(){
+	$('#authtype_select').on('change',function () {
+		var authtype_select=$('#authtype_select').val();
+		switch (authtype_select) {
+			case 'MustAllModulesSucc':
+				$('#MustAllModulesSucc').next('.select2').show();
+				$('#authtype_text').hide();
+				break;
+			default:
+				$('#MustAllModulesSucc').next('.select2').hide();
+				$('#authtype_text').show();
+				break;
+		}
+	});
+	$('#authtype_select').val('all').trigger('change');
+	//输入数字
+	show_authtype_list();
+	$("#authtype_page").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	if(search_typeall_r!=""){
+		var v1="";
+		var id="";
+		var str_new="";
+		var search_typeall_str=search_typeall_r.split('\t');
+		$.each(search_typeall_str,function(i,item){
+			if(item==""){
+				return false;
+			}
+			var str_sea=item.split("-");
+			v1=$('#authtype_select').find('option[value='+str_sea[0]+']').text();
+			id=item;
+			str_sea[0]=v1;
+			str_new=str_sea.join('-');
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'</span><span class="ww">'+str_new+'</span><i class="del" onclick="_delFilter(this);"></i></li>');
+			selView();
+		});
+	}
+	var search_typeall_select=document.frm_authtype.e.value.substr(document.frm_authtype.e.value.indexOf(':')+1,document.frm_authtype.e.value.length-1);
+	if(search_typeall_select!=''){
+		var array=new Array();
+		array[0]=search_typeall_select.substr(0,search_typeall_select.indexOf('-'));
+		array[1]=search_typeall_select.substr(search_typeall_select.indexOf('-')+1,search_typeall_select.length);
+		$('#authtype_select').val(array[0]).trigger('change');
+		switch (array[0]) {
+			case 'MustAllModulesSucc':
+				$('#'+array[0]).val(array[1]).trigger('change');
+				break;
+			default:
+				$('#authtype_text').val(array[1]).trigger('change');
+				break;
+		}
+	}
+	//页码显示
+	$("#page_nums").val(MAX_PAGE);
+	parent._switchBtn(1);//显示按钮
+	//tr双击事件
+
+	$("#authtype_list").on('dblclick','tr',function(e){
+		//双击事件的执行代码
+		x=e.target;
+		var id=$(this).find("td");
+		if(x.nodeName !='A' && x.nodeName !='INS'){
+			var id=$(this).find("td");
+			var edit_item_id=$(id).eq(1).text();
+			document.frm_authtype.authtypeId.value=edit_item_id;
+			document.frm_authtype.tasktype.value=2;
+			document.frm_authtype.search_typeall.value=search_typeall_r;
+			document.frm_authtype.action = '/bhost/authtype_handle';
+			var select_id=$('#authtype_select').val();
+			var select_value=null;
+			switch (select_id) {
+				case 'MustAllModulesSucc':
+					select_value=$('#'+select_id).val();
+					break;
+				default:
+					select_value=$('#authtype_text').val();
+					break;
+			}
+			document.frm_authtype.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+			document.frm_authtype.submit();
+		}
+	}).on("click", "tr", function (e){
+		x=e.target;
+		var id=$(this).find("td");
+		//删除按钮
+		if(x.id == 'del' && $(id).eq(1).text()>1000){
+			var id=$(this).find("td");
+			var input  = $(this).find("input");
+			$('.btn').blur();parent.layer.open({
+				type:1,
+				title: '认证方式',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+				btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+				btnAlign:'c',
+				closeBtn: false,
+				skin:'layer-custom',
+				area:['380px','310px'],
+				move: false,
+				resize: false,
+				yes:function(i){
+					parent.layer.close(i);
+					var delete_item=$(id).eq(1).text();
+					// $(input).iCheck('uncheck');
+					delete_fun(delete_item+'\t'+$(id).eq(2).text());
+				}
+			});
+		}
+		//编辑按钮
+		if(x.id == 'edit'){
+			var id=$(this).find("td");
+			var edit_item_id=$(id).eq(1).text();
+			document.frm_authtype.authtypeId.value=edit_item_id;
+			document.frm_authtype.tasktype.value=2;
+			document.frm_authtype.search_typeall.value=search_typeall_r;
+			var select_id=$('#authtype_select').val();
+			var select_value=null;
+			switch (select_id) {
+				case 'MustAllModulesSucc':
+					select_value=$('#'+select_id).val();
+					break;
+				default:
+					select_value=$('#authtype_text').val();
+					break;
+			}
+			document.frm_authtype.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+			document.frm_authtype.action = '/bhost/authtype_handle';
+			document.frm_authtype.submit();
+		}
+	});
+	$('#check_one_page').on(' ifClicked',function(e){
+		if(!$('#check_one_page').is(':checked')){
+			$("table tbody tr input:not(:disabled)").iCheck('check');
+		}else{
+			$("table tbody tr input:not(:disabled)").iCheck('uncheck');
+			
+		}
+	});
+	$("#authtype_list").on("ifChecked",function(e){
+		check_num++;
+		$("span.sum").text(check_num);
+		if($("table tbody tr input:checked").length==$("table tbody tr input:not(:disabled)").length){
+			$('#check_one_page').iCheck('check');
+		}
+	}).on("ifUnchecked",function(e){
+		check_num--;
+		$("span.sum").text(check_num);
+		$('#check_one_page').iCheck('uncheck');
+	});
+})
+//显示创建页面
+function authtype_add(){
+	document.frm_authtype.tasktype.value=1;
+	document.frm_authtype.authtypeId.value=0;
+	document.frm_authtype.search_typeall.value=search_typeall_r;
+	var select_id=$('#authtype_select').val();
+	var select_value=null;
+	switch (select_id) {
+		case 'MustAllModulesSucc':
+			select_value=$('#'+select_id).val();
+			break;
+		default:
+			select_value=$('#authtype_text').val();
+			break;
+	}
+	document.frm_authtype.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+	document.frm_authtype.action = '/bhost/authtype_handle';
+	document.frm_authtype.submit();
+}
+//选中字段存储
+function delect_save(){
+	$(">tr","#authtype_list").each(function(){
+		var input  = $(this).find("input[type='checkbox']");
+		var delect_item=$(">td",this).eq(1).text()+'\t'+(perm==2?$(">td",this).eq(2).text():$(">td",this).eq(0).text());
+		var index=$.inArray(delect_item,delect_str);
+		if($(input).is(':checked')){
+			if(index<0){
+				delect_str.push(delect_item);
+			}
+		}else{
+			if(index>=0){
+				delect_str.splice(index,1);
+			}
+		}
+	});
+}
+//check显示
+function check_show(){
+	$(">tr","#authtype_list").each(function(){
+		var input  = $(this).find("input[type='checkbox']");
+		var check_id=$(">td",this).eq(1).text()+'\t'+(perm==2?$(">td",this).eq(2).text():$(">td",this).eq(0).text());
+		if($.inArray(check_id,delect_str)>=0){
+			$(input).iCheck('check');
+		}
+	});
+}
+//input回车触发事件
+function showMsg(){
+	delect_save();
+	var cur = $("#authtype_page").val();
+	cur=cur.replace(/\D/g, "");
+	if(cur=='' || parseInt(cur) < 1){
+		cur=1;
+	}
+	document.frm_authtype.paging.value=cur;
+	show_authtype_list();
+}
+var search_typeall_new=document.frm_authtype.e.value.substr(0,document.frm_authtype.e.value.indexOf(':'));
+String.prototype.ResetBlank=function(){
+		var regEx = /\s+/g; 
+		return this.replace(regEx, ' '); 
+	};
+function _addFilter(obj,type,type_num){
+	var id = $(obj).parent().children('select').eq(0).children('option:selected').val();
+	var v1 = $(obj).parent().children('select').eq(0).children('option:selected').text();
+	var v2 = $(obj).parent().children('input[type=text]').val().trim();
+	if(id=='all'){
+		v1='';
+	}else{
+		if(id=='MustAllModulesSucc'){
+			v2=$('#MustAllModulesSucc').children('option:selected').text();
+		}
+		v1=v1+'-';
+	}
+	v2=v2.ResetBlank();
+	if(v2 == '' && type_num!=1){
+		$(obj).parent().children('input[type=text]').blur();
+		_alert(2,'搜索','请输入关键字', $(obj).parent().children('input[type=text]'));
+		return false;
+	}
+	// else
+	{
+		switch(id){
+			case 'AuthTypeName':
+				var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				break;
+			case 'AuthModuleName':
+				var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				break;
+			case 'MustAllModulesSucc':
+				var Reg=/^[\u4e00-\u9fa5\s]+$/;
+				break;
+		}
+		var pass=false;
+		$.each(search_typeall_r.split('\t'),function (i,item) {
+				//console.log(item);
+				if(item.indexOf('MustAllModulesSucc')==0 && id=='MustAllModulesSucc'){
+					_alert(2,'搜索','只能搜索一个验证方式');
+					pass=true;
+					return false;
+				}
+		});
+		if(pass){
+			return false;
+		}
+		if(id!='all' && id!='MustAllModulesSucc' && !Reg.test(v2) && type_num!=1){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(1,'搜索','关键字格式不正确', $(obj).parent().children('input[type=text]'));
+			return false;
+		}
+		if($.inArray(id+'-'+v2,search_typeall_r.split('\t'))>=0 && type_num!=1){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(2,'搜索','关键字重复', $(obj).parent().children('input[type=text]'));
+			return false;大家都在发
+		}
+		if(type){
+			search_typeall_r=search_typeall_r+id+'-'+v2+'\t';
+			search_typeall_new='';
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'-'+v2+'</span><span class="ww">'+v1+v2+'</span><i class="del" onclick="_delFilter(this);"></i></li>');
+			$('#authtype_text').val('');
+			$('#authtype_text_check').hide();
+			selView();
+		}else{
+			if(type_num!=1) search_typeall_new=id+'-'+v2+'\t';
+		}
+	}
+	document.frm_authtype.paging.value=1;
+	delect_str=new Array();
+	show_authtype_list();
+}
+function _delFilter(obj){
+	var id = $(obj).parent().find("span");
+	var ids=$(id).eq(0).text();
+	var search_typeall_r_arr=search_typeall_r.split('\t');
+	search_typeall_r_arr.splice($.inArray(ids,search_typeall_r_arr),1);
+	search_typeall_r=search_typeall_r_arr.join('\t');
+	var authtype_text=$('#authtype_text').val().trim();
+	$(obj).parent().remove();
+	selView();
+	document.frm_authtype.paging.value=1;
+	delect_str=new Array();
+	show_authtype_list();
+}
+function selView(){
+	var $sel = $('#filterWW');
+	var len = $('li',$sel).length;
+	//////console.log(len);
+	if(len == 0){
+		$sel.hide();
+		$('#clearFilter').hide();
+	}else{
+		$("#filterWW").show();
+		$('#clearFilter').show();
+		$('>span.ww',$sel).show();
+		$sel.addClass('selector-multiple');
+	}
+}
+function _clearFilter(obj,num){
+	if(num==1){
+		$('#authtype_text').val('');
+	$('#authtype_text_check').hide();
+	search_typeall_new='';
+	document.frm_authtype.paging.value=1;
+	delect_str=new Array();
+	show_authtype_list();
+	return;
+	}
+	$('#clearFilter').next().children('ul').empty();
+	$('#authtype_text').val('');
+	$('#authtype_text_check').hide();
+	$('#clearFilter').hide();
+	search_typeall_new='';
+	search_typeall_r='';
+	selView();
+	document.frm_authtype.paging.value=1;
+	delect_str=new Array();
+	show_authtype_list();
+}
+//以每页显示数显示列表函数
+function show_authtype_list(){
+	update_all_list();
+	var paging = document.frm_authtype.paging.value;
+	var page_num = MAX_PAGE;
+	var search_typeall=search_typeall_r+search_typeall_new;
+	var authtypeId=document.frm_authtype.authtypeId.value;
+	$.ajax({
+		url: "/bhost/get_authtype_list",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a4:page_num,a3:paging,a2:search_typeall,a1:authtypeId,dsc:true},
+		success:function(result){
+			var authtype_result = JSON.parse(result);
+			if (authtype_result.Result==true){
+				var authtype_data = authtype_result.info;
+				var total_all = authtype_data.totalrow;
+				fenye_r=Math.ceil(total_all/MAX_PAGE)||1;
+				if(authtype_data.data=="" && paging!="1"){
+					authtype_page(0.9);
+				}else{
+					//total = 0;
+					total_all_r = total_all;
+					if(total_all){
+						$("#authtype_list").empty();
+						$("#authtype_list").append(authtype_data.data.map(function (item) {
+							if(item.AuthTypeName==null){
+								item.AuthTypeName="";
+							}
+							if(item.Separator==null){
+								item.Separator="";
+							}
+							if(item.MustAllModulesSucc){
+								item.MustAllModulesSucc="全部通过";
+							}else{
+								item.MustAllModulesSucc="任一通过";
+							}
+							var set_str="";
+							$.each(item.Set,function(i,item1){
+								set_str=set_str+item1.AuthModuleName+"，";
+							});
+							set_str=set_str.substr(0,set_str.length-1);
+							return "<tr>"+
+								(perm==2?"<td class=\"in\">"+(item.AuthTypeId<=1000?"<input type=\"checkbox\" class=\"input_checkbox\" disabled/>":"<input type=\"checkbox\" class=\"input_checkbox\" />")+"</td>":"<td title='"+item.AuthTypeName+"'>"+item.AuthTypeName+(item.IsDefault?'（'+'<strong style="">默认</strong>'+'）':'')+"</td>")+
+								"<td style = \"display:none\">"+item.AuthTypeId+"</td>"+
+								(perm==2?"<td title='"+item.AuthTypeName+"'>"+item.AuthTypeName+(item.IsDefault?'（'+'<strong style="">默认</strong>'+'）':'')+"</td>":'')+
+								"<td>"+item.MustAllModulesSucc+"</td>"+
+								"<td title='"+item.Separator+"'>"+item.Separator+"</td>"+
+								"<td title='"+set_str+"'>"+set_str+"</td>"+
+								"<td><div class=\"tab-ctr\">"+
+								(perm==2?"<a href=\"javascript:;\" class=\"edit\" id=\"edit\" title='编辑'></a>":"<a href=\"javascript:;\" class=\"search_result\" id=\"edit\" title='查看'></a>")+
+								(perm==2?"<a href=\"javascript:;\" class=\"del "+(item.AuthTypeId<=1000?"disabled":"")+"\" id=\"del\" title='删除'></a>":"")+
+								"</div>"+
+								"</td></tr>"
+						}));
+						$(".input_checkbox","#authtype_list").iCheck({
+							checkboxClass: 'icheckbox_minimal-blue',
+							radioClass: 'iradio_minimal-blue',
+							increaseArea: '0' // optional
+						});
+						$("#authtype_total").text(total_all);
+						if(paging>=fenye_r){
+							paging=fenye_r;
+						}
+						document.frm_authtype.paging.value=paging;
+						document.getElementById("authtype_page").value=paging;
+						$("#authtype_pages").text(fenye_r);
+						$('#check_one_page').iCheck('uncheck');
+						$("table tbody tr input").iCheck('uncheck');
+						check_show();
+						check_num=delect_str.length;
+						$("span.sum").text(check_num);
+					}else{
+						$("span.sum").text(0);
+						$('#check_one_page').iCheck('uncheck');
+						$("table tbody tr input").iCheck('uncheck');
+						$("#authtype_list").empty();
+						$("#authtype_total").text(total_all);
+						$("#authtype_pages").text(1);
+						document.frm_authtype.paging.value=1;
+						fenye_r=1;
+						document.getElementById("authtype_page").value=1;
+					}
+				}
+			}else{
+				_alert(1,"认证方式",authtype_result.ErrMsg);
+				$('#check_one_page').iCheck('uncheck');
+				$("table tbody tr input").iCheck('uncheck');
+				$("span.sum").text(0);
+				$("#authtype_total").text(0);
+				$("#authtype_pages").text(1);
+				document.frm_authtype.paging.value=1;
+				fenye_r=1;
+				document.getElementById("authtype_page").value=1;
+				return false;
+			}
+		}
+	});
+
+}
+//刷新
+function clear_all(){
+	delect_str=new Array();
+	show_authtype_list();
+}
+// //显示列表
+// $(document).ready(function(){
+// 	//以下3行用来回显默认每页5条
+// 	show_authtype_list();
+// })
+//分页 and 刷新
+function authtype_page(num){
+	var paging=parseInt(document.frm_authtype.paging.value)+num;
+	if(paging<1){
+		paging=1;
+	}
+	delect_save();
+	if (num == 0.1){
+		paging = 1;
+	}else if(num == 0.9){
+		paging=fenye_r;
+	}
+	// document.getElementById("authtype_page").value=paging;
+	document.frm_authtype.paging.value=paging;
+	show_authtype_list();
+}
+var click_all=false;
+function update_all_list() {
+	var search_typeall=search_typeall_r+search_typeall_new;
+	var authtypeId=document.frm_authtype.authtypeId.value;
+	$.ajax({
+		url: "/bhost/get_authtype_list",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a2:search_typeall,a1:authtypeId,dsc:true},
+		success:function(result){
+			var authtype_result = JSON.parse(result);
+			if (authtype_result.Result){
+				var authtype_data = authtype_result.info;
+				var delect_str_old=delect_str;
+				delect_str=new Array();
+				authtype_array=authtype_data.data.filter(function (params) {
+					return params.AuthTypeId>1000;
+				}).map(function (params) {
+					if($.inArray(params.AuthTypeId+'\t'+params.AuthTypeName,delect_str_old)>=0){
+						delect_str.push(params.AuthTypeId+'\t'+params.AuthTypeName);
+					}
+					return params.AuthTypeId+'\t'+params.AuthTypeName;
+				});
+			}else{
+				_alert(1,'认证方式',authtype_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+//全选按钮
+function click_all_list(){
+	delect_save();
+	if(authtype_array.length==delect_str.length){
+		delect_str=new Array();
+	}else{
+		delect_str=authtype_array;
+	}
+	show_authtype_list();
+}
+//删除函数
+function delete_fun(delect_str_1){
+	$.ajax({
+		url: '/bhost/del_authtype',
+		type: "POST",
+		async:false,
+		data: {a0:$("input[name=se]").val(),a1:delect_str_1},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				authtype_page(0);
+				if(result.fail_num!=0){
+					if (result.success_num!=0)
+						_alert(0,"认证方式","成功："+result.success_num+'，失败：'+result.fail_num);
+					else
+						if ((result.fail_num+result.success_num)==1)
+							_alert(1,"认证方式",result.ErrMsg);
+						else
+							_alert(0,"认证方式",'失败：'+result.fail_num);
+				}else{
+					_alert(0,"认证方式","删除成功");
+				}
+				// _alert(0,"认证方式","删除成功");
+			}else{
+				authtype_page(0);
+				_alert(1,"认证方式",result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+//删除按钮
+function delete_list(){
+	delect_save();
+	if(delect_str.length == 0){
+		_alert(2,"认证方式","请选择要删除的数据");
+		return false;
+	}
+	//利用对话框返回的值 （true 或者 false）
+	$('.btn').blur();parent.layer.open({
+		type:1,
+		title: '认证方式',
+		content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		yes:function(i){
+			parent.layer.close(i);
+			delete_fun(delect_str.join(','));
+		}
+	});
+}
+$(function(){
+	
+	$("#authtype").on("click",function(){
+		parent.reload();
+	});
+        });
+
+</script>
+</body>
+</html>

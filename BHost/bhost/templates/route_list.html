@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<!---->
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3 class="unsel" onclick="export_show();">网口设置</h3>
+				<h3 onclick="location.reload();">路由设置</h3>
+				-->
+				<div class="manual-head" style="float:left;width:auto">
+					<div  class="manual-title-other title-item" style="color:rgb(123,121,123);background:rgb(222,222,222)" ;>
+						<span id="int_set">网口设置</span>
+						<i style="display:none";></i>
+					</div>
+					<div id="frist" class="manual-title-other  title-item" >
+						<span id="route_set">路由设置</span>
+						<i class="route_icon" ></i>
+					</div>
+					<div  class="manual-title title-item" style="color:rgb(123,121,123);background:rgb(222,222,222)" ;>
+						<span id="dns_set">DNS设置</span>
+						<i style="display:none";></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			
+			<div class="container1">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr">
+									{% if _power_mode == 2 %}
+									<a href="javascript:;" class="btn btn-default s-hide" onclick="create_route()">创建</a>
+									<a href="javascript:;" class="btn btn-default s-hide" onclick="delete_all()">删除</a>
+									<a href="javascript:;" class="btn btn-default s-hide" onclick="select_all()">全选</a>
+									{% endif %}
+									
+									<a href="javascript:;" class="btn btn-default" onclick="refresh()">刷新</a>
+									
+									
+								</div>
+									
+								<div class="filter">
+									<div class="search">
+										<select name="" id="filtername" style="width:115px;" class="filter-select" onchange="change_filter(this);">
+											<option value="0">所有</option>
+											<option value="1">网口</option>
+											<option value="2">网关</option>
+											<option value="3">下一跳转地址</option>
+											<option value="4">掩码</option>
+											<option value="5">类型</option>
+										</select>
+										<select name="" id="filter_name" class="filter-select" style="display:none;">
+											<option value="0">所有</option>
+											<option value="default">default</option>
+											<option value="net">net</option>
+										</select>
+										<input type="text" class="filter-text" id="keyword" placeholder="输入关键字" style="padding: 0 22px 0 4px;" 
+										onblur="change_input(this);"  onkeydown="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return;" onchange="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();}" onkeyup="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();}">
+										
+										<i class="v-check v-wrong" id="text_check" onclick="_clear_keyword(this)" style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<button class="btn filter-btn" onclick="_addFilter(this,false)"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+											<!--li><span class="ww">关键字1</span><i class="del" onclick="_delFilter(this)"></i></li>
+											<li><span class="ww">关键字2</span><i class="del" onclick="_delFilter(this)"></i></li>
+											<li><span class="ww">关键字3</span><i class="del" onclick="_delFilter(this)"></i></li-->
+										</ul>
+									</div>
+								</div>
+							
+							</div>
+							<div class="box-table">
+							<table cellpadding="0" cellspacing="0" id="route_list">
+								<thead>
+									<tr>		
+										<th width="50" class="s-hide"><input type="checkbox" class="form-checkbox" id="check_page"/></th>
+										<th>服务器</th>
+										<th>网口</th>
+										<th>网关</th>
+										<th>下一跳转地址</th>
+										<th>掩码</th>
+										<th>类型</th>
+										<th width="60"></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									
+								</tbody>
+							</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_total">10</span>条 总数：<span id = "route_total">25</span>  选中：<span id = "select_total">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" onclick="firstpage()"><i></i></a>
+									<a href="javascript:;" class="nav prev" onclick="prevpage()"><i></i></a>
+									<input type="text" value="1" id="curpage" onchange="jumppage()">/&nbsp;<span id = "totalpage"> 25</span>
+									<a href="javascript:;" class="nav next" onclick="nextpage()"><i></i></a>
+									<a href="javascript:;" class="nav2 end" onclick="lastpage()"><i></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="clearfix"></div>
+						<!--
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-cancel1 btn-normal" onclick="list_cancel()">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+						<div id="bBtn" style="position: fixed;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="list_cancel();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<form action="/bhost/create_route" method="POST" name="frm_route" id="frm_route">
+		<input type="hidden" name="z1" id = "z1" value="" />
+		<input type="hidden" name="z2" id = "z2" value="" />	
+		<input type="hidden" name="z3" id = "z3" value="" />
+		<input type="hidden" name="z4" id = "z4" value="" />
+		<input type="hidden" name="z5" id = "z5" value="" />
+		<input type="hidden" name="se" id = "se" value="{{se}}" />
+		<input type="hidden" name="a0" value="{{se}}" />
+	</form>
+</body>
+
+
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+
+
+<script>
+
+var se;
+var _if_disable = '2';
+var first_style='';
+$(function(){
+	$("#filter_name").next('span').find('span.select2-selection').css({"border-bottom-left-radius":"1px","border-top-left-radius":"1px","margin-left":"-1px"})
+	if(parent.is_guide == 1){
+		$('#bBtn').hide();
+		$('a.ret').parent().hide();
+	}
+	if('{{error_msg}}' !=""){
+		_alert(2,'路由设置','{{error_msg}}');
+		return false;
+	}
+	_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+	if(_if_disable == '1'){
+		$('.s-hide').remove();
+		$('thead tr').eq(0).children('th:last').css('width',30);
+		first_style="style=\"border-left: 1px solid #FFF;\"";
+	}
+	$("#int_set").on("click",function(){
+		export_show();
+	});
+	$("#dns_set").on("click",function(){
+		export_show_dns();
+	});
+	$("#route_set").on("click",function(){
+		//parent.reload();
+		document.frm_route.action = '/bhost/route_show';
+		document.frm_route.z1.value = 1;
+		document.frm_route.z2.value = "[]";
+		document.frm_route.z3.value = 0;
+		document.frm_route.z4.value = "[]";
+		document.frm_route.submit();
+	});
+	//只能输入数字
+	se = window.parent.document.frm.se.value;
+	$("#curpage").bind('keydown', function(e){
+        DigitInput(e);
+    });
+	$("#filter_name").next().hide();
+	//绑定当前页
+	
+	if(c_ipage != "None"){
+		$("#curpage").val(c_ipage);
+	}
+	if (keyword_re.length != 0){
+		var key_len = keyword_re.length;
+		$.each(keyword_re,function(i,item){
+			var filter_arry = item.split('-');
+			var filter_name = filter_arry[0];
+			filter_arry.splice(0,1);
+			var filter_v = filter_arry.join('-');
+			var filter_value = 0;
+			var addfilter = "";
+			if (filter_name == "0"){
+				filter_value = "0";
+				addfilter = filter_v;
+			}else if (filter_name == "1"){
+				filter_value = "1";
+				addfilter = "网口-" + filter_v;
+			}else if (filter_name == "2"){
+				filter_value = "2";
+				addfilter = "网关-" + filter_v;
+			}else if (filter_name == "3"){
+				filter_value = "3";
+				addfilter = "下一跳转地址-" + filter_v;
+			}else if (filter_name == "4"){
+				filter_value = "4";
+				addfilter = "掩码-" + filter_v;
+			}else if (filter_name == "5"){
+				filter_value = "5";
+				addfilter = "类型-" + filter_v;
+			}
+			if (filter_flag == 1){
+				if (key_len == 1){
+					$("#filtername").val(filter_value).trigger('change');
+					if (filter_value == "5"){
+						$("#filter_name").val(filter_v);
+						keyword_v = "";
+					}else{
+						$("#keyword").val(filter_v);
+						keyword_v = filter_v;
+					}
+				}else{
+					if (i+1 != key_len){
+						$("#filterWW").show();
+						$("#clearFilter").show();
+						$("#filterWW ul").append("<li><span class=\"ww\" data-value=\""+item+"\">"+addfilter+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+					}else{
+						$("#filtername").val(filter_value).trigger('change');
+						if (filter_value == "5"){
+							$("#filter_name").val(filter_v);
+						}else{
+							$("#keyword").val(filter_v);
+							keyword_v = filter_v;
+						}
+					}
+				}
+				$("#text_check").show();
+			}else{	
+				$("#filterWW").show();
+				$("#clearFilter").show();
+				$("#filterWW ul").append("<li><span class=\"ww\" data-value=\""+item+"\">"+addfilter+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+				if (i+1 == key_len){
+					$("#filtername").val(filter_value).trigger('change');
+				}
+			}
+		});
+	}else{
+		$("#filterWW").hide();
+		//$("#keyword").hide();
+		$("#clearFilter").hide();
+	}
+	parent._switchBtn(1);//显示左右按钮
+	get_route_list();
+});
+var keyword_v = "";
+
+function change_filter(obj){
+	if ($(obj).val() == "5"){
+		$("#filter_name").show();
+		$("#filter_name").next().show();
+		$("#keyword").hide();
+	}else{
+		$("#filter_name").hide();
+		$("#filter_name").next().hide();
+		$("#keyword").show();
+	}
+}
+
+var flag = 1;
+var flags = 0;
+var selectid = {{selectid|safe}};
+var num=0;
+var curid=[];
+var c_ipage="{{ipage}}";
+var server_id = "";
+var keyword_re = {{keyword|safe}};
+var filter_flag = {{filter_flag}};
+//全选
+var select_all_click = 0;
+function select_all(){
+	var num = 0;
+	selectid = [];
+	var select_total = $("#select_total").text();
+	var route_total = $("#route_total").text();
+	if (route_total == select_total){
+		$("#route_list").find('input').iCheck('uncheck');
+	}else{
+		$.ajax({  
+			url:'/bhost/get_route_list',
+			type:"post",
+			async:false,
+			data:{a0:se,z4:"null",z5:"null",z6:JSON.stringify(keyword_re)},
+			success:function(result){
+				var route_data = JSON.parse(result);
+				$.each(route_data.data,function(i,item){
+					selectid.push(item.route_id);
+				});
+			}
+		});
+		$("#route_list tbody input[type='checkbox']").each(function(){
+			$(this).iCheck('check');
+		});
+	}	
+	num = selectid.length;
+	$("#select_total").text(num);
+}
+
+//下一页
+function nextpage(){
+	var cpage = $("#curpage").val();
+	var total = $("#totalpage").text();
+	var npage = 0;
+	if (total == cpage){
+		return;
+	}else{
+		npage = parseInt(cpage)+1;
+	}
+	$("#curpage").val(npage);
+	get_route_list();
+}
+
+//上一页
+function prevpage(){
+	var cpage = $("#curpage").val();
+	var ppage = 0;
+	if (parseInt(cpage) == 1){
+		return;
+	}else{
+		ppage = parseInt(cpage)-1;
+	}
+	$("#curpage").val(ppage);
+	get_route_list();
+}
+//首页
+function firstpage(){
+	$("#curpage").val(1);
+	get_route_list();
+}
+//末页
+function lastpage(){
+	var cpage = $("#curpage").val();
+	var lpage = $("#totalpage").text();
+	if (cpage == lpage){
+		return;
+	}
+	$("#curpage").val(lpage);
+	get_route_list();
+}
+//跳页
+function jumppage(){
+	var cur = $("#curpage").val();
+	var numReg = /\D/;
+	if (numReg.test(cur)){
+		$("#curpage").val(1);
+	}
+	if (parseInt(cur) < 1 || cur == ""){
+		$("#curpage").val(1);
+	}
+	get_route_list();
+}
+
+//获取列表
+function get_route_list(){
+    ipage = $("#curpage").val(); //页数	
+	keyword = JSON.stringify(keyword_re);
+	curid=[];
+	$.ajax({  
+		url:'/bhost/get_route_list',
+		type:"post",
+		async:false,
+		data:{a0:se,z4:MAX_PAGE,z5:ipage,z6:keyword},//page:z4,ipage:z5,keyword:z6,name:z7
+		success:function(result){
+			route_list = JSON.parse(result);
+			$("#route_list tbody").empty();
+			$.each(route_list.data,function(i,item){ 
+				if (item.next_addr == null){
+					item.next_addr = "";
+				}
+				if (item.netmask == null){
+					item.netmask = "";
+				}
+				if(_if_disable == '1'){
+					edit_class = 'search_result';
+					title_str="查看";
+				}else{
+					edit_class = 'edit';
+					title_str ="编辑";
+				}
+				$("#route_list tbody").append("<tr><td class=\"s-hide\"><input class=\"form-checkbox\" type=\"checkbox\" name=\""+item.route_id+"\" value=\""+item.route_id+"\"></td><td title=\""+item.server_id+"\" "+first_style+">"+item.server_id+"</td><td title=\""+item.netdev_name+"\">"+item.netdev_name+"</td><td title=\""+item.gw_addr+"\">"+item.gw_addr+"</td><td title=\""+item.next_addr+"\">"+item.next_addr+"</td><td title=\""+item.netmask+"\">"+item.netmask+"</td><td title=\""+item.route_type+"\">"+item.route_type+"</td><td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\""+edit_class+"\" title=\""+title_str+"\" onclick=\"edit_route("+item.route_id+");\"></a><a href=\"javascript:;\" title=\"删除\" class=\"del s-hide\" id=\"del\" onclick=\"delete_route("+item.route_id+")\"></a></div></td></tr>");    
+				if(_if_disable == '1'){
+					$('.s-hide').remove();
+				}
+				tabArr();
+				$('.form-checkbox,.form-radio').iCheck({
+					checkboxClass: 'icheckbox_minimal-blue',
+					radioClass: 'iradio_minimal-blue',
+					increaseArea: '0' 
+				});
+			});
+		}
+	});
+    $("#route_total").text(route_list.totalrow);
+	totalpage = Math.ceil(parseInt(route_list.totalrow)/MAX_PAGE);
+	if (totalpage < 1){
+		totalpage = 1;
+	}
+	$("#totalpage").text(totalpage.toString());
+	$("#page_total").text(MAX_PAGE);
+	$('#check_page').iCheck('uncheck');
+	/*
+	var selectid_temp = [];
+	$.ajax({  
+		url:'/bhost/get_route_list',
+		type:"post",
+		async:false,
+		data:{a0:se,z4:"null",z5:"null",z6:keyword},
+		success:function(result){
+			var route_data = JSON.parse(result);
+			$.each(route_data.data,function(i,item){
+				$.each(selectid,function(i1,item1){
+					if (item1 == item.route_id){
+						selectid_temp.push(item1);
+					}
+				})
+			})
+		}
+	});
+	selectid = selectid_temp;
+	*/
+	var check_page_flag = 0;
+	$("#route_list tbody input[type='checkbox']").each(function(){
+		if ($.inArray(parseInt(this.value), selectid) != -1){					
+			$(this).iCheck('check');
+			check_page_flag++;
+		}
+	});
+	if ($("#route_list tbody input:checked").length == $("#route_list tbody input").length && check_page_flag != 0){
+		$('#check_page').iCheck('check');
+	}
+
+	if (parseInt(ipage) > totalpage){
+		$("#curpage").val(totalpage);
+		get_route_list();
+	}
+
+	
+	//绑定列表单击选中
+	/*
+	$("#route_list tbody >tr").unbind().bind("click",function(e){
+		x=e.target;
+		if (x.nodeName != 'A'){
+			var input = $(this).find("input[type='checkbox']");
+			if ($(input).prop('checked') == false && $(input).prop("disabled") == false){
+				$(input).iCheck('check');
+			}else{
+				$(input).iCheck('uncheck');
+			}
+		}
+	})
+	*/
+	$("#route_list tbody >tr").bind("dblclick",function(e){
+		x=e.target;
+		if (x.nodeName != "INS"){
+			$(this).children('td:last').find('.edit').click();
+			$(this).children('td:last').find('.search_result').click();
+		}
+	});
+	num = selectid.length;
+	$("#select_total").text(num);
+	$('#check_page').on('ifClicked',function(e){
+		if(!$('#check_page').prop('checked')){
+			$("#route_list").children('tbody').find('input[type=checkbox]').iCheck('check');
+		}else{
+			$("#route_list").children('tbody').find('input[type=checkbox]').iCheck('uncheck');
+		}
+		
+	});
+	$("#route_list tbody input[type='checkbox']").on("ifChanged",function(){
+		if ($(this).is(":checked")){
+			num = $("#select_total").text();   
+			num++;
+			if (selectid.indexOf(parseInt(this.value)) == -1){
+				selectid.push(parseInt(this.value))	
+			}
+			$("#select_total").text(num);
+		}else{
+			num = $("#select_total").text();
+			num--;
+			selectid.splice($.inArray(parseInt(this.value),selectid),1);
+			$("#select_total").text(num);   
+		}
+		if ($("#route_list tbody").find('input[type=checkbox]:checked').length == $("#route_list tbody input[type='checkbox']").length){
+			$('#check_page').iCheck('check');
+		}else{
+			$('#check_page').iCheck('uncheck');
+		}
+	});
+	
+}
+
+//批量删除
+function delete_all(){
+	if (selectid.length == 0){
+		_alert(2,"路由设置","请选择要删除的数据");
+		return;
+	}
+	var id = JSON.stringify(selectid);
+	$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"路由设置",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			$("#select_total").text(0);
+        	delete_aclient(1,id);
+        	selectid=[];
+        	get_route_list();
+		},
+		btn2:function(i){
+			parent.layer.close(i);
+		}
+	});	
+}
+//单个删除
+function delete_route(id){
+	var name = $("[value="+id+"]").prop('name');
+	$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"路由设置",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			delete_aclient(0,id);
+			for (var i = 0; i < selectid.length; i++){      
+				if (selectid[i] == parseInt(id)){
+					num = $("#select_total").text();
+					num = parseInt(num)-1;
+					$("#select_total").text(num);
+					selectid.splice($.inArray(parseInt(id),selectid),1);
+					break;
+				}
+        	}
+			get_route_list();
+		},
+		btn2:function(i){
+			 parent.layer.close(i);
+		}
+	});
+}
+
+function delete_aclient(type,id){
+	$.ajax({
+		url:'/bhost/delete_route',
+		type:'post',
+		async:false,
+		data:{a0:se,z10:type,z9:id},
+		success:function(results){
+			data = JSON.parse(results);
+			if (data.Result == "false"){
+				_alert(1,"路由设置","删除失败,失败原因:"+data.ErrMsg);
+			}else{
+				_alert(0,"路由设置","删除成功");
+			}
+		}
+	});
+}
+
+//过滤下拉框选择
+function filter_change(){
+	var name = $("#filtername").val();
+	if (name == '0'){
+		$("#keyword").hide();
+		$("#filterWW").hide();
+		$("clearFilter").hide();
+		$('#filter_name').next().hide();
+	}else if(name == '5'){
+		$("#keyword").hide();
+		$('#filter_name').next().show();
+	}else{
+		$("#keyword").show();
+		$('#filter_name').next().hide();
+        //$("#filterWW").show();
+	}
+}
+//搜索
+function _addFilter(obj,type){
+	var name = $("#filtername").val();
+	var add = 0;
+	var sinReg = /[0-9\.]+$/
+	if (name != '5'){
+		var keyword = $("#keyword").val().trim();
+		if (keyword == ""){
+			$("#keyword").blur();
+			_alert(2,"搜索","请输入关键字",$("#keyword"));
+			return;
+		}
+	}else{
+		var keyword = $("#filter_name").val();
+	}
+	var addfilter = "";
+	//1网口，2网关，3下一跳转地址。4掩码，5类型
+	addfilter = name + '-' + keyword;
+	if (name == "0"){
+		keyword = keyword;
+	}else if (name == "1"){
+		keyword = "网口-" + keyword;
+	}else if (name == "2"){
+		keyword = "网关-" + keyword;
+	}else if (name == "3"){
+		keyword = "下一跳转地址-" + keyword;
+	}else if (name == "4"){
+		keyword = "掩码-" + keyword;
+	}else if (name == "5"){
+		keyword = "类型-" + keyword;
+	}
+	
+	if (type){
+		$("#filterWW li").each(function(i,item){
+			var filter = $(item).find('.ww').attr('data-value');
+			var filter_arry = filter.split('-');
+			if (filter_arry[0] == "5"){
+				_alert(2,"搜索","只能搜索一个类型",$("#keyword"));
+				add = 1;
+				return false;
+			}
+			if (filter == addfilter){
+				_alert(2,"搜索","该搜索条件已存在",$("#keyword"));
+				add = 1;
+				return false;
+			}
+		});
+		if (add == 1){
+			return false;
+		}
+		if (add != 1){
+			if (filter_flag == 1){
+				keyword_re.splice(-1,1);
+				filter_flag = 0;
+			}
+			
+			$("#filterWW").show();
+			$("#clearFilter").show();
+			$("#filterWW ul").append("<li><span class=\"ww\" data-value=\""+addfilter+"\">"+keyword+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+			keyword_re.push(addfilter);
+		}
+		keyword_v = "";
+		$("#keyword").val('');
+		$("#text_check").hide();
+	}else{
+		$("#filterWW li").each(function(i,item){
+			var filter = $(item).find('.ww').attr('data-value');
+			var filter_arry = filter.split('-');
+			if (name == '5' && filter_arry[0] == '5'){
+				add = 1;
+				_alert(2,"搜索","只能搜索一个类型",$("#keyword"));
+				return false;
+			}
+		})
+		
+		if (add == 1){
+			return false;
+		}
+	
+		if (filter_flag != 0){
+			keyword_re.splice(-1,1);
+		}
+		filter_flag=1;
+		keyword_re.push(addfilter);
+		keyword_v = keyword;
+	}
+	$("#curpage").val(1);
+	selectid = [];
+	get_route_list();
+}
+
+function _clearFilter(obj){
+	$("#filterWW").children('ul').empty();
+	$("#filterWW").hide();
+	$("#clearFilter").hide();
+	$("#text_check").hide();
+	keyword_re=[];
+	filter_flag = 0;
+	$("#keyword").val('');
+	get_route_list();
+}
+//移除搜索条件
+function _delFilter(obj){
+	var filter_text = $(obj).parent().children('span').attr('data-value');
+	$(obj).parent().remove();
+	keyword_re.splice($.inArray(filter_text,keyword_re),1);
+	if ($("#filterWW").children('ul').children('li').length == 0){
+		$("#filterWW").hide();
+		$("#clearFilter").hide();
+	}
+	get_route_list();
+}
+
+function _clear_keyword(){
+	$("#keyword").val("");
+	$("#text_check").hide();
+	if (keyword_v != ""){
+		keyword_v = "";
+		keyword_re.splice(-1,1);
+		filter_flag = 0;
+		get_route_list();
+	}
+}
+
+function change_input(obj){
+	//console.log($(obj).val());
+	//console.log()
+	if ($(obj).val() == "" && keyword_v != "" && $("#filtername").val() != "5"){
+		keyword_v = "";
+		filter_flag = 0;
+		keyword_re.splice(-1,1);
+		get_route_list();
+	}
+}
+
+//创建
+function create_route(){
+	ipage = $("#curpage").val();
+	var deliver = JSON.stringify(keyword_re);
+	document.frm_route.action = '/bhost/create_route';
+	document.frm_route.z1.value = ipage;
+	document.frm_route.z2.value = 0;
+	document.frm_route.z3.value = deliver;
+	document.frm_route.z4.value = filter_flag;
+	document.frm_route.z5.value = JSON.stringify(selectid);
+	document.frm_route.submit();
+}
+
+//编辑
+function edit_route(id){
+	var flag = 0;
+	$.ajax({
+		url:'/bhost/select_route_all',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:id},
+		success:function(result){
+			result = JSON.parse(result);
+			if (result.totalrow == "0"){
+				_alert(2,"路由设置","该路由设置已删除")
+				flag = 1;
+			}
+		}
+	});
+	if (flag == 1){
+		refresh();
+		return;
+	}
+	ipage = $("#curpage").val();
+	var deliver = JSON.stringify(keyword_re);
+	document.frm_route.action='/bhost/create_route';
+	document.frm_route.z1.value = ipage;
+	document.frm_route.z2.value = id;
+	document.frm_route.z3.value = deliver;
+	document.frm_route.z4.value = filter_flag;
+	document.frm_route.z5.value = JSON.stringify(selectid);
+	document.frm_route.submit();	
+}
+//刷新
+function refresh(){
+	selectid=[];
+	$("#route_list input[type='checkbox']").each(function(){                                 
+		$(this).iCheck('uncheck');
+	});
+	$("#select_total").text(0);
+	get_route_list();
+	return;
+}
+
+//返回
+function list_cancel(){
+	window.parent._closePage(null); 
+}
+
+function export_show(){
+	document.frm_route.action='/bhost/export_show';
+	document.frm_route.submit();
+}
+function export_show_dns(){
+	document.frm_route.action='/bhost/dns_show';
+	document.frm_route.se.value=se;
+	document.frm_route.submit();
+}
+</script>

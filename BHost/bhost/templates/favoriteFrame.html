@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+		<meta charset="UTF-8">
+		<title>manager</title>
+		<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+		<link rel="stylesheet" href="/manage/css/style.css">
+		<link rel="stylesheet" href="/manage/css/new-head.css">
+		<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />	
+</head>
+
+<body style="overflow:hidden;" class="bg-white">
+	<div class="container">
+				<div class="c-top">
+						<div class="c-title">
+								<div class="manual-head" style="">
+										<div class="manual-title" id="" style="">
+												<span id="favorite_title">收藏夹</span>
+												<i class="hlink-coll" style=""></i>
+										</div>
+								</div>
+						</div>
+			<div class="c-cont3">
+				<div class="h-catelog ywcate ywcate-collection" id="favorite_list" style="overflow:hidden;">
+					<div style="width:100%;height:36px;border-bottom: 1px solid #bebdc1;overflow:hidden;">
+						<a href="javascript:;" onclick="_modify(this,1);" style="float: right;margin-right: 12px;margin-top: 3px;">收藏夹<i class="h-eicon h-eicon-sc-m"></i></a>
+					</div>
+					<!--
+					<h5 onclick="_modify(this,1);"><i class="h-eicon h-eicon-sc-m"></i>收藏夹</h5>
+					-->
+					<ul style="height:calc(100% - 74px);overflow:auto;">
+					</ul>
+				</div>
+
+				<div class="ywcont">
+					<iframe src="/bhost/index?tasktype=13&us={{us}}&se={{se}}" frameborder="0" width="100%" height="100%" id="ywTarget" name="Target"></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+		<span class="bb-btn-slide yw-btn-slide" onclick="_pullMenu(this)"></span>
+
+		<div class="bb-form-big" id="classifyLayer" style="display: none;">
+				<h3>收藏夹名称</h3>
+				<input type="text" name="" value="" maxlength="50">
+				<p class="tip"><i></i>不超过50个字符，请勿输入特殊字符</p>
+				<div class="btns" style="">
+			<a href="javascript:;" class="btn btn-submit btn-normal">保&nbsp;&nbsp;存</a>
+		</div>
+		</div>
+
+	<div id="client_module" style="overflow:hidden;height: 200px;display:none;">
+		<div class="c-form" style="padding-bottom:10px;padding-left:50px;">
+			<div class="c-form" style="padding:0;">
+				<span class="form-tag" style="width:222px;">路径：</span>
+				<div style="width: 450px;margin-left: 200px;">
+					<label style="float: left;margin-right:8px;">
+						<select class="form-select select_clt" name=""  style="width: 60px;">
+							<option value="0" selected >全局</option>
+							<option value="1"  >指定</option>
+						</select>
+					</label>
+					<input class="form-text" id="client_input" type="text" style="float: left;"/>
+					<a href="javascript:;" class="btn btn-normal btn-global" onclick="$('#ywTarget')[0].contentWindow.get_win_path(this);">浏&nbsp;&nbsp;览</a>
+				</div>
+			</div>
+			<div class="btns" style="/*padding: 20px 0 0px;*/position:absolute;">
+				<a href="javascript:;" class="btn btn-normal btn-submit" >保&nbsp;&nbsp;存</a>
+				<a href="javascript:;" class="btn btn-normal btn-cancel" >取&nbsp;&nbsp;消</a>
+			</div>
+		</div>
+	</div>
+	<div class="dialog-cont" id="remarkDialog" style="display:none;">
+		<div class="container">
+			<div class="c-cont" style="max-height:300px;">
+				<div class="c-form" style="">
+					<div class="clearfix"></div>
+					<div class="form">
+						<div class="form-item" style="">
+							<span class="form-tag" style=""><em class="imp">*</em>操作备注：</span>
+							<div class="form-c" style="">
+								<textarea id="operation_content" class="form-textarea" name="" cols="30" rows="10"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="c-form" style="">
+					<div class="btns" style="">
+						<a href="javascript:;" class="btn btn-normal btn-submit" >提&nbsp;&nbsp;交</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 添加（编辑）秘钥浮层 -->
+	<div class="dialog-cont" id="SSHKeyDialog" style="display:none;">
+		<div class="container">
+			<div class="c-cont" style="max-height: 450px; min-height: 450px;">
+				<div class="c-form" style="width:auto; padding: 0px 0 0;">
+					<div class="form">
+						<div class="form-item">
+							<span class="form-tag"><em class="imp">*</em>名称：</span>
+							<div class="form-c">
+								<input type="text" class="form-text" id="d_n1" name="d_n1" onblur="regCheck(this,nameReg);" maxlength="128">
+								<i class="v-check"></i>
+								<p class="form-tip">特殊字符仅支持下划线、横杠、小数点</p>
+							</div>
+						</div>
+						<div class="form-item">
+							<span class="form-tag">类型：</span>
+							<div class="form-c">
+								<select class="form-select form-select2" name="Protocol1" id="Protocol1" style="width:150px;">
+									<option value="1" selected>私钥</option>
+									<option value="0" >公钥</option>
+								</select>
+							</div>
+						</div>
+						
+						<!-- <div class="form-item">
+							<span class="form-tag">状态：</span>
+							<div class="form-c" style="margin-top: 3px;">
+									<input type="checkbox" class="form-checkbox" id="Enable"/>
+									<span style="vertical-align:middle;font-size:16px; color: #000;">启用</span>
+							</div>
+						</div> -->
+						<div class="form-item" style="width: 380px;">
+							<span class="form-tag">设置密码：</span>
+							<div class="form-c">
+								<input type="password" class="form-text" id="Password" name="Password" onblur="" maxlength="16" style="width: 160px;padding-right: 8px;">
+							</div>
+						</div>
+						<div class="form-item" style="width: 280px;">
+							<span class="form-tag" style="width: 92px;">确认密码：</span>
+							<div class="form-c" style="padding-left: 100px;">
+								<input type="password" class="form-text" id="Password_two" name="Password_two" onblur="" maxlength="16" style="width: 160px;padding-right: 8px;">
+							</div>
+						</div>
+						<div class="form-item">
+							<span class="form-tag"><em class="imp">*</em>内容：</span>
+							<div class="form-c">
+								<textarea type="textarea" class="form-text" id="content" style="width: 430px; height: 150px; resize: none"></textarea>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+
+			</div>
+			<div class="btns" style="padding: 10px 0 10px;">
+				<a href="javascript:;" class="btn btn-normal btn-submit s-hide">保&nbsp;&nbsp;存</a>
+				<a href="javascript:;" class="btn btn-normal btn-cancel" >重&nbsp;&nbsp;置</a>
+			</div>
+		</div>
+	</div>
+
+		<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+		<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+		<script src="/manage/js/layer.js"></script>
+		<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+	<script src="/manage/js/xSelect.js"></script>
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	
+	<style>
+			#SSHKeyDialog .form-item{
+			float:left;
+		}	
+		.layui-layer-ico {
+			background: url(/manage/images/icon_close.png) no-repeat 0 0;
+		}
+		.layui-layer-setwin .layui-layer-close1 {
+			background-position: 0;
+		}
+		.bb-form-big{
+			padding: 30px 0 100px 0;
+		}
+		.ywcate-collection h5{
+			border-bottom: 1px solid #bebdc1;
+		}
+		.ywcate-collection ul li i.coll2{
+			cursor:pointer;
+		}
+		.ywcate-collection h5{
+			border-bottom: 1px solid #bebdc1;
+		}
+		.ywcate-collection div a i{
+			float: right;
+			margin-right: 0;
+			margin-left: 5px;
+			margin-top: 3px;
+			background: url(/manage/images/icon-coll2.png) no-repeat 50% 50%;
+			cursor: pointer;
+		}
+		#favorite_list ul{
+			overflow:auto;
+			max-height:calc(100%-36px);
+		}
+		.ywcate-collection ul li .tit{
+			width:156px;
+		}
+		.btns{
+			position:absolute;
+		}
+		.ui-dialog-body{
+			padding:0;
+		}
+	</style>
+	<style>
+	a.btn-global{
+		float: left;
+		padding: 0px 8px;
+		line-height: 26px;
+		color: #8D808A;
+		border: 1px solid #8D808A;
+		margin-left:8px;
+		border-radius: 5px;
+		transition: all 0.4s;
+	}
+	a.btn-global:hover{
+		background-color: #8D808A;
+		border-color: #8D808A;
+		color: #fff;
+	}
+	</style>
+	<script>
+		$('#Enable').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+		$("#Protocol1").select2({minimumResultsForSearch: -1});
+		$('.select_clt').select2({minimumResultsForSearch: -1});
+	</script>	
+		<script>
+	var se = "{{se}}";
+	var _permissions = 0;
+		$(function(){ 
+				//用于数据库保存权限
+				show_Loading();
+				$.ajax({
+					url:'/bhost/Get_AuthObjectByLevel',
+					type:'post', 
+					async:true,
+					cache:false,
+					data:{a0:se,z1:-1},
+					success:function(result){
+					}
+				})
+				_initSize();
+				_initEvent();
+		$('.ywcate').on('click','a.tit',function(){
+						$(this).parent().addClass('active').siblings('li').removeClass('active');
+			var url = $(this).attr('href');
+			$('#ywTarget').attr('src',url);
+				});
+		
+		get_favorite_list();
+		$("#favorite_title").bind('click',function(){
+			location.href = '/bhost/index?tasktype=11&us={{us}}&se={{se}}';
+		})
+		
+		$.each(window.parent._power,function(i,item){
+			if (item.SubMenuId == 25 && item.Mode == 1){
+				_permissions = 1;
+				$('.btns').remove();
+				var $a = $("#favorite_list").find('a:first');
+				$a.css({"cursor":"default"});
+				$a.children().css({"cursor":"default"});
+				return false;
+			}
+		});
+		
+		});
+	
+	function get_favorite_list(){
+		$.ajax({
+			url:'/bhost/PGet_FavoriteList',
+			type:'post',
+			async:false,
+			data:{a0:se},
+			success:function(result){
+				var list_result = JSON.parse(result);
+				var li_str = "";
+				if (list_result.length != 0){
+					$.each(list_result,function(i,item){
+						li_str = li_str + '<li class=""><i class="coll2"></i><a href="/bhost/favorite_show?a0={{se}}&z1='+item.FavoriteId+'&z2='+item.FavoriteName+'" class="tit" target="Target">'+item.FavoriteName+'</a><div class="ctr"><a href="javascript:;" class="edit" onclick="_modify(this,2,'+item.FavoriteId+')"></a><a href="javascript:;" class="del" onclick="_delete(this,'+item.FavoriteId+')"></a></div></li>'
+					});
+					$("#favorite_list").children('ul').empty().append(li_str);
+					$("#favorite_list").children('ul').find('a:first').trigger('click');
+				}else{
+					close_Loading();
+				}
+				$(".coll2").on('click',function(){
+					$(this).next().click();
+				});
+			}
+		});
+		
+	}
+	
+		$(window).resize(function(){
+				_initSize();;
+		});
+
+		function _initSize(){
+				var h = $(window).height();
+				$('.h-catelog').height(h).css("visibility","visible");
+				$('.h-content,#ywTarget').height(h);
+		}
+
+		function _pullMenu(obj){
+				var $_obj = $(obj), $_p = $('div.ywcate'),$_c = $('div.ywcont');
+				if($(obj).hasClass('on')){
+						$_p.removeClass('on');
+						$_c.removeClass('on');
+						$_obj.removeClass('on');
+				}else{
+						$_p.addClass('on');
+						$_c.addClass('on');
+						$_obj.addClass('on');
+				}
+		$("#ywTarget").contents().find(".layui-layer").removeClass("block").addClass("none");
+		}
+
+		//collection
+		function _setCollParent(obj,hgid,hid,hname,fid){
+				if($(obj).hasClass('on')){
+			parent.layer.open({
+				type: 1,
+				title: "收藏",
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否取消收藏</div>',
+				btn: ['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+				btnAlign: 'c',
+				closeBtn: false,
+				skin: 'layer-custom',
+				area: ['380px', '310px'],
+				move: false,
+				resize: false,
+				btn1: function (i) {
+					parent.layer.close(i);
+					$.ajax({
+						url:'/bhost/cancel_favoritehost',
+						type:'post',
+						async:false,
+						data:{a0:se,z1:hgid,z2:hid,z3:fid,z4:hname},
+						success:function(result){
+							var cancel_result = JSON.parse(result);
+							if (cancel_result.Result){
+								$(obj).removeClass('on');
+								$(obj).parents('tr').remove();
+								var host_total = $("#ywTarget").contents().find("#host_total").text();
+																$("#ywTarget").contents().find("#host_total").text(parseInt(host_total)-1);
+							}else{
+								_alert(1,"收藏夹","执行失败：" + ErrMsg);
+								return false;
+							}
+						}
+					});
+				},
+				btn2: function (i) {
+					parent.layer.close(i);
+				}
+			})
+				}
+		}
+
+		//
+		function _addNewColl(obj){
+				var v = $.trim( $(obj).prev().val());
+				if(v != ''){
+						var $new = $('<a href="javascript:;" class="collbtn" title="'+v+'">'+v+'</a>');
+						$(obj).parent().before($new);
+						$(obj).prev().val('');
+				}
+		}
+
+		function _initEvent(){
+				$('body').on('click','#collLayer a.collbtn',function(){
+						var $this = $(this);
+						if($this.hasClass('on')){
+								$this.removeClass('on');
+						}else{
+								$this.addClass('on');
+						}
+				});
+		}
+		function _delete(obj,id){
+				layer.open({
+						type: 1,
+						title: '删除',
+						content: '<div class="layer-alert"><i class="alert warning"></i>是否删除此收藏夹</div>',
+						btn: ['确&nbsp;&nbsp定', '取&nbsp;&nbsp消'],
+						btnAlign: 'c',
+						area: ['380px','310px'],
+						yes: function(i) {
+								var $_p = $(obj).parent().parent();
+								$.ajax({
+					url:'/bhost/del_favorite',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:id},
+					success:function(result){
+						var del_result = JSON.parse(result);
+						if (del_result.Result){
+							$_p.fadeOut(function(){
+								$_p.remove();
+								if($('#favorite_list').find('li.active').length == 0){
+									$('#favorite_list').find('li:first>a').trigger('click');
+								}
+							});
+						}else{
+							_alert(1,"收藏夹","删除失败：" + ErrMsg);
+							return false;
+						}
+					}
+				})
+								
+								layer.close(i);
+						},
+						skin:'layer-custom'
+				})
+		}
+	
+	function _modify(obj,type,id){
+		if (_permissions == 1 && type == 1){
+			return false;
+		}
+				if (type == 1){
+			var title = "收藏夹";
+		}else{
+			var title = "收藏夹";
+		}
+		modifyLayer = layer.open({
+						type:1,
+						title:title,
+						content:$('#classifyLayer'),
+						area:'640px'
+		});
+		if (type == 1){
+			$('#classifyLayer').find('input:text').val('');
+		}else{
+			var name = $(obj).parent().prev().text();
+			$('#classifyLayer').find('input:text').val(name);
+		}
+						$('#classifyLayer').find('.btn').unbind().on('click',function(){
+						var v = $.trim( $('#classifyLayer').find('input:text').val());
+						if(v == ''){
+								_alert(1,"收藏夹",'收藏夹名称不能为空',$('#classifyLayer').find('input:text'));
+								return false;
+						}
+			var NameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+			if (!NameReg.test(v)){
+				_alert(1,"收藏夹","收藏夹名称格式不正确",$('#classifyLayer').find('input:text'));
+				return false;
+			}
+			var len = 0;
+			for (var i = 0; i < v.length; i++) {
+				 if (v.charAt(i).match(/[\u4E00-\u9FA5]/ig) != null){ //全角 
+					len += 2; 
+				 }else{
+					len += 1;
+				}			
+			}
+			if(len > 50){
+				_alert(1,"收藏夹","收藏夹名称过长",$('#classifyLayer').find('input:text'));
+				return false;
+			}
+			if (type == 1){
+				$.ajax({
+					url:'/bhost/save_favoritelist',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:v},
+					success:function(result){
+						var save_result = JSON.parse(result);
+						if (save_result.Result){
+							layer.close(modifyLayer);
+							var li_str = '<li class=""><i class="coll2"></i><a href="/bhost/favorite_show?a0={{se}}&z1='+save_result.FavoriteId+'&z2='+v+'" class="tit" target="Target">'+v+'</a><div class="ctr"><a href="javascript:;" class="edit" onclick="_modify(this,2,'+save_result.FavoriteId+')"></a><a href="javascript:;" class="del" onclick="_delete(this,'+save_result.FavoriteId+')"></a></div></li>'
+							//var li_str = '<li class=""><i class="coll2"></i><a href="/bhost/index?tasktype=13&us={{us}}&se={{se}}" class="tit" target="Target">'+v+'</a><div class="ctr"><a href="javascript:;" class="edit" onclick="_modify(this,2,'+save_result.FavoriteId+')"></a><a href="javascript:;" class="del" onclick="_delete(this,'+save_result.FavoriteId+')"></a></div></li>'
+							$("#favorite_list").children('ul').append(li_str);
+							_alert(0,"收藏夹","添加成功");		
+							return false;
+						}else{
+							_alert(1,"收藏夹","添加失败：" + save_result.ErrMsg);
+							return false;
+						}
+					}
+				});
+			}else{
+				$.ajax({
+					url:'/bhost/modify_favoritelist',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:v,z2:id,z3:name},
+					success:function(result){
+						var save_result = JSON.parse(result);
+						if (save_result.Result){
+							layer.close(modifyLayer);
+							$(obj).parent().prev().text(v);
+							_alert(0,"收藏夹","修改成功");
+							$("#ywTarget").contents().find('.h-path-wrap').text(v);
+							return false;
+						}else{
+							_alert(1,"收藏夹","修改失败：" + save_result.ErrMsg);
+							return false;
+						}
+					}
+				});
+			}
+				});
+	}
+	var loadingLayer = false;
+	function show_Loading(){
+		var arclist = arguments;
+		loadingLayer = layer.open({
+			title:false,
+			closeBtn:false,
+			content:'<div id="Loading"></div>',
+			btn:false,
+			skin:'loadingbar',
+			area:['250px','250px'],
+			move:false,
+			resize:false,
+			isOutAnim: false,
+			shade:[0.1,'#000'],
+			success:function(){
+			
+			}
+		})
+	}
+	function close_Loading(){
+		if(loadingLayer){
+			layer.close(loadingLayer);
+		}
+	}
+	
+	function close_dialog(){
+		dialog_d.close().remove();
+	}
+	var dialog_d;
+	function client_module_show(client_v){
+		$("#client_input").val('');
+				var $dialogCont = $("#client_module").show();
+				dialog_d = dialog({
+			title:"客户端路径",
+			content:$dialogCont,
+			id:"client_module",
+			width:"850px"
+				});
+		$("#client_module").find('span.form-tag').text(client_v+'：');
+				function addEventListener(ele,event,fn){
+			if(ele.addEventListener){
+				ele.addEventListener(event,fn,false);
+			}else{
+				ele.attachEvent('on'+event,fn.bind(ele));
+			}
+		}
+		addEventListener(dialog_d,'close',function () {
+			 $dialogCont.appendTo("body").hide();
+		});
+				dialog_d.showModal();
+		$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+			dialog_d.close().remove();
+				});
+				$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+			//dialog_d.close().remove();
+			$("#ywTarget")[0].contentWindow.save_client();
+		});
+	}
+	
+	function remarkDialog_show(planmsg){
+		$("#operation_content").val(planmsg);
+		var $dialogCont = $("#remarkDialog").show();
+		var title = '操作备注';
+		var d = dialog({
+			title:title,
+			content:$dialogCont,
+			id:"remarkDialog",
+			width:"780px"
+		});
+		function addEventListener(ele,event,fn){
+			if(ele.addEventListener){
+				ele.addEventListener(event,fn,false);
+			}else{
+				ele.attachEvent('on'+event,fn.bind(ele));
+			}
+		}
+		addEventListener(d,'close',function () {
+			 $dialogCont.appendTo("body").hide();
+		});
+		d.showModal();
+		$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+			
+		});
+		$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+			$("#ywTarget")[0].contentWindow.connect_pro();
+			d.close().remove();
+		});
+	}
+	//---------------------------秘钥编辑
+	//---------------------------秘钥编辑
+	var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+	function _addNew3(obj,type){
+		editkey1 = obj;
+		editkey2 = type;
+		clear_sshkey();
+		sshkey = {
+			"SshKeyId": 0,
+			"KeyName": null,
+			"KeyType": 0,
+			"KeyContent": null,
+			"IfValid": false
+		};	
+		if(type == 0){
+
+			SshKeyId = 0;
+		}else{
+			SshKeyId = $(obj).children('span').attr('data-value');
+			sshkey.SshKeyId = SshKeyId
+			editKey(SshKeyId);
+		}
+
+		var $dialogCont = $("#SSHKeyDialog").show();
+		title = "秘钥";
+		
+		var d = dialog({
+			title:title,
+			content:$dialogCont,
+			id:"SSHKeyDialog",
+			width:"800px"
+		});
+		function addEventListener(ele,event,fn){
+			if(ele.addEventListener){
+				ele.addEventListener(event,fn,false);
+			}else{
+				ele.attachEvent('on'+event,fn.bind(ele));
+			}
+		}
+		addEventListener(d,'close',function () {
+			 $dialogCont.appendTo("body").hide();
+		});
+		d.showModal();
+		
+		$(".ui-dialog-title").css("width","125px");
+		$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+			_addNew3(editkey1,editkey2);
+		});
+		
+		$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+			var p_id = $("#Protocol1").val();		
+			var val = $.trim( $("#d_n1").val());
+			var $i = $("#d_n1").next('i.v-check');
+			//事件告警信息名
+			if (val == "") {
+				_alert(2, "密钥", '请输入名称', $("#d_n1"));
+				return false;
+			}
+			if (!nameReg.test(val)) {
+				_alert(1, "密钥", '名称格式不正确', $("#d_n1"));
+				//$("#d_n1").val("");
+				return false;
+			}
+			sshkey.KeyName = val;
+			var Password=$.trim($('#Password').val());
+			var Password_two=$.trim( $('#Password_two').val());
+			if(Password==''){
+				Password=null;
+			}
+			else if(Password!=Password_two){
+				_alert(2, "密钥管理","两次密码不匹配",$("#Password"));
+				return false;
+			}
+			sshkey.Password=Password;
+			var content = $("#content").val();
+			var keycheck = /^[\u4e00-\u9fa5]*$/g;
+			if(content==""){
+				_alert(2, "密钥", '请填写密钥内容', $("#content"));
+				return false;
+			}
+			if(keycheck.test(content)){_alert(1, "密钥", '密钥格式不正确', $("#content"));return}
+			if($("#d_n1").val().length>32) {
+				_alert(1, "密钥", '密钥名称已达到最大值', $("#d_n1"));
+				return false;
+			}
+			//if($("#Enable").is(':checked')){
+				//sshkey.IfValid = true;
+			// }else{
+			// 	sshkey.IfValid = false;
+			// }
+			sshkey.KeyContent = content;
+			sshkey.KeyType = parseInt(p_id);
+			msstr = aceg(JSON.stringify(sshkey),se);
+			$.ajax({
+				url: '/bhost/add_sshkey_host',
+				type: "POST",
+				async: false,
+				data: { a0: se, a1: JSON.stringify(sshkey), a10: "运维管理>主机",m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						$('.btn').blur(); parent.layer.open({
+							type: 1,
+							title: '密钥',
+							content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+							btn: ['确&nbsp;&nbsp;定'],
+							btnAlign: 'c',
+							closeBtn: false,
+							skin: 'layer-custom',
+							area: ['380px', '310px'],
+							move: false,
+							resize: false,
+							yes: function (i) {
+								d.close().remove();
+								parent.layer.close(i);
+
+								var id_str = $("#ywTarget").contents().find("#SSHkey_s").data('value');
+								var name_str = $("#ywTarget").contents().find("#SSHkey_s").children().find('span').text();
+								//console.log(result);
+								if(name_str == '请选择'){
+									$("#ywTarget")[0].contentWindow.bind_SSHkey_xSelect();
+									//console.log(result.SshKeyId);
+									//console.log($("#ywTarget").contents().find("#SSHkey_s").data('value'));
+									$("#ywTarget").contents().find("#SSHkey_s").data('value',result.SshKeyId);
+									//console.log($("#ywTarget").contents().find("#SSHkey_s").data('value'));
+									$("#ywTarget").contents().find("#SSHkey_s").children().find('span').text(val);
+								}else{
+									$("#ywTarget")[0].contentWindow.bind_SSHkey_xSelect();
+									//console.log($("#ywTarget").contents().find("#SSHkey_s").data('value'));
+									$("#ywTarget").contents().find("#SSHkey_s").data('value',id_str);
+									//console.log($("#ywTarget").contents().find("#SSHkey_s").data('value'));
+									$("#ywTarget").contents().find("#SSHkey_s").children().find('span').text(name_str);
+								}
+							}
+						});
+						//console.log($("#ywTarget").contents().find("#SSHkey_s").data('value'));
+					} else {
+						_alert(1, "密钥管理", result.ErrMsg, $("#d_n1"));
+						return false;
+					}
+				}
+			});
+		})
+	}
+	function clear_sshkey(){
+		$("#d_n1").val("");
+		$("#SSHKeyDialog .v-check").attr("class","v-check");
+		$("#Protocol1").val("1").trigger('change');
+		$("#Protocol1").attr('disabled','true');
+		$("#d_n1").removeAttr("disabled"); 
+		$("#Password").val("");
+		$("#Password_two").val("");
+		$("#content").val("");
+	}
+	function editKey(id){
+		$.ajax({
+			url: '/bhost/get_sshkey',
+			type: "POST",
+			async: false,
+			data: { a0: se, a1: id, a2: null},
+			success: function (result) {
+				var result = JSON.parse(result);
+				if (result.Result == true) {
+					key_Data = result.info.data[0];
+					$("#d_n1").val(key_Data.KeyName);
+					$("#d_n1").attr('disabled','true');
+					$("#content").val(key_Data.KeyContent);
+					$("#Password").val(key_Data.Password);
+					$("#Password_two").val(key_Data.Password);
+				} else {
+					_alert(1, "密钥管理", result.ErrMsg, $("#d_n1"));
+					return false;
+				}
+			}
+		});
+	}
+</script>
+</body>
+
+</html>

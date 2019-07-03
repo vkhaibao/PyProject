@@ -1,0 +1,909 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+
+</head>
+<style>
+	.filter-select2 + .select2-container--default >.selection > .select2-selection--single{
+		border-bottom-left-radius: 0;
+		border-top-left-radius: 0;
+		margin-left: -1px;
+	}
+	.filter-select2 + .select2-container--default{
+		display: none;
+	}
+</style>
+<body style="overflow:hidden;display:none;" class="bg-white">
+		<!--事件告警信息表-->
+		<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+				
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title" >
+						<span id="eventinfo_group" style="cursor: pointer;">事件告警</span>
+						<i class="syswarn_icon"></i>
+					</div>
+				</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer" name="eventinfo" id="eventinfo" >
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr" style="width:288px;">
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="eventinfo_add();">创建</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="delete_list();">删除</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="click_all_list();">全选</a>
+									<a href="javascript:;" class="btn btn-default" onclick="eventinfo_page(0);clear_all();">刷新</a>
+								</div>
+								<div class="filter">
+									<div class="search">
+										<select name="eventinfo_select" id="eventinfo_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="Name">名称</option>
+											<option value="EventLevel">等级</option>
+											<option value="EventType">类型</option>
+											<option value="EventDescription">描述</option>
+											<option value="AlarmAction">方式</option>
+											<option value="UserSet">接收者</option>
+										</select>
+										<input type="text" class="filter-text" style="/*display:none;*/padding-right: 22px;" 
+										placeholder="输入关键字" name="eventinfo_text" 
+										id="eventinfo_text" maxlength="128" 
+										onchange="if($('#eventinfo_text').val()==''){$('#eventinfo_text_check').hide();}else{$('#eventinfo_text_check').show();}"
+										onkeyup="if($('#eventinfo_text').val()==''){$('#eventinfo_text_check').hide();}else{$('#eventinfo_text_check').show();}"
+										onblur="if($('#eventinfo_text').val()=='' && search_typeall_new!=''){search_typeall_new='';_addFilter(this,false,1);}"
+										onkeydown="if($('#eventinfo_text').val()==''){$('#eventinfo_text_check').hide();}else{$('#eventinfo_text_check').show();};if (event.keyCode == 13){_addFilter(this,false);return false;} else return; ">
+										<i class="v-check v-wrong" id="eventinfo_text_check" 
+										onclick="_clearFilter(this,1)" 
+										style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<select name="EventLevel" id="EventLevel" style="" class="filter-select filter-select2">
+											<option value="all" selected>所有</option>
+											<option value="0">无</option>
+											<option value="1">低</option>
+											<option value="2">中</option>
+											<option value="3">高</option>
+										</select>
+										<select name="EventType" id="EventType" style="" class="filter-select filter-select2">
+											<option value="all" selected>所有</option>
+											<option value="0">无</option>
+											<option value="1">违规操作</option>
+											<option value="2">高危操作</option>
+											<option value="3">登录异常</option>
+										</select>
+										<select name="AlarmAction" id="AlarmAction" style="" class="filter-select filter-select2">
+											<option value="all" selected>所有</option>
+											<option value="0">无</option>
+											<option value="1">邮件</option>
+											<option value="3">短信</option>
+											<option value="4">SNMP</option>
+											<option value="5">SYSLOG</option>
+										</select>
+
+										<button class="btn filter-btn" onclick="_addFilter(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th width="50" class="perm_disabled"><input type="checkbox" class="form-checkbox" id="check_one_page"/></th>
+											<th>名称</th>
+											<th>等级</th>
+											<th>类型</th>
+											<th>描述</th>
+											<th>方式</th>
+											<th>接收者</th>
+											<th id="eventinfo_list_th" width="55"></th>
+										</tr>
+									</thead>
+
+									<tbody name="eventinfo_list" id="eventinfo_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_nums">10</span>条 总数：<span id = "eventinfo_total">0</span><span class="perm_disabled">  选中：</span><span class="sum perm_disabled">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="eventinfo_begin" onclick="eventinfo_page(0.1);" ><i></i></a>
+									<a href="javascript:;" class="nav prev" id="eventinfo_prev" onclick="eventinfo_page(-1);" ><i></i></a>
+									<input type="text" id = "eventinfo_page" value="1" onchange="showMsg();" onblur="showMsg();">/&nbsp;<span id = "eventinfo_pages">1</span>
+									<a href="javascript:;" class="nav next" id="eventinfo_next" onclick="eventinfo_page(1);" ><i></i></a>
+									<a href="javascript:;" class="nav2 end" id="eventinfo_end" onclick="eventinfo_page(0.9);" ><i></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="clearfix"></div>
+						<!--
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal" onclick="save_eventinfo();">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="save_eventinfo();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<form action="/bhost/get_eventinfo_list" method="POST" name="frm_eventinfo" id="frm_eventinfo">
+			<input type="hidden" name="tasktype" id = "tasktype" value="3" />
+			<!--创建 编辑 列表-->
+			<input type="hidden" name="eventinfoId" id = "eventinfoId" value="0" />
+			<!--需要查询id-->
+			<input type="hidden" name="paging" id = "paging" value="{{paging}}" />
+			<!--页码-->
+			<input type="hidden" name="search_typeall" id = "search_typeall" value="{{search_typeall}}" />
+			<!--search_typeall-->
+			<input type="hidden" name="e" id = "e" value="{{e}}" />
+			<!--e-->
+			<input type="hidden" name="se" id = "se" value="{{se}}" />
+			<!--se-->
+	</form>
+
+<script>
+	var perm={{perm}};
+	if (perm==0) parent.parent.$('#nav-s1 a.active').click();
+	else{
+		$('.bg-white').show();
+		if(perm==1){
+			$('.perm_disabled').remove();
+			$('#eventinfo_list_th').attr('width',25);
+		}
+	}
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+
+<script>
+	$('.filter-select').select2({minimumResultsForSearch: -1});
+	$('#eventinfo_select').parents('div.search').hide();
+	$('#eventinfo_select').on('change',function () {
+		var eventinfo_select=$('#eventinfo_select').val();
+		switch (eventinfo_select) {
+			case 'EventLevel':
+				$('#EventLevel').next('.select2').show();
+				$('#eventinfo_text').hide();
+				$('#EventType').next('.select2').hide();
+				$('#EventDescription').next('.select2').hide();
+				$('#AlarmAction').next('.select2').hide();
+				break;
+			case 'EventType':
+				$('#EventLevel').next('.select2').hide();
+				$('#eventinfo_text').hide();
+				$('#EventType').next('.select2').show();
+				$('#EventDescription').next('.select2').hide();
+				$('#AlarmAction').next('.select2').hide();
+				break;
+			case 'AlarmAction':
+				$('#EventLevel').next('.select2').hide();
+				$('#eventinfo_text').hide();
+				$('#EventType').next('.select2').hide();
+				$('#EventDescription').next('.select2').hide();
+				$('#AlarmAction').next('.select2').show();
+				break;
+			default:
+				$('#EventLevel').next('.select2').hide();
+				$('#eventinfo_text').show();
+				$('#EventType').next('.select2').hide();
+				$('#EventDescription').next('.select2').hide();
+				$('#AlarmAction').next('.select2').hide();
+				break;
+		}
+	});
+	$('#eventinfo_select').val('all').trigger('change');
+	$('#eventinfo_select').parents('div.search').show();
+</script>
+
+<script type="text/javascript">
+var delect_str = new Array();
+var check_num=0;
+var total_all_r=0;
+//总数
+var fenye_r=0;
+var eventinfo_array=null;
+//总页码
+var search_typeall_r=document.frm_eventinfo.search_typeall.value;
+//关键字
+function save_eventinfo()
+{
+	window.parent._closePage(null); 
+}
+$(function(){
+	document.frm_eventinfo.se.value=window.parent.document.frm.se.value;
+	if(search_typeall_r!=""){
+		var v1="";
+		var id="";
+		var str_new="";
+		var search_typeall_str=search_typeall_r.split('\t');
+		$.each(search_typeall_str,function(i,item){
+			if(item==""){
+				return false;
+			}
+			var str_sea=item.split("-");
+			v1=$('#eventinfo_select').find('option[value='+str_sea[0]+']').text();
+			id=item;
+			str_sea[0]=v1;
+			str_new=str_sea.join('-');
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'</span><span class="ww">'+str_new+'</span><i class="del" onclick="_delFilter(this);"></i></li>');
+			selView();
+		});
+	}
+	var search_typeall_select=document.frm_eventinfo.e.value.substr(document.frm_eventinfo.e.value.indexOf(':')+1,document.frm_eventinfo.e.value.length-1);
+	if(search_typeall_select!=''){
+		var array=new Array();
+		array[0]=search_typeall_select.substr(0,search_typeall_select.indexOf('-'));
+		array[1]=search_typeall_select.substr(search_typeall_select.indexOf('-')+1,search_typeall_select.length);
+		$('#eventinfo_select').val(array[0]).trigger('change');
+		switch (array[0]) {
+			case 'EventLevel':
+			case 'EventType':
+			case 'AlarmAction':
+				$('#'+array[0]).val(array[1]).trigger('change');
+				break;
+			default:
+				$('#eventinfo_text').val(array[1]).trigger('change');
+				break;
+		}
+	}
+	//输入数字
+	$("#eventinfo_page").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	//页码显示
+	$("#page_nums").val(MAX_PAGE);
+	//list show
+	show_eventinfo_list();
+	parent._switchBtn(1);//显示按钮
+	//tr双击事件
+	$("#eventinfo_list").on('dblclick','tr',function(e){
+		x=e.target;
+		var id=$(this).find("td");
+		if(x.nodeName !='A' && x.nodeName !='INS'){
+			var id=$(this).find("td");
+			var edit_item=$(id).eq(1).text();
+			document.frm_eventinfo.eventinfoId.value=edit_item;
+			document.frm_eventinfo.tasktype.value=2;
+			document.frm_eventinfo.search_typeall.value=search_typeall_r;	
+			var select_id=$('#eventinfo_select').val();
+			var select_value=null;
+			switch (select_id) {
+				case 'EventLevel':
+				case 'EventType':
+				case 'AlarmAction':
+					select_value=$('#'+select_id).val();
+					break;
+				default:
+					select_value=$('#eventinfo_text').val();
+					break;
+			}
+			document.frm_eventinfo.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+			document.frm_eventinfo.action = '/bhost/eventinfo_handle';
+			document.frm_eventinfo.submit();
+		}
+	}).on("click", "tr", function (e){  
+		x=e.target;
+		//删除按钮
+		if(x.id == 'del'){ 
+			var id=$(this).find("td");
+			var input  = $(this).find("input"); 
+			$('.btn').blur();parent.layer.open({
+				type:1,
+				title: '事件告警',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+				btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+				btnAlign:'c',
+				closeBtn: false,
+				skin:'layer-custom',
+				area:['380px','310px'],
+				move: false,
+				resize: false,
+				yes:function(i){
+					parent.layer.close(i);
+					var delete_item=$(id).eq(1).text();			
+					// $(input).iCheck('uncheck');
+					delete_fun(delete_item+'\t'+$(id).eq(2).text());
+				}
+			});
+		}
+		//编辑按钮
+		if(x.id == 'edit'){
+			var id=$(this).find("td");
+			var edit_item=$(id).eq(1).text();
+			document.frm_eventinfo.eventinfoId.value=edit_item;
+			document.frm_eventinfo.tasktype.value=2;
+			document.frm_eventinfo.search_typeall.value=search_typeall_r;	
+			var select_id=$('#eventinfo_select').val();
+			var select_value=null;
+			switch (select_id) {
+				case 'EventLevel':
+				case 'EventType':
+				case 'AlarmAction':
+					select_value=$('#'+select_id).val();
+					break;
+				default:
+					select_value=$('#eventinfo_text').val();
+					break;
+			}
+			document.frm_eventinfo.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+			document.frm_eventinfo.action = '/bhost/eventinfo_handle';
+			document.frm_eventinfo.submit();
+		}
+	});
+	$('#check_one_page').on(' ifClicked',function(e){
+		if(!$('#check_one_page').is(':checked')){
+			$("table tbody tr input").iCheck('check');
+		}else{
+			$("table tbody tr input").iCheck('uncheck');
+		}
+		
+	});
+	$("#eventinfo_list").on("ifChecked",function(e){
+		check_num++;
+		$("span.sum").text(check_num);		
+		if($("table tbody tr input:checked").length==$("table tbody tr").length){
+			$('#check_one_page').iCheck('check');
+		}
+	}).on("ifUnchecked",function(e){
+		check_num--;
+		$("span.sum").text(check_num);	
+		$('#check_one_page').iCheck('uncheck');	
+	});
+})
+//显示创建页面
+function eventinfo_add(){
+	document.frm_eventinfo.tasktype.value=1;
+	document.frm_eventinfo.eventinfoId.value=0;
+	document.frm_eventinfo.action = '/bhost/eventinfo_handle';
+	var select_id=$('#eventinfo_select').val();
+	var select_value=null;
+	switch (select_id) {
+		case 'EventLevel':
+		case 'EventType':
+		case 'AlarmAction':
+			select_value=$('#'+select_id).val();
+			break;
+		default:
+			select_value=$('#eventinfo_text').val();
+			break;
+	}
+	document.frm_eventinfo.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+	document.frm_eventinfo.search_typeall.value=search_typeall_r;
+	document.frm_eventinfo.submit();
+}
+//刷新
+function clear_all(){
+	$("table tbody tr input").iCheck('uncheck');
+	delect_str=new Array();
+	check_num=0;
+	$("span.sum").text(check_num);
+}
+var search_typeall_new=document.frm_eventinfo.e.value.substr(0,document.frm_eventinfo.e.value.indexOf(':'));
+String.prototype.ResetBlank=function(){
+		var regEx = /\s+/g; 
+		return this.replace(regEx, ' '); 
+	};
+function _addFilter(obj,type,type_num){
+	var id = $(obj).parent().children('select').eq(0).children('option:selected').val();
+	var v1 = $(obj).parent().children('select').eq(0).children('option:selected').text();
+	var v2 = $(obj).parent().children('input[type=text]').val().trim();
+	if(id=='all'){
+		v1='';
+	}else{
+		v1=v1+'-';
+	}
+	switch (id) {
+		case 'EventLevel':
+		case 'EventType':
+		case 'AlarmAction':
+			var v3 = $('#'+id).children('option:selected').text();
+			v2=v3;
+			break;
+	}
+	v2=v2.ResetBlank();
+	if(v2 == '' && type_num!=1){
+		$(obj).parent().children('input[type=text]').blur();
+		_alert(2,'搜索','请输入关键字', $(obj).parent().children('input[type=text]'));
+		return false;
+	}
+	{
+		switch (id) {
+			case 'Name':
+				var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				break;
+			case 'EventLevel':
+				var Reg=/^[\u4e00-\u9fa5\s]+$/;
+				break;
+			case 'EventType':
+				var Reg=/^[\u4e00-\u9fa5\s]+$/;
+				break;
+			case 'AlarmAction':
+				var Reg=/^[\u4e00-\u9fa5a-zA-Z\s]+$/;
+				break;
+		}
+		var pass=false;
+		$.each(search_typeall_r.split('\t'),function (i,item) {
+			if(item.indexOf('EventLevel')==0 && id=='EventLevel'){
+				_alert(2,'搜索','只能搜索一个等级');
+				pass=true;
+				return false;
+			}
+			if(item.indexOf('EventType')==0 && id=='EventType'){
+				_alert(2,'搜索','只能搜索一个类型');
+				pass=true;
+				return false;
+			}
+			if(item.indexOf('AlarmAction')==0 && id=='AlarmAction'){
+				_alert(2,'搜索','只能搜索一个方式');
+				pass=true;
+				return false;
+			}
+		});
+		if(pass){
+			return false;
+		}
+		if(id!='all' && id!='EventDescription' && id!="UserSet" && !Reg.test(v2) && type_num!=1){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(1,'搜索','关键字格式不正确', $(obj).parent().children('input[type=text]'));
+			return false;
+		}
+		if($.inArray(id+'-'+v2,search_typeall_r.split('\t'))>=0 && type_num!=1){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(2,'搜索','关键字重复', $(obj).parent().children('input[type=text]'));
+			return false;
+		}
+		if(type){
+			search_typeall_r=search_typeall_r+id+'-'+v2+'\t';
+			$(obj).parent().children('input[type=text]').val('');
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'-'+v2+'</span><span class="ww">'+v1+v2+'</span><i class="del" onclick="_delFilter(this);"></i></li>')
+			$('#eventinfo_text_check').hide();
+			search_typeall_new='';
+			selView();
+		}else{
+			if (type_num!=1)search_typeall_new=id+'-'+v2+'\t';
+		}
+	}
+	$("table tbody tr input").iCheck('uncheck');
+		delect_str=new Array();
+		eventinfo_page(0.1);
+		check_num=0;
+		$("span.sum").text(check_num);
+}
+function _delFilter(obj){
+	var id = $(obj).parent().find("span");
+	var ids=$(id).eq(0).text();
+	// search_typeall_r = search_typeall_r.replace(ids+'\t','');
+	var search_typeall_r_arr=search_typeall_r.split('\t');
+	search_typeall_r_arr.splice($.inArray(ids,search_typeall_r_arr),1);
+	search_typeall_r=search_typeall_r_arr.join('\t');
+	var eventinfo_text=$('#eventinfo_text').val().trim();
+	$(obj).parent().remove();
+	selView();
+	$("table tbody tr input").iCheck('uncheck');
+	delect_str=new Array();
+	eventinfo_page(0.1);
+	check_num=0;
+	$("span.sum").text(check_num);
+}
+function selView(){
+	var $sel = $('#filterWW');
+	var len = $('li',$sel).length;
+	if(len == 0){
+		$sel.hide();
+		$('#clearFilter').hide();
+	}else{
+		$("#filterWW").show();
+		$('#clearFilter').show();
+		$('>span.ww',$sel).show();
+		$sel.addClass('selector-multiple');
+	}
+}
+function _clearFilter(obj,num){
+	if(num==1){
+		$('#eventinfo_text_check').hide();
+	$('#eventinfo_text').val('');
+	search_typeall_new='';
+	$("table tbody tr input").iCheck('uncheck');
+		delect_str=new Array();
+		eventinfo_page(0.1);
+		check_num=0;
+		$("span.sum").text(check_num);
+		return;
+	}
+	$('#clearFilter').next().children('ul').empty();
+	$('#eventinfo_text_check').hide();
+	$('#eventinfo_text').val('');
+	$('#clearFilter').hide();
+	search_typeall_new='';
+	search_typeall_r='';
+	selView();
+	$("table tbody tr input").iCheck('uncheck');
+	delect_str=new Array();
+	eventinfo_page(0.1);
+	check_num=0;
+	$("span.sum").text(check_num);
+}
+//选中字段存储
+function delect_save(){
+	$(">tr","#eventinfo_list").each(function(){
+		var input  = $(this).find("input[type='checkbox']");
+		var delect_item=$(">td",this).eq(1).text()+'\t'+(perm==2?$(">td",this).eq(2).text():$(">td",this).eq(0).text());
+		var index=$.inArray(delect_item,delect_str);
+		if($(input).is(':checked')){
+			if(index<0){
+				delect_str.push(delect_item);
+			}
+		}else{
+			if(index>=0){
+				delect_str.splice(index,1);
+			}
+		}
+	});
+}
+//check显示
+function check_show(){
+	$(">tr","#eventinfo_list").each(function(){
+		var input  = $(this).find("input[type='checkbox']");
+		var check_id=$(">td",this).eq(1).text()+'\t'+(perm==2?$(">td",this).eq(2).text():$(">td",this).eq(0).text());
+		if($.inArray(check_id,delect_str)>=0){
+			$(this).find("input[type='checkbox']").iCheck('check');
+		}
+	});
+}
+//input回车触发事件
+function showMsg(){
+	delect_save();
+	var cur = $("#eventinfo_page").val();
+	cur=cur.replace(/\D/g, "");
+	if(cur=='' || parseInt(cur) < 1){
+		cur=1;
+	}else if (parseInt(cur)>fenye_r) {
+		cur=fenye_r;
+	}
+	if(parseInt(cur)==parseInt(document.frm_eventinfo.paging.value)){
+		$('#eventinfo_page').val(cur);
+		return false;
+	}
+	document.frm_eventinfo.paging.value=cur;
+	show_eventinfo_list();
+}
+var paging_max=null;
+//以每页显示数显示列表函数
+function show_eventinfo_list(){
+	update_all_list();
+	var paging = document.frm_eventinfo.paging.value;
+	var page_num = MAX_PAGE;
+	var eventinfoId=document.frm_eventinfo.eventinfoId.value;
+	var search_typeall=search_typeall_r+search_typeall_new;
+	$.ajax({
+		url: "/bhost/get_eventinfo_list",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a4:page_num,a3:paging,a2:search_typeall,a1:eventinfoId,dsc:true},
+		success:function(result){
+			var eventinfo_result = JSON.parse(result);
+			if (eventinfo_result.Result==true){
+				var eventinfo_data = eventinfo_result.info;
+				var total_all = eventinfo_data.totalrow;
+				if(paging_max==null){
+					paging_max=parseInt(total_all/MAX_PAGE)+1;
+				}
+				if(total_all%MAX_PAGE==0){
+					fenye_r=parseInt(total_all/MAX_PAGE);
+				}else{
+					fenye_r=parseInt(total_all/MAX_PAGE)+1;
+				}
+				if(eventinfo_data.data=="" && paging!="1"){
+					eventinfo_page(0.9);
+				}else{
+					//total = 0;
+					total_all_r = total_all;
+					if(total_all){
+						$("#eventinfo_list").empty();
+						$.each(eventinfo_data.data,function(i,item){
+							//if (total<page_num){
+								//total++;//
+								if(item.Name==null){
+									item.Name="";
+								}
+								if(item.EventDescription==null){
+									item.EventDescription="";
+								}
+								if(item.AlarmReceiver==null){
+									item.AlarmReceiver="";
+								}
+								switch(item.EventLevel){
+									case 0:
+										item.EventLevel="无";
+										break;
+									case 1:
+										item.EventLevel="低";
+										break;
+									case 2:
+										item.EventLevel="中";
+										break;
+									case 3:
+										item.EventLevel="高";
+										break;
+								}
+								switch(item.EventType){
+									case 0:
+										item.EventType="无";
+										break;
+									case 1:
+										item.EventType="违规操作";
+										break;
+									case 2:
+										item.EventType="高危操作";
+										break;
+									case 3:
+										item.EventType="登录异常";
+										break;
+								}
+								switch(item.AlarmAction){
+									case 0:
+										item.AlarmAction="无";
+										break;
+									case 1:
+										item.AlarmAction="邮件";
+										break;
+									case 2:
+										item.AlarmAction="短信猫";
+										break;
+									case 3:
+										item.AlarmAction="短信";
+										break;
+									case 4:
+										item.AlarmAction="snmp";
+										break;
+									case 5:
+										item.AlarmAction="syslog";
+										break;
+								}
+								var set_str="";
+								if(item.AlarmAction=="邮件" || item.AlarmAction.indexOf("短信")>=0){
+									$.each(item.UserSet,function(i1,item1){
+										set_str=set_str+item1.UserCode+";";
+									});
+									if(item.AlarmReceiver!=""){
+										set_str=set_str+item.AlarmReceiver;
+									}else{
+										set_str=set_str.substr(0,set_str.length-1);
+									}
+									
+								}
+								set_str=set_str.replace(/;/g,'，');
+								// float_str = "<p>事件描述："+HTMLEncode(item.EventDescription)+"</p><p>信息接收者："+HTMLEncode(set_str)+"</p>";
+								$("#eventinfo_list").append("<tr>"+
+								(perm==2?"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" /></td>":"<td title='"+item.Name+"'>"+item.Name+"</td>")+
+								"<td style = \"display:none\">"+item.EventAlarmInfoId+"</td>"+
+								(perm==2?"<td title='"+item.Name+"'>"+item.Name+"</td>":'')+
+								"<td>"+item.EventLevel+"</td>"+
+								"<td>"+item.EventType+"</td>"+
+								"<td title='"+item.EventDescription+"'>"+item.EventDescription+"</td>"+
+								"<td>"+item.AlarmAction+"</td>"+
+								"<td title='"+set_str+"'>"+set_str+"</td>"+
+								"<td><div class=\"tab-ctr\">"+
+								(perm==2?"<a href=\"javascript:;\" class=\"edit\" id=\"edit\" title='编辑'></a>":"<a href=\"javascript:;\" class=\"search_result\" id=\"edit\" title='查看'></a>")+
+								(perm==2?"<a href=\"javascript:;\" class=\"del\" id=\"del\" title='删除'></a>":"")+
+								"</div>"+
+								// "<div class=\"tab-moreinfo\">"+float_str+"</div>"+
+								"</td></tr>");
+							//}
+						})
+						// tabArr();
+						$(".input_checkbox","#eventinfo_list").iCheck({
+							checkboxClass: 'icheckbox_minimal-blue',
+							radioClass: 'iradio_minimal-blue',
+							increaseArea: '0' // optional
+						});
+						$("#eventinfo_total").text(total_all);
+	
+						if(paging>=fenye_r){
+							paging=fenye_r;
+						}
+						document.frm_eventinfo.paging.value=paging;
+						document.getElementById("eventinfo_page").value=paging;
+						$("#eventinfo_pages").text(fenye_r);
+						$('#check_one_page').iCheck('uncheck');	
+						$("table tbody tr input").iCheck('uncheck');
+						check_show();
+						check_num=delect_str.length;
+						$("span.sum").text(check_num);
+					}else{
+						$('#check_one_page').iCheck('uncheck');	
+						$("span.sum").text(0);
+						$("table tbody tr input").iCheck('uncheck');
+						$("#eventinfo_list").empty();
+						$("#eventinfo_total").text(total_all);
+						$("#eventinfo_pages").text(1);
+						document.frm_eventinfo.paging.value=1;
+						fenye_r=1;
+						document.getElementById("eventinfo_page").value=1;
+					}	
+				}
+			}else{
+				_alert(1,"事件告警",eventinfo_result.ErrMsg);
+				$('#check_one_page').iCheck('uncheck');	
+				$("table tbody tr input").iCheck('uncheck');
+				$("span.sum").text(0);
+				$("#eventinfo_total").text(0);
+				$("#eventinfo_pages").text(1);
+				document.frm_eventinfo.paging.value=1;
+				fenye_r=1;
+				document.getElementById("eventinfo_page").value=1;
+				return false;
+			}
+		}
+	});
+}
+//分页 and 刷新
+function eventinfo_page(num){
+	var paging=parseInt(document.frm_eventinfo.paging.value)+num;
+	if(paging==0 || paging==fenye_r+1){
+		return false;
+	}
+	delect_save();
+	var eventinfo_list_s = [];
+	if (num == 0.1){
+		paging = 1;
+	}else if(num == 0.9){
+		paging=fenye_r;
+	}
+	$("span.sum").text(0);
+	document.getElementById("eventinfo_page").value=paging;
+	document.frm_eventinfo.paging.value=paging;
+	show_eventinfo_list();
+}
+function update_all_list() {
+	var eventinfoId=document.frm_eventinfo.eventinfoId.value;
+	var search_typeall=search_typeall_r+search_typeall_new;
+	$.ajax({
+		url: "/bhost/get_eventinfo_list",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a2:search_typeall,a1:eventinfoId},
+		success:function(result){
+			var eventinfo_result = JSON.parse(result);
+			if (eventinfo_result.Result){
+				var eventinfo_data = eventinfo_result.info;
+				var delect_str_old=delect_str;
+				delect_str=new Array();
+				eventinfo_array=eventinfo_data.data.map(function (params) {
+					if($.inArray(params.EventAlarmInfoId+'\t'+params.Name,delect_str_old)>=0){
+						delect_str.push(params.EventAlarmInfoId+'\t'+params.Name);
+					}
+					return params.EventAlarmInfoId+'\t'+params.Name;
+				});
+			}else{
+				_alert(1,'事件告警',eventinfo_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+//全选按钮
+function click_all_list(){
+	delect_save();
+	if(eventinfo_array.length==delect_str.length){
+		delect_str=new Array();
+	}else{
+		delect_str=eventinfo_array;
+	}
+	show_eventinfo_list();
+}
+//删除函数
+function delete_fun(delect_str_1){
+	$.ajax({
+		url: '/bhost/del_eventinfo',
+		type: "POST",
+		async:false,
+		data: {a0:$("input[name=se]").val(),a1:delect_str_1},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				eventinfo_page(0);
+				// _alert(0,"事件告警","删除成功");
+				if(result.fail_num!=0){
+					if (result.success_num!=0)
+						_alert(0,"事件告警","成功："+result.success_num+'，失败：'+result.fail_num);
+					else
+						if ((result.fail_num+result.success_num)==1)
+							_alert(1,"事件告警",result.ErrMsg);
+						else
+							_alert(0,"事件告警",'失败：'+result.fail_num);
+				}else{
+					_alert(0,"事件告警","删除成功");
+				}
+			}else{
+				eventinfo_page(0);
+				_alert(1,"事件告警",result.ErrMsg);
+				return false;
+			}	
+		}
+	});
+}
+//删除按钮
+function delete_list(){
+	delect_save();
+	if(delect_str.length == 0){
+		_alert(2,"事件告警","请选择要删除的数据");
+		return false;
+	}
+	//利用对话框返回的值 （true 或者 false） 
+	$('.btn').blur();parent.layer.open({
+		type:1,
+		title: '事件告警',
+		content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		yes:function(i){
+			parent.layer.close(i);
+			delete_fun(delect_str.join(',')); 
+			delect_str=new Array();
+			check_num=0;
+			$("span.sum").text(check_num);
+		}
+	});
+}
+$(function(){
+	
+	$("#eventinfo_group").on("click",function(){
+		parent.reload();
+	});
+ });
+</script>
+</body>
+</html>

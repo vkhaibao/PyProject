@@ -1,0 +1,757 @@
+{% extends "index.html" %} {% block head %}
+<!--icheck-->
+<script src="/manage/js/icheck.min.js"></script>
+<script src="/manage/js/select2.full.min.js"></script>
+<script src="/manage/js/common_e.js"></script>
+<script src="/manage/js/xSelect.js"></script>
+<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+<link rel="stylesheet" href="/manage/css/select2.min.css">
+<link rel="stylesheet" href="/manage/css/new-head.css"> {% endblock %} {% block main %}
+<!---->
+<div class="rwrap">
+	<!--自动归档策略表-->
+	<div class="c-top">
+		<div class="c-title">
+			<div class="manual-head" style="float:left;width:auto">
+				<div class="manual-title-other title-item" id="frist">
+					<span id="archiving_strategy">归档策略</span>
+					<i class="archive_strategy_icon"></i>
+				</div>
+				<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+					<span id="manual_backup"> 数据备份</span>
+					<i style="display: none;"></i>
+				</div>
+
+				<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+					<span id="data_recovery">数据恢复</span>
+					<i style="display: none;"></i>
+				</div>
+
+				<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+					<span id="auto_archiving">数据归档</span>
+					<i style="display: none;"></i>
+				</div>
+
+			</div>
+			<div class="ctr">
+				<a href="javascript:;" class="ret" onclick="parent._closePage(this)">
+					<i></i>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="mainer">
+		<div class="container" id="step1">
+			<div class="c-cont">
+				<div class="c-wrap" style="padding: 10px 0 0;margin:0 auto;text-align: left;width:auto;">
+					<div class="c-exp" style="margin: -1px auto;">
+						<div class="h-explorer">
+							<div class="G-top">
+								<div class="G-box1"></div>
+								<strong>&nbsp;归档策略：</strong>
+							</div>
+							<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 14px 0 0;">
+								<div class="form-item" style="width: 40%;">
+									<span class="form-tag" style="">归档类型：</span>
+									<select name="" id="ArchiveStyle" class="select2" style="margin-left: 6px;width: 92px;" onchange="">
+										<option value="1">配额归档</option>
+										<option value="2">周期归档</option>
+									</select>
+								</div>
+								<div class="form-item" style="display:none;">
+									<span class="form-tag" style="">
+										<em class="imp">*</em>磁盘配额：</span>
+									<div class="form-c " style="">
+										<input type="text" class="form-text" value="90" onblur="regCheck(this,numReg);dataCheck(this, 50, 90);" onkeyup="/*dataCheck(this, 50,90);*/" id="DiskLimit" maxlength="3" style="width: 60px;"> &nbsp;&nbsp;&nbsp;%
+										<i class="v-check" style="margin: 7px 0 0 -54px;"></i>
+										<span style="font-size: 12px;">(自动归档最低不能小于50%，最大不能大于90%)</span>
+									</div>
+								</div>
+								<div class="form-item" style="display:none;">
+									<span class="form-tag" style="">
+										<em class="imp">*</em>存储周期：</span>
+									<div class="form-c " style="">
+										<input type="text" class="form-text" value="90" onblur="regCheck(this,numReg);dataCheck(this, 180, 3650);" onkeyup="dataCheck(this, 180, 3650);" id="StoragePeriod" maxlength="6" style="width: 60px;"> &nbsp;&nbsp;&nbsp;天
+										<i class="v-check" style="margin: 7px 0 0 -54px;"></i>
+										<span style="font-size: 12px;">(180-3650)</span>
+									</div>
+								</div>
+								<div class="form-item" style="width: 40%;">
+									<span class="form-tag" style="">归档方式：</span>
+									<select name="" id="ArchiveType" class="select2" style="margin-left: 6px;width: 92px;" onchange="">
+										<!--<option value="0">本地保存</option>-->
+										<option value="1">自动丢弃</option>
+										<option value="2">FTP上传</option>
+									</select>
+								</div>
+								<div class="form-item" style="display:none;padding-bottom: 20px;">
+									<span class="form-tag" style="">FTP配置：</span>
+									<div class="form-c">
+										<div class="xSelect xSelect_ftp" id="FTPServerId"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 归档周期-->
+					<!--<div class="c-exp" style="margin: -1px auto;display: none;" id="five">
+							<div class="h-explorer">
+								<div class="G-top">
+									<div class="G-box1"></div><strong>&nbsp;归档周期：</strong>
+								</div>
+								<div class="h-content2" style="height: auto;width: 100%;overflow: hidden;padding: 0px;">
+									<div class="form-item" style="">
+										<span class="form-tag" style=""><em class="imp">*</em>存储周期：</span>
+										<div class="form-c " style="">	
+											<input type="text" class="form-text" onblur="_s_check()" id="storageperiod" maxlength="4" style=""> 天
+											<span style="font-size: 12px;">(0-3650,0表示不进行自动归档)</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div> -->
+				</div>
+			</div>
+		</div>
+		{% if _power_mode == 2%}
+		<div class="btns">
+			<a href="javascript:;" class="btn btn-normal " onclick="savedata();" style="font-weight: 400;">保&nbsp;&nbsp;存</a>
+		</div>
+		{% endif %}
+		<div id="bBtn" style="position: fixed;z-index:5;">
+			<a href="javascript:;" class="btn btn-normal" onclick="parent._closePage(this);" style="float: right;">
+				<i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+		</div>
+	</div>
+</div>
+<!--浮层-->
+<!--FTP  -->
+<!--ftp  -->
+<div class="dialog-cont" id="ftp_suspend" style="display:none;max-height: 420px;">
+	<div class="container" style="margin-top: -10px;">
+		<div class="c-cont" style="padding: 0px; height: 281px;">
+			<div class="c-form ">
+				<div class="form">
+					<div class="form-item" style="padding: 10px 0;" id="FTPServer_Master" name="FTPServer_Master">
+						<span class="form-tag" style="width:285px;">
+							<em class="imp">*</em>配置名称：</span>
+						<div class="form-c">
+							<input type="text" style="width: 224px;" class="form-text" id="FTPServerName_Master" name="FTPServerName_Master" onblur="regCheck(this,nameReg);">
+							<i class="v-check" style=""></i>
+							<p class="form-tip" style="padding-left: 84px;">特殊字符仅支持下划线、横杠、小数点</p>
+						</div>
+					</div>
+					<div class="form-item" style="padding: 10px 0;display:none;">
+						<span class="form-tag" style="width:285px;">DNS服务地址：</span>
+						<div class="form-c">
+							<input style="padding-right: 8px;" type="text" class="form-text" id="DNS_FTP_Master" name="DNS_FTP_Master">
+						</div>
+					</div>
+					<div class="form-item" style="padding: 10px 0;">
+						<span class="form-tag" style="width:285px;">
+							<em class="imp">*</em>服务器IP：</span>
+						<div class="form-c">
+							<input style="padding-right: 8px;" type="text" class="form-text" id="ServerIP_Master" name="ServerIP_Master">
+						</div>
+					</div>
+					<div class="form-item" style="padding: 10px 0;">
+						<span class="form-tag" style="width:285px;">
+							<em class="imp">*</em>用户名：</span>
+						<div class="form-c">
+							<input style="padding-right: 8px;" type="text" class="form-text" id="ServerUser_Master" name="ServerUser_Master">
+						</div>
+					</div>
+					<div class="form-item" style="padding: 10px 0;">
+						<span class="form-tag" style="width:285px;">
+							<em class="imp">*</em>用户密码：</span>
+						<div class="form-c">
+							<input style="padding-right: 8px;" maxlength="128" type="password" class="form-text" id="ServerPasswd_Master" name="ServerPasswd_Master">
+						</div>
+					</div>
+					<div class="form-item" style="padding: 10px 0;">
+						<span class="form-tag" style="width:285px;">
+							<em class="imp">*</em>上传路径：</span>
+						<div class="form-c">
+							<input style="padding-right: 8px;" type="text" class="form-text" id="ServerPath_Master" name="ServerPath_Master">
+						</div>
+					</div>
+					<div class="form-item" style="padding: 10px 0;">
+						<span class="form-tag" style="width: 285px;">方式：</span>
+						<div class="form-c">
+							<select name="ftpFlag" id="ftpFlag" class="form-select" style="width: 100px" onchange="">
+								<option value="2">默认</option>
+								<option value="1">备用</option>
+								<option value="0">其他</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+	<div class="btns" style="margin-bottom: 0px;margin-left:-20px;width:840px;">
+		<a href="javascript:;" class="btn btn-normal btn-submit">保&nbsp;&nbsp;存</a>
+		<a href="javascript:;" class="btn btn-normal btn-cancel">重&nbsp;&nbsp;置</a>
+	</div>
+
+</div>
+<form action="/bhost/astrategy_list" method="POST" name="frm_astrategy" id="frm_astrategy">
+	<input type="hidden" name="tasktype" id="tasktype" value="" />
+	<input type="hidden" name="se" value="{{se}}" />
+	<input type="hidden" name="a" value="" />
+</form>
+
+<style>
+	.ui-dialog-body {
+		padding: 20px 0 0 0;
+	}
+
+	.form-c {
+		padding-left: 192px;
+		position: relative;
+	}
+
+	.G-top {
+		width: 100%;
+		height: 16px;
+		margin: 10px 0 0 0;
+		font-size: 17px;
+		line-height: 16px;
+		color: #5b5b5b;
+	}
+
+	.G-box1 {
+		margin-left: 10px;
+		width: 3px;
+		height: 16px;
+		background-color: #3FB7D2;
+		float: left;
+	}
+
+	.h-content2 .form-item {
+		height: auto;
+		padding: 20px 0 10px;
+		min-height: 38px;
+		padding: 5px;
+		width: 50%;
+		float: left;
+	}
+
+	.h-explorer {
+		width: 95%;
+		height: 100%;
+		border: 1px solid #CCC;
+		margin: 0 auto;
+		overflow: hidden;
+		min-width: 1100px;
+	}
+</style>
+<script type="text/javascript">
+	var ftpserver = [];
+	var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+	var numReg=/^[\d]+$/;
+	 var ipReg =/(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+	var ftpserver_save = {
+		"FTPServerId": 0,
+		"FTPServerName": null,
+		"ServerIP": null,
+		"DNS": null,
+		"ServerUser": null,
+		"ServerPasswd": null,
+		"ServerPath": null,
+		"Flag": 0 ,
+		"IfPasv": true
+	};
+	$(function () {
+		parent._switchBtn(1);//显示按钮
+		$('.form-select,.select2,.filter-select').select2({ minimumResultsForSearch: -1 });
+		$('.xSelect').on('click', '.xSelect-show', function () {
+			$focusObj = $(this).parents('.xSelect');
+		})
+
+		$("#storageperiod,#DiskLimit").bind('keydown', function (e) {
+			DigitInput(e);
+		});
+		$('#ArchiveStyle').on('change',function () {
+			var ArchiveStyle=$('#ArchiveStyle').val();
+			if(ArchiveStyle=='1'){
+				$('#StoragePeriod').parents('.form-item').hide();
+				$('#DiskLimit').parents('.form-item').show();
+				if($('#DiskLimit').val()==''){
+					$('#DiskLimit').next('i.v-check').attr('class','v-check');
+				}
+			}else{
+				$('#DiskLimit').parents('.form-item').hide();
+				$('#StoragePeriod').parents('.form-item').show();
+				if($('#StoragePeriod').val()==''){
+					$('#StoragePeriod').next('i.v-check').attr('class','v-check');
+				}
+			}
+		});
+		$('#ArchiveType').on('change',function () {
+			var ArchiveType=$('#ArchiveType').val();
+			if(ArchiveType=='2'){
+				$('#ArchiveType').parents('.form-item').css('padding-bottom',5);
+				$('#FTPServerId').parents('.form-item').show();
+				update_xSelect($('.xSelect_ftp'));
+			}else{
+				$('#ArchiveType').parents('.form-item').css('padding-bottom',20);
+				$('#FTPServerId').parents('.form-item').hide();
+			}
+		});
+		$('.xSelect').on('click','.xSelect-show',function () {
+			$focusObj=$(this).parents('.xSelect');
+		});
+		$("#archiving_strategy").on("click", function () {
+			archiving_strategy();
+		});
+		$("#manual_backup").on("click", function () {
+			manual_backup()
+		});
+		$("#data_recovery").on("click", function () {
+			data_recovery()
+		});
+		$("#auto_archiving").on("click", function () {
+			auto_archiving()
+		});
+	});
+	$(function () {
+		
+		//获取数据自动归档策略
+		$.ajax({
+			url: "/bhost/get_archive_strategy",
+			type: "POST",
+			async: false,
+			data: { a0: $("input[name=se]").val() },
+			success: function (result) {
+				var result = JSON.parse(result);
+				if (result.Result) {
+					if(result.info==null){
+						$('#ArchiveStyle').val(1).trigger('change');
+						$('#ArchiveType').val(2).trigger('change');
+						$('#DiskLimit').val(90);
+						$('#StoragePeriod').val(90);
+						document.frm_astrategy.a.value=0;
+					}else{
+						$('#ArchiveStyle').val(result.info.ArchiveStyle).trigger('change');
+						$('#DiskLimit').val(90);
+						$('#StoragePeriod').val(90);
+						$('#ArchiveType').val(result.info.ArchiveType).trigger('change');
+						if (result.info.ArchiveStyle==1){
+							$('#DiskLimit').val(result.info.DiskLimit);
+						}else{
+							$('#StoragePeriod').val(result.info.StoragePeriod);
+						}
+						$('#FTPServerId').data('value',result.info.FTPServerId);
+						if(result.info.FTPServerId==0){
+							$('#FTPServerId .xSelect-show-text').text('默认');
+						}else{
+							$('#FTPServerId .xSelect-show-text').text(result.info.FTPServerName);
+						}
+						document.frm_astrategy.a.value=result.info.LogArchiveStrategyId;
+					}
+				}
+				else {
+					_alert(1, '归档策略', result.ErrMsg);
+					return false;
+				}
+			}
+		});
+	})
+	//检查格式
+	function dataCheck(obj, min, max) {//min can not bigger than 1
+		obj.value = obj.value.replace(/\D/g, "");
+		if (obj.value!=''){
+			obj.value=parseInt(obj.value, 10);
+		}
+		
+		if (min) {
+			if (parseInt(obj.value, 10) < parseInt(min, 10)) obj.value = min;
+		}
+		if (max) {
+			if (parseInt(obj.value, 10) > parseInt(max, 10)) obj.value = max;
+		}
+	}
+	
+	function archiving_strategy() {
+		document.frm_astrategy.tasktype.value = 1;
+		document.frm_astrategy.action = '/bhost/data_show';
+		document.frm_astrategy.submit();
+	}
+	function manual_backup() {
+		document.frm_astrategy.tasktype.value = 2;
+		document.frm_astrategy.action = '/bhost/data_show';
+		document.frm_astrategy.submit();
+	}
+
+	function data_recovery() {
+		document.frm_astrategy.tasktype.value = 3;
+		document.frm_astrategy.action = '/bhost/data_show';
+		document.frm_astrategy.submit();
+	}
+
+	function auto_archiving() {
+		document.frm_astrategy.tasktype.value = 4;
+		document.frm_astrategy.action = '/bhost/data_show';
+		document.frm_astrategy.submit();
+	}
+
+	function back() {
+		window.parent._closePage(null);
+	}
+	function update_xSelect($obj){
+		var id_value=$obj.data('value');
+		if(id_value==undefined || id_value==0){
+			text_value='默认';
+			id_value=0;
+		}else{
+			var text_value=$('.xSelect-show-text',$obj).text();
+			var id=$('.xSelect-show',$obj).data('id');
+			$obj.empty().data('xSelect','');
+			$('.'+id).remove();
+		}
+		//console.log(text_value+id);
+		$.ajax({
+			url: "/bhost/get_ftpserver",
+			type: "POST",
+			async: false,
+			data: { a0: $("input[name=se]").val() },
+			success: function (result) {
+				var result = JSON.parse(result);
+				if (result.Result) {
+					var data = result.info;
+					ftpconfig_data_all=result.info.data;
+					ftpserver = new Array();
+					ftpserver[0] =(JSON.parse('{"value":0,"name":"默认","type":null}'));
+					$.each(data.data, function (i, item) {
+						if(item.FTPServerId==0){
+							return true;
+						}
+						ftpserver[item.FTPServerId] =(JSON.parse('{"value":'+item.FTPServerId+',"name":"'+item.FTPServerName+'","type":"edit"}'));
+					})
+				} else {
+					_alert(1, 'FTP服务器查询', result.ErrMsg);
+					return false;
+				}
+			}
+		});
+		$obj.xSelect({
+			width: 270,
+			defaultText: '全局指定',
+			items:ftpserver,
+			edit: function(item,obj){
+				$('.'+$('.xSelect_ftp .xSelect-show').data('id')).hide();
+				get_dialog_ftp(item,1);
+			},
+			delete: function(item,obj){
+			},
+			btn:[
+				{
+					'name':'新增',
+					'event': function(items,obj){
+						get_dialog_ftp(items,2);
+					}
+				}
+			],
+			setval:function(item,obj){
+				update_xSelect($('.xSelect_ftp'));
+			}
+		});
+		$obj.data('value',id_value);
+		$('.xSelect-show-text',$obj).text(text_value);
+	}
+	//MasterFTPServer输入
+	function MasterFTPServer_input(item_ftp) {
+		$('#FTPServerName_Master').val(item_ftp.FTPServerName);
+		$('#ServerIP_Master').val(item_ftp.ServerIP);
+		$('#ServerUser_Master').val(item_ftp.ServerUser);
+		$('#ServerPasswd_Master').val(item_ftp.ServerPasswd);
+		ftpserver_save.ServerPasswd=item_ftp.ServerPasswd;
+		$('#ServerPath_Master').val(item_ftp.ServerPath);
+		$('#DNS_FTP_Master').val(item_ftp.DNS);
+		$('#ftpFlag').val(item_ftp.Flag).trigger('change');
+	}
+	function get_dialog_ftp(obj,type){
+		ftp_master_clear();
+		var title;
+		if (type == 1){
+			var id=obj.value;
+			title = "编辑FTP配置";
+			$.ajax({
+				url: "/bhost/get_ftpserver",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(),a1:id },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						var data = result.info.data[0];
+						MasterFTPServer_input(data);
+						$('#FTPServerName_Master').attr("disabled", true);
+						ftpserver_save.FTPServerId=parseInt(id);
+					} else {
+						_alert(1, 'FTP服务器查询', result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}else{
+			title = "创建FTP新配置";
+			ftpserver_save.FTPServerId=0;
+		}
+		var $dialogCont = $("#ftp_suspend").show();
+
+		var d = dialog({
+			title:title,
+			content:$dialogCont,
+			id:"ftp_suspend",
+			width:"800px"
+		});
+		d.addEventListener('close', function () {
+			$dialogCont.appendTo("body").hide();
+		});
+		d.showModal();
+		$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+			// d.close().remove();
+			ftp_master_clear();
+			if (type == 1){
+				var id=obj.value;
+				$.ajax({
+					url: "/bhost/get_ftpserver",
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(),a1:id },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result) {
+							var data = result.info.data[0];
+							MasterFTPServer_input(data);
+							$('#FTPServerName_Master').attr("disabled", true);
+							ftpserver_save.FTPServerId=parseInt(id);
+						} else {
+							_alert(1, 'FTP服务器查询', result.ErrMsg);
+							return false;
+						}
+					}
+				});
+			}else{
+				ftpserver_save.FTPServerId=0;
+			}
+		});
+		$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+			var FTPServerName_Master=$("#FTPServerName_Master").val();
+			if(FTPServerName_Master==''){
+				_alert(2, 'FTP配置', '请输入名称',$('#FTPServerName_Master'));
+				return false;
+			}else if(!nameReg.test(FTPServerName_Master)){
+				_alert(1, 'FTP配置', '名称格式不正确',$('#FTPServerName_Master'));
+				return false;
+			}
+			var DNS_FTP_Master = $('#DNS_FTP_Master').val();
+			if (DNS_FTP_Master == "") {
+				DNS_FTP_Master = null;
+			}
+			var ServerIP_Master = $('#ServerIP_Master').val();
+			if (ServerIP_Master == "") {
+				_alert(2, 'FTP配置', '请输入服务器IP地址',$('#ServerIP_Master'));
+				return false;
+			} else if (!ipReg.test(ServerIP_Master)) {
+				_alert(1, 'FTP配置', '服务器IP地址格式不正确',$('#ServerIP_Master'));
+				return false;
+			}
+			var ServerUser_Master = $("#ServerUser_Master").val();
+			if (ServerUser_Master == "") {
+				_alert(2, 'FTP配置', '请输入用户名', $("#ServerUser_Master"));
+				return false;
+			}
+			var ServerPasswd_Master = $('#ServerPasswd_Master').val();
+			if (ServerPasswd_Master == "") {
+				_alert(2, 'FTP配置', '请输入密码',$('#ServerPasswd_Master'));
+				return false;
+			}
+			if(ServerPasswd_Master.length > 64){
+				_alert(2, 'FTP配置', "密码不能超过系统限定64位", $("#ServerPasswd_Master"));
+				return false;
+			}
+			var ServerPath_Master = $('#ServerPath_Master').val();
+			if (ServerPath_Master == "") {
+				_alert(2, 'FTP配置', '请输入上传路径',$('#ServerPath_Master'));
+				return false;
+			}
+			ftpserver_save.FTPServerName=FTPServerName_Master;
+			ftpserver_save.ServerIP=ServerIP_Master;
+			ftpserver_save.DNS=DNS_FTP_Master;
+			ftpserver_save.ServerUser=ServerUser_Master;
+			ftpserver_save.ServerPasswd=ServerPasswd_Master;
+			ftpserver_save.ServerPath=ServerPath_Master;
+			ftpserver_save.Flag=parseInt($('#ftpFlag').val());
+			if(save_ftpserver()){
+				$('.btn').blur();parent.layer.open({
+					type: 1,
+					title: 'FTP配置',
+					content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn: ['确&nbsp;&nbsp;定'],
+					btnAlign: 'c',
+					closeBtn: false,
+					skin: 'layer-custom',
+					area: ['380px', '310px'],
+					move: false,
+					resize: false,
+					yes: function (i) {
+						parent.layer.close(i);
+						d.close().remove();
+					}
+				});
+			}
+		})
+	}
+	//ftpserver_save
+	function save_ftpserver() {
+		if (ftpserver_save == null) {
+			return false;
+		}
+		var pass = true;
+		msstr = aceg(JSON.stringify(ftpserver_save),$("input[name=se]").val());
+		$.ajax({
+			url: "/bhost/add_ftpserver",
+			type: "POST",
+			async: false,
+			data: { a0: $("input[name=se]").val(), a1: JSON.stringify(ftpserver_save),a2:'系统管理>数据管理',m1:msstr},
+			success: function (result) {
+				var result = JSON.parse(result);
+				if (result.Result) {
+					if(ftpserver[result.FTPServerId]!=null){
+					}else{
+						ftpserver[result.FTPServerId]={};
+						ftpserver[result.FTPServerId]["type"]='edit';
+						ftpserver[result.FTPServerId]["value"]=result.FTPServerId;
+						ftpserver[result.FTPServerId]["name"]=ftpserver_save.FTPServerName;
+					}
+					var focusObj_value=$focusObj.data('value');
+					if(focusObj_value=='0' || focusObj_value=='' || focusObj_value==undefined){
+						$('.xSelect-show-text',$focusObj).text(ftpserver_save.FTPServerName);
+						$focusObj.data('value',result.FTPServerId);
+					}
+					update_xSelect($('.xSelect_ftp'));
+				} else {
+					if(result.ErrMsg=="同名的FTP服务器配置已存在"){
+						_alert(1, "FTP配置",result.ErrMsg, $('#FTPServerName_Master'));
+					}else{
+						_alert(1, "FTP配置",result.ErrMsg);
+					}
+					pass = false;
+				}
+			}
+		});
+		return pass;
+	}
+
+	function savedata() {
+		var jsondata = {
+			"LogArchiveStrategyId": 0,
+			"DiskLimit": 0,
+			"ArchiveType": 2,   //归档方式,0-自动丢弃,1-本地保存 2-FTP上传
+			"FTPServerId": null,
+			"FTPServerName":null,
+			"StoragePeriod": 0,
+			"ArchiveStyle":1
+		};
+		jsondata.LogArchiveStrategyId = parseInt(document.frm_astrategy.a.value);
+		var ArchiveStyle=parseInt($('#ArchiveStyle').val());
+		jsondata.ArchiveStyle=ArchiveStyle;
+		if(ArchiveStyle==1){
+			if ($("#DiskLimit").val() == "") {
+				_alert(2, "归档策略", "请输入磁盘配额", $("#DiskLimit"));
+				return false;
+			}
+			var DiskLimit=parseInt($('#DiskLimit').val());
+			if(DiskLimit<50){
+				_alert(2,'归档策略','自动归档不能小于50%',$("#DiskLimit"));
+				return false;
+			}else if(DiskLimit>90){
+				_alert(2,'归档策略','自动归档不能大于90%',$("#DiskLimit"));
+				return false;
+			}
+			jsondata.DiskLimit=DiskLimit;
+		}else{
+			if($('#StoragePeriod').val()==''){
+				_alert(2, "归档策略", "请输入存储周期", $("#StoragePeriod"));
+				return false;
+			}
+			var StoragePeriod=parseInt($('#StoragePeriod').val());
+			if(StoragePeriod<180){
+				_alert(2,'归档策略','周期不能小于180',$("#StoragePeriod"));
+				return false;
+			}else if(StoragePeriod>3650){
+				_alert(2,'归档策略','周期不能大于3650',$("#StoragePeriod"));
+				return false;
+			}
+			jsondata.StoragePeriod=StoragePeriod;
+		}
+		var ArchiveType=parseInt($('#ArchiveType').val());
+		jsondata.ArchiveType=ArchiveType;
+		if(ArchiveType==2){
+			var FTPServerId=$('#FTPServerId').data('value');
+			jsondata.FTPServerId=FTPServerId;
+			jsondata.FTPServerName=$('#FTPServerId .xSelect-show-text').text();
+		}
+		var msstr = aceg(JSON.stringify(jsondata),$("input[name=se]").val());
+		$.ajax({
+			url: "/bhost/save_archive_strategy",
+			type: "POST",
+			async: false,
+			data: { a0: $("input[name=se]").val(), a1: JSON.stringify(jsondata) ,m1:msstr},
+			success: function (result) {
+				var result = JSON.parse(result);
+				if (result.Result) {
+					$('.btn').blur(); parent.layer.open({
+						type: 1,
+						title: '归档策略',
+						content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+						btn: ['确&nbsp;&nbsp;定'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							parent.layer.close(i);
+							archiving_strategy();
+						}
+					});
+				} else {
+					_alert(1, '归档策略', result.ErrMsg);
+					return false;
+				}
+			}
+		});
+	}
+
+	//创建邮件FTP下拉框
+	var $focusObj;
+	//ftp_master_clear
+	function ftp_master_clear() {
+		$('#FTPServer_Master').show();
+		$('#FTPServerName_Master').next('i.v-check').attr('class','v-check');
+		$("#FTPServerName_Master").val('');
+		$("#FTPServerName_Master").attr("disabled", false);
+		$('#ServerIP_Master').val('');
+		$('#ServerUser_Master').val('');
+		$('#ServerPasswd_Master').val('');
+		ftpserver_save.ServerPasswd=null;
+		$('#ServerPath_Master').val('');
+		$('#DNS_FTP_Master').val('');
+		var ftpconfig_data_all_Flag=ftpconfig_data_all.map(function (params) {
+			return params.Flag;
+		});
+		if($.inArray(2,ftpconfig_data_all_Flag)<0){
+			$('#ftpFlag').val(2).trigger('change');
+		}else if($.inArray(1,ftpconfig_data_all_Flag)<0){
+			$('#ftpFlag').val(1).trigger('change');
+		}else{
+			$('#ftpFlag').val(0).trigger('change');
+		}
+	}
+</script> {% endblock %}

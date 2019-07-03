@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3 onclick="parent.reload();">系统升级</h3>
+				-->
+				<div class="manual-head" style="width:100px;float:left;">
+					<div class="manual-title">
+						<span id="sys_update_reload" style="cursor: pointer;">系统升级</span>
+						<i class="sys_update_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			<form action="/bhost/sys_updata" method="POST" name="frm1" id="frm1" enctype="multipart/form-data">
+			<input type="hidden" name="us" value = ""/>
+			<input type="hidden" name="se" value = ""/>  
+			<input type="hidden" name="navi" value = ""/>
+			<input type="hidden" name="sys_ok" value = ""/>
+			<input type="hidden" name="cloud" value = "0"/>
+			<input type="hidden" name="s1" value = ""/>
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-form" style="width:90%;padding-bottom:10px;min-width:1130px;margin-left: 10px;">
+						<div class="form">	
+							<div class="form-item">
+								<span class="form-tag">选择服务器：</span>
+								<div class="form-c">
+									<select class="select" style="width:284px;margin-left:0;" id = "fileselect" name="fileselect">
+									</select>
+								</div>	
+							</div>	
+							<div class="form-item">
+								<span class="form-tag" style="">当前版本号：</span>
+								<div class="form-c">
+									<input id="sys_version" name="sys_version" class="form-text" style="width:250px;cursor: default;" type="text" readonly >
+								</div>
+							</div>
+							<!--
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>文件序列号：</span>
+								<div class="form-c">
+									<input id="file_num" name="" class="form-text" style="width:220px;" type="text">
+								</div>
+							</div>-->
+							<div class="form-item tab-t" style="padding: 0px;">
+								<span class="form-tag" style="padding: 20px 10px 0 0;"><em class="imp">*</em>选择文件：</span>
+								<div class="form-c ctr" style="padding: 20px 0 0 0;    width: 280px;">
+									<div class="item" style="float: left;width:67%">
+										<input id="file_change" name="file_change" class="form-text" type="text" onclick="browes();" onchange="/*filetip(this);*/" style="float: left;opacity: 0;margin-top: 0px;position: absolute;cursor: pointer;" >
+										<input id="file_v" name="file_v" class="form-text" type="text" style="float: left;width: 250px;">
+										<input id="file_change1" name="file_change1" class="form-text" type="file" onchange="filetip(this);" style="float: left; display: none;" >
+										
+									</div>
+									<div class="item" style="float: left;width:33%">
+										<a class="btn s-hide" href="javascript:;" style="margin-left: 100px;height: 26px;width:33px;" onclick="browes();">浏览</a>
+									</div>
+								</div>
+								
+							</div>
+							
+							<div class="form-item" >
+								<div class="form-c" id="div_update" style="padding:0px">		
+									<span class="form-tag" id="span_update" style="padding: 0 10px 0 0;">升级时间：</span>
+									<select class="select" style="width:280px;" id = "version_select" name="version_select">
+										<option value="new">最近一次</option>
+										<option value="last">2017-01-11 16:47:10</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">详细信息：</span>
+								<div class="form-c">
+									<textarea class="form-textarea" name="" id="fileinfo" cols="30" rows="10" style="    width: 875px; height: 180px;"></textarea>
+								</div>
+							</div>
+							<div class="form-item" id="suggest" style="width:100%;display:none;">
+								<span class="form-tag">注意事项：</span>
+								<div class="form-c" style="margin-top: 6px;">
+									<span class="" style="color: initial;">重启之后，建议清除浏览器缓存，以确保新功能正常使用</span>
+								</div>	
+							</div>		
+							
+							
+						</div>
+					</div>
+					<div class="c-form">
+						<div class="btns s-hide">
+							<a href="javascript:;" class="btn btn-normal" onclick="save();">确&nbsp;&nbsp;定</a>
+							<!--
+							<a href="javascript:;" class="btn btn-normal" onclick="back();">取&nbsp;&nbsp;消</a>
+							-->
+						</div>
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+$('.select').select2({minimumResultsForSearch: -1});
+</script>
+
+<style>
+.form .item .c a.fbtn {
+    float: left;
+    padding: 0 20px;
+    line-height: 30px;
+    margin-left: 10px;
+    border: 1px solid #40b3c1;
+    color: #000;
+    border-radius: 3px;
+    background: #FFF;
+}
+.c-form{
+	margin-left: 210px;
+}
+.form-item{
+	width: 50%;
+	float: left;
+}
+</style>
+<style type="text/css">
+</style>
+<script>
+var node_str = "";
+var sess = window.parent.document.frm.se.value;
+$('input[name=se]').val(sess);
+var old_id="";
+var node_str = "";
+var sys_verion ="" ;
+var server_id = -1;
+var sys_select_str = "";
+var sys_select_str_id = '';
+$(function(){
+	_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+	if(_if_disable == '1'){
+		$('.s-hide').remove();
+		$('#file_change').removeAttr("onchange").removeAttr("onclick").attr('type','text');
+	}
+	$("#sys_update_reload").on("click",function(){
+		parent.reload();
+	});
+	//binding_server();
+	$("#fileselect").on("change",function(){
+		node_id = $("#fileselect").val();
+		getsysinfo();
+    });
+	$("select[name='version_select']").change(function(){
+		update_type = $(this).val();
+		change_update(update_type);
+	})
+	var sysup_info = "";
+	sys_select_str = '';
+	sys_select_str_id='';
+	var is_sys_false = 0;
+	$.ajax({//获取
+		url: '/bhost/get_sysupdate',
+		type: "post",
+		async:false,
+		data: {se:sess},
+		success: function(result) {
+			var result=eval("("+result+")");
+			if(result.Result == false){
+				if(result.info.indexOf('系统繁忙')>=0 || result.info.indexOf('非法访问')>=0 || result.info.indexOf('系统超时') >=0 ){
+					_alert(1,'系统升级',result.info,true);
+				}else{
+					_alert(1,'系统升级',result.info);
+				}
+				is_sys_false = 1;
+				return false;
+			}
+			else{
+				sysup_info = result;
+				sys_select_str = sysup_info.info;
+				node_str = sys_select_str;
+				sys_verion = sysup_info.file;
+			}
+		}
+	})
+	if(is_sys_false) return false;
+	
+	sys_select=sys_select_str.split(",")
+	$("#fileselect").empty();
+	if(is_sys_false == 0){
+		$("#fileselect").append("<option value='-1'>所有</option>");
+		$.each(sys_select,function(i,item){
+			sys_select_str_id = sys_select_str_id +parseInt(item)+',';
+			$("#fileselect").append("<option value='"+item+"'>服务器"+item+"</option>");
+		});
+		sys_select_str_id = sys_select_str_id.substring(0,sys_select_str_id.length-1);
+	}else{
+		$("#fileselect").append("<option value='none'>无服务器</option>");
+	}
+	//以下3行默认选中下拉第一个
+	$("#fileselect").select2("destroy");
+	$("#fileselect option:eq(0)").prop("selected",true);
+	$("#fileselect").select2();
+	getsysinfo();
+	$("#sys_version").text(sys_verion);
+	
+	//get_data();
+})
+function binding_server(){
+	$.ajax({
+		url:'/bhost/get_serverglobal',
+		type:'post',
+		async:false,
+		data:{a0:sess},
+		success:function(result){
+			data = JSON.parse(result);
+			$("#fileselect").empty().append('<option value="-1">请选择</option>');
+			$.each(data.data,function(i,item){
+				$("#fileselect").append("<option value=\""+item.server_id+"\">"+item.server_id+"("+item.ip+")</option>");
+			})
+		}
+	})
+	
+	//$("#fileselect").trigger('change');
+}
+function filetip(obj){
+	var c=$(obj).val();
+	c = c.split("\\");
+	var b = c[c.length-1];
+	$('#file_v').val(b);
+	//$(obj).parent().children('input:first').val(b);
+	//$(obj).prev("input").val(b);
+}
+var setinterval=null;
+var use_BH=window.parent.parent.document.frm.use_BH.value;
+function browes(){
+	if(use_BH=='0'){
+		$("#file_change1").click();
+		return 0;
+	}
+	// $("#file_change").click();
+	var referrer_arr=document.referrer.toString().split('/');
+	referrer_arr.pop();
+	var referrer=referrer_arr.join('/');
+	var sesstimet = (new Date()).valueOf();
+	var json_download = {
+			"Type": "Upload",
+			"Url": referrer,
+			"Path": "/usr/storage/.system/update/",
+			"Filename": sesstimet+'',
+			"Session": sess,
+			"sesstimet":sesstimet+''
+	}
+	var if_html_client = false;
+	var base64_str = '';
+	$.ajax({
+			url: "/bhost/get_base64",
+			type:"POST",
+			async:false,
+			data:{a0:window.parent.document.frm.se.value,z1:JSON.stringify(json_download)},
+			success:function(result){
+					var result=JSON.parse(result);
+					if(result.Result){
+							if_html_client = result.info;
+							base64_str = result.b64;
+					}else{
+							_alert(1,"系统升级",result.ErrMsg); 
+					}
+			}
+	})
+	if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(json_download));
+	else{
+		get_regedit('bhost', window.parent.document.frm.se.value,'',sesstimet);
+		$('#YuFrame1').remove();
+		$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+		$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+	}
+	clearInterval(setinterval);
+	setinterval=setInterval(function(){
+		$.ajax({
+			url: "/bhost/find_item_sql",
+			type:"POST",
+			async:false,
+			data:{a0:window.parent.document.frm.se.value,a1:sesstimet},
+			success:function(result){
+				var result=JSON.parse(result);
+				if(result.Result){
+					if(result.info==null){
+
+					}else{
+						var info_arr=result.info.split('/');
+						if(info_arr.length>1){
+							$('#file_v').val(info_arr.pop());
+							$('#file_change').val('/usr/storage/.system/update/'+sesstimet);
+						}else{
+							if(result.info=='NULL'){
+								$('#file_v').val('');
+							$('#file_change').val('');
+							}else{
+								$('#file_v').val(result.info);
+								$('#file_change').val('/usr/storage/.system/update/'+sesstimet);
+							}
+						}
+						
+						clearInterval(setinterval);
+					}
+				}
+			}
+		});
+	}, 3000);
+}
+
+//返回
+function back(){
+	window.parent._closePage(null); 
+}
+
+var count_str = '';
+function getsysinfo(){
+	var sys_info = "";
+	var sys_info_get = "";
+	node_id = $("select[name='fileselect']").val();
+	update_type = $("#version_select").val();
+	$.ajax({//获取查询搜索的角色数据
+		url: '/bhost/getsys_info',
+		type: "post",
+		async:false,
+		data: {se:sess,node_id:node_id,update_type:update_type,node_str:node_str},
+		success: function(result) {
+			var result=eval("("+result+")");
+			if(result.Result == false){
+				_alert(1,'系统升级',result.info)
+				return false;
+			}
+			else{
+				sys_info = result;
+				sys_info_get = sys_info.info;
+				version = sys_info.version;
+				last_time = sys_info.last_time;
+				count_str = sys_info.count_str;
+				if (old_id == "") old_id =  sys_info.id;
+				//////console.log(old_id);
+			}
+		}
+	})
+	sys_info = sys_info_get;
+	sys_info = sys_info.replace(/<br>/g,"\n")
+	$("#fileinfo").val(sys_info);
+	$("#sys_version").val(version);
+	$("#version_select").empty();
+	$("#version_select").append("<option value='new'>最近一次</option>");
+	if(last_time != "") $("#version_select").append("<option value='last'>"+last_time+"</option>");
+	$("#version_select").select2("destroy");
+	$("#version_select option:eq(0)").prop("selected",true);
+	$("#version_select").select2();
+	
+	return sys_info;
+}
+
+////系统升级
+
+function save(){
+	server_id = $('#fileselect').val();
+	document.frm1.s1.value = server_id;
+	
+	var filename=document.frm1.file_v.value;
+	//var sn=$("#fileno").val();
+	if($("#fileselect").val() == "none"){
+		_alert(1,'系统升级','当前没有服务器，无法升级');
+		return false;
+	}
+	if(filename==''){
+		_alert(1,'系统升级','请选择系统升级文件');
+		//AlertDialog('请选择系统升级文件');
+		return false;
+	}
+	/*
+	if(sn==''){
+		AlertDialog('请输入文件序列号');$("#fileno").focus();return false;
+	}*/
+	var lastcertname = sys_verion;  
+	var certname = document.frm1.file_v.value;
+	var certcheck =/^(bh(-[0-9]*)?-v)((\d\.\d)|(\d\.\d\.\d*)|(\d\.\d\.\d\.\d*))-(\d{4})-((0[1-9])|(1[0-2]))-((0[1-9])|([1,2][0-9])|(3[0,1]))(.pkt)$/;
+	var certcheck_x86 =/^(bh(-[0-9]*)?-x86-v)((\d\.\d)|(\d\.\d\.\d*)|(\d\.\d\.\d\.\d*))-(\d{4})-((0[1-9])|(1[0-2]))-((0[1-9])|([1,2][0-9])|(3[0,1]))(.pkt)$/;
+	var certcheck_x64 =/^(bh(-[0-9]*)?-x64-v)((\d\.\d)|(\d\.\d\.\d*)|(\d\.\d\.\d\.\d*))-(\d{4})-((0[1-9])|(1[0-2]))-((0[1-9])|([1,2][0-9])|(3[0,1]))(.pkt)$/;
+	var certcheck_cloud =/^(bh(-[0-9]*)?-cloud-x64-v)((\d\.\d)|(\d\.\d\.\d*)|(\d\.\d\.\d\.\d*))-(\d{4})-((0[1-9])|(1[0-2]))-((0[1-9])|([1,2][0-9])|(3[0,1]))(.pkt)$/;
+	var codecheck =/[^0-9A-Za-z]/;
+	var flag = 0;
+	if ((-1 != lastcertname.indexOf('x86')) && (-1 == certname.indexOf('x86'))){
+		_alert(1,'系统升级','升级版本不对');
+		return false;
+	} else if ((-1 != lastcertname.indexOf('x64')) && (-1 == certname.indexOf('x64'))){
+		_alert(1,'系统升级','升级版本不对');
+		return false;
+	}
+	var index1 = lastcertname.indexOf('v');
+	var index2 = certname.indexOf('v');
+	var lastverstr = lastcertname.substr(index1, 4);
+	var curverstr = certname.substr(index2,4);
+	var lasttime = lastcertname.substr(-10);
+	var curtime = certname.substr(-10);
+	if(lastcertname.charAt(index1+4) == '.'){
+		var index3 = index1+5;
+		var lastver = parseInt(lastcertname.substr(index3,(lastcertname.indexOf('-',index3)-index3)),10);
+	} else {
+		var lastver = NaN;
+	}
+	if(certname.charAt(index2+4) == '.'){
+		var index4 = index2+5;
+		var curver = parseInt(certname.substr(index4,(certname.indexOf('-',index4)-index4)),10);
+	} else {
+		var curver = NaN;
+	}
+	if(((lastver > 10000)&&(curver<10000))||((lastver < 10000)&&(curver>10000))){
+		/*
+		if(confirm('升级版本与当前系统版本不同 提示是否升级?')){
+			flag=1;
+		}else{ 
+			return false;
+		}*/
+	}else{
+		if(lastverstr < curverstr){
+			flag = 1;
+		} else if((lastverstr == curverstr)&&(lastver < curver || (isNaN(lastver)&&!isNaN(curver)))){
+			flag = 1;
+		} else if((lastverstr == curverstr)&&(isNaN(lastver)&&isNaN(curver)||lastver == curver)&&lastcertname.substr(lastcertname.length-10) < (certname.substr(certname.length-17)).substr(0,10)){
+			flag = 1;
+		}
+	}
+	if((!certcheck.test(certname)) && (!certcheck_x86.test(certname)) && (!certcheck_x64.test(certname)) && (!certcheck_cloud.test(certname)) ){
+		_alert(1,'系统升级','请选择正确格式的系统升级文件');
+		return false;
+	}
+	/*
+	if(flag == 0){
+		if(!confirm('导入的不是新版本，是否继续升级?')){ return false;}
+	}*/
+	if(certname.indexOf('cloud') >=0){
+		document.frm1.cloud.value = 1;
+	}
+	//if(use_BH=='0'){
+		_showLoading();
+	//}
+	system_update_last();
+	
+}
+var loadLayer;
+var co = 1;
+var cc = 0;
+var system_type = '{{system_type}}';
+function _showLoading(){
+	if(use_BH == '0'){
+		loadLayer =  parent.parent.layer.open({
+			title:false,
+			closeBtn:false,
+			content:'<div class="progress"><div class="progress-bar progress-bar-info progress-bar-striped active" id="progress_width" style="width: 0%;"><div class="progress-value" id="progress_value">0%</div></div></div>',
+			btn:false,
+			skin:'loadingbar',
+			area:['400px','180px'],
+			move:false,
+			resize:false,
+			isOutAnim: false,
+			shade:[0.1,'#000'],
+			success: function(i){
+				co = 1;
+				cc = setInterval(function() {
+					if(co >50) clearInterval(cc);
+					$('#progress_width',parent.parent.document).css('width',co+'%');
+					$('#progress_value',parent.parent.document).text(co+'%');
+					co = co +1;
+				}, 200);
+			}
+			
+		})
+	}else{
+		var st = "正在升级中，请稍后......";
+		loadLayer = parent.parent.layer.open({
+				title:false,
+				closeBtn:false,
+				content:'<div id="Loading">'+st+'</div>',
+				btn:false,
+				skin:'loadingbar',
+				area:['150px','180px'],
+				move:false,
+				resize:false,
+				isOutAnim: false,
+				shade:[0.1,'#000']
+		})
+	
+	}
+}
+
+function _closeLoading(){
+	  parent.parent.layer.close(loadLayer);
+}
+function system_update_last(){
+	var formData_f = new FormData($("#frm1")[0]);
+	formData_f.append('a0',sess);
+	formData_f.append('a99',use_BH);
+	// formData_f.append('a99','0');
+	$.ajax({
+		url:'/bhost/sys_updata',
+		type:'post',
+		data:formData_f,
+		async: true,  
+		cache: false,
+		contentType: false,
+		processData: false,
+		success:function(result){
+			data = JSON.parse(result);
+			if (data.Result == true){
+				$("#fileinfo").val('');
+				$('#file_change').val('');
+				$('#file_v').val('');
+				var count = 0;
+				var if_ok = setInterval(function(){
+					if (count>30){    //超时
+						clearInterval(if_ok);
+						ifsystem_succ(1);
+						getsysinfo();
+						old_id == "";
+						//if(use_BH=='0'){
+							_closeLoading();
+						//}
+						return false;
+					}
+					count = count + 1;			
+					var sys_succ_info = ifsystem_succ(0);
+					if(sys_succ_info.indexOf("升级成功") >= 0){
+						clearInterval(if_ok);
+						if(parseInt($('#progress_width',parent.parent.document).css('width')) < 50){
+							clearInterval(cc);
+						}					
+						$('#progress_width',parent.parent.document).css('width','100%');
+						$('#progress_value',parent.parent.document).text('100%');
+						setTimeout(function(){ 
+							//if(use_BH=='0'){
+								_closeLoading();
+							//}
+							reboot();
+						}, 2000);
+						
+						return true;
+					}
+				},2000);
+			}else{
+				$('#progress_width',parent.parent.document).css('width','100%');
+				$('#progress_value',parent.parent.document).text('100%');
+				setTimeout(function(){ 
+					//if(use_BH=='0'){
+						_closeLoading();
+					//}
+					_alert(1,"系统升级","系统升级失败，失败原因："+data.info);
+				}, 2000);
+				
+			}
+		}	
+	});
+	
+}
+function reboot(){
+
+	$("#suggest").show();
+	getsysinfo();
+	old_id == "";
+	//if(use_BH=='0'){
+		_closeLoading();
+	//}
+	if(server_id == -1){
+		var oper ="重启系统：（所有服务器）";
+		var title = "系统升级成功,是否重启所有服务器的程序？";
+		var server_id_reboot = sys_select_str_id;
+	}else{
+		var oper ="重启系统：（服务"+server_id+"）";
+		var title = "系统升级成功,是否重启服务器"+server_id+"的程序？";
+		server_id_reboot = parseInt(server_id);
+	}
+	
+	//重启之后，建议清除浏览器缓存，以确保新功能正常使用;
+	layer.open({
+		type:1,
+		title:"系统升级",
+		content:'<div class="layer-alert"><i class="alert warning"></i>'+title+'</div>',
+		btn:['确&nbsp;&nbsp;定', '取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			layer.close(i);
+			
+			$.ajax({  
+				url:'/bhost/reboot_pid',
+				type:"post",
+				async:true,
+				cache:false,
+				data:{a0:sess,a1:server_id_reboot,o1:oper},  //默认是单机  
+				success:function(result){
+					result = JSON.parse(result);
+					if(result.Result){
+						_alert(0,"系统重启","重启成功");
+					}else{
+						_alert(1,"系统重启","重启失败："+result.ErrMsg);
+						return false;
+					}
+				}
+			})
+		},
+		btn2:function(i){
+			layer.close(i);
+			//_closeLoading();
+		}
+	});
+
+}
+function ifsystem_succ(edit){
+	var str_tmp = "";
+	var n = 0;
+	$.ajax({//获取查询搜索的角色数据
+		url: '/bhost/if_sys_succ',
+		type: "post",
+		async:false,
+		data: {se:sess,id:old_id,s1:server_id,count_str:count_str},
+		success: function(result) {
+			var result=eval("("+result+")");
+			if(result.Result == false){
+				_alert(1,'系统升级',result.info);
+				n = 1;
+				return false;
+			}
+			else{
+				if(edit) {
+					_alert(1,'系统升级',result.info);	
+					return false;
+				}
+				else {
+					str_tmp = result.info;
+					return true;
+				}
+				
+			}
+		}
+	})
+	if(n) return false;
+	return str_tmp
+}
+///获取上一次升级的信息
+function change_update(update_type){
+	var n = 0;
+	node_id = $("select[name='fileselect']").val();
+	$.ajax({//获取查询搜索的角色数据
+		url: '/bhost/change_update',
+		type: "post",
+		async:false,
+		data: {se:sess,update_type:update_type,node_id:node_id},
+		success: function(result) {
+			var result=eval("("+result+")");
+			if(result.Result == false){
+				if(result.info.indexOf('系统繁忙')>=0 || result.info.indexOf('非法访问')>=0 || result.info.indexOf('系统超时') >=0 ){
+					_alert(1,'系统升级',result.info,true);
+				}else{
+					_alert(1,'系统升级',result.info);
+				}	
+				n = 1;
+				return false;
+			}else{
+				$("#sys_version").text(result.version.sys_version);
+				sys_info = result.info.replace(/<br>/g,"\n")
+				$("#fileinfo").val(sys_info);
+			}
+		}
+	})
+	if(n) return false;
+}
+</script>

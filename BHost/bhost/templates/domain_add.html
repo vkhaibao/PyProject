@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+    <link rel="stylesheet" href="/manage/css/new-head.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<style>
+		.c-form-host .form-item .form-text2 {
+			width: 137px;
+			padding-right: 8px;
+		}
+		.ss{
+		    padding-bottom: 10px;
+		}
+	</style>
+</head>
+<body style="overflow:hidden;display:none;" class="bg-white">
+	<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+				<!--<h3 onclick="parent.reload();">AD域</h3>-->
+				<div class="manual-head" style="float:left;width:100px">
+    							<div class="manual-title" >
+       								 <span id="domain" style="cursor: pointer;">AD域</span>
+        							 <i class="domain_icon"></i>
+   								</div>
+							</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<!--添加或编辑-->
+		<div class="mainer">
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-form" style="padding-bottom:10px;">
+						<div class="form">	
+							<div class="form-item" >
+								<span class="form-tag"><em class="imp">*</em>名称：</span>
+								<div class="form-c">
+									<input type="text" class="form-text" id="d_n" name="d_n" maxlength="128" onblur="regCheck(this,nameReg);">
+									<i class="v-check"></i>
+									<p class="form-tip">特殊字符仅支持下划线、横杠、小数点</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="c-form c-form-host"style="width:780px;min-width:780px;padding-top:0px;">
+						<div class="form">
+							<div class="form-item form-item-100 " style="width:900px;font-size:16px;">
+								<span class="form-tag"style="width:192px;" ><em class="imp">*</em>服务器IP：</span>
+								<div id="ip_n" name="ip_n" class="form-c"style="padding-left:10px;    float: left;width:560px;">
+									<span class="ss ss-add">
+										<input id="ipInput" type="text" style="" class="form-text form-text2" onkeyup="/*showMsg(this);*/" onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9.]/g,'')">
+										<i class="ctr ctr-add" onclick="_addIp(this)" style="margin-top: 9px;margin-left: 3px;"></i>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="c-form perm_disabled">
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal"onclick="domain_add();">保&nbsp;&nbsp;存</a>
+							<!--
+							<a href="javascript:;" class="btn btn-normal" onclick="domain_list(0);">取&nbsp;&nbsp;消</a> 
+							-->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="bBtn" style="position: fixed;z-index: 5;">
+                                <a href="javascript:;" class="btn" style="float: right;" onclick="domain_list(0);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+                        </div>
+		</div>
+	</div>
+	<form action="/bhost/domain_handle" method="POST" name="frm_domain_add" id="frm_domain_add">
+			<input type="hidden" name="tasktype" id = "tasktype" value="{{ tasktype }}" />
+			<!--创建 编辑 列表-->
+			<input type="hidden" name="DomainId" id = "DomainId" value="{{ DomainId }}" />
+			<!--DomainId-->
+			<input type="hidden" name="paging" id = "paging" value="{{paging}}" />
+			<!--页码-->
+			<input type="hidden" name="search_typeall" id = "search_typeall" value="{{search_typeall}}" />
+			<!--search_typeall-->
+			<input type="hidden" name="e" id = "e" value="{{e}}" />
+			<!--e-->
+			<input type="hidden" name="se" id = "se" value="{{se}}" />
+			<!--f0-->
+	</form>
+<script>
+var perm={{perm}};
+if (perm==0) parent.parent.$('#nav-s1 a.active').click();
+else{
+	$('.bg-white').show();
+	if(perm==1){
+		$('.perm_disabled').remove();
+	}
+}
+var domain={
+	"DomainId":0,
+    "DomainName":"",
+    "ServerIP":""
+};
+var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+var ipReg = /(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+$(function(){
+	parent._switchBtn(0);//隐藏按钮
+	var tasktype = document.frm_domain_add.tasktype.value;
+	if(tasktype == "2"){			//如果是编辑已有的AD域
+		var DomainId=document.frm_domain_add.DomainId.value;
+		$.ajax({
+			url: "/bhost/get_domain_list",
+			type:"POST",
+			async:false,
+			data:{a0:$("input[name=se]").val(),a1:DomainId},
+			success:function(result){
+				var domain_result = JSON.parse(result);
+				if (domain_result.Result == true){
+					var domain_data = domain_result.info.data[0];
+					$("#d_n").val(domain_data.DomainName);                              
+					$("#d_n").attr("disabled",true);
+
+					var domain_data_ip = domain_data.ServerIP.split(";");
+					var inputArea = $("#ip_n").find("span[class='ss ss-add']");
+					// $.each(domain_data_ip,function(i,item){
+					// 	inputArea.after( createIPTag(item));
+					// });
+					for(var i=0;i<domain_data_ip.length-1;i++){
+						inputArea.after( createIPTag(domain_data_ip[i]));
+					}
+					$('#ipInput').val(domain_data_ip[i]);
+				}else{
+					_alert(1,'AD域',domain_result.ErrMsg);
+					return false;
+				}
+			}
+		});
+	}
+});
+//删除服务器ip
+function _delIp(obj){
+	var $c = $(obj).parent();
+	$c.fadeOut(function(){
+				$c.remove();
+			});
+}
+/*function showMsg(obj){//input回车触发事件
+	var code = event.keyCode;
+	if(code == 13){
+		_addIp($(obj).next('i'));
+	}
+}*/
+//加入服务器ip
+function _addIp(obj){
+	var isUnique = 1;
+	var inputVal = $("#ipInput").val().trim();
+
+	if(inputVal == ''){
+		_alert(2,'AD域','请输入服务器IP',$("#ipInput"));
+		return false;
+	}else if( wrongIPFormat(inputVal)){
+		_alert(1,'AD域','服务器IP格式不正确',$("#ipInput"));
+		return false;
+	}else{
+		$("#ip_n>span[class='ss']").each(function(){
+			ip_str = $(this).find("input").val();
+			if (ip_str == inputVal){
+				_alert(2,'AD域','服务器IP重复',$("#ipInput"));
+				isUnique = false;
+				return false;
+			}
+		});
+	}
+	if(isUnique){
+		$(obj).parent().after( createIPTag(inputVal));
+		$("#ipInput").val("");
+		$("#ipInput").focus();
+	}
+}
+
+//创建
+function domain_add(){
+	var ADName = $("#d_n").val();				//获得AD域名称
+	var $i = $("#d_n").next('i.v-check');	//获得AD域合法标志
+	if(ADName == ""){							//检查AD域名称是否为空
+		_alert(2,'AD域','请输入名称',$("#d_n"));
+		return false;
+	}
+	if(!nameReg.test(ADName)){					//检查AD域名称是否合法
+		_alert(1,'AD域','名称格式不正确',$("#d_n"));
+		return false;
+	}
+
+	var input_str = $("#ipInput").val().trim();			//获得ip输入框中的值
+	var enteredIP = $('#ip_n').find('span[class=ss]');	//获得已经输入的IP
+	var ipCount = enteredIP.length;						//以及它们的个数
+	
+	var ipBuf = [];	
+	if (input_str != "") {
+		if ( wrongIPFormat(input_str)) {
+			_alert(1,'AD域','服务器IP格式不正确',$("#ipInput"));
+			return false;
+		}
+		ipBuf.push(input_str);
+	} else if (ipCount == 0) {
+		_alert(2,'AD域',"请输入服务器IP",$("#ipInput"));
+		return false;
+	}
+
+	for (var i = 0; i < ipCount; ++i) {		//运行到for语句之前 input_str要么为空，要么是一个合法的ip
+		var inputBox = enteredIP.eq(i).find("input");
+		var ip_str = inputBox.val();
+
+		if ( wrongIPFormat(ip_str)){
+			inputBox.val('').val(ip_str);
+			_alert(1,'AD域','服务器IP格式不正确',inputBox);
+			return false;
+		}
+		if (ip_str == input_str){					//是否与输入框的值重复
+			$("#ipInput").val('').val(input_str);
+			_alert(2,'AD域','服务器IP重复',$("#ipInput"));
+			return false;
+		}	
+		if (ipBuf.indexOf(ip_str) != -1) {
+			inputBox.val('').val(ip_str);
+			_alert(2,'AD域','服务器IP重复',inputBox);
+			return false;
+		}
+		ipBuf.push(ip_str);
+	}
+	ipBuf.reverse();
+
+	domain.DomainId = document.frm_domain_add.DomainId.value;
+	domain.DomainName = ADName;
+	domain.ServerIP = ipBuf.join(';');
+	var msstr = aceg(JSON.stringify(domain),$("input[name=se]").val());
+	
+	$.ajax({
+		url: '/bhost/add_domain',
+		type: "POST",
+		async:false,
+		data: {a0:$("input[name=se]").val(),a1:JSON.stringify(domain),m1:msstr},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				$('.btn').blur();parent.layer.open({
+					type:1,
+					title: 'AD域',
+					content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn:['确&nbsp;&nbsp;定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					yes:function(i){
+						parent.layer.close(i);
+						domain_list(1,result.DomainId);
+					}
+				});	
+			}else{
+				_alert(1,'AD域',result.ErrMsg,$("#d_n"));
+				return false;
+			}
+		}
+	});
+}
+
+function wrongIPFormat(ipStr) {
+	if ( !ipReg.test(ipStr)) {
+		return true;
+	}
+	return ipStr == "0.0.0.0" || ipStr == "255.255.255.255";
+}
+
+function createIPTag(ipAddr){
+	var contentBuf = [];
+	contentBuf.push('<span class="ss">');
+	contentBuf.push('<input type="text" style="" class="form-text form-text2" value="' + ipAddr + '">');
+	contentBuf.push('<i class="ctr ctr-del" onclick="_delIp(this)" style="margin-top: 6px;margin-left: -5px;"></i>');
+	contentBuf.push('</span>');
+	return contentBuf.join('');
+}
+
+//显示列表页面
+function domain_list(num,id){
+		if(num==1){
+			$.ajax({
+				url: '/bhost/PGetRecordRownum',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(),a1: id,a2:14 },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						if(result.info%MAX_PAGE==0){
+							document.frm_domain_add.paging.value=parseInt(result.info/MAX_PAGE);
+						}else{
+							document.frm_domain_add.paging.value=parseInt(result.info/MAX_PAGE)+1;
+						}
+					}
+				}
+			});
+			document.frm_domain_add.search_typeall.value='';
+			document.frm_domain_add.e.value=':';
+		}
+		document.frm_domain_add.tasktype.value=3;
+		document.frm_domain_add.action = '/bhost/domain_handle'
+		document.frm_domain_add.submit();
+}
+
+$(function(){
+	
+	$("#domain").on("click",function(){
+		location.reload();
+	});
+        });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,2839 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+</head>
+<style>
+	.filter-select2 + .select2-container--default >.selection > .select2-selection--single{
+		border-bottom-left-radius: 0;
+		border-top-left-radius: 0;
+		margin-left: -1px;
+	}
+	.filter-select2 + .select2-container--default{
+		display: none;
+	}
+</style>
+<script>
+	var perm={{perm}};
+	if(perm==0){
+		parent.$('#nav-s1 a.active').click();
+	}
+</script>
+<body style="overflow:hidden;" class="bg-white">
+	<!--自动改密表-->
+	<div class="mainer" name="pwdauth" id="pwdauth">
+
+		<div class="container" id="one">
+			<div class="c-top">
+				<div class="c-title">
+					<!-- <a href="javascript:;" onclick="pwdauth_list();">
+						<h3>自动改密</h3>
+					</a> -->
+					<div class="manual-head" style="">
+						<div class="manual-title" id="" style="">
+								<span onclick="pwdauth_list();" style="">自动改密</span>
+								<i class="pwd_auth_icon" style=""></i>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<div class="c-cont">
+				<div class="c-wrap">
+					<div class="c-table " id="">
+						<div class="tab-t">
+							<div class="ctr" style="width:288px;">
+								<a id="one-1" href="javascript:;" class="btn btn-default" onclick="pwdauth_add();">创建</a>
+								<a id="one-2" href="javascript:;" class="btn btn-default" onclick="delete_list();">删除</a>
+								<a id="one-3" href="javascript:;" class="btn btn-default" onclick="click_all_list();">全选</a>
+								<a id="one-4" href="javascript:;" class="btn btn-default" onclick="pwdauth_page(0);clear_all();">刷新</a>
+							</div>
+							<script>
+								////console.log('perm:'+perm);
+								if(perm==1){
+									$('#one-1').remove();
+									$('#one-2').remove();
+									$('#one-3').remove();
+								}
+							</script>
+							<div class="filter">
+								<div class="search">
+									<select name="pwdauth_select" id="pwdauth_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="PwdModPlanName">名称</option>
+											<option value="ReviewStatus">是否审核</option>
+											<option value="Status">执行结果</option>
+											<option value="PwdModStrategyName">策略</option>
+											<option value="InvalidLog">详细信息</option>
+											<option value="Enabled">状态</option>
+										</select>
+
+									<input type="text" style="/*display:none;*/padding-right: 22px;"
+									class="filter-text" placeholder="输入关键字" 
+									name="pwdauth_text" id="pwdauth_text" maxlength="128" 
+									onchange="if($('#pwdauth_text').val()==''){$('#pwdauth_text_check').hide();}else{$('#pwdauth_text_check').show();}"
+									onkeyup="if($('#pwdauth_text').val()==''){$('#pwdauth_text_check').hide();}else{$('#pwdauth_text_check').show();}"
+									onblur="if($('#pwdauth_text').val()=='' && search_typeall_new!=''){search_typeall_new='';_addFilter(this,false,1);}"
+									onkeydown="if($('#pwdauth_text').val()==''){$('#pwdauth_text_check').hide();}else{$('#pwdauth_text_check').show();}; if (event.keyCode == 13){_addFilter(this,false);return false;} else return; ">
+									<i class="v-check v-wrong" id="pwdauth_text_check" 
+										onclick="_clearFilter(this,1)" 
+										style="display:none;cursor: pointer;float: left;position: static;"></i>
+									<select name="ReviewStatus" id="ReviewStatus" style="" class="filter-select filter-select2">
+										<option value="all" selected>所有</option>
+										<option value="0">无需审核</option>
+										<option value="1">需要审核</option>
+										<option value="2">审核通过</option>
+										<option value="3">审核不通过</option>
+									</select>
+									<select name="Status" id="Status" style="width: 227px" class="filter-select filter-select2">
+										<option value="all" selected>所有</option>
+										<option value="0">准备执行</option>
+										<option value="1">生成预备密码</option>
+										<option value="10">正在审核</option>
+										<option value="2">生成密码完成，待发送</option>
+										<option value="3">发送预备密码文件完成，待确认</option>
+										<option value="4">确认预备密码文件</option>
+										<option value="5">执行改密</option>
+										<option value="6">执行完成</option>
+										<option value="7">发送改密文件完成，待确认</option>
+										<option value="8">确认</option>
+										<option value="9">任务失败</option>
+									</select>
+									<select name="Enabled" id="Enabled" style="" class="filter-select filter-select2">
+										<option value="all" selected>所有</option>
+										<option value="0">启用</option>
+										<option value="1">停用</option>
+									</select>
+									<button class="btn filter-btn" onclick="_addFilter(this,false);"><i class="add-filter"></i></button>
+									<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+								</div>
+								<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+									<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+								</div>
+								<div class="selector selector-multiple" id="filterWW" style="display:none;">
+									<span class="ww">搜索条件</span>
+									<ul>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="box-table" id="pwdauth_tablediv">
+							<table cellpadding="0" cellspacing="0" id="pwdauth_table">
+								<thead>
+									<tr>
+										<th width="1"><input type="checkbox" class="form-checkbox" id="check_one_page" /></th>
+										<th width='80'>名称</th>
+										<th width='60'>是否审核</th>
+										<th style="width:20%">执行结果</th>
+										<th style="width:20%">策略</th>
+										<th width=''>详细信息</th>
+										<th width='30'>状态</th>
+										<th width="105"></th>
+									</tr>
+								</thead>
+								<script>
+									if (perm==1){
+										$('#pwdauth_table thead th').eq(0).hide();
+										$('#pwdauth_table thead th').eq(7).attr('width',55);
+									}
+								</script>
+								<tbody name="pwdauth_list" id="pwdauth_list">
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-i">
+							<div class="il">
+								每页显示<span id="page_nums">10</span>条 总数：<span id="pwdauth_total">0</span><span> 选中：</span></span><span class="sum">0</span>
+							</div>
+							<script>
+								if(perm==1){
+									$('#pwdauth_total').next('span').remove();
+									$('#pwdauth_total').next('span').remove();
+								}
+							</script>
+							<div class="ipage">
+								<a href="javascript:;" class="nav2 begin" id="pwdauth_begin" onclick="pwdauth_page(0.1);"><i></i></a>
+								<a href="javascript:;" class="nav prev" id="pwdauth_prev" onclick="pwdauth_page(-1);"><i></i></a>
+								<input type="text" id="pwdauth_page" value="1" onchange="showMsg();" onblur="showMsg();">/&nbsp;<span id="pwdauth_pages">1</span>
+								<a href="javascript:;" class="nav next" id="pwdauth_next" onclick="pwdauth_page(1);"><i></i></a>
+								<a href="javascript:;" class="nav2 end" id="pwdauth_end" onclick="pwdauth_page(0.9);"><i></i></a>
+							</div>
+						</div>
+					</div>
+
+					<div class="clearfix"></div>
+					<!--
+					<div class="btns">
+						<a href="javascript:;" class="btn btn-normal" onclick="back();">返&nbsp;&nbsp;回</a>
+					</div>
+					-->
+					<div id="bBtn" style="position: fixed;z-index:5;">
+						<a href="javascript:;" class="btn" style="float: right;" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container" id="two" style="display:none;">
+			<div class="c-top">
+				<div class="c-title">
+					<!-- <a href="javascript:;" onclick="go_pwdtask();">
+						<h3>改密任务</h3>
+					</a> -->
+					<div class="manual-head" style="">
+						<div class="manual-title" id="" style="">
+								<span onclick="go_pwdtask();" style="">改密任务</span>
+								<i class="pwd_tack_icon" style=""></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="c-cont">
+				<div class="c-wrap">
+					<div class="c-table " id="">
+						<div class="tab-t">
+							<div class="ctr" style="width:288px;">
+								<a id="two-1" href="javascript:;" class="btn btn-default" onclick="delete_list_pwdtask();">删除</a>
+								<a id="two-2" href="javascript:;" class="btn btn-default" onclick="click_all_list_pwdtask();">全选</a>
+								<a id="two-3" href="javascript:;" class="btn btn-default" onclick="pwdtask_page(0);clear_all_pwdtask();">刷新</a>
+							</div>
+							<script>
+								if(perm==1){
+									$('#two-1').remove();
+									$('#two-2').remove();
+								}
+							</script>
+							<div class="filter">
+								<div class="search">
+									<select name="pwdtask_select" id="pwdtask_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="pwdmodplanname">名称</option>
+											<option value="ReviewStatus">是否审核</option>
+											<option value="Status">执行结果</option>
+											<option value="ExecuteUserName">管理员</option>
+											<option value="FailMsg">详细信息</option>
+										</select>
+
+									<input type="text"  style="/*display:none;*/padding-right: 22px;"  
+									class="filter-text" placeholder="输入关键字" 
+									name="pwdtask_text" id="pwdtask_text" maxlength="128"  
+									onchange="if($('#pwdtask_text').val()==''){$('#pwdtask_text_check').hide();}else{$('#pwdtask_text_check').show();}"
+									onkeyup="if($('#pwdtask_text').val()==''){$('#pwdtask_text_check').hide();}else{$('#pwdtask_text_check').show();}"
+									onblur="if($('#pwdtask_text').val()=='' && search_typeall_new_pwdtask!=''){search_typeall_new_pwdtask='';_addFilter_pwdtask(this,false,1);}"
+									onkeydown="if($('#pwdtask_text').val()==''){$('#pwdtask_text_check').hide();}else{$('#pwdtask_text_check').show();}; if (event.keyCode == 13){_addFilter_pwdtask(this,false);return false;} else return; ">
+									<i class="v-check v-wrong" id="pwdtask_text_check" 
+										onclick="_clearFilter_pwdtask(this,1)" 
+										style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<select name="ReviewStatus_pwdtask" id="ReviewStatus_pwdtask" style="" class="filter-select filter-select2">
+											<option value="all" selected>所有</option>
+											<option value="0">无需审核</option>
+											<option value="1">需要审核</option>
+											<option value="2">审核通过</option>
+											<option value="3">审核不通过</option>
+										</select>
+										<select name="Status_pwdtask" id="Status_pwdtask" style="width: 227px" class="filter-select filter-select2">
+											<option value="all" selected>所有</option>
+											<option value="0">准备执行</option>
+											<option value="1">生成预备密码</option>
+											<option value="10">正在审核</option>
+											<option value="2">生成密码完成，待发送</option>
+											<option value="3">发送预备密码文件完成，待确认</option>
+											<option value="4">确认预备密码文件</option>
+											<option value="5">执行改密</option>
+											<option value="6">执行完成</option>
+											<option value="7">发送改密文件完成，待确认</option>
+											<option value="8">确认</option>
+											<option value="9">任务失败</option>
+										</select>
+										<button class="btn filter-btn" onclick="_addFilter_pwdtask(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter_pwdtask(this,true)"><i class="append-filter"></i></button>
+								</div>
+								<div class="search" id="clearFilter_pwdtask" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter_pwdtask(this)"><i class="clear-filter"></i></button>
+									</div>
+								<div class="selector selector-multiple" id="filterWW_pwdtask" style="display:none;">
+									<span class="ww">搜索条件</span>
+									<ul>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="box-table" id="pwdtask_tablediv">
+							<table cellpadding="0" cellspacing="0" id="pwdtask_table">
+								<thead>
+									<tr>
+										<th width="50"><input type="checkbox" class="form-checkbox" id="check_one_page_pwdtask" /></th>
+										<th>名称</th>
+										<th width='70'>是否审核</th>
+										<th width='196'>执行结果</th>
+										<th>管理员</th>
+										<th width="50">总数</th>
+										<th>详细信息</th>
+										<th width="80"></th>
+									</tr>
+								</thead>
+								<script>
+									if(perm==1){
+										$('#pwdtask_table thead th').eq(0).hide();
+										$('#pwdtask_table thead th').eq(7).attr('width',25);
+									}
+								</script>
+								<tbody name="pwdtask_list" id="pwdtask_list">
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-i">
+							<div class="il">
+								每页显示<span id="page_nums_pwdtask">10</span>条 总数：<span id="pwdtask_total">0</span><span> 选中：</span><span class="sum">0</span>
+							</div>
+							<script>
+								if(perm==1){
+									$('#pwdtask_total').next('span').remove();
+									$('#pwdtask_total').next('span').remove();
+								}
+							</script>
+							<div class="ipage">
+								<a href="javascript:;" class="nav2 begin" id="pwdtask_begin" onclick="pwdtask_page(0.1);"><i></i></a>
+								<a href="javascript:;" class="nav prev" id="pwdtask_prev" onclick="pwdtask_page(-1);"><i></i></a>
+								<input type="text" id="pwdtask_page" value="1" onchange="showMsg_pwdtask();" onblur="showMsg_pwdtask();">/&nbsp;<span id="pwdtask_pages">1</span>
+								<a href="javascript:;" class="nav next" id="pwdtask_next" onclick="pwdtask_page(1);"><i></i></a>
+								<a href="javascript:;" class="nav2 end" id="pwdtask_end" onclick="pwdtask_page(0.9);"><i></i></a>
+							</div>
+						</div>
+					</div>
+
+					<div class="clearfix"></div>
+					<!--
+					<div class="btns">
+						<a href="javascript:;" class="btn btn-normal" onclick="back_pwdtask();">返&nbsp;&nbsp;回</a>
+					</div>
+					-->
+					<div id="bBtn" style="position: fixed;z-index:5;">
+						<a href="javascript:;" class="btn" style="float: right;" onclick="back_pwdtask();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container" id="three" style="display:none;">
+			<div class="c-top">
+				<div class="c-title">
+					<!-- <a href="javascript:;" onclick="go_pwdresult();">
+						<h3>改密结果</h3>
+					</a> -->
+					<div class="manual-head" style="">
+						<div class="manual-title" id="" style="">
+								<span onclick="go_pwdresult();" style="">改密结果</span>
+								<i class="pwd_result_list_icon" style=""></i>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="c-cont">
+				<div class="c-wrap">
+					<div class="c-table">
+						<div class="tab-t">
+							<div class="ctr" style="width:288px;">
+								<a href="javascript:;" class="btn btn-default" onclick="click_all_list_pwdresult();">全选</a>
+								<a href="javascript:;" class="btn btn-default" onclick="down_load();">下载</a>
+								<a href="javascript:;" class="btn btn-default" onclick="pwdresult_page(0);clear_all_pwdresult();">刷新</a>
+							</div>
+
+							<div class="filter">
+								<div class="search">
+									<select name="pwdresult_select" id="pwdresult_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="hostip">IP</option>
+											<option value="hostname">主机</option>
+											<option value="protocolname">协议</option>
+											<option value="accountname">账号</option>
+											<option value="username">管理员</option>
+											<option value="Status">执行结果</option>
+										</select>
+
+									<input type="text" style="/*display:none;*/padding-right: 22px;"  
+									class="filter-text" placeholder="输入关键字" 
+									name="pwdresult_text" id="pwdresult_text" maxlength="128" 
+									onchange="if($('#pwdresult_text').val()==''){$('#pwdresult_text_check').hide();}else{$('#pwdresult_text_check').show();}"
+									onkeyup="if($('#pwdresult_text').val()==''){$('#pwdresult_text_check').hide();}else{$('#pwdresult_text_check').show();}"
+									onblur="if($('#pwdresult_text').val()=='' && search_typeall_new_pwdresult!=''){search_typeall_new_pwdresult='';_addFilter_pwdresult(this,false,1);}"
+									onkeydown="if($('#pwdresult_text').val()==''){$('#pwdresult_text_check').hide();}else{$('#pwdresult_text_check').show();}; if (event.keyCode == 13){_addFilter_pwdresult(this,false);return false;} else return; ">
+									<i class="v-check v-wrong" id="pwdresult_text_check" 
+										onclick="_clearFilter_pwdresult(this,1)" 
+										style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<select name="Status_pwdresult" id="Status_pwdresult" style="width: 141px" class="filter-select filter-select2">
+											<option value="all" selected>所有</option>
+											<option value="0">准备</option>
+											<option value="1">生成预备密码完成</option>
+											<option value="2">可以执行改密</option>
+											<option value="3">正在执行改密</option>
+											<option value="4">成功</option>
+											<option value="5">登录失败</option>
+											<option value="6">改密失败</option>
+											<option value="7">确认失败</option>
+											<option value="8">域账号已改密</option>
+										</select>
+									<button class="btn filter-btn" onclick="_addFilter_pwdresult(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter_pwdresult(this,true)"><i class="append-filter"></i></button>
+									
+								</div>
+								<div class="search" id="clearFilter_pwdresult" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter_pwdresult(this)"><i class="clear-filter"></i></button>
+									</div>
+								<div class="selector selector-multiple" id="filterWW_pwdresult" style="display:none;">
+									<span class="ww">搜索条件</span>
+									<ul>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="box-table" id="pwdresult_list_box_div">
+							<table cellpadding="0" cellspacing="0">
+								<thead>
+									<tr>
+											<th width="50">
+											<input type="checkbox" class="form-checkbox" id="check_one_page_pwd_result" />
+											</th>
+											<th width='140'>最后更新时间</th>
+											<th>主机</th>
+											<th width='60'>协议</th>
+											<th>账号</th>
+											<th>管理员</th>
+											<th>执行结果</th>
+											<th width="25"></th>
+									</tr>
+								</thead>
+
+								<tbody name="pwdresult_list" id="pwdresult_list">
+								</tbody>
+							</table>
+						</div>
+						<div class="tab-i">
+							<div class="il">
+								每页显示<span id="page_nums_pwdresult">10</span>条 总数：<span id="pwdresult_total">0</span> 选中：<span class="sum">0</span>
+							</div>
+
+							<div class="ipage">
+								<a href="javascript:;" class="nav2 begin" id="pwdresult_begin" onclick="pwdresult_page(0.1);"><i></i></a>
+								<a href="javascript:;" class="nav prev" id="pwdresult_prev" onclick="pwdresult_page(-1);"><i></i></a>
+                                <input type="text" maxlength="5" id="pwdresult_page" value="1" onchange="showMsg_pwdresult();change_input_width();" onblur="showMsg_pwdresult();change_input_width();"onkeyup="change_input_width(this);" onkeydown="change_input_width(this);">/&nbsp;<span id="pwdresult_pages">1</span>
+								<a href="javascript:;" class="nav next" id="pwdresult_next" onclick="pwdresult_page(1);"><i></i></a>
+								<a href="javascript:;" class="nav2 end" id="pwdresult_end" onclick="pwdresult_page(0.9);"><i></i></a>
+							</div>
+						</div>
+					</div>
+
+					<div class="clearfix"></div>
+					<div id="bBtn" style="position: fixed;z-index:5;">
+						<a href="javascript:;" class="btn" style="float: right;" onclick="back_pwdresult();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<form action="/bhost/get_pwdauth_list" method="POST" name="frm_pwdauth" id="frm_pwdauth">
+		<input type="hidden" name="tasktype" id="tasktype" value="{{tasktype}}" />
+		<!--创建 编辑 列表-->
+		<input type="hidden" name="a" id="a" value="{{a}}" />
+		<!--需要查询id-->
+		<input type="hidden" name="c" id="c" value="{{c}}" />
+		<!--页码-->
+		<input type="hidden" name="d" id="d" value="{{d}}" />
+		<!--search_typeall-->
+		<input type="hidden" name="e" id="e" value="{{e}}" />
+		<!--页码paging-->
+		<input type="hidden" name="f" id="f" value="{{f}}" />
+		<!--search_typeall-->
+		<input type="hidden" name="us" id="us" value="{{us}}" />
+		<!--us-->
+		<input type="hidden" name="se" id="se" value="{{se}}" />
+		<!--se-->
+	</form>
+
+
+	<script>
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+		$('#pwdauth_select').parents('div.search').hide();
+		$('.filter-select').select2({ minimumResultsForSearch: -1 });
+		$('#pwdauth_select').on('change',function () {
+			var pwdauth_select=$('#pwdauth_select').val();
+			switch (pwdauth_select) {
+				case 'Enabled':
+					$('#pwdauth_text').hide();
+					$('#Enabled').next('.select2').show();
+					$('#ReviewStatus').next('.select2').hide();
+					$('#Status').next('.select2').hide();
+					break;
+				case 'ReviewStatus':
+					$('#pwdauth_text').hide();
+					$('#Enabled').next('.select2').hide();
+					$('#ReviewStatus').next('.select2').show();
+					$('#Status').next('.select2').hide();
+					break;
+				case 'Status':
+					$('#pwdauth_text').hide();
+					$('#Enabled').next('.select2').hide();
+					$('#ReviewStatus').next('.select2').hide();
+					$('#Status').next('.select2').show();
+					break;
+				default:
+					$('#pwdauth_text').show();
+					$('#Enabled').next('.select2').hide();
+					$('#ReviewStatus').next('.select2').hide();
+					$('#Status').next('.select2').hide();
+					break;
+			}
+		});
+		$('#pwdauth_select').val('all').trigger('change');
+		$('#pwdauth_select').parents('div.search').show();
+		$('#pwdtask_select').on('change',function () {
+			var pwdtask_select=$('#pwdtask_select').val();
+			switch (pwdtask_select) {
+				case 'ReviewStatus':
+					$('#pwdtask_text').hide();
+					$('#ReviewStatus_pwdtask').next('.select2').show();
+					$('#Status_pwdtask').next('.select2').hide();
+					break;
+				case 'Status':
+					$('#pwdtask_text').hide();
+					$('#ReviewStatus_pwdtask').next('.select2').hide();
+					$('#Status_pwdtask').next('.select2').show();
+					break;
+				default:
+					$('#pwdtask_text').show();
+					$('#ReviewStatus_pwdtask').next('.select2').hide();
+					$('#Status_pwdtask').next('.select2').hide();
+					break;
+			}
+		});
+		$('#pwdtask_select').val('all').trigger('change');
+		$('#pwdresult_select').on('change',function () {
+			var pwdresult_select=$('#pwdresult_select').val();
+			switch (pwdresult_select) {
+				case 'Status':
+					$('#pwdresult_text').hide();
+					$('#Status_pwdresult').next('.select2').show();
+					break;
+				default:
+					$('#pwdresult_text').show();
+					$('#Status_pwdresult').next('.select2').hide();
+					break;
+			}
+		});
+		$('#pwdresult_select').val('all').trigger('change');
+	</script>
+	<!--one-->
+	<script type="text/javascript">
+		var delect_str = new Array();
+		var check_num = 0;
+		var total_all_r = 0;
+		//总数
+		var fenye_r = 0;
+		//总页码
+		var pwdauth_array = null;
+		var search_typeall_r = document.frm_pwdauth.d.value;
+		//关键字
+		function back() {
+			document.frm_pwdauth.tasktype.value = 4;
+			document.frm_pwdauth.action = '/bhost/index';
+			document.frm_pwdauth.submit();
+		}
+		var loginusercode = window.parent.document.frm.us.value;
+		$(function () {
+			_initSize();
+			if (search_typeall_r != "") {
+				var v1 = "";
+				var id = "";
+				var str_new = "";
+				var search_typeall_str = search_typeall_r.split('\t');
+				$.each(search_typeall_str, function (i, item) {
+					if (item == "") {
+						return false;
+					}
+					var str_sea = item.split("-");
+					v1 = $('#pwdauth_select').find('option[value=' + str_sea[0] + ']').text();
+					id=item;
+					if(str_sea[0]=='ReviewStatus' && str_sea[1]=='需要审核'){
+						$('#Status option[value=1]').remove();
+					}
+					else if(str_sea[0]=='ReviewStatus' && str_sea[1]!='需要审核'){ 
+						$('#Status option[value=10]').remove();
+					}
+					else if(str_sea[0]=='Status' && str_sea[1]=='正在审核'){
+						$('#pwdauth_select option[value=ReviewStatus]').remove();
+					}
+					// <!-- switch (str_sea[0]) { -->
+					// 	<!-- case 'ReviewStatus': -->
+					// 	<!-- case 'Status': -->
+					// 	<!-- case 'Enabled': -->
+					// 		<!-- $('#pwdauth_select option[value='+str_sea[0]+']').remove(); -->
+					// 		<!-- if(str_sea[0]=='Status' && str_sea[1]=='正在审核'){ -->
+					// 			<!-- $('#pwdauth_select option[value=ReviewStatus]').remove(); -->
+					// 		<!-- } -->
+					// 		<!-- else if(str_sea[0]=='ReviewStatus' && str_sea[1]!='需要审核'){ -->
+					// 			<!-- $('#Status option[value=10]').remove(); -->
+					// 		<!-- } -->
+					// 		<!-- else if(str_sea[0]=='ReviewStatus' && str_sea[1]=='需要审核'){ -->
+					// 			<!-- $('#Status option[value=1]').remove(); -->
+					// 		<!-- } -->
+					// 		<!-- break; -->
+					// <!-- } -->
+					str_sea[0] = v1;
+					str_new = str_sea.join('-');
+					$('#filterWW>ul').append('<li><span style = "display:none">' + id + '</span><span class="ww" title="'+str_new+'">' + str_new + '</span><i class="del" onclick="_delFilter(this);"></i></li>');
+					selView();
+				});
+			}
+			var search_typeall_select=document.frm_pwdauth.e.value.substr(document.frm_pwdauth.e.value.indexOf(':')+1,document.frm_pwdauth.e.value.length-1);
+			if(search_typeall_select!=''){
+				var array=new Array();
+				array[0]=search_typeall_select.substr(0,search_typeall_select.indexOf('-'));
+				array[1]=search_typeall_select.substr(search_typeall_select.indexOf('-')+1,search_typeall_select.length);
+				$('#pwdauth_select').val(array[0]).trigger('change');
+				switch (array[0]) {
+					case 'ReviewStatus':
+					case 'Status':
+					case 'Enabled':
+						$('#'+array[0]).val(array[1]).trigger('change');
+						break;
+					default:
+						$('#pwdauth_text').val(array[1]).trigger('change');
+						break;
+				}
+			}
+			//输入数字
+			$("#pwdauth_page").bind('keydown', function (e) {
+				DigitInput(e);
+			});
+			//页码显示
+			$("#page_nums").val(MAX_PAGE);
+			//list show
+			show_pwdauth_list();
+			parent._switchBtn(1);//显示按钮
+			//tr双击事件
+			$("#pwdauth_list").on('dblclick', 'tr', function (e) {
+				x = e.target;
+				if (x.nodeName != 'A' && x.nodeName != 'INS') {
+					var id = $(this).find("td");
+					var state_value=$(id).eq(5).text();
+					var r_state_value=$(id).eq(7).text();
+					////console.log(state_value);
+					if((r_state_value=='停用')){
+					// if((r_state_value=='停用')||(state_value=='确认' || state_value=='准备执行' || state_value=='任务失败')){
+						var edit_item = $(id).eq(1).text();
+						document.frm_pwdauth.a.value = edit_item;
+						document.frm_pwdauth.tasktype.value = 2;
+						document.frm_pwdauth.action = '/bhost/pwd_trust';
+						document.frm_pwdauth.d.value = search_typeall_r;
+						var select_id=$('#pwdauth_select').val();
+						var select_value=null;
+						switch (select_id) {
+							case 'ReviewStatus':
+							case 'Status':
+							case 'Enabled':
+								select_value=$('#'+select_id).val();
+								break;
+							default:
+								select_value=$('#pwdauth_text').val();
+								break;
+						}
+						document.frm_pwdauth.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+						document.frm_pwdauth.submit();
+					}
+				}
+			}).on("click", "tr", function (e) {
+				x = e.target;
+				//删除按钮
+				if (x.id == 'del') {
+					var id = $(this).find("td");
+					var input = $(this).find("input");
+					$('.btn').blur(); parent.layer.open({
+						type: 1,
+						title: '自动改密',
+						content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+						btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							$('.btn').blur(); parent.layer.close(i);
+							var delete_item = $(id).eq(1).text();
+							$(input).iCheck('uncheck');
+							delete_fun(delete_item);
+						}
+					});
+				}
+				//编辑按钮
+				else if (x.id == 'edit') {
+					var id = $(this).find("td");
+					//if (confirm("你确定编辑吗？")) {
+					var input  = $(this).find("input")
+					var edit_item = $(id).eq(1).text();
+					document.frm_pwdauth.a.value = edit_item;
+					document.frm_pwdauth.tasktype.value = 2;
+					document.frm_pwdauth.d.value = search_typeall_r;
+					document.frm_pwdauth.action = '/bhost/pwd_trust';
+					var select_id=$('#pwdauth_select').val();
+					var select_value=null;
+					switch (select_id) {
+						case 'ReviewStatus':
+						case 'Status':
+						case 'Enabled':
+							select_value=$('#'+select_id).val();
+							break;
+						default:
+							select_value=$('#pwdauth_text').val();
+							break;
+					}
+					document.frm_pwdauth.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+					document.frm_pwdauth.submit();
+
+					//}
+				}
+				//显示改密任务列表
+				else if (x.id == 'icon7') {
+					var id = $(this).find("td");
+					var edit_item = $(id).eq(1).text();
+					id_pwdtask = edit_item;
+					//document.frm_pwdauth.tasktype.value = 4;
+					search_typeall_r_pwdtask = '';
+					search_typeall_new_pwdtask='';
+					paging_pwdtask=1;
+					delect_str_pwdtask=new Array();
+					$('#filterWW_pwdtask ul').empty();
+					selView_pwdtask();
+					$('#pwdtask_text').val('');
+					$('#pwdtask_select').val('all').trigger('change');
+					if($('#pwdtask_select option[value=ReviewStatus]').length==0){
+						$('#pwdtask_select option[value=pwdmodplanname]').after('<option value="ReviewStatus">是否审核</option>');
+					}
+					if($('#pwdtask_select option[value=Status]').length==0){
+						$('#pwdtask_select option[value=ReviewStatus]').after('<option value="Status">执行结果</option>');
+					}
+					if($('#Status_pwdtask option[value=1]').length==0){
+						$('#Status_pwdtask option[value=0]').after('<option value="1">生成预备密码</option>');
+					}
+					if($('#Status_pwdtask option[value=10]').length==0){
+						$('#Status_pwdtask option[value=1]').after('<option value="10">正在审核</option>');
+					}
+					$('#pwdtask_text_check').hide();
+					$(this).trigger('click');
+					show_pwdtask_list();
+					$('#one').hide();
+					$('#two').show();
+					$('#three').hide();
+					//list show
+				}
+				else if (x.id == 'start_icon') {
+					var id = $(this).find("td");
+					var edit_item = $(id).eq(1).text();
+					var edit_name=$(id).eq(2).text();
+					$.ajax({
+						url: "/bhost/pwd_auth_start_plan",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val(),a1:edit_item,a2:edit_name},
+						success: function (result) {
+							var result=JSON.parse(result);
+							if(result.Result){
+								pwdauth_page(0);
+							}else{
+								_alert(2,'自动改密',result.ErrMsg);
+								return false;
+							}
+						}
+					});
+				}
+				else if (x.id == 'stop_icon') {
+					var id = $(this).find("td");
+					var edit_item = $(id).eq(1).text();
+					var edit_name=$(id).eq(2).text();
+					$.ajax({
+						url: "/bhost/pwd_auth_stop_plan",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val(),a1:edit_item,a2:edit_name},
+						success: function (result) {
+							var result=JSON.parse(result);
+							if(result.Result){
+								pwdauth_page(0);
+							}else{
+								_alert(2,'自动改密',result.ErrMsg);
+								return false;
+							}
+						}
+					});
+				}
+			});
+			$('#check_one_page').on('ifClicked', function (e) {
+				if (!$('#check_one_page').is(':checked')) {
+					$("#pwdauth_list tr").find("input[disabled!=disabled]").iCheck('check');
+				} else {
+					$("#pwdauth_list tr").find("input").iCheck('uncheck');
+				}
+			});
+			$("#pwdauth_list").on("ifChecked", function (e) {
+				check_num++;
+				$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num);
+				if ($("#pwdauth_table tbody tr").find("input:checked").length == $("#pwdauth_table tbody tr").find("input[disabled!=disabled]").length) {
+					$('#check_one_page').iCheck('check');
+				}
+			}).on("ifUnchecked", function (e) {
+				check_num--;
+				$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num);
+				$('#check_one_page').iCheck('uncheck');
+			});
+		});
+		function _initSize() {
+			var w = $(window).width();
+			$('#pwdauth_table thead th').eq(5).css('width',"30%");
+			$('#pwdtask_table thead th').eq(6).css('width',(w-1200)/720*280+170);
+		}
+		$(window).resize(function () {
+			_initSize();
+		});
+		function clear_all_pwdresult() {
+			$("#pwdresult_list tr").find("input").iCheck('uncheck');
+			delect_save_pwd_result = new Array();
+			check_num = 0;
+			$('#pwdresult_total').next("span.sum").text(check_num);
+		}
+		function click_all_list_pwdresult() {
+			delect_save_pwdresult();
+			if (pwd_result_array.length == delect_save_pwd_result.length) {
+				delect_save_pwd_result = new Array();
+			} else {
+				delect_save_pwd_result = pwd_result_array;
+			}
+			show_pwdresult_list();
+		}
+		//显示创建页面
+		function pwdauth_add() {
+			document.frm_pwdauth.tasktype.value = 1;
+			document.frm_pwdauth.a.value = 0;
+			document.frm_pwdauth.action = '/bhost/pwd_trust';
+			document.frm_pwdauth.d.value = search_typeall_r;
+			var select_id=$('#pwdauth_select').val();
+			var select_value=null;
+			switch (select_id) {
+				case 'ReviewStatus':
+				case 'Status':
+				case 'Enabled':
+					select_value=$('#'+select_id).val();
+					break;
+				default:
+					select_value=$('#pwdauth_text').val();
+					break;
+			}
+			document.frm_pwdauth.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+			//document.frm_pwdauth.search_typeall.value=search_typeall_r;
+			document.frm_pwdauth.submit();
+		}
+		function go_pwdtask() {
+			search_typeall_r_pwdtask = '';
+			search_typeall_new_pwdtask='';
+			paging_pwdtask=1;
+			$('#one').hide();
+			$('#two').show();
+			$('#three').hide();
+			$('#filterWW_pwdtask ul').empty();
+			selView_pwdtask();
+			$('#pwdtask_text').val('');
+			$('#pwdtask_select').val('all').trigger('change');
+			if($('#pwdtask_select option[value=ReviewStatus]').length==0){
+				$('#pwdtask_select option[value=pwdmodplanname]').after('<option value="ReviewStatus">是否审核</option>');
+			}
+			if($('#pwdtask_select option[value=Status]').length==0){
+				$('#pwdtask_select option[value=ReviewStatus]').after('<option value="Status">执行结果</option>');
+			}
+			if($('#Status_pwdtask option[value=1]').length==0){
+				$('#Status_pwdtask option[value=0]').after('<option value="1">生成预备密码</option>');
+			}
+			if($('#Status_pwdtask option[value=10]').length==0){
+				$('#Status_pwdtask option[value=1]').after('<option value="10">正在审核</option>');
+			}
+			$('#pwdtask_text_check').hide();
+			//list show
+			show_pwdtask_list();
+		}
+		//选中字段存储
+		function delect_save() {
+			$(">tr", "#pwdauth_list").each(function () {
+				var input = $(this).find("input[type='checkbox']");
+				var delect_item = $(">td", this).eq(1).text();
+				var index=$.inArray(delect_item,delect_str);
+				if ($(input).is(':checked')) {
+					if(index<0){
+						delect_str.push(delect_item);
+					}
+				} else {
+					if(index>=0){
+						delect_str.splice(index,1);
+					}
+				}
+			});
+		}
+		//check显示
+		function check_show() {
+			$(">tr", "#pwdauth_list").each(function () {
+				var input = $(this).find("input[type='checkbox']");
+				var check_id = $(">td", this).eq(1).text();
+				if($.inArray(check_id,delect_str)>=0){
+					$(input).iCheck('check');
+				}
+			});
+		}
+		//input回车触发事件
+		function showMsg() {
+			delect_save();
+			var cur = $("#pwdauth_page").val();
+			cur=cur.replace(/\D/g, "");
+			if(cur=='' || parseInt(cur) < 1){
+				cur=1;
+			}else if (parseInt(cur)>fenye_r) {
+				cur=fenye_r;
+			}
+			if (parseInt(cur) ==parseInt(document.frm_pwdauth.c.value)) {
+				$("#pwdauth_page").val(cur);
+				return false;
+			}
+			document.frm_pwdauth.c.value = cur;
+			show_pwdauth_list();
+		}
+		var search_typeall_new=document.frm_pwdauth.e.value.substr(0,document.frm_pwdauth.e.value.indexOf(':'));
+		function update_array() {
+			var search_typeall = search_typeall_r+search_typeall_new;
+			var conn_d = document.frm_pwdauth.a.value;
+			$.ajax({
+				url: "/bhost/get_pwdauth_list",
+				type: "POST",
+				async: true,
+				data: { a0: $("input[name=se]").val(), a2: search_typeall,a5:'11', a1: conn_d },
+				success: function (result) {
+					var pwdauth_result = JSON.parse(result);
+					if (pwdauth_result.Result) {
+						var pwdauth_data = pwdauth_result.info;
+						pwdauth_array = pwdauth_data.data.filter(function (params) {
+							if(!params.Enabled){
+								return true;
+							}
+							if(params.Status==0 || params.Status==1 || params.Status==8 || params.Status==9){
+								return true;
+							}
+							return false;
+						}).map(function (params) {
+							return params.PwdModPlanId+'';
+						});
+						
+					}else{
+						_alert(1,'自动改密',pwdauth_result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+		String.prototype.ResetBlank=function(){
+		var regEx = /\s+/g; 
+		return this.replace(regEx, ' '); 
+	};
+		function _addFilter(obj,type,type_num) {
+			var id = $(obj).parent().children('select').eq(0).children('option:selected').val();
+			var v1 = $(obj).parent().children('select').eq(0).children('option:selected').text();
+			var v2 = $(obj).parent().children('input[type=text]').val().trim();
+			if(id=='all'){	
+				v1='';
+			}else{
+				v1=v1+'-';
+			}
+			switch (id) {
+				case 'ReviewStatus':
+				case 'Status':
+				case 'Enabled':
+					var v3 = $('#'+id).children('option:selected').text();
+					v2=v3;
+					break;
+			}
+			if (v2 == '' && type_num!=1) {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+			//  else 
+			{
+				//var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				switch (id) {
+					case 'PwdModPlanName':
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'ReviewStatus':
+						var Reg=/^[\u4e00-\u9fa5\s]+$/;
+						break;
+					case 'Status':
+						var Reg=/^[\u4e00-\u9fa5\s]+$/;
+						break;
+					case 'PwdModStrategyName':
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'InvalidLog':
+						var Reg=/^[\u4e00-\u9fa5\s]+$/;
+						break;
+					case 'Enabled':
+						var Reg=/^[\u4e00-\u9fa5\s]+$/;
+						break;
+				}
+				if(id!='all' && id!='ReviewStatus' && id!='Status' && id!='Enabled' && !Reg.test(v2) && type_num!=1){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if(search_typeall_r.indexOf(id+'-'+v2+'\t')>=0 && type_num!=1){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(2,'搜索','关键字重复', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				var pass=false;
+				$.each(search_typeall_r.split('\t'),function (i,item) {
+					//////console.log("aaa"+item)
+					if(item.indexOf('ReviewStatus')==0 && id=="ReviewStatus"){
+						_alert(2,'搜索','只能搜索一个审核条件');
+						////console.log("aaa")
+						pass=true;
+						return false;
+					}
+					if(item.indexOf('Status')==0 && id=="Status"){
+						_alert(2,'搜索','只能搜索一个执行结果');
+						pass=true;
+						return false;
+					}
+					if(item.indexOf('Enabled')==0 && id=="Enabled"){
+						_alert(2,'搜索','只能搜索一个状态');
+						pass=true;
+						return false;
+					}
+				});
+				if(pass){
+					return false;
+				}
+				if(id=='ReviewStatus' && v3=='需要审核'){
+					$('#Status option[value=1]').remove();
+				}
+				else if(id=='ReviewStatus' && v3!='需要审核'){ 
+					$('#Status option[value=10]').remove();
+				}
+				else if(id=='Status' && v2=='正在审核'){
+					$('#pwdauth_select option[value=ReviewStatus]').remove();
+				}
+				var r = /\s+/g;
+				v2 = v2.replace(r,' ');
+				if(type){
+					search_typeall_r = search_typeall_r + id + '-' + v2 + '\t';
+					search_typeall_new='';
+					$(obj).parent().children('input[type=text]').val('');
+					$('#filterWW>ul').append('<li><span style = "display:none">' + id +'-' + v2 + '</span><span class="ww" title="'+v1 + v2+'">' + v1 + v2 + '</span><i class="del" onclick="_delFilter(this);"></i></li>')
+					$('#pwdauth_text_check').hide();
+					selView();
+				}else{
+					if(type_num!=1)search_typeall_new=id + '-' + v2 + '\t';
+				}
+				
+			}
+			$("#pwdauth_table tbody tr").find("input").iCheck('uncheck');
+				delect_str=new Array();
+				pwdauth_page(0.1);
+				check_num = 0;
+				$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num);
+		}
+		function _delFilter(obj) {
+			var id = $(obj).parent().find("span");
+			var ids = $(id).eq(0).text();
+			search_typeall_r = search_typeall_r.replace(ids+'\t','');
+			var pwdauth_text=$('#pwdauth_text').val().trim();
+			var index_i=ids.indexOf('-');
+			var id_value_now=ids.substring(0,index_i);
+			switch (id_value_now) {
+				case 'ReviewStatus':
+					// <!-- if($('#pwdauth_select option[value=PwdModPlanName]').length>0){ -->
+					// 	<!-- $('#pwdauth_select option[value=PwdModPlanName]').after('<option value="ReviewStatus">是否审核</option>'); -->
+					// <!-- } -->
+					if($('#Status option[value=1]').length==0){
+						$('#Status option[value=0]').after('<option value="1">生成预备密码</option>');
+					}
+					if($('#Status option[value=10]').length==0){
+						$('#Status option[value=1]').after('<option value="10">正在审核</option>');
+					}
+					break;
+				case 'Status':
+					// <!-- if($('#pwdauth_select option[value=ReviewStatus]').length>0){ -->
+					// 	<!-- $('#pwdauth_select option[value=ReviewStatus]').after('<option value="Status">执行结果</option>'); -->
+					// <!-- } -->
+					// <!-- else if($('#pwdauth_select option[value=PwdModPlanName]').length>0){ -->
+					// 	<!-- $('#pwdauth_select option[value=PwdModPlanName]').after('<option value="Status">执行结果</option>'); -->
+					// <!-- } -->
+					if (ids.substring(index_i+1)=='正在审核'){
+						$('#pwdauth_select option[value=PwdModPlanName]').after('<option value="ReviewStatus">是否审核</option>');
+					}
+					break;
+				// <!-- case 'Enabled': -->
+				// 	<!-- if($('#pwdauth_select option[value=InvalidLog]').length>0){ -->
+				// 		<!-- $('#pwdauth_select option[value=InvalidLog]').after('<option value="Enabled">状态</option>'); -->
+				// 	<!-- } -->
+				// 	<!-- break; -->
+				
+			}
+			$(obj).parent().remove();
+			selView();
+			$("#pwdauth_table tbody tr").find("input").iCheck('uncheck');
+				delect_str=new Array();
+				pwdauth_page(0.1);
+				check_num = 0;
+				$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num);
+		}
+		function _clearFilter(obj,num){
+			if(num==1){
+			$('#pwdauth_text').val('');
+			$('#pwdauth_text_check').hide();
+			search_typeall_new='';
+			$("#pwdauth_table tbody tr").find("input").iCheck('uncheck');
+				delect_str=new Array();
+				pwdauth_page(0.1);
+				check_num = 0;
+				$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num);
+				return;
+			}
+			if($('#pwdauth_select option[value=ReviewStatus]').length==0){
+				$('#pwdauth_select option[value=PwdModPlanName]').after('<option value="ReviewStatus">是否审核</option>');
+			}
+			// <!-- if($('#pwdauth_select option[value=Status]').length==0){ -->
+			// 	<!-- $('#pwdauth_select option[value=ReviewStatus]').after('<option value="Status">执行结果</option>'); -->
+			// <!-- } -->
+			// <!-- if($('#pwdauth_select option[value=Enabled]').length==0){ -->
+			// 	<!-- $('#pwdauth_select option[value=InvalidLog]').after('<option value="Enabled">状态</option>'); -->
+			// <!-- } -->
+			if($('#Status option[value=1]').length==0){
+				$('#Status option[value=0]').after('<option value="1">生成预备密码</option>');
+			}
+			if($('#Status option[value=10]').length==0){
+				$('#Status option[value=1]').after('<option value="10">正在审核</option>');
+			}
+			$('#clearFilter').next().children('ul').empty();
+			$('#pwdauth_text').val('');
+			$('#clearFilter').hide();
+			$('#pwdauth_text_check').hide();
+			search_typeall_new='';
+			search_typeall_r='';
+			selView();
+			$("#pwdauth_table tbody tr").find("input").iCheck('uncheck');
+				delect_str=new Array();
+				pwdauth_page(0.1);
+				check_num = 0;
+				$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num);
+		}
+		function selView() {
+			var $sel = $('#filterWW');
+			var len = $('li', $sel).length;
+
+			if (len == 0) {
+				$sel.hide();
+				$('#clearFilter').hide();
+			}else {
+				$("#filterWW").show();
+				$('#clearFilter').show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			}
+		}
+		//以每页显示数显示列表函数
+		function show_pwdauth_list() {
+			update_array();
+			var paging = document.frm_pwdauth.c.value;
+			var page_num = MAX_PAGE;
+			var search_typeall = search_typeall_r+search_typeall_new;
+			var conn_d = document.frm_pwdauth.a.value
+			$.ajax({
+				url: "/bhost/get_pwdauth_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(),a5:'111', a4: page_num, a3: paging, a2: search_typeall, a1: conn_d },
+				success: function (result) {
+					var pwdauth_result = JSON.parse(result);
+					if (pwdauth_result.Result) {
+						var pwdauth_data = pwdauth_result.info;
+						var total_all = pwdauth_data.totalrow;
+						fenye_r = Math.ceil(total_all / MAX_PAGE)||1;
+						
+						if (pwdauth_data.data == "" && paging != "1") {
+							pwdauth_page(0.9);
+						} else {
+							total_all_r = total_all;
+							if (total_all) {
+								$("#pwdauth_list").empty();
+								$.each(pwdauth_data.data, function (i, item) {
+									if (item.PwdModPlanName == null) {
+										item.PwdModPlanName = "";
+									}
+									if (item.PwdModStrategyName == null) {
+										item.PwdModStrategyName = "";
+									}
+									if (item.InvalidLog == null) {
+										item.InvalidLog = "";
+									}
+									var edit_str='<a href=\"javascript:;\" class=\"'+(perm==2?'edit':'search_result')+' disabled\" id=\"\" title="'+(perm==2?'编辑':'查看')+'"></a>';
+									var del_str='<a href=\"javascript:;\" class=\"del disabled\" id=\"\" title="删除"></a>';
+									var start_icon_str='<a href="javascript:;" class="start_icon disabled" id="" title="启用"></a>';
+									var stop_icon_str='<a href="javascript:;" class="stop_icon disabled" id="" title="停用"></a>';
+									start_icon_str='<a href="javascript:;" class="start_icon" id="start_icon" title="启用"></a>';
+									////console.log(item.Status);
+									switch (item.Status) {
+										case 0:
+											del_str='<a href=\"javascript:;\" class=\"del\" id=\"del\" title="删除"></a>';
+											stop_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="停用"></a>';
+											item.Status = '准备执行';
+											break;
+										case 1:
+											item.Status = '生成预备密码';
+											if(item.ReviewStatus==1){
+												item.Status='正在审核';
+												del_str='<a href=\"javascript:;\" class=\"del\" id=\"del\" title="删除"></a>';
+												stop_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="停用"></a>';
+											}
+											break;
+										case 2:
+											item.Status = '生成密码完成，待发送';
+											break;
+										case 3:
+											item.Status = '发送预备密码文件完成，待确认';
+											break;
+										case 4:
+											item.Status = '确认预备密码文件';
+											break;
+										case 5:
+											item.Status = '执行改密';
+											break;
+										case 6:
+											item.Status = '执行完成';
+											break;
+										case 7:
+											item.Status = '发送改密文件完成，待确认';
+											break;
+										case 8:
+											del_str='<a href=\"javascript:;\" class=\"del\" id=\"del\" title="删除"></a>';
+											stop_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="停用"></a>';
+											/*
+											start_icon_str='<a href="javascript:;" class="start_icon" id="start_icon" title="启用"></a>';
+											stop_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="停用"></a>';
+											*/
+											item.Status = '确认';
+											break;
+										case 9:
+											del_str='<a href=\"javascript:;\" class=\"del\" id=\"del\" title="删除"></a>';
+											stop_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="停用"></a>';
+											/*
+											start_icon_str='<a href="javascript:;" class="start_icon" id="start_icon" title="启用"></a>';
+											stop_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="停用"></a>';
+											*/
+											item.Status = '任务失败';
+											break;
+									}
+									switch (item.ReviewStatus) {
+										case 0:
+											item.ReviewStatus = '无需审核';
+											break;
+										case 1:
+											item.ReviewStatus = '需要审核';
+											break;
+										case 2:
+											item.ReviewStatus = '审核通过';
+											break;
+										case 3:
+											item.ReviewStatus = '审核不通过';
+											break;
+									}
+									if(item.InvalidLog.indexOf('被删除')>=0){
+										start_icon_str='<a href="javascript:;" class="start_icon disabled" id="" title="启用"></a>'
+									}
+									if(perm==1){
+										start_icon_str='<a href="javascript:;" class="start_icon disabled" id="" title="启用"></a>';
+										stop_icon_str='<a href="javascript:;" class="stop_icon disabled" id="" title="停用"></a>';
+										del_str='<a href=\"javascript:;\" class=\"del disabled\" id=\"\" title="删除"></a>';
+										edit_str='<a href=\"javascript:;\" class=\"search_result\" id=\"edit\" title="查看"></a>';
+									}
+									if (item.Enabled) {
+										item.Enabled = '启用';
+										var icon_str=stop_icon_str;
+										if (perm==2) edit_str='<a href=\"javascript:;\" class=\"edit disabled\" id=\"\" title="编辑"></a>';
+									} else {
+										item.Enabled = '停用';
+										edit_str='<a href=\"javascript:;\" class=\"'+(perm==2?'edit':'search_result')+'\" id=\"edit\" title="'+(perm==2?'编辑':'查看')+'"></a>';
+										if (perm==2) del_str='<a href=\"javascript:;\" class=\"del\" id=\"del\" title="删除"></a>';
+										var icon_str=start_icon_str;
+									}
+									
+									var PasswordAuthName = '';
+									if (item.PasswordAuthSet != null) {
+										PasswordAuthName=item.PasswordAuthSet.map(function (params) {
+											return params.PasswordAuthName;
+										}).join('，');
+									}
+									if(item.PwdModStrategyInfo==null){
+										item.PwdModStrategyInfo={
+											'PwdModStrategyName':'#'
+										}
+									}
+									
+									$("#pwdauth_list").append("<tr>" +
+										(perm==2?"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" id=\"inputplan-"+item.PwdModPlanId+"\"/></td>":"<td title='" + item.PwdModPlanName + "'>" + item.PwdModPlanName + "</td>") +
+										"<td style = \"display:none\">" + item.PwdModPlanId + "</td>" +
+										(perm==2?"<td title='" + item.PwdModPlanName + "'>" + item.PwdModPlanName + "</td>":'') +
+										"<td title='" + item.ReviewStatus + "'>" + item.ReviewStatus + "</td>" +
+										"<td title='" + item.Status + "'>" + item.Status + "</td>" +
+										"<td title='" + (item.PwdModStrategyInfo.PwdModStrategyName.indexOf('#')>=0?'':item.PwdModStrategyInfo.PwdModStrategyName) + "'>" + (item.PwdModStrategyInfo.PwdModStrategyName.indexOf('#')>=0?'':item.PwdModStrategyInfo.PwdModStrategyName) + "</td>" +
+										// "<td title='" + PasswordAuthName + "'>" + PasswordAuthName + "</td>" +
+										"<td title='" + item.InvalidLog + "'>" + item.InvalidLog + "</td>" +
+										"<td>" + item.Enabled + "</td>" +
+										"<td><div class=\"tab-ctr\">"+(perm==2?edit_str+icon_str:edit_str)+
+										"<a href=\"javascript:;\" class=\"icon7\" id=\"icon7\" title=\"改密任务\"></a>"+(perm==2?del_str:'')+"</div></td></tr>");
+									if (perm==1) return true;
+									$("#inputplan-"+item.PwdModPlanId).iCheck({
+										checkboxClass: 'icheckbox_minimal-blue',
+										radioClass: 'iradio_minimal-blue',
+										increaseArea: '0' // optional
+									});
+									if((del_str=='<a href=\"javascript:;\" class=\"del disabled\" id=\"\" title="删除"></a>')){
+										$("#inputplan-"+item.PwdModPlanId).iCheck('disable');
+									}
+								})
+								//tabArr();
+								$("#pwdauth_total").text(total_all);
+								if (paging >= fenye_r) {
+									paging = fenye_r;
+								}
+								document.frm_pwdauth.c.value = paging;
+								document.getElementById("pwdauth_page").value = paging;
+								$("#pwdauth_pages").text(fenye_r);
+								$('#check_one_page').iCheck('uncheck');
+								$("#pwdauth_table tbody tr").find("input").iCheck('uncheck');
+								check_show();
+								check_num = delect_str.length;
+								$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num);
+							} else {
+								$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(0);
+								$('#check_one_page').iCheck('uncheck');
+								$("#pwdauth_table tbody tr").find("input").iCheck('uncheck');
+								$("#pwdauth_list").empty();
+								$("#pwdauth_total").text(total_all);
+								$("#pwdauth_pages").text(1);
+								document.frm_pwdauth.c.value = 1;fenye_r=1;
+								document.getElementById("pwdauth_page").value = 1;
+							}
+						}
+					} else {
+						_alert(1, "自动改密", pwdauth_result.ErrMsg);
+						$("#pwdauth_table tbody tr").find("input").iCheck('uncheck');
+						$('#check_one_page').iCheck('uncheck');
+						$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(0);
+						$("#pwdauth_total").text(0);
+						$("#pwdauth_pages").text(1);
+						document.frm_pwdauth.c.value = 1;fenye_r=1;
+						document.getElementById("pwdauth_page").value = 1;
+						return false;
+					}
+				}
+			});
+			
+		}
+		//分页 and 刷新
+		function pwdauth_page(num) {
+			var paging = parseInt(document.frm_pwdauth.c.value) + num;
+			if (paging == 0 || paging == fenye_r + 1) {
+				return false;
+			}
+			delect_save();
+			var pwdauth_list_s = [];
+			if (num == 0.1) {
+				var paging = 1;
+			} else if (num == 0.9) {
+				var paging = fenye_r;
+			}
+			$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(0);
+			document.getElementById("pwdauth_page").value = paging;
+			document.frm_pwdauth.c.value = paging;
+			show_pwdauth_list();
+		}
+		//全选按钮
+		function click_all_list() {
+			delect_save();
+			if(pwdauth_array.length==delect_str.length){
+				delect_str=new Array();
+			}else{
+				delect_str=pwdauth_array;
+			}
+			show_pwdauth_list();
+		}
+		//刷新
+		function clear_all() {
+			$("#pwdauth_table tbody tr").find("input").iCheck('uncheck');
+			delect_str =new Array();
+			check_num = 0;
+			$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num);
+		}
+		//删除函数
+		function delete_fun(delect_str_1) {
+			$.ajax({
+				url: '/bhost/del_pwdauth',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: delect_str_1 },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						pwdauth_page(0);
+						// if(result.success_num+result.fail_num==1){
+							_alert(0, "自动改密", "删除成功");
+						// }else{
+						// 	_alert(0, "自动改密", "删除成功(成功:"+result.success_num+",失败:"+result.fail_num+")");
+						// }
+					} else {
+						pwdauth_page(0);
+						_alert(1, "自动改密", result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+		//删除按钮
+		function delete_list() {
+			delect_save();
+			if (delect_str.length == 0) {
+				_alert(2, "自动改密", "请选择要删除的数据");
+				return false;
+			}
+			////console.log(delect_str);
+			//利用对话框返回的值 （true 或者 false）  
+			$('.btn').blur(); parent.layer.open({
+				type: 1,
+				title: '自动改密',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+				btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+				btnAlign: 'c',
+				closeBtn: false,
+				skin: 'layer-custom',
+				area: ['380px', '310px'],
+				move: false,
+				resize: false,
+				yes: function (i) {
+					$('.btn').blur(); parent.layer.close(i);
+					////console.log(delect_str);
+					delete_fun(delect_str.join(','));
+					delect_str = new Array();
+					check_num = 0;
+					$("#pwdauth_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num);
+				}
+			});
+		}
+	</script>
+	<!--two-->
+	<script type="text/javascript">
+		var delect_str_pwdtask = new Array();
+		var check_num_pwdtask = 0;
+		var total_all_r_pwdtask = 0;
+		//总数
+		var fenye_r_pwdtask = 0;
+		//总页码
+		var pwdtask_array = null;
+		var search_typeall_r_pwdtask = '';
+		//关键字
+		function back_pwdtask() {
+			
+			delect_str=new Array();
+			show_pwdauth_list();
+			$('#two').hide();
+			$('#one').show();
+			$('#three').hide();
+
+		}
+		$(function () {
+			//输入数字
+			$("#pwdtask_page").bind('keydown', function (e) {
+				DigitInput(e);
+			});
+			//页码显示
+			$("#page_nums_pwdtask").val(MAX_PAGE);
+
+			//tr双击事件
+			$("#pwdtask_list").on('dblclick', 'tr', function (e) {
+				var id = $(this).find("td");
+				var edit_item = $(id).eq(1).text();
+				pwdresult_id = edit_item;
+				$('.tab-moreinfo').remove();
+				paging_r_pwdresult=1;
+				search_typeall_r_pwdresult='';
+				search_typeall_new_pwdresult='';
+				delect_save_pwd_result=new Array();
+				$('#filterWW_pwdresult ul').empty();
+				selView_pwdresult();
+				if($('#pwdresult_select option[value=Status]').length==0){
+					$('#pwdresult_select option[value=username]').after('<option value="Status">执行结果</option>');
+				}
+				$('#pwdresult_text').val('');
+				$('#pwdresult_select').val('all').trigger('change');
+				$('#pwdresult_text_check').hide();
+				$(this).trigger('click');
+				show_pwdresult_list();
+				$('#three').show();
+				$('#one').hide();
+				$('#two').hide();
+			}).on("click", "tr", function (e) {
+				x = e.target;
+				//删除按钮
+				if (x.id == 'del') {
+					var id = $(this).find("td");
+					var input = $(this).find("input");
+					$('.btn').blur(); parent.layer.open({
+						type: 1,
+						title: '改密任务',
+						content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+						btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+						btnAlign: 'c',
+						closeBtn: false,
+						skin: 'layer-custom',
+						area: ['380px', '310px'],
+						move: false,
+						resize: false,
+						yes: function (i) {
+							$('.btn').blur(); parent.layer.close(i);
+							var delete_item = $(id).eq(1).text();
+							$(input).iCheck('uncheck');
+							delete_fun_pwdtask(delete_item);
+						}
+					});
+				}
+				//显示改密结果列表
+				if (x.id == 'icon5') {
+					var id = $(this).find("td");
+					var edit_item = $(id).eq(1).text();
+					pwdresult_id = edit_item;
+					$('.tab-moreinfo').remove();
+					paging_r_pwdresult=1;
+					search_typeall_r_pwdresult='';
+					search_typeall_new_pwdresult='';
+					delect_save_pwd_result=new Array();
+					$('#filterWW_pwdresult ul').empty();
+					selView_pwdresult();
+					if($('#pwdresult_select option[value=Status]').length==0){
+						$('#pwdresult_select option[value=username]').after('<option value="Status">执行结果</option>');
+					}
+					$('#pwdresult_text').val('');
+					$('#pwdresult_select').val('all').trigger('change');
+					$('#pwdresult_text_check').hide();
+					$(this).trigger('click');
+					show_pwdresult_list();
+					$('#three').show();
+					$('#one').hide();
+					$('#two').hide();
+				}else if (x.id == 'stop_icon') {
+					var id = $(this).find("td");
+					var edit_item = $(id).eq(1).text();
+					var edit_name=$(id).eq(2).text();
+					$.ajax({
+						url: "/bhost/pwd_auth_cancel_plan",
+						type: "POST",
+						async: false,
+						data: { a0: $("input[name=se]").val(),a1:edit_item,a2:edit_name},
+						success: function (result) {
+							var result=JSON.parse(result);
+							if(result.Result){
+								pwdtask_page(0);
+							}else{
+								_alert(2,'自动改密',result.ErrMsg);
+								return false;
+							}
+						}
+					});
+				}
+			});
+			$('#check_one_page_pwdtask').on(' ifClicked', function (e) {
+				if (!$('#check_one_page_pwdtask').is(':checked')) {
+					$("#pwdtask_table tbody tr").find("input[disabled!=disabled]").iCheck('check');
+				} else {
+					$("#pwdtask_table tbody tr").find("input").iCheck('uncheck');
+				}
+
+			});
+			$("#pwdtask_list").on("ifChecked", function (e) {
+				check_num_pwdtask++;
+				$("#pwdtask_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num_pwdtask);
+				if ($("#pwdtask_table tbody tr").find("input:checked").length == $("#pwdtask_table tbody tr").find("input[disabled!=disabled]").length) {
+					$('#check_one_page_pwdtask').iCheck('check');
+				}
+			}).on("ifUnchecked", function (e) {
+				check_num_pwdtask--;
+				$("#pwdtask_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num_pwdtask);
+				$('#check_one_page_pwdtask').iCheck('uncheck');
+			});
+		})
+		//选中字段存储
+		function delect_save_pwdtask() {
+			$(">tr", "#pwdtask_list").each(function () {
+				var input = $(this).find("input[type='checkbox']");
+				var delect_item = $(">td", this).eq(1).text();
+				var index=$.inArray(delect_item,delect_str_pwdtask);
+				if ($(input).is(':checked')) {
+					if(index<0){
+						delect_str_pwdtask.push(delect_item);
+					}
+				} else {
+					if(index>=0){
+						delect_str_pwdtask.splice(index,1);
+					}
+				}
+			});
+		}
+		function pwdauth_list(){
+			document.frm_pwdauth.action = '/bhost/pwd_trust';
+			document.frm_pwdauth.tasktype.value = 3;
+			document.frm_pwdauth.c.value = 1;
+			document.frm_pwdauth.d.value = '';
+			document.frm_pwdauth.e.value = ':';
+			document.frm_pwdauth.submit();	
+		}
+		//check显示
+		function check_show_pwdtask() {
+			$(">tr", "#pwdtask_list").each(function () {
+				var input = $(this).find("input[type='checkbox']");
+				var check_id = $(">td", this).eq(1).text();
+				if($.inArray(check_id,delect_str_pwdtask)>=0){
+					$(input).iCheck('check');
+				}
+			});
+		}
+		//input回车触发事件
+		function showMsg_pwdtask() {
+			delect_save_pwdtask();
+			var cur = $("#pwdtask_page").val();
+			cur=cur.replace(/\D/g, "");
+			if(cur=='' || parseInt(cur) < 1){
+				cur=1;
+			}else if (parseInt(cur)>fenye_r_pwdtask) {
+				cur=fenye_r_pwdtask;
+			}
+			//////console.log(cur);
+			if (parseInt(cur) ==parseInt(paging_pwdtask)) {
+				$("#pwdtask_page").val(cur);
+				return false;
+			}
+			paging_pwdtask = cur;
+			show_pwdtask_list();
+		}
+		var search_typeall_new_pwdtask='';
+		function update_array_pwdtask() {
+			var search_typeall = search_typeall_r_pwdtask+search_typeall_new_pwdtask;
+			$.ajax({
+				url: "/bhost/get_pwdmodtask_list",
+				type: "POST",
+				async: true,
+				data: { a0: $("input[name=se]").val(), a2: search_typeall, a1: id_pwdtask, a6: 1 },
+				success: function (result) {
+					var pwdtask_result = JSON.parse(result);
+					if (pwdtask_result.Result) {
+						var pwdtask_data = pwdtask_result.info;
+						pwdtask_array = pwdtask_data.data.filter(function (params) {
+							if(params.Status==0 || params.Status==8 || params.Status==9){
+								return true;
+							}
+							return false;
+						}).map(function (params) {
+							return params.PwdModTaskId+'';
+						});
+						
+					}else{
+						_alert(1,'自动改密',pwdtask_result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+		function _addFilter_pwdtask(obj,type,type_num) {
+			var id = $(obj).parent().children('select').eq(0).children('option:selected').val();
+			var v1 = $(obj).parent().children('select').eq(0).children('option:selected').text();
+			var v2 = $(obj).parent().children('input[type=text]').val().trim();
+			if(id=='all'){
+				v1='';
+			}else{
+				v1=v1+'-';
+			}
+			v2=v2.ResetBlank();
+			if (v2 == '' && type_num!=1) {
+				$(obj).parent().children('input[type=text]').blur();
+				_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+				return false;
+			}
+			//  else 
+			{
+				switch (id) {
+					case 'pwdmodplanname':
+						//var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'ReviewStatus':
+						var Reg=/^[\u4e00-\u9fa5\s]+$/;
+						break;
+					case 'Status':
+						var Reg=/^[\u4e00-\u9fa5\s]+$/;
+						break;
+					case 'ExecuteUserName':
+						//var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'FailMsg':
+						var Reg=/^[\u4e00-\u9fa5\s]+$/;
+						break;
+				}
+				// <!-- var pass=false; -->
+				// <!-- $.each(search_typeall_r.split('\t'),function (i,item) { -->
+				// 	<!-- if(search_typeall_r_pwdtask.indexOf('ReviewStatus')>=0 && id=='ReviewStatus'){ -->
+				// 	<!-- ////console.log("eee"+search_typeall_r_pwdtask) -->
+				// 		<!-- _alert(2,'搜索','只能搜索一个审核结果'); -->
+				// 		<!-- pass=true; -->
+				// 		<!-- return false; -->
+				// 	<!-- } -->
+				// 	<!-- if(search_typeall_r_pwdtask.indexOf('Status')>=0&& id=='Status'&& search_typeall_r_pwdtask.indexOf('ReviewStatus')<0 ){ -->
+				// 	<!-- ////console.log("fff"+search_typeall_r_pwdtask) -->
+				// 		<!-- _alert(2,'搜索','只能搜索一种执行结果'); -->
+				// 		<!-- pass=true; -->
+				// 		<!-- return false; -->
+				// 	<!-- } -->
+					
+				// <!-- }); -->
+				// <!-- if(pass){ -->
+				// 	<!-- return false; -->
+				// <!-- }				 -->
+				if(id!='all' && id!='ReviewStatus' && id!='Status' && !Reg.test(v2) && type_num!=1){
+				//if(id!='all' && !Reg.test(v2) && type_num!=1){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if(search_typeall_r_pwdtask.indexOf(id+'-'+v2+'\t')>=0 && type_num!=1){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(2,'搜索','关键字重复', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				var pass=false;
+				$.each(search_typeall_r.split('\t'),function (i,item) {
+					//////console.log("aaa"+item)
+					if(search_typeall_r_pwdtask.indexOf('ReviewStatus')>=0 && id=="ReviewStatus"){
+						_alert(2,'搜索','只能搜索一个审核条件');
+						////console.log("aaa")
+						pass=true;
+						return false;
+					}
+					if(search_typeall_r_pwdtask.indexOf('ReviewStatus')>=0 && id=="Status"){
+						cc=search_typeall_r_pwdtask.replace("ReviewStatus","")
+						if(cc.indexOf('Status')>=0 && id=="Status"){
+							_alert(2,'搜索','只能搜索一个执行结果');
+							pass=true;
+							return false;
+						}
+					}else{
+						if(search_typeall_r_pwdtask.indexOf('Status')>=0 && id=="Status"){
+							_alert(2,'搜索','只能搜索一个执行结果');
+							pass=true;
+							return false;
+						}
+					}
+				});
+				if(pass){
+					return false;
+				}
+				var r = /\s+/g;
+				v2 = v2.replace(r,' ');
+				if(id=='ReviewStatus' && v3=='需要审核'){
+					$('#Status_pwdtask option[value=1]').remove();
+				}
+				else if(id=='ReviewStatus' && v3!='需要审核'){ 
+					$('#Status_pwdtask option[value=10]').remove();
+				}
+				else if(id=='Status' && v3=='正在审核'){
+					$('#pwdtask_select option[value=ReviewStatus]').remove();
+				}
+				if(type){
+					search_typeall_r_pwdtask = search_typeall_r_pwdtask + id + '-' + v2 + '\t';
+					search_typeall_new_pwdtask = '';
+					$(obj).parent().children('input[type=text]').val('');
+					$('#filterWW_pwdtask>ul').append('<li><span style = "display:none">' + id +'-' + v2 +  '</span><span class="ww">' + v1 + v2 + '</span><i class="del" onclick="_delFilter_pwdtask(this);"></i></li>')
+					$('#pwdtask_text_check').hide();
+					// <!-- switch (id) { -->
+					// 	<!-- case 'ReviewStatus': -->
+					// 	<!-- case 'Status': -->
+					// 		<!-- //$('#pwdtask_select option[value='+id+']').remove(); -->
+					// 		<!-- $('#pwdtask_select').val('all').trigger('change'); -->
+					// 		<!-- $('#'+id+'_pwdtask').val('0').trigger('change'); -->
+					// 		<!-- <!-- if(id=='ReviewStatus' && v3=='需要审核'){ --> -->
+					// 			<!-- <!-- $('#Status_pwdtask option[value=1]').remove(); --> -->
+					// 		<!-- <!-- } --> -->
+					// 		<!-- <!-- else if(id=='ReviewStatus' && v3!='需要审核'){ --> -->
+					// 			<!-- <!-- $('#Status_pwdtask option[value=10]').remove(); --> -->
+					// 		<!-- <!-- } --> -->
+					// 		<!-- <!-- else if(id=='Status' && v3=='正在审核'){ --> -->
+					// 			<!-- <!-- $('#pwdtask_select option[value=ReviewStatus]').remove(); --> -->
+					// 		<!-- <!-- } --> -->
+					// 		<!-- break; -->
+					// <!-- }  -->
+					selView_pwdtask();
+				}else{
+					if(type_num!=1)search_typeall_new_pwdtask = id + '-' + v2 + '\t';
+				}
+				
+			}
+			pwdtask_page(0.1);
+		}
+		function _delFilter_pwdtask(obj) {
+			var id = $(obj).parent().find("span");
+			var ids = $(id).eq(0).text();
+			search_typeall_r_pwdtask = search_typeall_r_pwdtask.replace(ids+'\t','');
+			var pwdtask_text=$('#pwdtask_text').val().trim();
+			var index_i=ids.indexOf('-');
+			var id_value_now=ids.substring(0,index_i);
+			switch (id_value_now) {
+				case 'ReviewStatus':
+					// <!-- if($('#pwdtask_select option[value=pwdmodplanname]').length>0){ -->
+					// 	<!-- $('#pwdtask_select option[value=pwdmodplanname]').after('<option value="ReviewStatus">是否审核</option>'); -->
+					// <!-- } -->
+					if($('#Status_pwdtask option[value=1]').length==0){
+						$('#Status_pwdtask option[value=0]').after('<option value="1">生成预备密码</option>');
+					}
+					if($('#Status_pwdtask option[value=10]').length==0){
+						$('#Status_pwdtask option[value=1]').after('<option value="10">正在审核</option>');
+					}
+					break;
+				case 'Status':
+					// <!-- if($('#pwdtask_select option[value=ReviewStatus]').length>0){ -->
+					// 	<!-- $('#pwdtask_select option[value=ReviewStatus]').after('<option value="ReviewStatus">是否审核</option>'); -->
+					// <!-- } -->
+					// <!-- else if($('#pwdtask_select option[value=pwdmodplanname]').length>0){ -->
+					// 	<!-- $('#pwdtask_select option[value=pwdmodplanname]').after('<option value="Status">执行结果</option>'); -->
+					// <!-- } -->
+					////console.log("abcd"+ids.substring(index_i+1))
+					if (ids.substring(index_i+1)=='正在审核'){
+						$('#pwdtask_select option[value=pwdmodplanname]').after('<option value="ReviewStatus">是否审核</option>');
+					}
+					break; 
+			}
+			$(obj).parent().remove();
+			selView_pwdtask();
+			pwdtask_page(0.1);
+		}
+		function _clearFilter_pwdtask(obj,num){
+			if(num==1){
+			$('#pwdtask_text').val('');
+			$('#pwdtask_text_check').hide();
+			search_typeall_new_pwdtask='';
+			$("#pwdtask_table tbody tr").find("input").iCheck('uncheck');
+			delect_str_pwdtask=new Array();
+			pwdtask_page(0.1);
+				return;
+			}
+			if($('#pwdtask_select option[value=ReviewStatus]').length==0){
+				$('#pwdtask_select option[value=pwdmodplanname]').after('<option value="ReviewStatus">是否审核</option>');
+			}
+			// <!-- if($('#pwdtask_select option[value=Status]').length==0){ -->
+			// 	<!-- $('#pwdtask_select option[value=ReviewStatus]').after('<option value="Status">执行结果</option>'); -->
+			// <!-- } -->
+			if($('#Status_pwdtask option[value=1]').length==0){
+				$('#Status_pwdtask option[value=0]').after('<option value="1">生成预备密码</option>');
+			}
+			if($('#Status_pwdtask option[value=10]').length==0){
+				$('#Status_pwdtask option[value=1]').after('<option value="10">正在审核</option>');
+			}
+			$('#clearFilter_pwdtask').next().children('ul').empty();
+			$('#pwdtask_text').val('');
+			$('#clearFilter_pwdtask').hide();
+			$('#pwdtask_text_check').hide();
+			search_typeall_new_pwdtask='';
+			search_typeall_r_pwdtask='';
+			selView_pwdtask();
+			$("#pwdtask_table tbody tr").find("input").iCheck('uncheck');
+			delect_str_pwdtask=new Array();
+			pwdtask_page(0.1);
+		}
+		function selView_pwdtask() {
+			var $sel = $('#filterWW_pwdtask');
+			var len = $('li', $sel).length;
+			if (len == 0) {
+				$sel.hide();
+				$('#clearFilter_pwdtask').hide();
+			}else {
+				$("#filterWW_pwdtask").show();
+				$('#clearFilter_pwdtask').show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			}
+		}
+		var paging_pwdtask = 1;
+		var id_pwdtask = 0;
+        var delect_save_pwd_result=new Array();
+		function go_pwdresult() {
+			$('#three').show();
+			$('#one').hide();
+			$('#two').hide();
+			paging_r_pwdresult=1;
+			search_typeall_r_pwdresult='';
+			search_typeall_new_pwdresult='';
+            delect_save_pwd_result=new Array();
+			$('#filterWW_pwdresult ul').empty();
+			selView_pwdresult();
+			if($('#pwdresult_select option[value=Status]').length==0){
+				$('#pwdresult_select option[value=username]').after('<option value="Status">执行结果</option>');
+			}
+			$('#pwdresult_text').val('');
+			$('#pwdresult_select').val('all').trigger('change');
+			$('#pwdresult_text_check').hide();
+			show_pwdresult_list();
+		}
+		//以每页显示数显示列表函数
+		function show_pwdtask_list() {
+			update_array_pwdtask();
+			var paging = paging_pwdtask;
+			var page_num = MAX_PAGE;
+			var search_typeall = search_typeall_r_pwdtask+search_typeall_new_pwdtask;
+			$.ajax({
+				url: "/bhost/get_pwdmodtask_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a4: page_num, a3: paging, a2: search_typeall, a1: id_pwdtask, a6: 1 },
+				success: function (result) {
+					var pwdtask_result = JSON.parse(result);
+					if (pwdtask_result.Result) {
+						var pwdtask_data = pwdtask_result.info;
+						var total_all = pwdtask_data.totalrow;
+						if (total_all % MAX_PAGE == 0) {
+							fenye_r_pwdtask = parseInt(total_all / MAX_PAGE);
+						} else {
+							fenye_r_pwdtask = parseInt(total_all / MAX_PAGE) + 1;
+						}
+						if (pwdtask_data.data == "" && paging != "1") {
+							pwdtask_page(0.9);
+						} else {
+							//total = 0;
+							total_all_r_pwdtask = total_all;
+							if (total_all) {
+								$("#pwdtask_list").empty();
+								$.each(pwdtask_data.data, function (i, item) {
+									if (item.PwdModPlanName == null) {
+										item.PwdModPlanName = "";
+									}
+									if (item.StartTime == null) {
+										item.StartTime = "";
+									}
+									if (item.EndTime == null) {
+										item.EndTime = "";
+									}
+									if (item.FailCount == null) {
+										item.FailCount = 0;
+									}
+									if (item.SuccCount == null) {
+										item.SuccCount = 0;
+									}
+									if (item.TotalCount == null) {
+										item.TotalCount = 0;
+									}
+									if (item.LoginFailCount == null) {
+										item.LoginFailCount = 0;
+									}
+									if (item.FailMsg == null) {
+										item.FailMsg = '';
+									}
+									if (item.ExecuteUserName == null) {
+										item.ExecuteUserName = "";
+									}
+									if (item.SecondLoginFailCount == null) {
+										item.SecondLoginFailCount = 0;
+									}
+									if (item.DomainUserUpdatedCount == null) {
+										item.DomainUserUpdatedCount = 0;
+									}
+									var Status='';
+									switch (item.Status) {
+										case 0:
+											Status='准备执行';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="取消"></a>';
+											break;
+										case 1:
+											Status='生成预备密码';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="取消"></a>';
+											break;
+										case 2:
+											Status='生成密码完成，待发送';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="取消"></a>';
+											break;
+										case 3:
+											Status='发送预备密码文件完成，待确认';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="取消"></a>';
+											break;
+										case 4:
+											Status='确认预备密码文件';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="取消"></a>';
+											break;
+										case 5:
+											Status='执行改密';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon" id="stop_icon" title="取消"></a>';
+											break;
+										case 6:
+											Status='执行完成';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon disabled" id="" title="取消"></a>';
+											break;
+										case 7:
+											Status='发送改密文件完成，待确认';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon disabled" id="" title="取消"></a>';
+											break;
+										case 8:
+											Status='确认';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon disabled" id="" title="取消"></a>';
+											break;
+										case 9:
+											Status='任务失败';
+											cancel_icon_str='<a href="javascript:;" class="stop_icon disabled" id="" title="取消"></a>';
+											break;
+									}
+									if(item.Status==1 && item.ReviewStatus==1){
+										Status='正在审核'
+									}
+									var ReviewStatus='';
+									switch (item.ReviewStatus) {
+										case 0:
+											ReviewStatus='无需审核';
+											break;
+										case 1:
+											ReviewStatus='需要审核';
+											break;
+										case 2:
+											ReviewStatus='审核通过';
+											break;
+										case 3:
+											ReviewStatus='审核不通过';
+											break;
+									}
+									// var del_str=(item.Status==0 || item.Status==8 || item.Status==9)?'<a href=\"javascript:;\" class=\"del\" id=\"del\" title="删除"></a>':'<a href=\"javascript:;\" class=\"del disabled\" id=\"\" title="删除"></a>';
+									var del_str=(item.Status==8 || item.Status==9) && perm==2?'<a href=\"javascript:;\" class=\"del\" id=\"del\" title="删除"></a>':'<a href=\"javascript:;\" class=\"del disabled\" id=\"\" title="删除"></a>';
+									float_str = "<p>开始时间：" + (item.StartTime) + "</p>" +
+										"<p>结束时间：" + (item.EndTime) + "</p>" +
+										"<p>改密成功：" + (item.SuccCount) + "</p>" +
+										"<p>改密失败：" + (item.FailCount) + "</p>" +
+										"<p>登录失败：" + (item.LoginFailCount) + "</p>" +
+										"<p>确认失败：" + (item.SecondLoginFailCount) + "</p>" +
+										"<p>域账号已改密：" + (item.DomainUserUpdatedCount) + "</p>";
+									$("#pwdtask_list").append("<tr>" +
+										(perm==2?"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" id=\"inputtask-"+item.PwdModTaskId+"\" "+((item.Status==0 || item.Status==8 || item.Status==9)?'':'disabled')+"></td>":"<td title='" + item.PwdModPlanName + "'>" + item.PwdModPlanName + "</td>")+
+										"<td style = \"display:none\">" + item.PwdModTaskId + "</td>" +
+										(perm==2?"<td title='" + item.PwdModPlanName + "'>" + item.PwdModPlanName + "</td>":''	) +
+										"<td title='" + ReviewStatus + "'>" + ReviewStatus + "</td>" +
+										"<td title='" + Status + "'>" + Status + "</td>" +
+										// "<td title='" + item.StartTime + "'>" + item.StartTime + "</td>" +
+										// "<td title='" + item.EndTime + "'>" + item.EndTime + "</td>" +
+										// "<td title='" + item.ExecuteUserName.split('-')[0] + "'>" + item.ExecuteUserName.split('-')[0] + "</td>" +
+										"<td title='" + item.ExecuteUserName + "'>" + item.ExecuteUserName + "</td>" +
+										"<td>" + item.TotalCount + "</td>" +
+										"<td title='" + item.FailMsg + "'>" + item.FailMsg + "</td>" +
+										"<td><div class=\"tab-ctr\">"+"<a href=\"javascript:;\" class=\"icon5\" id=\"icon5\" title=\"改密结果\"></a>"+
+										(perm==2?cancel_icon_str:'')+
+										(perm==2?del_str:'')+"</div><div class=\"tab-moreinfo\">" + float_str + "</div></td></tr>");
+									//}
+									////console.log("#inputtask-"+item.PwdModTaskId);
+									$("#inputtask-"+item.PwdModTaskId).iCheck({
+										checkboxClass: 'icheckbox_minimal-blue',
+										radioClass: 'iradio_minimal-blue',
+										increaseArea: '0' // optional
+									});
+									////console.log('item.Status');
+									////console.log(item.Status);
+									////console.log(item.Status!=0 && item.Status!=8 && item.Status!=9);
+									// if(item.Status!=0 && item.Status!=8 && item.Status!=9){
+									if(item.Status!=8 && item.Status!=9){
+										$("#inputtask-"+item.PwdModTaskId).iCheck('disable');
+									}
+								})
+								tabArr();
+								
+								$("#pwdtask_total").text(total_all);
+								if (paging >= fenye_r_pwdtask) {
+									paging = fenye_r_pwdtask;
+								}
+								paging_pwdtask = paging;
+								document.getElementById("pwdtask_page").value = paging;
+								$("#pwdtask_pages").text(fenye_r_pwdtask);
+								$('#check_one_page_pwdtask').iCheck('uncheck');
+								$("#pwdtask_table tbody tr").find("input").iCheck('uncheck');
+								check_show_pwdtask();
+								// delect_str_pwdtask=new Array();
+								check_num_pwdtask = delect_str_pwdtask.length;
+								$("#pwdtask_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num_pwdtask);
+							} else {
+								$("#pwdtask_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(0);
+								$('#check_one_page_pwdtask').iCheck('uncheck');
+								$("#pwdtask_table tbody tr").find("input").iCheck('uncheck');
+								$("#pwdtask_list").empty();
+								$("#pwdtask_total").text(total_all);
+								$("#pwdtask_pages").text(1);
+								paging_pwdtask=1;fenye_r_pwdtask=1;
+								document.getElementById("pwdtask_page").value = 1;
+							}
+						}
+					} else {
+						_alert(1, "自动改密", pwdtask_result.ErrMsg);
+						$("#pwdtask_table tbody tr").find("input").iCheck('uncheck');
+						$('#check_one_page_pwdtask').iCheck('uncheck');
+						$("#pwdtask_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(0);
+						$("#pwdtask_total").text(0);
+						$("#pwdtask_pages").text(1);
+						paging_pwdtask=1;fenye_r_pwdtask=1;
+						document.getElementById("pwdtask_page").value = 1;
+						return false;
+					}
+				}
+			});
+		}
+		//分页 and 刷新
+		function pwdtask_page(num) {
+			var paging = parseInt(paging_pwdtask) + num;
+			if (paging == 0 || paging == fenye_r_pwdtask + 1) {
+				return false;
+			}
+			delect_save_pwdtask();
+			var pwdtask_list_s = [];
+			if (num == 0.1) {
+				var paging = 1;
+			} else if (num == 0.9) {
+				var paging = fenye_r_pwdtask;
+			}
+			$("#pwdtask_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(0);
+			document.getElementById("pwdtask_page").value = paging;
+			paging_pwdtask = paging;
+			show_pwdtask_list();
+		}
+		//全选按钮
+		function click_all_list_pwdtask() {
+			delect_save_pwdtask();
+			if(pwdtask_array.length==delect_str_pwdtask.length){
+				delect_str_pwdtask=new Array();
+			}else{
+				delect_str_pwdtask=pwdtask_array;
+			}
+			show_pwdtask_list();
+		}
+		//刷新
+		function clear_all_pwdtask() {
+			$("#pwdtask_table tbody tr").find("input").iCheck('uncheck');
+			delect_str_pwdtask = new Array();
+			check_num_pwdtask = 0;
+			$("#pwdtask_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num_pwdtask);
+		}
+		//删除函数
+		function delete_fun_pwdtask(delect_str_pwdtask_1) {
+			$.ajax({
+				url: '/bhost/del_pwdtask',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: delect_str_pwdtask_1 },
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						pwdtask_page(0);
+						// if((result.success_num+result.fail_num)==1){
+							_alert(0, "自动改密", "删除成功");
+						// }else{
+						// 	_alert(0, "自动改密", "删除成功(成功:"+result.success_num+",失败:"+result.fail_num+")");
+						// }
+					} else {
+						pwdtask_page(0);
+						_alert(1, "自动改密", result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		}
+		//删除按钮
+		function delete_list_pwdtask() {
+			delect_save_pwdtask();
+			if (delect_str_pwdtask.length == 0) {
+				_alert(2, "自动改密", "请选择要删除的数据");
+				return false;
+			}
+			//利用对话框返回的值 （true 或者 false）  
+			$('.btn').blur(); parent.layer.open({
+				type: 1,
+				title: '自动改密',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+				btn: ['删&nbsp;&nbsp;除', '取&nbsp;&nbsp;消'],
+				btnAlign: 'c',
+				closeBtn: false,
+				skin: 'layer-custom',
+				area: ['380px', '310px'],
+				move: false,
+				resize: false,
+				yes: function (i) {
+					$('.btn').blur(); parent.layer.close(i);
+					delete_fun_pwdtask(delect_str_pwdtask.join(','));
+					delect_str_pwdtask = new Array();
+					check_num_pwdtask = 0;
+					$("#pwdtask_tablediv").next("div.tab-i").children("div.il").find("span.sum").text(check_num_pwdtask);
+				}
+			});
+		}
+	</script>
+	<!--three-->
+	<script type="text/javascript">
+		var delect_save_pwd_result = new Array();
+		var check_num_pwdresult = 0;
+		var total_all_r_pwdresult = 0;
+		var pwdresult_array = null;
+		//总数
+		var fenye_r_pwdresult = 1;
+		//总页码
+		var search_typeall_r_pwdresult = "";
+		//关键字
+		var paging_r_pwdresult = 1;
+		function back_pwdresult() {
+			
+			delect_str_pwdtask=new Array();
+			show_pwdtask_list();
+			$('#one').hide();
+			$('#two').show();
+			$('#three').hide();
+		}
+		$(function () {
+			//输入数字
+			$("#pwdresult_page").bind('keydown', function (e) {
+				DigitInput(e);
+			});
+			//////console.log("pwdresultlist11");
+			//页码显示
+			$("#page_nums_pwdresult").val(MAX_PAGE);
+			//list show
+			
+			//parent._switchBtn(1);//显示按钮
+			//tr事件
+			$("#pwdresult_list").on("click", "tr", function (e) {
+				x = e.target;
+				//下载按钮
+				if (x.id == 'icon6') {
+					var id = $(this).find("td");
+					var input = $(this).find("input");
+					var delete_item =parseInt($(id).eq(1).text());
+					var pwdchange_down=JSON.parse(JSON.stringify(pwd_result_data_json.data.filter(function (params) {
+						return params.PwdModTaskDetailId==delete_item;
+					})[0]));
+					var id_item={
+						"totalrow":null,
+						"data":new Array()
+					};
+					////console.log(JSON.stringify(pwdchange_down));
+					////console.log('id_item.data[pwdchange_down.HostId]:'+id_item.data[pwdchange_down.HostId]);
+					if(id_item.data[pwdchange_down.HostId]==undefined){
+						////console.log('pwdchange_down.HostIP:'+pwdchange_down.HostIP);
+						data_item.HostIP=pwdchange_down.HostIP;
+						////console.log('pwdchange_down.HostName:'+pwdchange_down.HostName);
+						data_item.HostName=pwdchange_down.HostName;
+						////console.log(JSON.stringify(data_item));
+						id_item.data.push(JSON.parse(JSON.stringify(data_item)));
+					}
+					////console.log(JSON.stringify(id_item));
+					account_item.AccountName=pwdchange_down.AccountName;
+					account_item.ProtocolName=pwdchange_down.ProtocolName;
+					account_item.PasswordType=pwdchange_down.NewPasswordType;
+					account_item.Password=pwdchange_down.NewPassword;
+					account_item.OldPasswordType=pwdchange_down.OldPasswordType;
+					account_item.OldPassword=pwdchange_down.OldPassword;
+					switch (pwdchange_down.Status) {
+						case 1:case 2:case 3:
+							account_item.Status='（预生成）';
+							break;
+						case 4:
+							account_item.Status='';
+							break;
+						case 5:
+							account_item.Status='（登录失败）';
+							break;
+						case 6:
+							account_item.Status='（改密失败）';
+							break;
+						case 7:
+							account_item.Status='（确认失败）';
+							break;
+						case 8:
+							account_item.Status='（域账号已改密）';
+							break;
+					}
+					id_item.data[0].AccountPassword.push(JSON.parse(JSON.stringify(account_item)));
+					////console.log(JSON.stringify(id_item));
+					down_load_ajax(id_item);
+				}
+			});
+            $('#check_one_page_pwd_result').on(' ifClicked', function (e) {
+				if (!$('#check_one_page_pwd_result').is(':checked')) {
+					$("#pwdresult_list tr input").iCheck('check');
+				} else {
+					$("#pwdresult_list tr input").iCheck('uncheck');
+				}
+			});
+			$("#pwdresult_list").on("ifChecked", function (e) {
+				check_num++;
+				$("#pwdresult_total").next("span.sum").text(check_num);
+				if ($("#pwdresult_list tr").find("input:checked").length == $("#pwdresult_list tr").find("input[disabled!=disabled]").length) {
+					$('#check_one_page_pwd_result').iCheck('check');
+				}
+			}).on("ifUnchecked", function (e) {
+				check_num--;
+				$("#pwdresult_total").next("span.sum").text(check_num);
+				$('#check_one_page_pwd_result').iCheck('uncheck');
+			});
+		})
+        var data_item={
+			"HostIP": null,
+			"HostName": null,
+			"AccountPassword": new Array()
+		};
+		var account_item={
+			"Password": null,
+			"AccountName": null,
+			"PasswordType": null,
+			"ProtocolName": null,
+			"OldPasswordType":null,
+			"OldPassword":null,
+			"Status":null
+		};
+        function down_load() {
+			
+			delect_save_pwdresult();
+			if (delect_save_pwd_result.length == 0) {
+				_alert(2, '改密结果', '请选择主机');
+				return false;
+			}
+			_showLoading();
+			// return false;
+			down_load_ajax(null);
+		}
+		//down_load_ajax
+		function down_load_ajax(id) {
+			if (id == null) {
+				id={
+					"totalrow":null,
+					"data":new Array()
+				};
+				////console.log('pwd_result_data_json.data.length:'+pwd_result_data_json.data.length);
+				////console.log(delect_save_pwd_result);
+				for(var i=0;i<pwd_result_data_json.data.length;i++){
+					if( $.inArray(pwd_result_data_json.data[i].PwdModTaskDetailId+'',delect_save_pwd_result)<0){
+						continue;
+					}
+					if(id.data[pwd_result_data_json.data[i].HostId]==undefined && $.inArray(pwd_result_data_json.data[i].PwdModTaskDetailId+'',delect_save_pwd_result)>=0){
+						data_item.HostIP=pwd_result_data_json.data[i].HostIP;
+						data_item.HostName=pwd_result_data_json.data[i].HostName;
+						id.data[pwd_result_data_json.data[i].HostId]=JSON.parse(JSON.stringify(data_item));
+					}
+					////console.log('pwd_result_data_json.data[i].HostId:'+JSON.stringify(id.data[pwd_result_data_json.data[i].HostId]));
+					account_item.AccountName=pwd_result_data_json.data[i].AccountName;
+					account_item.ProtocolName=pwd_result_data_json.data[i].ProtocolName;
+					account_item.PasswordType=pwd_result_data_json.data[i].NewPasswordType;
+					account_item.Password=pwd_result_data_json.data[i].NewPassword;
+					account_item.OldPasswordType=pwd_result_data_json.data[i].OldPasswordType;
+					account_item.OldPassword=pwd_result_data_json.data[i].OldPassword;
+					switch (pwd_result_data_json.data[i].Status) {
+						case 1:case 2:case 3:
+							account_item.Status='（预生成）';
+							break;
+						case 4:
+							account_item.Status='';
+							break;
+						case 5:
+							account_item.Status='（登录失败）';
+							break;
+						case 6:
+							account_item.Status='（改密失败）';
+							break;
+						case 7:
+							account_item.Status='（确认失败）';
+							break;
+						case 8:
+							account_item.Status='（域账号已改密）';
+							break;
+					}
+					id.data[pwd_result_data_json.data[i].HostId].AccountPassword.push(JSON.parse(JSON.stringify(account_item)));
+				}
+			}
+			delete id.totalrow;
+			for(var i=0;i<id.data.length;i++){
+				if(id.data[i]==undefined){
+					id.data.splice(i,1);
+					i--;
+				}
+			}
+			_showLoading();
+			//console.log(id);
+			$.ajax({
+				url:'/bhost/export_pwd',
+				type:'post',
+				async:false,
+				data:{a0:$("input[name=se]").val(),a1:JSON.stringify(id),a2:1},
+				success:function(result){
+					repeat_get = function(){
+						if_ok_down = setInterval(function(){
+							get_down_ok();
+						},5000)}
+					repeat_get();
+				}
+			});	
+			////console.log('id');
+			////console.log(id);
+			// var form = $("<form></form>").attr("action", '/bhost/export_pwd').attr("method", "post").attr('enctype', 'multipart/form-data');
+			// form.append($("<input></input>").attr("type", "hidden").attr("name", "a1").attr("value", JSON.stringify(id)));
+			// form.append($("<input></input>").attr("type", "hidden").attr("name", "a2").attr("value", 1));
+			// form.append($("<input></input>").attr("type", "hidden").attr("name", "a0").attr("value", $("input[name=se]").val()));
+			// form.appendTo('body').submit().remove();
+		}
+		var if_ok_down=null;
+		var use_BH=window.parent.parent.document.frm.use_BH.value;
+		function get_down_ok(){
+				$.ajax({
+						url:'/bhost/get_down_ok_pwd',
+						type:'post',
+						async:false,
+						data:{a0:$("input[name=se]").val()},
+						success:function(result){
+							var down_result = JSON.parse(result);
+							if (down_result.Result){
+								clearInterval(if_ok_down);
+								if (down_result.ErrMsg != "None"){
+										_alert(1,"改密结果",down_result.ErrMsg);
+										return false;
+								}
+								_closeLoading();
+								if(use_BH=='0'){
+									location.href = '/bhost/download_expt?a0='+$("input[name=se]").val();
+									return 0;
+								}
+								var sesstimet = (new Date()).valueOf();
+								//console.log(sesstimet);
+								var referrer_arr=document.referrer.toString().split('/');
+								referrer_arr.pop();
+								var referrer=referrer_arr.join('/');
+								//console.log(referrer);
+								//console.log(result.path);
+								//console.log(result.filename);
+								//console.log(result.filenewname);
+								var json_download = {
+										"Type": "Download",
+										"Url": referrer,
+										"Path": '/usr/storage/.system/passwd/',
+										"Filename": 'expt_'+window.parent.document.frm.us.value+'.'+window.parent.document.frm.se.value+'.pwd',
+										"Session": $("input[name=se]").val(),
+										"sesstimet":sesstimet,
+										"Filenewname": 'expt_'+window.parent.document.frm.us.value+'.pwd',
+								}
+								//console.log(json_download);
+								var if_html_client = false;
+								var base64_str = '';
+								$.ajax({
+										url: "/bhost/get_base64",
+										type:"POST",
+										async:false,
+										data:{a0:$("input[name=se]").val(),z1:JSON.stringify(json_download)},
+										success:function(result){
+												var result=JSON.parse(result);
+												if(result.Result){
+														if_html_client = result.info;
+														base64_str = result.b64;
+												}else{
+														_alert(1,"改密结果",result.ErrMsg); 
+												}
+										}
+								})
+								if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(json_download));
+								else{
+									get_regedit('bhost', window.parent.document.frm.se.value,'',sesstimet);
+									$('#YuFrame1').remove();
+									$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+									$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+								}
+							}
+						}
+				});
+		}
+		//input回车触发事件
+		function showMsg_pwdresult() {
+            delect_save_pwdresult();
+			var cur = $("#pwdresult_page").val();
+			cur=cur.replace(/\D/g, "");
+			if(cur=='' || parseInt(cur) < 1){
+				cur=1;
+			}else if (parseInt(cur)>fenye_r_pwdresult) {
+				cur=fenye_r_pwdresult;
+			}
+			if (parseInt(cur) ==parseInt(paging_r_pwdresult)) {
+				$("#pwdresult_page").val(cur);
+				return false;
+			}
+			paging_r_pwdresult = cur;
+			show_pwdresult_list();
+		}
+		var search_typeall_new_pwdresult='';
+		function _addFilter_pwdresult(obj,type,type_num) {
+			var id = $(obj).parent().children('select').eq(0).children('option:selected').val();
+			var v1 = $(obj).parent().children('select').eq(0).children('option:selected').text();
+			var v2 = $(obj).parent().children('input[type=text]').val().trim();
+			if (id=='all'){
+				v1='';
+			}else{
+				v1=v1+'-';
+			}
+			switch (id) {
+				case 'Status':
+					var v3 = $('#'+id+'_pwdresult').children('option:selected').text();
+					////console.log("3333"+v3)
+					v2=v3;
+					break;
+			}
+			if (v2 == '' && type_num!=1) {
+				_alert(2, '搜索', '请输入关键字', $(obj).parent().children('input[type=text]'));
+				return false;
+			} 
+			// else 
+			{
+				switch(id){
+					case 'hostip':
+						var Reg=/^[0-9\.\s]+$/;
+						break;
+					case 'hostname':
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'protocolname':
+						var Reg=/^[a-zA-Z\d_\-\s]+$/;
+						break;
+					case 'accountname':
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'username':
+						var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+						break;
+					case 'Status':
+						var Reg=/^[\u4e00-\u9fa5]+$/;
+						break;
+				}
+				//if(id!='all' && id!='Status' && !Reg.test(v2) && type_num!=1){
+				if(id!='all'  && !Reg.test(v2) && type_num!=1){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(1, '搜索', '关键字格式不正确', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if(search_typeall_r_pwdresult.indexOf(id+'-'+v2+'\t')>=0 && type_num!=1){
+					$(obj).parent().children('input[type=text]').blur();
+					_alert(2,'搜索','关键字重复', $(obj).parent().children('input[type=text]'));
+					return false;
+				}
+				if (search_typeall_r_pwdresult.indexOf(id) >= 0 && type_num!=1 && (id == "Status"))  {
+						_alert(2, '搜索', '只能搜索一个类型');
+						return false;
+				}
+				var r = /\s+/g;
+				v2 = v2.replace(r,' ');
+				if(type){
+					search_typeall_r_pwdresult = search_typeall_r_pwdresult + id + '-' + v2 + '\t';
+					search_typeall_new_pwdresult='';
+					$(obj).parent().children('input[type=text]').val('');
+					$('#filterWW_pwdresult>ul').append('<li><span style = "display:none">' + id +  '-' + v2 +'</span><span class="ww">' + v1 + v2 + '</span><i class="del" onclick="_delFilter_pwdresult(this);"></i></li>')
+					$('#pwdresult_text_check').hide();
+					switch (id) {
+						case 'Status':
+							//$('#pwdresult_select option[value=Status]').remove();
+							$('#pwdresult_select').val('all').trigger('change');
+							$('#Status_pwdresult').val('0').trigger('change');
+							break;
+					} 
+					selView_pwdresult();
+				}else{
+					if(type_num!=1)search_typeall_new_pwdresult=id + '-' + v2 + '\t';
+				}
+				
+			}
+            delect_save_pwd_result=new Array();
+				$("#pwdresult_list tr").find("input").iCheck('uncheck');
+			pwdresult_page(0.1);
+		}
+		function _delFilter_pwdresult(obj) {
+			var id = $(obj).parent().find("span");
+			var ids = $(id).eq(0).text();
+			search_typeall_r_pwdresult = search_typeall_r_pwdresult.replace(ids+'\t','');
+			var pwdresult_text=$('#pwdresult_text').val().trim();
+			var index_i=ids.indexOf('-');
+			var id_value_now=ids.substring(0,index_i);
+			// <!-- switch (id_value_now) { -->
+			// 	<!-- case 'Status': -->
+			// 		<!-- if($('#pwdresult_select option[value=username]').length>0){ -->
+			// 			<!-- $('#pwdresult_select option[value=username]').after('<option value="Status">执行结果</option>'); -->
+			// 		<!-- } -->
+			// 		<!-- break; -->
+				
+			// <!-- } -->
+			$(obj).parent().remove();
+			selView_pwdresult();
+            delect_save_pwd_result=new Array();
+            $("#pwdresult_list tr").find("input").iCheck('uncheck');
+			pwdresult_page(0.1);
+		}
+		function _clearFilter_pwdresult(obj,num){
+			if(num==1){
+			$('#pwdresult_text').val('');
+			$('#pwdresult_text_check').hide();
+			search_typeall_new_pwdresult='';
+            delect_save_pwd_result=new Array();
+            $("#pwdresult_list tr").find("input").iCheck('uncheck');
+			pwdresult_page(0.1);
+				return;
+			}
+			$('#clearFilter_pwdresult').next().children('ul').empty();
+			$('#pwdresult_text').val('');
+			$('#clearFilter_pwdresult').hide();
+			$('#pwdresult_text_check').hide();
+			search_typeall_new_pwdresult='';
+			search_typeall_r_pwdresult='';
+			selView_pwdresult();
+            delect_save_pwd_result=new Array();
+            $("#pwdresult_list tr").find("input").iCheck('uncheck');
+			pwdresult_page(0.1);
+		}
+		function selView_pwdresult() {
+			var $sel = $('#filterWW_pwdresult');
+			var len = $('li', $sel).length;
+			if (len == 0) {
+				$sel.hide();
+				$('#clearFilter_pwdresult').hide();
+			} else {
+				$("#filterWW_pwdresult").show();
+				$('#clearFilter_pwdresult').show();
+				$('>span.ww', $sel).show();
+				$sel.addClass('selector-multiple');
+			}
+		}
+        //选中字段存储
+		function delect_save_pwdresult() {
+			$(">tr", "#pwdresult_list").each(function (i, item) {
+				var input = $(this).find("input[type='checkbox']");
+				var delect_item = $(">td", this).eq(1).text();
+				var index = $.inArray(delect_item, delect_save_pwd_result);
+				if ($(input).is(':checked')) {
+					if (index < 0) {
+						delect_save_pwd_result.push(delect_item);
+					}
+				} else {
+					if (index >= 0) {
+						delect_save_pwd_result.splice(index, 1);
+					}
+				}
+			});
+		}
+		function check_show_result() {
+			$(">tr", "#pwdresult_list").each(function (i, item) {
+				var check_id = $(">td", this).eq(1).text();
+				var input = $(this).find("input[type='checkbox']");
+				////console.log('check_id:'+check_id);
+				if ($.inArray(check_id, delect_save_pwd_result) >= 0) {
+					input.iCheck('check');
+				}
+			});
+		}
+		var pwdresult_id=0;
+        function update_all_list_result() {
+			var search_typeall=search_typeall_r_pwdresult+search_typeall_new_pwdresult;
+			$.ajax({
+				url: "/bhost/get_pwdresult_list",
+				type: "POST",
+				async: true,
+				data: { a0: $("input[name=se]").val(), a2: search_typeall ,a1: pwdresult_id},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result) {
+						pwd_result_data_json=result.info;
+						pwd_result_array = result.info.data.filter(function (params) {
+							return params.Status!=0;
+						}).map(function (params) {
+							return params.PwdModTaskDetailId + '';
+						});
+					}
+				}
+			});
+		}
+		//以每页显示数显示列表函数
+		function show_pwdresult_list() {
+			update_all_list_result();
+			var paging = paging_r_pwdresult;
+			var page_num = MAX_PAGE;
+			var search_typeall=search_typeall_r_pwdresult+search_typeall_new_pwdresult;
+			$.ajax({
+				url: "/bhost/get_pwdresult_list",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a4: page_num, a3: paging,a2:search_typeall, a1: pwdresult_id },
+				success: function (result) {
+					var pwdresult_result = JSON.parse(result);
+					if (pwdresult_result.Result) {
+						var pwdresult_data = pwdresult_result.info;
+						var total_all = pwdresult_data.totalrow;
+						if (total_all % MAX_PAGE == 0) {
+							fenye_r_pwdresult = parseInt(total_all / MAX_PAGE);
+						} else {
+							fenye_r_pwdresult = parseInt(total_all / MAX_PAGE) + 1;
+						}
+						if (pwdresult_data.data == "" && paging != "1") {
+							pwdresult_page(0.9);
+						} else {
+							//total = 0;
+							total_all_r_pwdresult = total_all;
+							if (total_all) {
+								$("#pwdresult_list").empty();
+								$.each(pwdresult_data.data, function (i, item) {
+									if (item.UpdateTime == null) {
+										item.UpdateTime = '';
+									}
+									if (item.HostName == null) {
+										item.HostName = '';
+									}
+									if (item.HostIP == null) {
+										item.HostIP = '';
+									}
+									if (item.ProtocolName == null) {
+										item.ProtocolName = '';
+									}
+									if (item.AccountName == null) {
+										item.AccountName = '';
+									}
+									if (item.ExecuteUserName == null) {
+										item.ExecuteUserName = '';
+									}
+									switch (item.Status) {
+										case 0:
+											item.Status='准备';
+											break;
+										case 1:
+											item.Status='生成预备密码完成';
+											break;
+										case 2:
+											item.Status='可以执行改密';
+											break;
+										case 3:
+											item.Status='正在执行改密';
+											break;
+										case 4:
+											item.Status='成功';
+											break;
+										case 5:
+											item.Status='登录失败';
+											break;
+										case 6:
+											item.Status='改密失败';
+											break;
+										case 7:
+											item.Status='确认失败';
+											break;
+										case 8:
+											item.Status='域账号已改密';
+											break;
+										case 9:
+											item.Status='取消改密';
+											break;											
+									}
+									$("#pwdresult_list").append("<tr>" +
+										"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" id=\"inputtd-" + item.PwdModTaskDetailId + "\" "+(item.Status=='准备'?'disabled="disabled"':'')+"/></td>" +
+										"<td style = \"display:none\">" + item.PwdModTaskDetailId + "</td>" +
+										"<td title='" + item.UpdateTime + "'>" + item.UpdateTime + "</td>" +
+										"<td title='" + item.HostName+'('+item.HostIP+')'+ "'>" + item.HostName+'('+item.HostIP+')' + "</td>" +
+										"<td title='" + item.ProtocolName + "'>" + item.ProtocolName + "</td>" +
+										"<td title='" + item.AccountName + "'>" + item.AccountName + "</td>" +
+										"<td title='" + (item.ExecuteUserName) + "'>" + (item.ExecuteUserName) + "</td>" +
+										"<td title='" + item.Status + "'>" + item.Status + "</td>" +
+										"<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"icon6\" id=\"icon6\" style=\"\" title='下载'></a>"+
+										"</div>"+
+										"</td></tr>");
+									//}
+								})
+								$('#pwdresult_list_box_div table thead tr th').removeAttr('style');
+								$(".input_checkbox", "#pwdresult_list").iCheck({
+									checkboxClass: 'icheckbox_minimal-blue',
+									radioClass: 'iradio_minimal-blue',
+									increaseArea: '0' // optional
+								});
+								$("#pwdresult_total").text(total_all);
+								if (paging >= fenye_r_pwdresult) {
+									paging = fenye_r_pwdresult;
+								}
+								$('#check_one_page_pwd_result').iCheck('uncheck');
+								$("#pwdresult_list tr td.in input").iCheck('uncheck');
+								paging_r_pwdresult = paging;
+								check_show_result();
+								check_num = delect_save_pwd_result.length;
+								$("#pwdresult_total").next("span.sum").text(check_num);
+								document.getElementById("pwdresult_page").value = paging;
+								$("#pwdresult_pages").text(fenye_r_pwdresult);
+							} else {
+								$("#pwdresult_list").empty();
+								$("#pwdresult_total").text(total_all);
+								$("#pwdresult_pages").text(1);
+								paging_r_pwdresult=1;fenye_r_pwdresult=1;
+								document.getElementById("pwdresult_page").value = 1;
+							}
+						}
+					} else {
+						_alert(1, "改密结果", pwdresult_result.ErrMsg);
+						$("#pwdresult_list_box_div").next("div.tab-i").children("div.il").find("span.sum").text(0);
+						$("#pwdresult_total").text(0);
+						$("#pwdresult_pages").text(1);
+						paging_r_pwdresult=1;fenye_r_pwdresult=1;
+						document.getElementById("pwdresult_page").value = 1;
+						return false;
+					}
+				}
+			});
+		}
+		//分页 and 刷新
+		function pwdresult_page(num) {
+            delect_save_pwdresult();
+			////console.log('paging_r_pwdresult'+paging_r_pwdresult);
+			////console.log('fenye_r_pwdresult'+fenye_r_pwdresult);
+			var paging = parseInt(paging_r_pwdresult) + num;
+			if (paging == 0 || paging == fenye_r_pwdresult + 1) {
+				return false;
+			}
+			var pwdresult_list_s = [];
+			if (num == 0.1) {
+				var paging = 1;
+			} else if (num == 0.9) {
+				var paging = fenye_r_pwdresult;
+			}
+			document.getElementById("pwdresult_page").value = paging;
+			paging_r_pwdresult = paging;
+			show_pwdresult_list();
+		}
+	</script>
+</body>
+
+</html>

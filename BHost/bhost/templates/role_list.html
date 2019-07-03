@@ -1,0 +1,246 @@
+{% extends  "index.html" %}
+{% block head %}
+<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+{% endblock  %}
+
+{% block main %}
+<!---->
+		<div class="mainer">
+				<div class="container">
+					<div class="c-top">
+						<div class="c-title">
+							<a href="javascript:;" onclick="user_manage(1);"><h3>角色管理</h3></a>
+							<a href="javascript:;" onclick="user_manage(0);"><h3 class="unsel">用户管理</h3></a>
+						</div>
+					</div>
+
+					<div class="c-cont2">
+						<div class="c-wrap">
+							<div class="c-table">
+								<div class="tab-t">
+									<div class="ctr">
+										<a href="javascript:;" class="btn btn-default">创建</a>
+										<a href="javascript:;" class="btn btn-default" onclick="_allCheck('#_table');">全选</a>
+										<a href="javascript:;" class="btn btn-default">删除</a>
+										<a href="javascript:;" class="btn btn-default">刷新</a>
+									</div>
+
+									<div class="filter">
+										<div class="search">
+											<select name="" id="" class="filter-select">
+												<option value="0">姓名</option>
+											</select>
+
+											<input type="text" class="filter-text" placeholder="输入关键字">
+
+											<button class="filter-btn" onclick="_addFilter(this)"><img src="/manage/images/search-icon.png"></button>
+										</div>
+
+										<div class="selector" id="filterWW" style="display: none;">
+											<span class="ww">关键字</span>
+											<ul></ul>
+										</div>
+									</div>
+								</div>
+
+								<table cellpadding="0" cellspacing="0" id="_table">
+									<thead>
+										<tr><th><input class="form-checkbox" type="checkbox" name="" id=""></th>
+											<th>姓名</th>
+											<th>角色</th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th width="60"></th>
+										</tr>
+									</thead>
+
+									<tbody>
+										<tr><td><input class="form-checkbox" type="checkbox" name="" id=""></td>
+											<td>名字</td>
+											<td>监控概要-访问</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td><div class="tab-ctr">
+													<a href="javascript:;" class="edit"></a>
+													<a href="javascript:;" class="del"></a>
+												</div>
+											</td>
+										</tr>
+
+										<tr><td><input class="form-checkbox" type="checkbox" name="" id=""></td>
+											<td>名字</td>
+											<td>监控概要-访问</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td><div class="tab-ctr">
+													<a href="javascript:;" class="edit"></a>
+													<a href="javascript:;" class="del"></a>
+												</div>
+											</td>
+										</tr>
+
+										<tr><td><input class="form-checkbox" type="checkbox" name="" id=""></td>
+											<td>名字</td>
+											<td>监控概要-访问</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td><div class="tab-ctr">
+													<a href="javascript:;" class="edit"></a>
+													<a href="javascript:;" class="del"></a>
+												</div>
+											</td>
+										</tr>
+
+										<tr><td><input class="form-checkbox" type="checkbox" name="" id=""></td>
+											<td>名字</td>
+											<td>监控概要-访问</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td><div class="tab-ctr">
+													<a href="javascript:;" class="edit"></a>
+													<a href="javascript:;" class="del"></a>
+												</div>
+											</td>
+										</tr>
+
+										<tr><td><input class="form-checkbox" type="checkbox" name="" id=""></td>
+											<td>名字</td>
+											<td>监控概要-访问</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td>主机监控-控制</td>
+											<td><div class="tab-ctr">
+													<a href="javascript:;" class="edit"></a>
+													<a href="javascript:;" class="del"></a>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<div class="tab-i">
+									<div class="il">
+										每页显示
+										<select name="">
+											<option value="5">5</option>
+											<option value="10" selected>10</option>
+											<option value="15">15</option>
+										</select>
+										条 总数：25  选中：0
+									</div>
+
+									<div class="ipage">
+										<a href="javascript:;" class="nav2 begin"><i></i></a>
+										<a href="javascript:;" class="nav prev"><i></i></a>
+										<input type="text" value="1">/25
+										<a href="javascript:;" class="nav next"><i></i></a>
+										<a href="javascript:;" class="nav2 end"><i></i></a>
+									</div>
+								</div>
+							</div>
+							
+							<div class="clearfix"></div>
+							<!--
+							<div class="btns">
+								<a href="javascript:;" class="btn btn-normal" onclick="back();">返&nbsp;&nbsp;回</a>
+							</div>
+							-->
+							<div id="bBtn" style="position: fixed;z-index:5;">
+								<a href="javascript:;" class="btn" style="float: right;" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<form action="/bhost/user_manage" method="POST" name="frm_access">
+			<input type="hidden" name="tasktype"  value="0" />
+			<input type="hidden" name="se"  value="123456" />
+			<input type="hidden" name="us"  value="1233" />
+		</form>
+		
+{% endblock  %}		
+
+
+{% block script %}
+<script>
+
+function _addFilter(obj){
+	var v1 = $(obj).parent().children('select').children('option:selected').text();
+	var v2 = $(obj).parent().children('input[type=text]').val().trim();
+	if(v2 == ''){
+		layer.alert('请输入关键字',{icon:2});
+		return;
+	}else{
+		$('#filterWW>ul').append('<li><span class="ww">'+v1+'-'+v2+'</span><i class="del" onclick="_delFilter(this)"></i></li>')
+		selView();
+	}
+	
+}
+
+function _delFilter(obj){
+	$(obj).parent().remove();
+	selView();
+}
+
+function selView(){
+	var $sel = $('#filterWW');
+	var len = $('li',$sel).length;
+
+	if(len == 0){
+		$sel.hide();
+	}else if(len == 1){
+		$('>span.ww',$sel).hide();
+		$sel.removeClass('selector-multiple').show();
+	}else{
+		$('>span.ww',$sel).show();
+		$sel.addClass('selector-multiple');
+	}
+}
+$(function(){
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+	$('.form-select').select2();
+})
+function user_manage(tasktype){
+	document.frm_access.tasktype.value=tasktype;
+	document.frm_access.action = '/bhost/user_manage';
+	document.frm_access.submit();
+}
+function back(){
+	document.frm_access.tasktype.value=3;
+	document.frm_access.action = '/bhost/index';
+	document.frm_access.submit();
+}
+function _allCheck(obj){
+	$(obj,'').each(function(i,item){
+		
+	})
+}
+</script>
+{% endblock  %}

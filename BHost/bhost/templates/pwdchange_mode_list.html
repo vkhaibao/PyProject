@@ -1,0 +1,954 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />
+	<link rel="stylesheet" href="/manage/css/G-style.css" type="text/css" />
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+	
+</head>
+<style>
+	.form-item {
+		float:left;
+		width: auto;
+		height: auto;
+		padding: 20px 0 10px;
+		min-height: 28px;
+	}
+	.form-text1{
+		padding-right: 8px;
+	}
+	.item i.ctrl {
+		float: left;
+		margin-top: 26px;
+		display: inline-block;
+		width: 15px;
+		height: 15px;
+		background: url(/manage/images/icon-ctr.png) no-repeat 0 0;
+		vertical-align: middle;
+		margin-left: 5px;
+		cursor: pointer;
+	}
+	.item i.ctrl.add {
+		background-position: 0 -15px;
+	}
+	a.btn-normal1 {
+		display: inline-block;
+		width: 90px;
+		height: 32px;
+		border: 1px solid #DDD;
+		text-align: center;
+		line-height: 32px;
+		border-radius: 18px;
+		margin: 0 10px;
+		background-color: #fff;
+		transition: background-color 0.4s;
+		color: #7c7c7c;
+	}
+	a.btn-normal1:hover{
+		background-color: #8d808a;
+		color: #fff;
+	}
+	.tab-type2 table tr:hover td:last-child {
+		border-right: 1px solid #3fb7d2;
+		background-color: #63c3d9;
+	}
+	.c-dialog-cont {
+		width: 100%;
+		position: relative;
+		overflow: auto;
+		background-color: #fff;
+	}
+	.c-form-host .form-item {
+		float: left;
+		width: 230px;
+		padding: 10px 0px;
+	}
+	.c-wrap {
+		width: auto;
+	}
+</style>
+<body style="overflow:hidden;" class="bg-white">
+		<!--改密模式表-->
+		<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+				<h3 onclick="parent.reload();">改密模式</h3>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer" name="pwdchange_mode" id="pwdchange_mode" >
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr">
+									<a href="javascript:;" class="btn btn-default" onclick="pwdchange_mode_page(0);clear_all();">刷新</a>
+								</div>
+								<div class="filter">
+									<div class="search">
+										<select name="pwdchange_mode_select" id="pwdchange_mode_select" class="filter-select">
+											<option value="0" selected>所有</option>
+											<option value="devicetypename">名称</option>
+										</select>
+
+										<input type="text" style="display:none;" class="filter-text" placeholder="输入关键字" name="pwdchange_mode_text" id="pwdchange_mode_text" maxlength="128" onkeydown=" if (event.keyCode == 13){_addFilter(this,false);return false;} else return; ">
+
+										<button class="btn filter-btn" onclick="_addFilter(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th width="200">设备类型</th>
+											<th>模式</th>
+											<th width="25"></th>
+										</tr>
+									</thead>
+
+									<tbody name="pwdchange_mode_list" id="pwdchange_mode_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_nums">10</span>条 总数：<span id = "pwdchange_mode_total">0</span> 
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="pwdchange_mode_begin" onclick="pwdchange_mode_page(0.1);" ><i></i></a>
+									<a href="javascript:;" class="nav prev" id="pwdchange_mode_prev" onclick="pwdchange_mode_page(-1);" ><i></i></a>
+									<input type="text" id = "pwdchange_mode_page" value="1" onchange="showMsg();">/<span id = "pwdchange_mode_pages">1</span>
+									<a href="javascript:;" class="nav next" id="pwdchange_mode_next" onclick="pwdchange_mode_page(1);" ><i></i></a>
+									<a href="javascript:;" class="nav2 end" id="pwdchange_mode_end" onclick="pwdchange_mode_page(0.9);" ><i></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="clearfix"></div>
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal" onclick="save_pwdchange_mode();">返&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--添加或编辑-->
+		<div class="mainer" name='add_pwdchange_mode' id="add_pwdchange_mode" style="display:none;">
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap" style="padding: 10px 0 0;">
+						<div class="c-exp">
+							<div class="h-explorer" style="">
+									<div class="h-catelog h-catelog2" style="width: 100%;background-color: rgb(255, 255, 255);float: none;border-right:none;padding: 0;overflow: hidden;">
+										<div class="server_div">
+											<div class="c-table r-list tab-type2" style="padding-top: 35px;padding-bottom: 10px;">
+												<div class="box-table" style="overflow: hidden;">
+													<table cellpadding="0" cellspacing="0">
+														<thead>
+															<tr>
+																<th width="40"><input type="checkbox" class="form-checkbox" id="check_all"/></th>
+																<th width='200'>名称</th>
+																<th width="40">启用</th>
+																<th width="70">方式</th>
+																<th>参数</th>
+																<th width="50"></th>
+															</tr>
+														</thead>
+													</table>
+												</div>
+												<div class="box-table server_table_div" style="overflow: auto;margin-top: -1px;max-height: 380px;">
+													<table cellpadding="0" cellspacing="0">
+														<tbody name="pwdchange_mode_item_table" id="pwdchange_mode_item_table">
+														</tbody>
+													</table>
+												</div>
+												<div class="form" >
+													<div class="form-item form-item-100" style="width:100%">
+														<div style="text-align: right;">
+															<a href="javascript:;" id="" class="btn btn-normal1" onclick="mode_Dialog('add',this);">添&nbsp;&nbsp;加</a>
+															<a href="javascript:;" id="" class="btn btn-normal1" onclick="delete_mode(this,2);">删&nbsp;&nbsp;除</a>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal" onclick="save_data();">确&nbsp;&nbsp;定</a>
+							<a href="javascript:;" class="btn btn-normal" onclick="back();">返&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+	<form action="/bhost/get_pwdchange_mode_list" method="POST" name="frm_pwdchange_mode" id="frm_pwdchange_mode">	
+			<input type="hidden" name="tasktype" id = "tasktype" value="{{tasktype}}" />
+			<!--创建 编辑 列表-->
+			<input type="hidden" name="a" id = "a" value="{{a}}" />
+			<!--需要查询id-->
+			<input type="hidden" name="c" id = "c" value="{{c}}" />
+			<!--页码-->
+			<input type="hidden" name="d" id = "d" value="{{d}}" />
+			<!--search_typeall-->
+			<input type="hidden" name="e" id = "e" value="{{e}}" />
+			<input type="hidden" name="se" id = "se" value="{{se}}" />
+			<!--search_typeall_new-->
+	</form>
+	<!-- 浮层 -->
+	<!--改密模式-->
+	<div class="dialog-cont" id="scDCTab1" style="display:none;">
+		<div class="container">
+			<div class="c-dialog-cont" style="min-height: auto;max-height:550px;overflow:auto;">
+				<div class="c-wrap" style="padding:0 0 90px;margin-top: -10px;overflow: hidden;">
+				<div class="c-form c-form-host col3" style="min-width: 95%;">
+					
+					<div class="clearfix"></div>
+					<div class="c-table" style="padding: 0;">
+						<div class="form" id="pwdchange_mode_form" name="pwdchange_mode_form"  style="overflow: hidden;">
+							<div class="form-item" style="float: none;padding: 15px 0px;">
+								<span class="form-tag"><em class="imp">*</em>名称：</span>
+								<div class="form-c">
+									<input type="text" style="width: 248px;" class="form-text" id="Name" maxlength="128" onblur="regCheck(this,nameReg);">
+									<i class="v-check"></i>
+									<p class="form-tip">特殊字符仅支持下划线、横杠、小数点</p>
+								</div>
+							</div>
+							<div class="form-item" style="width: 100%;">
+								<span class="form-tag"><em class="imp">*</em>方式：</span>
+								<div class="form-c">
+									<select class="form-select" name="Type" id="Type" style="width: 120px;">
+										<option value="1">改密模式</option>
+										<option value="2">自定义脚本</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-item" id="Config_div">
+								<span class="form-tag"><em class="imp">*</em>脚本：</span>
+								<div class="form-c">
+									<textarea id="Config" name="Config" class="form-textarea" style="height: 100px;width: 400px;resize: none;"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="btns" style="padding: 20px 0 0px;">
+						<a href="javascript:;" class="btn btn-normal btn-submit" >确&nbsp;&nbsp;定</a>
+						<a href="javascript:;" class="btn btn-normal btn-cancel" onclick="">取&nbsp;&nbsp;消</a>
+					</div>
+				</div>
+				</div>
+			</div>  
+		</div>
+	</div>
+	
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+$('.filter-select,.form-select').select2({minimumResultsForSearch: -1});
+var total_all_r=0;
+//总数
+var fenye_r=0;
+//总页码
+var search_typeall_r=document.frm_pwdchange_mode.d.value!=''?document.frm_pwdchange_mode.d.value.split('\t'):new Array();
+//关键字
+var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+
+var pwdchange_mode_data=null;
+var pwdchange_mode_item=null;
+$(function(){
+	_initSize();
+	document.frm_pwdchange_mode.se.value=window.parent.document.frm.se.value;
+	$("#pwdchange_mode_select").change(function(){
+		var type = $(this).val();
+		if(type == 0){
+			$("#pwdchange_mode_text").hide();
+			$('#filterWW').hide();
+			$('#clearFilter').hide();
+		}else{
+			$("#pwdchange_mode_text").show();
+			if($('#filterWW ul li').length){
+				$('#filterWW').show();
+				$('#clearFilter').show();
+			}
+		}
+	});
+	$('#Type').on('change',function () {
+		var type = $(this).val();
+		if(type=='1'){
+			$('#pwdchange_mode_form .select-form').show();
+			$('#Config_div').hide();
+		}else{
+			$('#pwdchange_mode_form .select-form').hide();
+			$('#Config_div').show();
+		}
+	});
+	$('#check_all').on('ifClicked', function () {
+		if (!$('#check_all').is(':checked')) {
+			$("#pwdchange_mode_item_table td.in input").iCheck('check');
+		} else {
+			$("#pwdchange_mode_item_table td.in input").iCheck('uncheck');
+		}
+	});
+	$("#pwdchange_mode_item_table").on("ifChanged",'input', function () {
+		if ($("#pwdchange_mode_item_table td.in input:checked").length == $("#pwdchange_mode_item_table td.in input").length) {
+			$('#check_all').iCheck('check');
+		}else{
+			$('#check_all').iCheck('uncheck');
+		}
+		if($(this).parents('td.input_td').length){
+			var name=$(this).parents('tr').find('td').eq(1).text();
+			var check_true=pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+				return params.IsDefault==true;
+			});
+			if (check_true.length>0){
+				$.each(check_true,function (i,item) {
+					item.IsDefault=false;
+				});
+			}
+			pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+				return params.Name==name;
+			})[0].IsDefault=true;
+			show_config();
+		}
+		
+	});
+	//输入数字
+	$("#pwdchange_mode_page").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	//页码显示
+	$("#page_nums").val(MAX_PAGE);
+	//list show
+	show_pwdchange_mode_list();
+	parent._switchBtn(1);//显示按钮
+	//
+	$('#pwdchange_mode_item_table').on('dblclick','tr',function (e) {
+		x=e.target;
+		if(x.nodeName !='A' && x.nodeName !='INS'){
+			mode_Dialog('edit',$(this).find('a.edit'));
+		}
+	}).on('click','tr',function (e) {
+		x=e.target;
+		//编辑按钮
+		if(x.id == 'edit'){
+			mode_Dialog('edit',$(this).find('a.edit'));
+		}else if(x.id == 'del'){
+			delete_mode($(this).find('a.del'),1);
+		}
+	});
+	//tr双击事件
+	$("#pwdchange_mode_list").on('dblclick','tr',function(e){
+		x=e.target;
+		if(x.nodeName !='A' && x.nodeName !='INS'){
+			var id=$(this).find("td");
+			$('#pwdchange_mode').hide();
+			$('#add_pwdchange_mode').show();
+			$(".tab-moreinfo").hide();
+			var edit_item=$(id).eq(1).text();
+			pwdchange_mode_item=pwdchange_mode_data.data.filter(function (index) {
+				return index.DeviceTypeId==parseInt(edit_item);
+			})[0];
+			show_config();
+		}
+	}).on("click", "tr", function (e){  
+		x=e.target;
+		//编辑按钮
+		if(x.id == 'edit'){
+			var id=$(this).find("td");
+			$('#pwdchange_mode').hide();
+			$('#add_pwdchange_mode').show();
+			$(".tab-moreinfo").hide();
+			var edit_item=$(id).eq(1).text();
+			pwdchange_mode_item=pwdchange_mode_data.data.filter(function (index) {
+				return index.DeviceTypeId==parseInt(edit_item);
+			})[0];
+			show_config();
+		}
+	});
+})
+function show_config(){
+	$('#pwdchange_mode_form .select-form').remove();
+	if(pwdchange_mode_item.PwdModMethodSet!=null){
+		$('#pwdchange_mode_form').append(pwdchange_mode_item.PwdModMethodSet.map(function (params) {
+			var option_str='<option value="'+params.MethodOptionValue[0].replace(/'/g,"")+'" selected >'+params.MethodOptionName[0].replace(/'/g,"")+'</option>';
+			for (i=1;i<params.MethodOptionValue.length;i++){
+				option_str+=('<option value="'+params.MethodOptionValue[i].replace(/'/g,"")+'" >'+params.MethodOptionName[i].replace(/'/g,"")+'</option>');
+			}
+			return '<div class="form-item select-form">'+
+			'<span class="form-tag">'+params.MethodTitle+'：'+'</span>'+
+			'<div class="form-c">'+
+			'<select class="form-select item_select" name="'+params.MethodName+'" id="'+params.MethodName+'" style="width: 132px;">'+
+			option_str+'</select>'+
+			'</div></div>';
+		}).join(''));
+		$('#Type').empty();
+		$('#Type').append('<option value="1">改密模式</option><option value="2">自定义脚本</option>');
+		$('.filter-select,.select-form .form-select','#pwdchange_mode_form').select2({minimumResultsForSearch: -1});
+	}else{
+		pwdchange_mode_item.PwdModMethodSet=new Array();
+		$('#Type').empty();
+		$('#Type').append('<option value="2">自定义脚本</option>');
+		$('.filter-select,.select-form .form-select','#pwdchange_mode_form').select2({minimumResultsForSearch: -1});
+	}
+	$('#check_all').iCheck('uncheck');
+	$('#pwdchange_mode_item_table').empty();
+	if(pwdchange_mode_item.PwdModConfigSet!=null){
+		$('#pwdchange_mode_item_table').append(pwdchange_mode_item.PwdModConfigSet.map(function (params) {
+			if(params.Type==1){
+				var params_Config_arr=params.Config.split(' ');
+				var params_str='';
+				$.each(pwdchange_mode_item.PwdModMethodSet,function (i,item) {
+					params_str+=(item.MethodTitle+'：'+item.MethodOptionName[$.inArray("'"+params_Config_arr[i]+"'",item.MethodOptionValue)].replace(/'/g,"")+'，');
+				});
+				params_str=params_str!=''?params_str.substr(0,params_str.length-1):'';
+			}else{
+				var params_str=(params.Config=='' || params.Config==null)?'':HTMLEncode(params.Config);
+			}
+			return "<tr><td class=\"in\" width='40'>"+((params.PwdModConfigId>0 && params.PwdModConfigId<=1000)?'':"<input type=\"checkbox\" class=\"input_checkbox\" style=\"\"></td>")+
+			"<td width='200'>"+(params.Name||'')+"</td>"+
+			"<td width='40' class='input_td'><input type=\"checkbox\" class=\"input_checkbox\" style=\"\" "+(params.IsDefault?'checked="checked"':'')+"></td></td>"+
+			"<td width='70'>"+(params.Type==1?'改密模式':'自定义脚本')+"</td>"+
+			"<td>"+params_str+"</td>"+
+			"<td width='50'><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"edit\" id=\"edit\" style=\"width: 7px;\" onclick=\"mode_Dialog('edit',this);\"></a>"+((params.PwdModConfigId>0 && params.PwdModConfigId<=1000)?'':"<a href=\"javascript:;\" class=\"del\" id=\"del\" style=\"width: 7px;\" onclick=\"\"></a>")+
+			"</div></td></tr>"
+		}).join(''));
+		$(".input_checkbox","#pwdchange_mode_item_table").iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+		$.each($('#pwdchange_mode_item_table tr.input_td input'),function(){
+			if ($(this).is(':checked')) {
+				$(this).iCheck('disable');
+			}
+		});
+		
+	}else{
+		pwdchange_mode_item.PwdModConfigSet=new Array();
+	}
+}
+function save_data() {
+	if(pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+		return params.IsDefault==true;
+	}).length==0 && pwdchange_mode_item.PwdModConfigSet.length!=0){
+		_alert(2,'警告','请选择一条模式启用');
+		return false;
+	}
+	delete pwdchange_mode_item.DeviceTypeName;
+	delete pwdchange_mode_item.PwdModMethodSet;
+	//console.log(pwdchange_mode_item);
+	msstr = aceg(JSON.stringify(pwdchange_mode_item),$("input[name=se]").val());
+	$.ajax({
+		url: "/bhost/save_pwdchange_mode_item",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:JSON.stringify(pwdchange_mode_item),m1:msstr},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				$('.btn').blur();parent.layer.open({
+					type:1,
+					title: '改密模式',
+					content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn:['确&nbsp;&nbsp;定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					yes:function(i){
+						parent.layer.close(i);
+						back();
+					}
+				});	
+			}else{
+				_alert(1,'改密模式',result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+function clear_mode() {
+		$('#Name').val('');
+		$("#Name").attr("disabled",false);
+		$('#scDCTab1').find('i.v-check').removeClass().addClass('v-check');
+		$('#scDCTab1').find('select').prop('selectedIndex', 0).trigger('change');
+		$('#Config').val('');
+}
+function edit_mode(obj){
+	var tr_name=$(obj).parents('tr').find('td').eq(1).text();
+	//console.log(tr_name);
+	var PwdModConfig=pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+		return params.Name==tr_name;
+	})[0];
+	//console.log(PwdModConfig);
+	$("#Name").val(tr_name);
+	$("#Name").attr("disabled",true);
+	//console.log(PwdModConfig.Type);
+	$('#Type').val(PwdModConfig.Type).trigger('change');
+	if(PwdModConfig.Type==1){
+		if(PwdModConfig.Config!=null && PwdModConfig.Config!=''){
+			var config_arr=PwdModConfig.Config.split(' ');
+			//console.log();
+			var select_arr=$('#scDCTab1').find('select.item_select');
+			$.each(select_arr,function (i,item) {
+				//console.log(config_arr[i]);
+				$(item).val(config_arr[i]).trigger('change');
+			});
+		}
+	}else{
+		$('#Config').val(PwdModConfig.Config);
+	}
+}
+function mode_Dialog(type,obj) {
+	var $dialogCont = $("#scDCTab1").show();
+	clear_mode();
+	switch (type) {
+		case 'add':
+			title="添加";
+			break;
+		case 'edit':
+			title="编辑";
+			edit_mode(obj);
+			break;
+		default:
+			break;
+	}
+	var d = dialog({
+		title:title,
+		content:$dialogCont,
+		id:"scDCTab1",
+		width:"800px"
+	});
+	d.addEventListener('close', function () {
+		$dialogCont.appendTo("body").hide();
+	});
+	d.showModal();
+
+	$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+		d.close().remove();
+	});
+	$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+		if(save_mode(type)){
+			d.close().remove();
+		}
+	})
+}
+function delete_mode(obj,type) {
+	if(type==1){
+		title='是否删除'
+	}else{
+		if(!$("#pwdchange_mode_item_table td.in input:checked").length){
+			_alert(2,"改密模式","请选择要删除的数据");
+			return false;
+		}
+		title='是否批量删除';
+	}
+	$('.btn').blur();parent.layer.open({
+		type:1,
+		title: '删除确认',
+		content: '<div class="layer-alert"><i class="alert fail"></i>'+title+'</div>',
+		btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		yes:function(i){
+			parent.layer.close(i);
+			if(type==1){
+				var tr_name=$(obj).parents('tr').find('td').eq(1).text();
+				pwdchange_mode_item.PwdModConfigSet=pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+					return params.Name!=tr_name;
+				});
+				$(obj).parents('tr').remove();
+				$('#check_all').iCheck('uncheck');
+			}else{
+				var check_name=$("#pwdchange_mode_item_table td.in input:checked").map(function (params) {
+					return $(this).parents('td').next('td').text();
+				});
+				//console.log(check_name);
+				pwdchange_mode_item.PwdModConfigSet=pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+					return $.inArray(params.Name,check_name)<0;
+				});
+				$("#pwdchange_mode_item_table td.in input:checked").parents('tr').remove();
+				$('#check_all').iCheck('uncheck');
+			}
+			//console.log(pwdchange_mode_item);
+		}
+	});
+	
+	
+}
+function save_mode(type) {
+	var type_item=$('#Type').val();
+	switch (type_item+type) {
+		case '1add':
+			var name=$("#Name").val();
+			if(name==''){
+				_alert(2,'警告','名称不能为空',$("#Name"));
+				return false;
+			}else if(!nameReg.test(name)){
+				_alert(2,'警告','名称不符合要求',$("#Name"));
+				return false;
+			}
+			if (pwdchange_mode_item.PwdModConfigSet!=null){
+				if(pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+					return params.Name==name;
+				}).length){
+					_alert(1,'警告','同名的方式已存在',$("#Name"));
+					return false;
+				}
+			}else{
+				pwdchange_mode_item.PwdModConfigSet=new Array();
+			}
+			if(pwdchange_mode_item.PwdModMethodSet!=null){
+				var config=pwdchange_mode_item.PwdModMethodSet.map(function (params) {
+					return $('#'+params.MethodName).val();
+				}).join(' ');
+			}else{
+				var config='';
+			}
+			var config_json=JSON.parse('{"Config":null,"IsDefault": false,"Type": 1,"PwdModConfigId": 0,"Name":null}');
+			config_json.Config=config;
+			config_json.Name=name;
+			pwdchange_mode_item.PwdModConfigSet.push(config_json);
+			//console.log(pwdchange_mode_item.PwdModConfigSet);
+			show_config();
+			break;
+		case '2add':
+		var name=$("#Name").val();
+			if(name==''){
+				_alert(2,'警告','名称不能为空',$("#Name"));
+				return false;
+			}else if(!nameReg.test(name)){
+				_alert(2,'警告','名称不符合要求',$("#Name"));
+				return false;
+			}
+			if (pwdchange_mode_item.PwdModConfigSet!=null){
+				if(pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+					return params.Name==name;
+				}).length){
+					_alert(1,'警告','同名的方式已存在',$("#Name"));
+					return false;
+				}
+			}else{
+				pwdchange_mode_item.PwdModConfigSet=new Array();
+			}
+			var config=$('#Config').val();
+			if(config==''){
+				_alert(2,'警告','脚本内容不能为空',$('#Config'));
+				return false;
+			}
+			//console.log(config);
+			var config_json=JSON.parse('{"Config":null,"IsDefault": false,"Type": 2,"PwdModConfigId": 0,"Name":null}');
+			config_json.Config=config;
+			config_json.Name=name;
+			pwdchange_mode_item.PwdModConfigSet.push(config_json);
+			//console.log(pwdchange_mode_item.PwdModConfigSet);
+			show_config();
+			break;
+		case '1edit':
+			var name=$("#Name").val();
+			var inarr=pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+				return params.Name==name;
+			})
+			if(pwdchange_mode_item.PwdModMethodSet!=null){
+				var config=pwdchange_mode_item.PwdModMethodSet.map(function (params) {
+					return $('#'+params.MethodName).val();
+				}).join(' ');
+				if(inarr[0].Config!=config){
+					inarr[0].Config=config;
+					show_config();
+				}
+			}else{
+				var config='';
+			}
+			//console.log(pwdchange_mode_item.PwdModConfigSet);
+			break;
+		case '2edit':
+			var name=$("#Name").val();
+			var inarr=pwdchange_mode_item.PwdModConfigSet.filter(function (params) {
+				return params.Name==name;
+			})
+			var config=$('#Config').val();
+			if(config==''){
+				_alert(2,'警告','脚本内容不能为空',$('#Config'));
+				return false;
+			}
+			if(inarr[0].Config!=config){
+				inarr[0].Config=config;
+				show_config();
+			}
+			//console.log(pwdchange_mode_item.PwdModConfigSet);
+			break;
+		default:
+			break;
+	}
+	return true;
+}
+function back() {
+	$(".tab-moreinfo").hide();
+	$('#pwdchange_mode').show();
+	$('#add_pwdchange_mode').hide();
+	pwdchange_mode_page(0);
+}
+function save_pwdchange_mode()
+{
+	window.parent._closePage(null); 
+}
+$(window).resize(function(){
+	_initSize();
+});
+function _initSize(){
+	var h = $(window).height();
+	var w = $(window).width();
+	// $('.h-content2').height(h-200);
+	$('.h-content2').height($('.h-explorer').height()-20);
+	$('.c-exp').height($('.c-cont').height()-50);
+	$('.server_table_div').css('height',h-313);
+}
+function _addFilter(obj,type){
+	var id = $(obj).parent().children('select').val();
+	if (id=="0"){
+		$('#filterWW>ul').empty();
+		search_typeall_r = new Array();
+		search_typeall_new='';
+		$(obj).parent().children('input[type=text]').val('');
+		pwdchange_mode_page(0.1);
+		return false;
+	}
+	var v1 = $(obj).parent().children('select').children('option:selected').text();
+	var v2 = $(obj).parent().children('input[type=text]').val().trim();
+	if(v2 == ''){
+		$(obj).parent().children('input[type=text]').blur();
+		_alert(2,'关键字输入','关键字为空', $(obj).parent().children('input[type=text]'));
+		return false;
+	}else{
+		if(id=='Name' && !nameReg.test(v2)){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(2,'关键字输入','请输入正确的关键字', $(obj).parent().children('input[type=text]'));
+			return false;
+		}
+		if($.inArray(id+'-'+v2,search_typeall_r)>=0){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(2,'关键字输入','关键字重复', $(obj).parent().children('input[type=text]'));
+			return false;
+		}
+		if(type){
+			search_typeall_r.push(id+'-'+v2);
+			search_typeall_new='';
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'-'+v2+'</span><span class="ww">'+v1+'-'+v2+'</span><i class="del" onclick="_delFilter(this);"></i></li>')
+			$("#pwdchange_mode_text").val('');
+			selView();
+		}else{
+			search_typeall_new=id+'-'+v2;
+		}
+	}
+	pwdchange_mode_page(0.1);
+}
+var search_typeall_new=document.frm_pwdchange_mode.e.value;
+function _delFilter(obj){
+	var id = $(obj).parent().find("span");
+	var ids=$(id).eq(0).text();
+	search_typeall_r.splice($.inArray(ids,search_typeall_r),1);
+	var pwdchange_mode_text=$('#pwdchange_mode_text').val().trim();
+	if(pwdchange_mode_text==''){
+		search_typeall_new=='';
+	}else{
+		search_typeall_new=$('#pwdchange_mode_select').val()+'-' +pwdchange_mode_text;
+	}
+	$(obj).parent().remove();
+	selView();
+	pwdchange_mode_page(0.1);
+}
+function _clearFilter(obj){
+	$('#clearFilter').next().children('ul').empty();
+	$('#pwdchange_mode_text').val('');
+	search_typeall_new='';
+	search_typeall_r=new Array();
+	selView();
+	pwdchange_mode_page(0.1);
+}
+function selView(){
+	var $sel = $('#filterWW');
+	var len = $('li',$sel).length;
+	if(len == 0){
+		$sel.hide();
+		$('#clearFilter').hide();
+	}else{
+		$("#filterWW").show();
+		$('#clearFilter').show();
+		$('>span.ww',$sel).show();
+		$sel.addClass('selector-multiple');
+	}
+}
+//input回车触发事件
+function showMsg(){
+	var cur = $("#pwdchange_mode_page").val();
+	cur=cur.replace(/\D/g, "");
+	if(cur==''){
+		cur=1;
+	}
+	////console.log(cur);
+	if (parseInt(cur) < 1){
+		$("#pwdchange_mode_page").val(1);
+		document.frm_pwdchange_mode.c.value=1;
+	}else{
+		document.frm_pwdchange_mode.c.value=cur;
+	}
+	show_pwdchange_mode_list();
+}
+//以每页显示数显示列表函数
+function show_pwdchange_mode_list(){
+	var paging = document.frm_pwdchange_mode.c.value;
+	var page_num = MAX_PAGE;
+	var pwdchange_modeId=document.frm_pwdchange_mode.a.value;
+	var search_typeall=search_typeall_r.join('\t');
+	if(search_typeall_new!=''){
+		search_typeall+=('\t'+search_typeall_new);
+	}
+	$.ajax({
+		url: "/bhost/get_pwdchange_mode_list",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a4:page_num,a3:paging,a2:search_typeall},
+		success:function(result){
+			var pwdchange_mode_result = JSON.parse(result);
+			if (pwdchange_mode_result.Result==true){
+				pwdchange_mode_data = pwdchange_mode_result.info;
+				var total_all = pwdchange_mode_data.totalrow;
+				if(total_all%MAX_PAGE==0){
+					fenye_r=parseInt(total_all/MAX_PAGE);
+				}else{
+					fenye_r=parseInt(total_all/MAX_PAGE)+1;
+				}
+				if(pwdchange_mode_data.data=="" && paging!="1"){
+					pwdchange_mode_page(0.9);
+				}else{
+					//total = 0;
+					total_all_r = total_all;
+					if(total_all){
+						$("#pwdchange_mode_list").empty();
+						//console.log(pwdchange_mode_data.data);
+						$("#pwdchange_mode_list").append(pwdchange_mode_data.data.map(function (index) {
+							var float_str=(index.PwdModConfigSet==null?'':index.PwdModConfigSet.filter(function (params) {
+								return params.Type==1;
+							}).map(function (index1) {
+								return index1.Name;	
+							}).join('，'));
+							var float_str1=(index.PwdModConfigSet==null?'':index.PwdModConfigSet.filter(function (params) {
+								return params.Type==2;
+							}).map(function (index1) {
+								if(index1.Type==2){
+									return index1.Name;	
+								}
+							}).join('，'));
+							var float_str2="<div class=\"tab-moreinfo\">"+(float_str==''?'':"<p>默认脚本："+HTMLEncode(float_str)+"</p>")+(float_str1==''?'':"<p>自定义脚本："+HTMLEncode(float_str1)+"</p>")+'</div>';
+							var float_str3=float_str+(float_str1!=''?(float_str==''?float_str1:'，'+float_str1):'');
+							return "<tr>"+
+								"<td>"+(index.DeviceTypeName||'')+"</td>"+
+								"<td style = \"display:none\">"+index.DeviceTypeId+"</td>"+
+								"<td>"+float_str3+"</td>"+
+								"<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"edit\" id=\"edit\" title='修改模式'></a>"+
+								"</div>"+float_str2+"</td></tr>"
+						}).join(''));
+						tabArr();
+						$(".input_checkbox","#pwdchange_mode_list").iCheck({
+							checkboxClass: 'icheckbox_minimal-blue',
+							radioClass: 'iradio_minimal-blue',
+							increaseArea: '0' // optional
+						});
+						$("#pwdchange_mode_total").text(total_all);
+						if(paging>=fenye_r){
+							paging=fenye_r;
+						}
+						document.frm_pwdchange_mode.c.value=paging;
+						document.getElementById("pwdchange_mode_page").value=paging;
+						$("#pwdchange_mode_pages").text(fenye_r);
+					}else{
+						$("#pwdchange_mode_list").empty();
+						$("#pwdchange_mode_total").text(total_all);
+						$("#pwdchange_mode_pages").text(1);
+						document.frm_pwdchange_mode.c.value=1;
+						fenye_r=1;
+						document.getElementById("pwdchange_mode_page").value=1;
+					}	
+				}
+			}else{
+				_alert(2,"警告",pwdchange_mode_result.ErrMsg);
+				$("#pwdchange_mode_total").text(0);
+				$("#pwdchange_mode_pages").text(1);
+				document.frm_pwdchange_mode.c.value=1;
+				fenye_r=1;
+				document.getElementById("pwdchange_mode_page").value=1;
+				return false;
+			}
+		}
+	});
+	
+}
+//分页 and 刷新
+function pwdchange_mode_page(num){
+	var paging=parseInt(document.frm_pwdchange_mode.c.value)+num;
+	if(paging==0 || paging==fenye_r+1){
+		return false;
+	}
+	if (num == 0.1){
+		paging = 1;
+	}else if(num == 0.9){
+		paging=fenye_r;
+	}
+	document.getElementById("pwdchange_mode_page").value=paging;
+	document.frm_pwdchange_mode.c.value=paging;
+	show_pwdchange_mode_list();
+}
+
+// 创建编辑页面
+
+</script>
+</body>
+</html>

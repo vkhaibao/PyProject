@@ -1,0 +1,43 @@
+html{
+    transform: scale(0.83);
+    margin: -47px -122px;
+    overflow: hidden;
+}
+.wrapper{
+    width: 1840px;
+    height: 120%;
+    background-size: cover;
+    font-size: 13px;
+}
+.area1 .cont {
+    width: 480px;
+    height: 92px;
+}
+.one{
+    width: 480px;
+}
+.two {
+    width: 920px;
+}
+#chartBar1{
+    width: 500px!important;
+    height: 166px!important;
+}
+#chartBar2{
+    width: 500px!important;
+    height: 195px!important;
+    margin-top: -50px;
+}
+#chartPie{
+    width: 500px!important;
+    height: 165px!important;
+}
+.area5 .cont {
+    height: 196px;
+}
+.area7 .a {
+    height: 120px;
+}
+.area8 {
+    margin-top: 0px;
+}

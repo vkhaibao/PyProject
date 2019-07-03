@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>agreement</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<!--全局-->
+		<div class="c-top"><!-- 顶部 -->
+			<div class="c-title">
+				<!--
+				<h3 onclick="parent.reload();">协议</h3>
+				-->
+				<div class="manual-head" style="width:100px;float:left;">
+					<div class="manual-title">
+						<span id="protocol_reload" style="cursor: pointer;">协议</span>
+						<i class="protocol_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">		
+			<div class="container1">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr" style="width:280px;"><!-- 功能键 -->
+									{%if 14 in manage_power_id %}
+									<a href="javascript:;" class="btn btn-default" onclick="create_agreement()">创建</a>
+									<a href="javascript:;" class="btn btn-default" onclick="delete_all()">删除</a>
+									<a href="javascript:;" class="btn btn-default" onclick="select_all()">全选</a>
+									{%endif%}
+									<a href="javascript:;" class="btn btn-default" style="margin-right:0px;" onclick="refresh()">刷新</a>
+								</div>
+									
+								<div class="filter">
+									<div class="search"><!-- 搜索功能 -->
+										<select name="" id="filtername" class="filter-select" onchange="/*filter_change();*/">
+											<option value="0">所有</option>
+											<option value="1">名称</option>
+											<option value="2">端口</option>
+											<option value="3">描述</option>
+										</select>
+
+										<input type="text" class="filter-text" id="keyword" placeholder="输入关键字" style="padding: 0 22px 0 4px;"
+										onkeydown="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();};if (event.keyCode == 13){Filter();return false;} else return;" onchange="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();}" onkeyup="if($('#keyword').val()==''){$('#text_check').hide();}else{$('#text_check').show();}" onblur="change_input(this);">
+										
+										<i class="v-check v-wrong" id="text_check" onclick="_clear_keyword(this)" style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<button class="btn filter-btn" onclick="Filter(this)"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="add_Filter(this)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="display:none;margin: 0px 10px 0px -16px;">
+										<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="search_c" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+						
+										</ul>
+									</div>
+								</div>
+							
+							</div>
+							<div class="box-table"><!-- 表格 -->
+								<table cellpadding="0" cellspacing="0" id="agreement_list">
+									<thead><!-- 表格头部 -->
+									<tr>		
+										<th width="50"><input type="checkbox" class="form-checkbox" id="check_page"/></th>
+										<th>名称</th>
+										<th>端口</th>
+										<th>描述</th>
+										{%if 14 in manage_power_id %}
+										<th width="60"></th>
+										{%else%}
+										<th width="20"></th>
+										{%endif%}
+									</tr>
+									</thead>
+
+									<tbody><!-- 表格身体 -->
+										
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i"><!-- 页码模块 -->
+								<div class="il">
+									每页显示<span id="page_total">10</span>条 总数：<span id = "agreement_total">25</span>  选中：<span id = "select_total">0</span>
+			
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" onclick="firstpage()"><i></i></a>
+									<a href="javascript:;" class="nav prev" onclick="prevpage()"><i></i></a>
+									<input type="text" value="1" id="curpage" onchange="jumppage()">/&nbsp;<span id = "totalpage">25</span>
+									<a href="javascript:;" class="nav next" onclick="nextpage()"><i></i></a>
+									<a href="javascript:;" class="nav2 end" onclick="lastpage()"><i></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="clearfix"></div><!-- 返回键 -->
+						<!--
+						<div class="btns" id="bBtn" style="position: fixed;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="list_cancel();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+							<a href="javascript:;" class="btn btn-cancel1 btn-normal" onclick="list_cancel()">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+					</div>
+				</div>
+			</div>
+			<div id="bBtn" style="position: fixed;">
+				<a href="javascript:;" class="btn" style="float: right;" onclick="list_cancel();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+			</div>
+		</div>
+	<!-- 创建新协议表单数据 -->
+	<form action="/bhost/create_agreement" method="POST" name="frm_agreement" id="frm_agreement">
+		<input type="hidden" name="a0" id = "a0" value="" />
+		<input type="hidden" name="t1" id = "t1" value="" />
+		<input type="hidden" name="x1" id = "x1" value="" />		
+		<input type="hidden" name="x2" id = "x2" value=""/>
+		<input type="hidden" name="x3" id = "x3" value=""/>
+		<input type="hidden" name="x4" id = "x4" value=""/>
+		<input type="hidden" name="x5" id = "x5" value=""/>
+	</form>
+</body>
+
+<script>
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+
+<script>
+
+var se;
+var manage_power_id = {{manage_power_id}};
+//全局
+$(function(){
+	$("#protocol_reload").on('click',function(){
+		parent.reload();
+	});
+	se = window.parent.document.frm.se.value;
+	//页码只能输入数字
+	$("#curpage").bind('keydown', function(e){
+        DigitInput(e);
+    });
+	//绑定当前页
+	if(now_ipage != "None"){
+		$("#curpage").val(now_ipage);
+	}
+	$("#clearFilter").hide();
+	if (searchword.length > 0){
+		$("#clearFilter").show();
+		var key_len = searchword.length;
+		$("#search_c").show();
+		$.each(searchword,function(i,item){
+			var filter = item.substring(0,2);
+			var filter_value = 0;
+			var filter_v = "";
+			if (filter == "所有"){
+				filter_value = 0;
+				filter_v = item.substring(3);
+			}
+			if (filter == "名称"){
+				filter_value = 1;
+				filter_v = item;
+			}
+			if (filter == "端口"){
+				filter_value = 2;
+				filter_v = item;
+			}
+			if (filter == "描述"){
+				filter_value = 3;
+				filter_v = item;
+			}
+			$("#search_c ul").append("<li><span class=\"ww\" data-value=\""+item+"\">"+filter_v+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+			if (i+1 == key_len){
+				$("#filtername").val(filter_value).trigger('change');
+			}
+		});
+	}else{
+		$("#search_c").hide();
+	}
+	if(keyword_re.length>0){
+		$.each(keyword_re,function(i,item){
+			var filter = item.substring(0,2);
+			var keyword=item.substring(3);
+			var filter_value = 0;
+			if (filter == "所有"){
+				filter_value = 0;
+			}
+			if (filter == "名称"){
+				filter_value = 1;
+			}
+			if (filter == "端口"){
+				filter_value = 2;
+			}
+			if (filter == "描述"){
+				filter_value = 3;
+			}
+			$("#keyword").val(keyword);
+			$("#filtername").val(filter_value).trigger('change');
+		});
+	}
+	if (keyword_re.length ==0&&searchword.length==0){
+		$("#search_c").hide();
+		//$("#keyword").hide();
+	}
+	$("#keyword").focus();
+	if ($("#keyword").val() != ""){
+		$("#text_check").show();
+	}else{
+		$("#text_check").hide();
+	}
+	parent._switchBtn(1);//显示左右按钮
+	get_agreement_list();
+	$("#keyword").bind('keypress',function(event){  
+		 if(event.keyCode == "13")
+		 {
+			Filter();
+		}
+    });
+});
+
+//变量声明
+var selectid= {{selid|safe}};
+var num=0;
+var now_ipage="{{ipage}}";
+var keyword_re = {{keyword|safe}};
+var searchword={{sear|safe}};
+var max_page=10;
+var nameReg = /^[A-Za-z0-9_]+$/;
+//搜索下拉框选择
+function filter_change(){
+	var name = $("#filtername").val();
+	if (name == '0'){
+		$("#keyword").hide();
+        $("#filterWW").hide();
+		$("#clearFilter").hide();
+		$("#search_c").hide();
+		$("#search_c ul li").each(function(){
+			$(this).remove();
+		});
+		$("#keyword").val('');
+	}else{
+		$("#keyword").show();
+        $("#filterWW").show();
+		$("#keyword").bind("keyup",function(){
+            $("#keyword").val($("#keyword").val().replace(/[<>|]/,""));
+        });
+	}
+}
+
+//页码功能页---下一页
+function nextpage(){
+	var cpage = $("#curpage").val();
+	var total = $("#totalpage").text();
+	var npage = 0;
+	if (total == cpage){
+		return;
+	}else{
+		npage = parseInt(cpage)+1;
+	}
+	$("#curpage").val(npage);
+	get_agreement_list();
+}
+//上一页
+function prevpage(){
+	var cpage = $("#curpage").val();
+	var ppage = 0;
+	if (parseInt(cpage) == 1){
+		return;
+	}else{
+		ppage = parseInt(cpage)-1;
+	}
+	$("#curpage").val(ppage);
+	get_agreement_list();
+}
+//首页
+function firstpage(){
+	$("#curpage").val(1);
+	get_agreement_list();
+}
+//末页
+function lastpage(){
+	var cpage = $("#curpage").val();
+	var lpage = $("#totalpage").text();
+	if (cpage == lpage){
+		return;
+	}
+	$("#curpage").val(lpage);
+	get_agreement_list();
+}
+//跳页
+function jumppage(){
+	var cur = $("#curpage").val();
+	var numReg = /\D/;
+	if (numReg.test(cur)){
+		$("#curpage").val(1);
+	}
+	if (parseInt(cur) < 1 || cur == ""){
+		$("#curpage").val(1);
+	}
+	get_agreement_list();
+}
+
+//返回资源管理页面
+function list_cancel(){
+	window.parent._closePage(null);
+}
+
+//获取数据
+function get_agreement_list(){
+	 ipage=$('#curpage').val();
+	 var all_word=keyword_re.concat(searchword);
+	 var keyword=JSON.stringify(all_word);
+	 //获取协议数据
+	 $.ajax({
+		url:'/bhost/get_agreement_list',
+		type: "post",
+		async:false,
+		data: {a0:se,data1:max_page,data2:ipage,data3:keyword,dsc:true},
+		success: function(result) {
+			agreement_list = JSON.parse(result);
+			$("#agreement_list tbody").empty();
+			$.each(agreement_list.data,function(i,item){
+				append_str = "";
+				if(item.ProtocolId<1001)
+				{
+					if(item.ProtocolName!="PCANY"){
+						append_str += "<tr><td><input class=\"form-checkbox\" type=\"checkbox\" name=\""+item.ProtocolName+"\" value=\""+item.ProtocolId+"\" disabled></td>"+"<td title=\""+item.ProtocolName+"\">"+item.ProtocolName+"</td><td title=\""+item.Port+"\">"+item.Port+"</td><td title=\""+HTMLEncode(item.Description)+"\">"+HTMLEncode(item.Description)+"</td>";
+						if (manage_power_id.indexOf(14) != -1){
+							append_str += "<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"edit\" title=\"编辑\" onclick=\"edit_agreement("+item.ProtocolId+")\"></a><a href=\"javascript:;\" class=\"del disabled\" id=\"del\" title=\"删除\"></a></td></tr>";
+						}else{
+							append_str += "<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"search_result\" title=\"查看\" onclick=\"edit_agreement("+item.ProtocolId+")\"></a></td></tr>";
+						}
+						//$("#agreement_list tbody").append("<tr><td><input class=\"form-checkbox\" type=\"checkbox\" name=\""+item.ProtocolName+"\" value=\""+item.ProtocolId+"\" disabled></td>"+"<td title=\""+item.ProtocolName+"\">"+item.ProtocolName+"</td><td title=\""+item.Port+"\">"+item.Port+"</td><td title=\""+HTMLEncode(item.Description)+"\">"+HTMLEncode(item.Description)+"</td>"+"<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"edit\" title=\"编辑\" onclick=\"edit_agreement("+item.ProtocolId+")\"></a><a href=\"javascript:;\" class=\"del disabled\" id=\"del\" title=\"删除\"></a></td></tr>");
+					}else{
+						append_str += "<tr><td><input class=\"form-checkbox\" type=\"checkbox\" name=\""+item.ProtocolName+"\" value=\""+item.ProtocolId+"\" disabled></td>"+"<td title=\""+item.ProtocolName+"\">"+item.ProtocolName+"</td><td title=\""+item.Port+"/"+item.Port1+"\">"+item.Port+"/"+item.Port1+"</td><td title=\""+HTMLEncode(item.Description)+"\">"+HTMLEncode(item.Description)+"</td>";
+						
+						if (manage_power_id.indexOf(14) != -1){
+							append_str += "<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"edit\" title=\"编辑\" onclick=\"edit_agreement("+item.ProtocolId+")\"></a><a href=\"javascript:;\" class=\"del disabled\" id=\"del\" title=\"删除\"></a></td></tr>";
+						}else{
+							append_str += "<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"search_result\" title=\"查看\" onclick=\"edit_agreement("+item.ProtocolId+")\"></a></td></tr>";
+						}
+						//$("#agreement_list tbody").append("<tr><td><input class=\"form-checkbox\" type=\"checkbox\" name=\""+item.ProtocolName+"\" value=\""+item.ProtocolId+"\" disabled></td>"+"<td title=\""+item.ProtocolName+"\">"+item.ProtocolName+"</td><td title=\""+item.Port+"/"+item.Port1+"\">"+item.Port+"/"+item.Port1+"</td><td title=\""+HTMLEncode(item.Description)+"\">"+HTMLEncode(item.Description)+"</td>"+"<td><div class=\"tab-ctr\"><a href=\"javascript:;\" class=\"edit\" title=\"编辑\" onclick=\"edit_agreement("+item.ProtocolId+")\"></a><a href=\"javascript:;\" class=\"del disabled\" id=\"del\" title=\"删除\"></a></td></tr>");
+					}
+				}else{
+					append_str += "<tr><td><input class=\"form-checkbox\" type=\"checkbox\" name=\""+item.ProtocolName+"\" value=\""+item.ProtocolId+"\"></td>"+"<td title=\""+item.ProtocolName+"\">"+item.ProtocolName+"</td><td title=\""+item.Port+"\">"+item.Port+"</td><td title=\""+HTMLEncode(item.Description)+"\">"+HTMLEncode(item.Description)+"</td>";
+					
+					if (manage_power_id.indexOf(14) != -1){
+						append_str += "<td><div class=\"tab-ctr\"><a href=\"javascript:;\" title=\"编辑\" class=\"edit\" onclick=\"edit_agreement("+item.ProtocolId+")\"></a>"+"<a href=\"javascript:;\" class=\"del\" id=\"del\" title=\"删除\" onclick=\"delete_agreement("+item.ProtocolId+")\"></a></td></tr>";
+					}else{
+						append_str += "<td><div class=\"tab-ctr\"><a href=\"javascript:;\" title=\"查看\" class=\"search_result\" onclick=\"edit_agreement("+item.ProtocolId+")\"></a></td></tr>";
+					}
+					//$("#agreement_list tbody").append("<tr><td><input class=\"form-checkbox\" type=\"checkbox\" name=\""+item.ProtocolName+"\" value=\""+item.ProtocolId+"\"></td>"+"<td title=\""+item.ProtocolName+"\">"+item.ProtocolName+"</td><td title=\""+item.Port+"\">"+item.Port+"</td><td title=\""+HTMLEncode(item.Description)+"\">"+HTMLEncode(item.Description)+"</td>"+"<td><div class=\"tab-ctr\"><a href=\"javascript:;\" title=\"编辑\" class=\"edit\" onclick=\"edit_agreement("+item.ProtocolId+")\"></a>"+"<a href=\"javascript:;\" class=\"del\" id=\"del\" title=\"删除\" onclick=\"delete_agreement("+item.ProtocolId+")\"></a></td></tr>");
+				}
+				$("#agreement_list tbody").append(append_str);
+			});
+		}
+	});
+	
+	//页码计算
+	$("#agreement_total").text(agreement_list.totalrow);
+	totalpage=Math.ceil(parseInt(agreement_list.totalrow)/max_page);
+	if(totalpage<1){
+		totalpage=1;
+		}
+	$("#totalpage").text(totalpage.toString());
+
+	//重置全选按钮
+	$("#check_page").iCheck('uncheck');
+	
+	//搜寻表格中的数据的行数
+	var check_page_flag=0;
+	$("#agreement_list tbody input[type='checkbox']").each(function(){
+		if ($.inArray(parseInt(this.value), selectid) != -1){					
+			$(this).iCheck('check');
+			check_page_flag++;
+		}
+    });
+
+	//全选与非全选设置
+	var protid1=0;
+	var protid2=0;
+	$("#agreement_list tbody input[type='checkbox']").each(function(){
+		var protid=$(this).val();
+		if(protid>1000){
+			protid1++;
+		}
+	});
+	$("#agreement_list tbody input[type='checkbox']").each(function(){
+		var protid=$(this).val();
+		if ($(this).is(":checked")){
+			if(protid>1000){
+				protid2++;
+			}
+		}
+	});
+	if (protid1 == protid2&&protid2!=0){
+		$('#check_page').iCheck('check');
+	}else{
+		$('#check_page').iCheck('uncheck');
+	}
+	//获取该页面数据
+	if (parseInt(ipage) > totalpage){
+		$("#curpage").val(totalpage);
+		get_agreement_list();
+	}
+			
+	//对选择按钮进行渲染
+	$('.form-checkbox').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+		increaseArea: '0' 
+     });
+	
+	//全选按钮实现    	
+	$('#check_page').on('ifClicked',function(e){
+		if(!$('#check_page').prop('checked')){
+			$("#agreement_list tbody input[type='checkbox']").each(function(){
+			var protid=$(this).val();
+			if(protid>1000){
+				$(this).iCheck('check');
+			}
+		});
+		}else{
+			$("#agreement_list").children('tbody').find('input[type=checkbox]').iCheck('uncheck');
+		}
+		
+	});
+	
+	//获取选中数据总量
+	num=selectid.length;
+	$("#select_total").text(num);
+	
+	//选中数量显示
+	$("#agreement_list tbody input[type='checkbox']").on("ifChanged",function(){
+		if ($(this).is(":checked")){
+			num = $("#select_total").text();   
+			num++;
+			if (selectid.indexOf(parseInt(this.value)) == -1){
+				selectid.push(parseInt(this.value))	
+			}
+			$("#select_total").text(num);
+		}else{
+			num = $("#select_total").text();
+			num--;
+			selectid.splice($.inArray(parseInt(this.value),selectid),1);
+			$("#select_total").text(num);   
+		}
+		//全选与非全选设置
+		var protid1=0;
+		var protid2=0;
+		$("#agreement_list tbody input[type='checkbox']").each(function(){
+			var protid=$(this).val();
+			if(protid>1000){
+				protid1++;
+			}
+		});
+		$("#agreement_list tbody input[type='checkbox']").each(function(){
+			var protid=$(this).val();
+			if ($(this).is(":checked")){
+				if(protid>1000){
+					protid2++;
+				}
+			}
+		});
+		if (protid1 == protid2&&protid2!=0){
+			$('#check_page').iCheck('check');
+		}else{
+			$('#check_page').iCheck('uncheck');
+		}
+	});
+
+	 //双击表格内触发事件
+	 $("#agreement_list tbody >tr").bind("dblclick",function(e){
+		x=e.target;
+		if(x.nodeName!='INS'){
+			$(this).children('td:last').find('.edit').click();
+			$(this).children('td:last').find('.search_result').click();
+		}
+	});
+}
+
+String.prototype.ResetBlank=function(){
+	var regEx = /\s+/g; 
+	return this.replace(regEx, ' '); 
+};
+
+//对搜索框进行检查函数
+function search_check(keyword,choose){
+	/*
+	if (choose=="0"){
+		$("#search_c ul li").each(function(){
+			$(this).remove();
+		});
+		$("#keyword").val('');
+		keyword_re=[];
+		searchword=[];
+		get_agreement_list();
+		return null;
+	}
+	
+	if(choose=="1"||choose==2){
+		if(!nameReg.test(keyword)&&keyword!=""){
+			_alert(1,"搜索","关键字格式不正确",$("#keyword"));
+			return null;
+		}
+	}
+	
+	if(!nameReg.test(keyword)&&keyword!=""){
+		_alert(1,"搜索","关键字格式不正确",$("#keyword"));
+		return null;
+	}
+	*/
+	if(keyword==""){
+		_alert(2,"搜索","请输入搜索条件",$("#keyword"));
+		return null;
+	}
+	keyword = keyword.ResetBlank();
+	if (choose == "0"){
+		keyword = "所有-"+keyword;
+	}
+	if(choose=="1"){
+		keyword="名称-"+keyword;
+	}
+	if(choose=="2"){
+		keyword="端口-"+keyword;
+	}
+	if(choose=="3"){
+		keyword="描述-"+keyword;
+	}
+	return keyword;
+}
+
+//搜索按钮
+function Filter(){
+	var keyword=$("#keyword").val().trim();//删除字符的头尾口空格
+	var choose=$("#filtername").val();
+	keyword=search_check(keyword,choose);
+	if(keyword==null){
+		return;
+	}
+	keyword_re=[];
+	keyword_re.push(keyword);
+	$("#curpage").val(1);
+	get_agreement_list();
+}
+
+//添加搜索条件
+function add_Filter(){
+	var keyword=$("#keyword").val().trim();//删除字符的头尾口空格
+	var choose=$("#filtername").val();
+	keyword=search_check(keyword,choose);
+	if(keyword==null){
+		return;
+	}
+	var add=0;
+	var filter_v = "";
+	if (keyword.substring(0,2) == "所有"){
+		filter_v = keyword.substring(3);
+	}else{
+		filter_v = keyword;
+	}
+	//检查搜索条件是否全部输出
+	$("#search_c li").each(function(i,item){
+		var filter=$(item).find('.ww').text();
+		if(filter==filter_v){
+			_alert(1,"搜索","该搜索条件已存在",$("#keyword"));
+			add=1;
+		}
+	});
+	//如果没有，则输出
+	if(add!=1){
+		$("#search_c ul").append("<li><span class=\"ww\" data-value=\""+keyword+"\">"+filter_v+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");//输出搜索条件+移除搜索条件（选项）
+		searchword.push(keyword);//搜索条件放入数组
+	}
+	$("#clearFilter").show();
+	$("#search_c").show();
+	$("#keyword").val('');
+	$("#text_check").hide();
+	keyword_re=[];
+	$("#curpage").val(1);
+	get_agreement_list();
+}
+
+//移除搜索条件（选项）
+function _delFilter(obj){
+	var filter_text = $(obj).parent().children('span').attr('data-value');
+	//检查搜索条件是否全部输出
+	$(obj).parent().remove();
+	var flag=true;
+	searchword.splice($.inArray(filter_text,searchword),1);
+	if (searchword.length == 0){
+		$("#clearFilter").hide();
+		$("#search_c").hide();
+	}
+	/*
+	searchword=[];
+	$("#search_c li").each(function(i,item){
+		flag=false;
+		var filter=$(item).find('.ww').text();
+		searchword.push(filter);
+	});
+	
+	if(flag){
+		$("#clearFilter").hide();
+		$("#search_c").hide();
+	}
+	*/
+	get_agreement_list();
+}
+
+//移除搜索条件
+function _clearFilter(){
+	$("#search_c ul li").each(function(){
+		$(this).remove();
+	});
+	$("#clearFilter").hide();
+	$("#search_c").hide();
+	$("#keyword").val('');
+	$("#text_check").hide();
+	searchword=[];
+	keyword_re=[];
+	get_agreement_list();
+	return;
+}
+
+function _clear_keyword(){
+	$("#keyword").val("");
+	$("#text_check").hide();
+	if (keyword_re.length != 0){
+		keyword_re = [];
+		get_agreement_list();
+	}
+}
+
+function change_input(obj){
+	if ($(obj).val() == "" && keyword_re.length == 1){
+		keyword_re = [];
+		get_agreement_list();
+	}
+}
+
+//刷新按钮
+function refresh(){
+	selectid=[];
+	$("agreement_list input[type='checkbox']").each(function(){//清除已选框
+		$(this).iCheck('uncheck');
+	});
+	$("#select_tatal").text(0);
+	get_agreement_list();
+	return;
+}
+
+//全选按钮
+function select_all(){
+	var num=0;
+	selectid=[];
+	var agreement_total = $("#agreement_total").text();
+	var select_total = $("#select_total").text();
+	if (parseInt(agreement_total)-18 == select_total){
+		$("#agreement_list").find('input').iCheck('uncheck');
+	}else{
+		var all_word=keyword_re.concat(searchword);
+		var keyword=JSON.stringify(all_word);
+		$.ajax({
+			url:'/bhost/get_agreement_list',
+			type:'post',
+			async:false,
+			data: {a0:se,data1:"null",data2:"null",data3:keyword,dsc:true},
+			success:function(result){
+				var result=JSON.parse(result);
+				$.each(result.data,function(i,item){
+					var protid=parseInt(item.ProtocolId);
+					if(protid>1000)
+					{
+						selectid.push(protid);
+					}
+				});
+			}
+		});
+		$("#agreement_list tbody input[type='checkbox']").each(function(){
+			if (!$(this).prop("disabled")){
+				$(this).iCheck('check');   
+			}
+		});
+	}
+	num=selectid.length;
+	$("#select_total").text(num);
+	
+}
+
+//创建按钮 type=0：创建 type=1：编辑
+function create_agreement(){
+	ipage=$("#curpage").val();
+	var sear=JSON.stringify(searchword);
+	var sel_id=JSON.stringify(selectid);
+	var wordata=JSON.stringify(keyword_re);
+	document.frm_agreement.action='/bhost/create_agreement';
+	document.frm_agreement.a0.value = se;
+	document.frm_agreement.t1.value = 0;
+	document.frm_agreement.x1.value = ipage;
+	document.frm_agreement.x2.value = 0;
+	document.frm_agreement.x3.value = wordata;
+	document.frm_agreement.x4.value = sel_id;
+	document.frm_agreement.x5.value = sear;
+	document.frm_agreement.submit();
+}
+
+//删除按钮 type=0： 批量删除  type=1： 单个删除
+function delete_all(){
+	//若没有选择中项
+	if(selectid.length==0){
+		_alert(2,"协议","请选择要删除的数据");
+		return;
+	}
+	var protid=JSON.stringify(selectid);
+	parent.layer.open({
+		type:1,
+		title:"协议",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move:false,
+		resize:false,
+		btn1:function(i){
+			parent.layer.close(i);
+			$("#select_total").text(0);
+			new_delete_protocol(0,protid);
+			selectid=[];
+			get_agreement_list();
+		},
+		btn2:function(i){
+			parent.layer.close(i);
+		},
+	});
+}
+
+//单个删除按钮：type=1
+function delete_agreement(protid){
+	parent.layer.open({
+		type:1,
+		title:"协议",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move:false,
+		resize:false,
+		btn1:function(i){
+			parent.layer.close(i);
+			new_delete_protocol(1,protid);
+			//从selectid 中去除以删除的id
+			for (var i = 0; i < selectid.length; i++){      
+				if (selectid[i] == parseInt(protid)){
+					num = $("#select_total").text();
+					num = parseInt(num)-1;
+					$("#select_total").text(num);
+					selectid.splice($.inArray(parseInt(protid),selectid),1);
+					break;
+				}
+        	}
+			get_agreement_list();
+		},
+		btn2:function(i){
+			parent.layer.close(i);
+		},
+	});
+}
+
+//删除实现函数
+function new_delete_protocol(type,protid){
+	$.ajax({
+		url:'/bhost/new_delete_protocol',
+		type:"post",
+		async:false,
+		data:{a0:se,b1:type,b2:protid},
+		success:function(result){
+			data = JSON.parse(result);
+			if (data.Result == false){
+				_alert(1,"协议","删除失败："+data.ErrMsg);
+			}else{
+				_alert(0,"协议","删除成功");
+			}
+		}
+	});
+}
+
+//编辑按钮 type=1 编辑
+function edit_agreement(protid){
+	var flag=false;
+	$.ajax({
+		url:'/bhost/select_protocol',
+		type:"post",
+		async:false,
+		data:{a0:se,x1:protid},
+		success:function(result){
+			data=JSON.parse(result);
+			if(data.totalrow=="0"){
+				_alert(1,"协议","该协议已删除");
+				flag=true;
+			}
+		}
+	});
+	if(flag){
+		refresh();
+		return;
+	}
+	//提交表单数据
+	ipage=$("#curpage").val();
+	var wordata=JSON.stringify(keyword_re);
+	var sel_id=JSON.stringify(selectid);
+	var sear=JSON.stringify(searchword);
+	document.frm_agreement.action='/bhost/create_agreement';
+	document.frm_agreement.a0.value=se;
+	document.frm_agreement.t1.value=1;
+	document.frm_agreement.x1.value=ipage;
+	document.frm_agreement.x2.value=protid;
+	document.frm_agreement.x3.value=wordata;
+	document.frm_agreement.x4.value = sel_id;
+	document.frm_agreement.x5.value = sear;
+	document.frm_agreement.submit();
+}
+
+</script>

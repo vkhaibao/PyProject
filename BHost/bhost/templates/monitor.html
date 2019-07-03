@@ -1,0 +1,5549 @@
+
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>监控</title>
+	<link rel="stylesheet" href="/manage/css/control.css">
+	<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+	<script src="/manage/js/jquery.easing.js"></script>	
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/echarts.min.js"></script>
+	<script src="/manage/js/screenfull.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<style>
+		.layui-layer-setwin .layui-layer-close1{
+			background-position:0;
+		}
+		.layui-layer-ico{
+			background: url(/manage/images/icon_close.png) no-repeat 0 0;
+		}	
+		/*新加的*/
+		a.msg1 {
+			display: inline-block;
+			float: left;
+			width: 16px;
+			height: 16px;
+			overflow: hidden;
+			background: url(/manage/images/icon-tab-ctr3.png) no-repeat 0 0;
+			margin: 0 10px 0 4px;
+			background-position: -48px -16px;
+			transition: transform 0.4s
+		}
+		.tab-ctr .sss a.disabled {
+			opacity: 0.5;
+			cursor: default;
+		}
+		.switch{
+			width: 30px;
+			height: 38px;
+			background: url(/manage/images/jianyue.png) no-repeat 0px 0;
+			z-index: 999999;
+		}
+		.switch:hover{
+			width: 100px;
+			height: 40px;
+			background: url(/manage/images/jianyue.png) no-repeat 0 0;
+			z-index: 999999;
+			transition: 0.4s;
+		}
+		.arrow{
+			width: 6px;
+			height: 8px;
+			background: url(/manage/images/a01.png) no-repeat 0 0;
+			z-index: 999999;
+			left: 6px;
+			top: 17px
+		}
+		.switch:hover .arrow{
+			width: 90px;
+			height: 38px;
+			background: url(/manage/images/a00.png) no-repeat 0px 0;
+			z-index: 999999;
+			left: 12px;top: 17px
+		}	
+		#loadPer1{
+			width: 380px;
+			height: 18px;
+			overflow: hidden;
+			-webkit-background-size: 100% auto;
+			background-size: 100% auto;
+			line-height: 18px;
+			position: relative;
+			padding: 18px 17px;
+			background: url(/manage/images/control-nbg8-1.png) no-repeat 3%;
+			top: -29px;
+			margin-right: -1px;
+			float: right;
+		}
+		#loadPer1 .num{
+			width: 120px;
+			padding-right: 0px;
+		}
+		#loadPer2 .num{
+			width: 120px;
+			padding-right: 0px;
+		}		
+		#loadPer1 .name{
+			padding-left: 38px;
+		}
+		#loadPer1 span.bg {
+			position: absolute;
+			top: 20px;
+			left: 19px;
+			width: 0;
+			height: 14px;
+			background: url(/manage/images/control-nbg9-1.png) no-repeat 0 0;
+			background-size: auto 100%;
+			z-index: 1;
+			transition: width 0.4s;
+		}
+		.wrapper{
+			width: 100%;
+			height: 100%;
+			position: absolute;
+		}
+		.area7{
+			width: 340px;
+		}
+		.wrapper .two .area7 .cont .a .bot span.z1{
+			width: 159px;
+		}
+		.area8 .cont{
+			width: 900px;
+		}
+		.two{
+			width: 900px;
+		}
+		.textview{
+			background-color:rgba(63,182,210,0.2);
+			color:white;
+			text-align:left;
+			border-radius:4px;
+			line-height:1.5;
+			padding:5px;
+			display:inline-block;
+			z-index: 10;
+			position: absolute;
+			width: 120px;
+			word-break: break-all;
+			word-wrap: break-word;
+			display: none;
+			transition: all 0.1s;
+			font-size: 12px;
+		}
+
+		#server{
+			background: url(/manage/images/background-monitoring.png) 50% 50%;
+			background-size: 25%;
+			background-repeat: no-repeat!important;
+			background-position: 136px 40px;
+		}
+		.area1 .cont {
+			width: 420px;
+			height: 95px;
+			background: rgba(255,255,255,0.03);
+		}
+		.area1 .cont li{
+			height: 30px;
+		}
+		@media screen and (max-width: 1440px) {
+			#server{
+				background: url(/manage/images/background-monitoring.png) 50% 50%;
+				background-size: 28%;
+				background-repeat: no-repeat;
+				background-position: 136px 40px;
+			}
+		}
+		/*@media screen and (max-width: 1920px) {
+			#server{
+				background: url(/manage/images/background-monitoring.png) 50% 50%;
+				background-size: 23%;
+				background-repeat: no-repeat;
+				background-position: 185px 40px;
+			}
+		}*/
+		i.light{
+			width: 5px;
+			height: 14px;
+			background: url(/manage/images/light.png) no-repeat;
+			float: right;
+		}
+		/*
+		ONLY  system  data 2018 4-5
+		*/
+		.area.area9{
+			margin-top: 25px;
+		}
+		.area.area9 table{
+			width: 319%;
+		}
+		.area.area9 .tab-ctr{
+			width: 99.5%;
+		}
+		.area.area9 .title{
+			width: 100%;
+			height: 20px;
+			padding: 20px 0;
+			overflow: hidden;
+			position: relative;
+			z-index: 9;
+		}	
+		/*.area7 {
+			height: 190px;
+		}*/
+		/*
+		*/
+	</style>
+	<link id="screenSwitch" rel="stylesheet" href="">
+	<!-- <link rel="stylesheet" href="/manage/css/style.css"> -->
+	<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+	<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />
+	<script>
+		var screenWidth = window.screen.width;
+		var _radius = [20,75];
+		var dotsize = 8;	//数据分布上圆点的大小
+		var center_array = ['50%', '50%'];
+		var textView_y = 0;
+		var textView_x = 0;
+		// var height1 = parent.$("#mainFrame").height();
+		// parent.$("#mainFrame").height(height1+6);
+		// screenWidth = 1920;
+		if(screenWidth < 1440){
+			$('#screenSwitch').attr('href','/manage/css/control1280.css');
+			center_array = ['45%', '51%'];
+			textView_y = 67;
+			textView_x = 132;
+		}
+		else if(screenWidth > 1440 && screenWidth <= 1920){
+			// _radius = [30,100];
+			$('#screenSwitch').attr('href','/manage/css/control1920.css');
+			$("#server").css("background","url(/manage/images/background-monitoring.png) 50% 50%;");
+			$("#Comb").css("background","url(/manage/images/comb_1440.png) no-repeat;");		
+			dotsize = 10;
+		}else if(screenWidth > 1920 ){
+			$('#screenSwitch').attr('href','/manage/css/control2560.css');
+			$("#server").css("background","url(/manage/images/background-monitoring.png) 50% 50%;");
+			$("#Comb").css("background","url(/manage/images/comb_1440.png) no-repeat;");
+			_radius = [30,120];
+			dotsize = 15;
+		}
+	</script>
+</head>
+<body>
+	<div class="wrapper">
+		<!--新加的-->
+		<a class="switch" style="position: fixed;right: -16px;bottom: 40px;display: block; cursor: pointer;" onclick="save_style(1);";>
+			<div class="arrow" style="position: absolute;"></div>
+		</a>	
+		<div class="one">
+			<div class="area area1">
+				<div class="title">
+					<h3>证书</h3>
+				</div>
+
+				<div class="cont">
+					<ul>
+						<!-- <li><label>客户名称：</label>test1</li>
+						<li><label>出厂时间：</label>2017年5月10日</li>
+						<li><label>设备型号：</label>test1</li>
+						<li><label>服务期限：</label>1年</li>
+						<li><label>设备序列号：</label>test1</li>
+						<li><label>托管上限：</label>3000台主机</li> -->
+					</ul>
+				</div>
+			</div>
+			{%if monitor_flag1 != 0%}
+			<div class="area area2">
+				<div class="title">
+					<h3>时间趋势</h3>
+					<div class="r">
+						<div class="rbtns1">
+							<a href="javascript:;" id="distri_re" class="on" onclick="_setType(this,0,2)"><i></i></a>
+						</div>
+					</div>
+					<div class="r" style="margin-right :10px;">
+						<div class="rbtns" id="dis_type">
+							<a href="javascript:;" class="on" onclick="_setType(this,1,2)">操作</a>
+							<a href="javascript:;" onclick="_setType(this,2,2)">会话</a>
+						</div>
+					</div>
+					<div class="r" style="margin-right :10px;">
+						<div class="rbtns" id="dis_status">
+							<a href="javascript:;" class="on" onclick="_setType(this,5,2)">全部</a>
+							<a href="javascript:;" onclick="_setType(this,6,2)">异常</a>
+						</div>
+					</div>
+					<div class="r" style="margin-right :10px;">
+						<div class="rbtns" id="data_type">
+							<a href="javascript:;" class="on" onclick="_setType(this,3,2)">小时</a>
+							<a href="javascript:;" onclick="_setType(this,4,2)">天</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="cont">
+					<div id="chartBar1" onmouseup="_setMouseup()" style="width: 468px;height: 180px;margin-top: -40px;margin-bottom: 0px;margin-left: -20px"></div>
+				</div>
+			</div>
+
+			<div class="area area3">
+				<div class="title">
+					<h3>服务器</h3>
+					<div class="r">
+						<div class="rbtns1">
+							<a href="javascript:;" id="server_re" class="on" onclick="_setType(this,0,3)"><i></i></a>
+						</div>
+					</div>
+					<div class="r" style="margin-right :10px;">
+						<div class="rbtns" id="ser_type">
+							<a href="javascript:;" class="on" onclick="_setType(this,1,3)">操作</a>
+							<a href="javascript:;" onclick="_setType(this,2,3)">会话</a>
+						</div>
+					</div>
+					<div class="r" style="margin-right :10px;">
+						<div class="rbtns" id="ser_status">
+							<a href="javascript:;" class="on" onclick="_setType(this,5,3)">全部</a>
+							<a href="javascript:;" onclick="_setType(this,6,3)">异常</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="cont" id="server">
+					<div id="chartPie" style="width: 430px;height: 186px;margin-left: -20px"></div>
+				</div>
+			</div>
+
+			<div class="area area4">
+				<div class="title">
+					<h3>运维用户</h3>
+					<div class="r">
+						<div class="rbtns1">
+							<a href="javascript:;" id="bhuser_re" class="on" onclick="_setType(this,0,4)"><i></i></a>
+						</div>
+					</div>
+					<div class="r" style="margin-right :10px;">
+						<div class="rbtns" id="user_type">
+							<a href="javascript:;" class="on" onclick="_setType(this,1,4)">操作</a>
+							<a href="javascript:;" onclick="_setType(this,2,4)">会话</a>
+						</div>
+					</div>
+					<div class="r" style="margin-right :10px;">
+						<div class="rbtns" id="user_status">
+							<a href="javascript:;" class="on" onclick="_setType(this,5,4)">全部</a>
+							<a href="javascript:;" onclick="_setType(this,6,4)">异常</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="cont">
+					<div id="chartBar2" onmouseup="_setMouseup()" style="width: 468px;height: 200px;margin-top: -40px;margin-left: -20px"></div>
+				</div>
+			</div>
+			{%endif%}
+			{%if monitor_flag1 == 0%}
+			<div class="area area9">
+				<div class="title">
+					<h3>系统日志</h3>
+				</div>
+					<table>
+						<thead>
+							<tr>
+								<th width="15%">模块</th>
+								<th width="10%">发生时间</th>
+								<th width="8%">日志类型</th>
+								<th width="10%">发生地址</th>
+								<th width="6%">运维用户</th>
+								<th>日志操作</th>
+								<th width="15%">结果信息</th>
+								<th width="10%">告警信息</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+			</div>
+			{%endif%}
+		</div>
+
+		<!---->
+		<div class="two">
+			<div class="area-w">
+				<div class="area area5">
+					<div class="title">
+						<h3>系统概要</h3>
+						<div class="r l" id="service_status">
+							<span class="status"><i class="on"></i>服务状态：正常</span>
+							<!--<i class="off"></i>服务状态：未启用-->
+							<span class="status">服务器数量：1</span>
+						</div>
+						{%if monitor_flag2 != 0%}
+						<div class="r" style="float: left; margin-left: 35px;">
+							<div class="rbtns">
+								<a href="javascript:;" class="on" onclick="sys_log_info();">日志</a>
+							</div>
+						</div>
+						{%endif%}
+					</div>
+
+					<div class="cont">
+						<div class="a" id="sys_title" title="">
+							<div class="t">
+								<p class="p0" id="local_time"></p>
+							</div>
+							<div class="s" id="loadPer1" style="display: none;">
+								<span class="name">系统空间</span>
+								<span class="num"></span>
+								<span class="bg" style="width: 0%;"><i class="light"></i></span>
+							</div>
+							<div class="s" id="loadPer2">
+								<span class="name">用户空间</span>
+								<span class="num"></span>
+								<span class="bg" style="width: 0%;"><i class="light"></i></span>
+							</div>
+						</div>
+						
+						<div class="clearfix"></div>
+						<div class="b" id="part_b" style="display: none;">
+							<ul>
+								<li><i class="status0"></i><span>CPU：正常</span></li>
+								<li><i class="status0"></i><span>内存：正常</span></li>
+								{% if flag_cloud == 0 %}
+								<li><i class="status0"></i><span>磁盘：正常</span></li>
+								{% endif %}
+								<li><i class="status0"></i><span>网卡：正常</span></li>
+								<li><i class="status0"></i><span>ACC：正常</span></li>
+							</ul>
+						</div>
+						<div class="b" id="part_b1">
+							<ul>
+							</ul>
+						</div>
+						{%if monitor_flag1 != 0%}
+						<div class="clearfix"></div>
+						<div class="c" id="part_c">
+							<ul>
+								<li>运维用户：0个</li>
+								<li>运维主机：0个</li>
+								<li>访问策略：0个</li>
+								<li>指令策略：0个</li>
+								<li>工单策略：0个</li>
+							</ul>
+						</div>
+						{%endif%}
+					</div>
+				</div>
+				
+				{%if monitor_flag1 != 0%}
+				<div class="area area6">
+					<div class="title">
+						<h3>协议</h3>
+						<div class="r">
+							<div class="rbtns1">
+								<a href="javascript:;" id="proto_re" class="on" onclick="reload_c()"><i></i></a>
+							</div>
+						</div>
+					</div>
+
+					<div class="cont">
+						<div id="Comb" class="comb">
+							<div class="item item1 " style="cursor: pointer;"></div>
+							<div class="item item5 disable" ></div>
+							<div class="item item7 disable" ></div>
+							<div class="item item3 disable" ></div>
+							<div class="item item9 disable" ></div>
+							<div class="item item10 disable" ></div>
+							<div class="item item12 disable" ></div>
+							<div class="item item8 disable" ></div>
+							<div class="item item11 disable" ></div>
+							<div class="item item14 disable" ></div>
+							<div class="item item2 disable" ></div>
+							<div class="item item4 disable" ></div>
+							<div class="item item6 disable" ></div>
+							<div class="item item13 disable" ></div>
+							<div class="item item15 disable" ></div>
+						</div>
+					</div>
+				</div>
+				{%endif%}
+			</div>
+			<div class="area area7">
+				<div class="title">
+					<h3>告警</h3>
+					<div class="r" style="margin-left: 5px;">
+						<div class="rbtns">
+							<a href="javascript:;" class="on" onclick="warn_log_info();">更多</a>
+						</div>
+					</div>
+					<div class="r">当日：0个&nbsp;&nbsp;&nbsp;&nbsp;已处理：0个&nbsp;&nbsp;未处理：0个</div>
+				</div>
+
+				<div class="cont">
+					<div class="a" style="position: relative;">
+						<table>
+							<thead>
+								<tr>
+									<th width="40%">发生时间</th>
+									<th>告警信息</th>
+									<th width="20%">告警处理</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td></td>
+									<td></td>
+									<td width="20%">&nbsp;</td>
+								</tr>
+
+								<tr>
+									<td></td>
+									<td></td>
+									<td width="20%">&nbsp;</td>
+								</tr>
+
+								<tr>
+									<td></td>
+									<td></td>
+									<td width="20%">&nbsp;</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					{%if monitor_flag1 != 0%}
+					<div class="b">
+						<table cellpadding="0" cellspacing="0">
+							<thead>
+							</thead>
+
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="b">
+						<table cellpadding="0" cellspacing="0">
+							<thead>
+							</thead>
+
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="b">
+						<table cellpadding="0" cellspacing="0">
+							<thead>
+							</thead>
+
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+
+					<div class="b">
+						<table cellpadding="0" cellspacing="0">
+							<thead>
+							</thead>
+
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+					{%endif%}
+				</div>
+			</div>
+			{%if monitor_flag1 != 0%}
+			<div class="clearfix"></div>
+			<div class="area  area8">
+				<div class="title">
+					<h3>最新会话</h3>
+					<div class="fl" style="width: 30%;">
+						<div class="r" style="margin-right :14px;float: left;">
+							<div class="rbtns" id="sess_status">
+								<a href="javascript:;" class="on" onclick="_setType(this,5,5)">全部</a>
+								<a href="javascript:;" onclick="_setType(this,6,5)">异常</a>
+							</div>
+						</div>
+						<div class="btns">
+							<a href="javascript:;" onclick="ses_refresh()" class="on"><i class="fl-renew"></i>刷新</a>
+							<a href="javascript:;" id="more_ses_info" onclick="more_info()"><i class="fl-more"></i>更多</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="cont" style="position: relative;">
+					<table cellpadding="0" cellpadding="0">
+						<thead>
+							<tr>
+								<th style="width:15%;">起始时间</th>
+								<th style="width:15%;">最后更新</th>
+								<th>会话类型</th>
+								<th>会话状态</th>
+								<th>运维用户</th>
+								<th>运维用户姓名</th>
+								<th>服务器IP</th>
+								<th>审批用户姓名</th>
+								<th>服务器用户名</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			{%endif%}
+		</div>
+
+		<div class="dialog-cont" id="remarkDialog" style="display:none;">
+			<div class="container">
+				<div class="c-cont" style="max-height:300px;">
+					<div class="c-form" style="">
+						<div class="clearfix"></div>
+						<div class="form">
+							<div class="form-item" style="">
+								<span class="form-tag" style=""><em class="imp">*</em>确认备注：</span>
+								<div class="form-c" style="">
+									<textarea id="operation_content" class="form-textarea" name="" cols="30" rows="10"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="c-form" style="">
+						<div class="btns" style="">
+							<a href="javascript:;" class="btn btn-normal btn-submit" >保&nbsp;&nbsp;存</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<form action="/bhost/monitor_route" method="POST" name="frm_monitor" id="frm_monitor">
+		<!--2 - 时间趋势; 3 - 服务器; 4 - 运维用户; 5 - 协议; 6 - 最新会话; -->
+		<input type="hidden" name="tasktype" id = "tasktype" value=""/>	
+		<!-- name -->
+		<input type="hidden" name="a1" id = "a1" value=""/>
+		<!-- type -->
+		<input type="hidden" name="a2" id = "a2" value=""/>
+		<!-- normal 1 - 全部; 2 - 异常; -->
+		<input type="hidden" name="a3" id="a3" value=""/>
+		<!-- button status:  
+			1:时间趋势 1：小时 2：天;
+			2:时间趋势 1：全部 2：异常;
+			3:时间趋势 0：操作 1：会话;
+			4:服务器   1：全部 2：异常;
+			5:服务器   0：操作 1：会话;
+			6:运维用户 1：全部 2：异常;
+			7:运维用户 0：操作 1：会话;
+			8:最新会话 0：全部 2：异常; -->
+		<input type="hidden" name="a4" id = "a4" value="{{a4}}"/>
+		<input type="hidden" name="a6" id = "a6" value=""/>		
+		<!-- session -->
+		<input type="hidden" name="se" id = "se" value="{{se}}"/>	
+
+		<input type="hidden" name="ha"  value="{{hash}}"/>
+		
+	</form>
+	<form name="frm_search" method="post" action='/bhost/search_log'>
+		<!--session-->
+		<input type="hidden" name="a0" id = "a0" value=""/>
+		<input type="hidden" name="f1" id = "f1" value=""/>
+		<input type="hidden" name="i1" id = "i1" value=""/>
+		<input type="hidden" name="a1" id = "a1" value=""/>
+		<input type="hidden" name="a2" id = "a2" value=""/>
+		<input type="hidden" name="a4" id = "a4" value=""/>
+		<input type="hidden" name="ha" id = "ha" value="{{hash}}"/>
+		
+	</form>
+	<form action="/bhost/analysis_index" method="get" name="frm_analysis">
+			<input type="hidden" name="a0"  value="{{se}}" />
+			<input type="hidden" name="s1"  value="" />
+			<input type="hidden" name="st"  value="" />
+			<input type="hidden" name="et"  value="" />
+			<input type="hidden" name="stat"  value="" />
+			<input type="hidden" name="tp"  value="" />
+			<input type="hidden" name="su"  value="" />
+			<input type="hidden" name="si"  value="" />
+			<input type="hidden" name="lo"  value="" />
+			<input type="hidden" name="yu"  value="" />
+			<input type="hidden" name="ot"  value="" />
+			<input type="hidden" name="ha" id = "ha" value="{{hash}}"/>
+			
+	</form>
+	<form action="/bhost/playback_index" method="get" name="frm_playback">
+		<input type="hidden" name="a0"  value="{{se}}" />
+		<input type="hidden" name="s1"  value="" />
+		<input type="hidden" name="st"  value="" />
+		<input type="hidden" name="et"  value="" />
+		<input type="hidden" name="stat"  value="" />
+		<input type="hidden" name="tp"  value="" />
+		<input type="hidden" name="su"  value="" />
+		<input type="hidden" name="si"  value="" />
+		<input type="hidden" name="lo"  value="" />
+		<input type="hidden" name="ha" value="{{hash}}"/>
+	</form>	
+<script type="text/javascript"> 
+var interval_output = null;
+var count = 1;
+var sess = window.parent.document.frm.se.value;
+var REFRESH_TIME = 60000;							//数据刷新时间	ms	
+var REFRESH_TIME_SYS = 5000; 					//系统概况刷新时间	ms
+var BH_USER_NUM = 8;									//运维用户显示数量
+var COMB_NUM = 15;										//COMB数量
+var COMB_ORDER = [1,5,7,3,9,10,12,8,11,14,2,4,6,13,15];	//COMB顺序
+var AREA7_NUM = 4;										//告警部分协议显示数量
+var AREA8_NUM = 3;										//最新会话部分显示数量
+var AREA9_NUM = 15;										//系统日志部分显示数量
+var AREA2_NUM = 10;										//服务器部分显示数量
+var REFRESH_5 = 0;
+var c_today1;
+var c_today2;
+var c_week1;
+var c_week2;
+var index = [];
+var index_s = [];
+var index_a = [];
+var monitor_flag1 = {{monitor_flag1}};
+var monitor_flag2 = {{monitor_flag2}};
+var condition_json = {
+	"starttime":null,
+	"endtime":null,
+	"serverip":null,
+	"usercode":null,
+	"inttype":null,
+	"intexception":null,
+	"moretime":null
+};
+if(screenWidth > 1440 && screenWidth <= 1920){
+	var AREA7_NUM = 6;			
+	var AREA8_NUM = 5;
+	var AREA9_NUM = 22;
+	$(".area.area8").find('.cont').find('tr').eq(0).find("th").eq(0).attr("style","width:13%;");
+	$(".area.area8").find('.cont').find('tr').eq(0).find("th").eq(1).attr("style","width:13%;");		
+}else if(screenWidth > 1920 ){
+	var AREA7_NUM = 8;
+	var AREA8_NUM = 6;
+	var AREA9_NUM = 27;	
+}
+
+function a(){
+	var elem = screenfull.element;
+	var isFullscreen = screenfull.isFullscreen;
+}
+Array.prototype.max = function() {
+	return Math.max.apply({}, this)
+}
+window.onresize = function(){
+	a();
+}
+var test = function(param){
+	if(param.seriesType == 'pie'){
+		var type;		//1 -- > 操作; 2 -- > 会话;
+		var normal;		//1 -- > 全部; 2 -- > 异常;
+		if($("#ser_type").children().eq(0).attr('class') == 'on'){	
+			type = 1;
+		}else{
+			type = 2;
+		}
+		if($("#ser_status").children().eq(0).attr('class') == 'on'){	
+			normal = 1;
+		}else{
+			normal = 2;
+		}			
+		document.frm_monitor.tasktype.value = 3;
+		document.frm_monitor.se.value = window.parent.document.frm.se.value;
+		document.frm_monitor.a1.value = param.name;
+		document.frm_monitor.a2.value = type;
+		document.frm_monitor.a3.value = normal;		
+		document.frm_monitor.submit();
+		return false;
+	}else if($(param.target).attr("class") == "tab-ctr"){
+		ses_detail($(param.target).attr("_id"));
+	}else if(param.target != undefined){
+		if(param.target.nodeName == "TD"){
+			_id = $(param.target).parent().find('td').eq(1).text();
+			if(_id != undefined && _id != ""){
+				syslog_detail(_id);
+			}
+		}
+	}else if($(param.target).attr("class") == "m_ses_icon2"){
+		//alert("回放"+$(param.target).attr("_id"));
+	}else if($(param.target).attr("class") == "m_ses_icon1"){
+		//alert("指令查看"+$(param.target).attr("_id"));
+	}else if($(param.target).attr("class") == "m_ses_icon4"){
+		//alert("指令导出"+$(param.target).attr("_id"));
+	}
+}
+var test1 = function(param){
+	if(param.target.nodeName == "DIV" || param.target.nodeName == "TD"){
+		_if = -1;
+		_id = $(param.target).parent().siblings('td').eq(0).attr('_id');
+		if(param.target.nodeName == "TD"){
+			_id = $(param.target).parent().find('td').eq(0).attr('_id');
+		}
+		if(_id == undefined || _id == -1){
+			return true;
+		}
+		syslog_detail1(_id);
+	}else{
+		return true;
+	}
+}
+var comb_click = function(param){
+	var tar_class = $(param.target).attr('class');
+	var c_type = $(param.target).attr('type');
+	var content = $(param.target).text();
+	if(tar_class.indexOf('disable') == -1 && tar_class != "comb" && content != ""){
+		document.frm_monitor.tasktype.value = 5;
+		document.frm_monitor.se.value = window.parent.document.frm.se.value;
+		document.frm_monitor.a1.value = c_type;
+		document.frm_monitor.a2.value = 1;
+		document.frm_monitor.a3.value = 1;
+		document.frm_monitor.submit();
+	}
+}
+
+function ses_detail(id){
+	var from_flag = "monitor";
+	var taskid = id;
+	var logtype = "SESSION";
+	var ids = index.toString();
+	get_button_status();
+	document.frm_search.a0.value = sess;
+	document.frm_search.f1.value = from_flag;
+	document.frm_search.a1.value = taskid;
+	document.frm_search.a2.value = logtype;
+	document.frm_search.a4.value = button_status;
+	document.frm_search.i1.value = ids;
+	document.frm_search.submit();
+}
+
+function syslog_detail(id){
+	var from_flag = "monitor";
+	var taskid = id;
+	var logtype = "SYSTEM";
+	var ids = index_s.toString();
+	get_button_status();
+	document.frm_search.a0.value = sess;
+	document.frm_search.f1.value = from_flag;
+	document.frm_search.a1.value = taskid;
+	document.frm_search.a2.value = logtype;
+	document.frm_search.a4.value = button_status;
+	document.frm_search.i1.value = ids;
+	document.frm_search.submit();
+}
+function syslog_detail1(id){
+	var from_flag = "monitor";
+	var taskid = id;
+	var logtype = "SYSTEM";
+	var ids = index_a.toString();
+	get_button_status();
+	document.frm_search.a0.value = sess;
+	document.frm_search.f1.value = from_flag;
+	document.frm_search.a1.value = taskid;
+	document.frm_search.a2.value = logtype;
+	document.frm_search.a4.value = button_status;
+	document.frm_search.i1.value = ids;
+	document.frm_search.submit();
+}
+var timeoutId = 0;
+var timeouts = {};
+$(function(){
+	var worker = new Worker("/manage/js/timeout_worker.js");
+	worker.addEventListener("message", function(evt) {
+		var data = evt.data,
+		id = data.id,
+		fn = timeouts[id].fn,
+		args = timeouts[id].args;
+
+		//fn.apply(null, args);
+		delete timeouts[id];
+	});
+	window.setTimeout1 = function(fn, delay) {
+		var args = Array.prototype.slice.call(arguments, 2);
+		timeoutId += 1;
+		delay = delay || 0;
+		var id = timeoutId;
+		timeouts[id] = {fn: fn, args: args};
+		worker.postMessage({command: "setTimeout", id: id, timeout: delay});
+		return id;
+	};
+
+	window.clearTimeout1 = function(id) {
+		worker.postMessage({command: "clearTimeout", id: id});
+		delete timeouts[id];
+	};
+	newCharts();
+	get_protocol_list();	//生成协议列表
+	get_crt();						//加载证书信息
+	create_alert_form();
+	get_warnMsg();
+	if(monitor_flag1 == 0){
+		create_SysLog_form();
+		get_SysLog();
+		$('.area-w').css("height","200px");
+		$('.area.area7').css("height","200px");
+	}
+	// $('#chartBar1').on('click',test);
+	// $('#chartPie').on('click',test);
+	// $('#chartBar2').on('click',test);
+	// $('#more_ses_info').on('click',ses_click);
+	//回显的所有按钮状态
+	var btn_status = document.frm_monitor.a4.value;
+	show_time();
+	t_get_msg3 = setInterval(function(){
+		show_details();
+	},REFRESH_TIME_SYS);
+	/*interval_output=setInterval(
+		function(){
+			newCharts();
+			get_warnMsg();
+	},REFRESH_TIME_SYS);*/
+	getSysSize();
+	getUsrSize();
+	get_condition();
+	var A;//  1: 小时  2: 天
+	var B;//  1: 全部  2: 异常(最新会话0：全部 2：异常)
+	var C;//  1: 操作  2: 会话
+	if(monitor_flag1 != 0){
+		if(btn_status != ""){
+			A = btn_status.charAt(0);
+			B = btn_status.charAt(1);
+			C = btn_status.charAt(2);
+			if(A == 1){
+				$("#data_type").children().eq(0).attr("class","on");
+				$("#data_type").children().eq(1).attr("class","");
+			}else{
+				$("#data_type").children().eq(1).attr("class","on");
+				$("#data_type").children().eq(0).attr("class","");
+			}
+			if(B == 1){
+				$("#dis_status").children().eq(0).attr("class","on");
+				$("#dis_status").children().eq(1).attr("class","");
+			}else{
+				$("#dis_status").children().eq(1).attr("class","on");
+				$("#dis_status").children().eq(0).attr("class","");
+			}
+			if(C == 1){
+				$("#dis_type").children().eq(0).attr("class","on");
+				$("#dis_type").children().eq(1).attr("class","");
+			}else{
+				$("#dis_type").children().eq(1).attr("class","on");
+				$("#dis_type").children().eq(0).attr("class","");
+			}		
+			Chart1(C,A,0,B);
+		}else{
+			Chart1(1,1,0,1);
+		}
+		interval_output=setInterval(
+			function(){
+				var type1;	//  1: 小时  2: 天
+				var type2;	//  1: 操作  2: 会话
+				var normal	//  1: 全部  2: 异常
+				//判断是Hour 还是Day
+				if($("#data_type").children().eq(0).attr('class') == "on"){
+					type1 = 1;
+				}else{
+					type1 = 2;
+				}
+				//判断操作或者会话
+				if($("#dis_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				//判断全部或者异常
+				if($("#dis_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+
+				Chart1(type2,type1,0,normal);
+			},REFRESH_TIME);
+		if(btn_status != ""){
+			B = btn_status.charAt(3);
+			C = btn_status.charAt(4);
+			if(B == 1){
+				$("#ser_status").children().eq(0).attr("class","on");
+				$("#ser_status").children().eq(1).attr("class","");			
+			}else{
+				$("#ser_status").children().eq(1).attr("class","on");
+				$("#ser_status").children().eq(0).attr("class","");
+			}
+			if(C == 1){
+				$("#ser_type").children().eq(0).attr("class","on");
+				$("#ser_type").children().eq(1).attr("class","");			
+			}else{
+				$("#ser_type").children().eq(1).attr("class","on");
+				$("#ser_type").children().eq(0).attr("class","");
+			}		
+			Chart2(C,0,B);
+		}else{
+			Chart2(1,0,1);
+		}
+		interval_output=setInterval(
+			function(){
+				var normal;
+				//判断全部或者异常
+				if($("#ser_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				if($("#ser_type").children().eq(0).attr('class') == "on"){
+					Chart2(1,0,normal);
+				}else{
+					Chart2(2,0,normal);
+				}
+			},REFRESH_TIME);
+		if(btn_status != ""){
+			B = btn_status.charAt(5);
+			C = btn_status.charAt(6);
+			if(B == 1){
+				$("#user_status").children().eq(0).attr("class","on");
+				$("#user_status").children().eq(1).attr("class","");			
+			}else{
+				$("#user_status").children().eq(1).attr("class","on");
+				$("#user_status").children().eq(0).attr("class","");
+			}
+			if(C == 1){
+				$("#user_type").children().eq(0).attr("class","on");
+				$("#user_type").children().eq(1).attr("class","");			
+			}else{
+				$("#user_type").children().eq(1).attr("class","on");
+				$("#user_type").children().eq(0).attr("class","");
+			}		
+			Chart3(C,0,B);
+		}else{
+			Chart3(1,0,1);
+		}	
+		interval_output=setInterval(
+			function(){
+			var normal;
+			//判断全部或者异常
+			if($("#user_status").children().eq(0).attr('class') == "on"){
+				normal = 1;
+			}else{
+				normal = 2;
+			}
+			if($("#user_type").children().eq(0).attr('class') == "on"){
+				Chart3(1,0,normal);
+			}else{
+				Chart3(2,0,normal);
+			}
+		},REFRESH_TIME);
+		//系统容量--（‘显示内容’，‘占用百分比’）
+		if(btn_status != ""){
+			B = btn_status.charAt(7);
+			if(B == 0){
+				$("#sess_status").children().eq(0).attr("class","on");
+				$("#sess_status").children().eq(1).attr("class","");
+			}else{
+				$("#sess_status").children().eq(1).attr("class","on");
+				$("#sess_status").children().eq(0).attr("class","");			
+			}
+			Chart4(B);
+		}else{
+			Chart4(0);
+		}	
+		Chart5_1();
+		Chart5_2();
+		Chart5_3();
+		Chart5_4();
+		interval_output=setInterval(
+			function(){
+				var normal;
+				//判断全部或者异常
+				if($("#sess_status").children().eq(0).attr('class') == "on"){
+					normal = 0;
+				}else{
+					normal = 2;
+				}			
+				Chart4(normal);
+				Chart5_1();
+				Chart5_2();
+				Chart5_3();
+				Chart5_4();
+				comb(1);
+			},REFRESH_TIME);
+		comb(0);		
+	}else{ //只有系统权限的时候显示 系统日志  都没权限监控页面隐藏（不用考虑）
+		interval_output = setInterval(function(){
+			get_SysLog();
+		},REFRESH_TIME_SYS);
+		/*interval_output=setInterval(
+			function(){
+				get_SysLog();
+			},REFRESH_TIME_SYS);*/
+	}
+
+	// $.when(get_day_ses).then(COMB);
+	$('#Comb').on('click',comb_click);
+	//
+	interval_output=setInterval(function(){	// 判断F11全屏
+		winHeight();
+	},500);
+	$('table > tbody > tr').hover(function(){
+		var i = $(this).index();
+		if(i == 0){
+			$(this).parent().prev().children('tr:last').addClass('before');
+		}else{
+			$(this).prev().addClass('before');
+		}
+	},function(){
+		var i = $(this).index();
+		if(i == 0){
+			$(this).parent().prev().children('tr:last').removeClass('before');
+		}else{
+			$(this).prev().removeClass('before');
+		}
+	})
+});
+var t_get_msg3;
+function show_details(){
+	//clearTimeout1(t_get_msg3);
+	newCharts();
+	get_warnMsg();
+}
+
+function create_SysLog_form(){
+	$html = "<tr>"+
+		"<td></td>"+
+		"<td></td>"+
+		"<td></td>"+
+		"<td></td>"+
+		"<td></td>"+
+		"<td></td>"+
+		"<td></td>"+
+		"<td>&nbsp;</td></tr>";
+	for(i=0;i<AREA9_NUM;i++){
+		$(".area.area9").children().find('tbody').append($html);
+	}
+}
+
+function get_SysLog(){
+	var limitrow = AREA9_NUM;
+	var offsetrow = 0;
+
+	$.ajax({
+		url: "/bhost/get_log_list_monitor",
+		type:"GET",
+		async:true,
+		cache:false,
+		data:{a0:sess,limit:limitrow,t2:null,t4:'SYSTEM',t5:'xtime_04,xtime_05,int32_01,int08_03,str32_22,str32_23,ip_01,str32_25,str32_00,xtime_00'},
+		success:function(result){
+			var result = JSON.parse(result);
+
+			data=result.items;
+			//data = [];
+			if(data != ""){
+				tbody = $('.area.area9').children().find('tbody');
+				$(tbody).empty();
+				index = [];
+				$.each(data,function(i,item){
+					html_msg2 = "";
+					if(monitor_flag2 == 2){
+						if((item.int08_12 == '告警') && (item.int08_11 == '未处理' || item.int08_11 == null)){//有确认
+							html_msg2 = "<div class=\"tab-ctr\"><div class=\"sss\"><a href=\"javascript:;\" class=\"msg1\" title=\"确认\" onclick=\"MarkWMsg1('"+item.xtime_00+"',3,this)\"></a></div></div>";
+						}else if((item.int08_12 == '告警') && item.int08_11 == '已处理'){
+							html_msg2 = "<div class=\"tab-ctr\"><div class=\"sss\"><a href=\"javascript:;\" class=\"msg1 disabled\" title=\"确认\"></a></div></div>";
+						}
+					}else{
+						html_msg2 = "";
+					}
+					item.xtime_02 = item.xtime_02.replace('T',' ').replace('+08:00','');
+					if(item.str32_30 == null){
+						item.str32_30 = "&nbsp;"
+					}
+					
+					$(tbody).append( "<tr>"
+						+"<td title=\""+item.str32_04+"\">"+item.str32_04+"</td>"
+						+"<td style=\"display: none;\" title=\""+item.xtime_00+"\">"+item.xtime_00+"</td>"
+						+"<td title=\""+item.xtime_02+"\">"+item.xtime_02+"</td>"
+						+"<td title=\""+item.int32_01+"\">"+item.int32_01+"</td>"
+						+"<td title=\""+item.ip_00+"\">"+item.ip_00+"</td>"
+						+"<td title=\""+item.str32_22+"\">"+item.str32_22+"</td>"
+						+"<td title=\""+item.str32_01+"\">"+item.str32_01+"</td>"
+						+"<td title=\""+item.str32_02+"\">"+item.str32_02+"</td>"
+						+"<td title=\""+item.str32_30+"\">"+item.str32_30+html_msg2+"</td>"
+						+"</tr>"
+					);
+					index_s.push(item.xtime_00);
+				})
+			}else{
+				var area9_str;
+				for(j=0; j<AREA9_NUM; j++){
+					area9_str += "<tr>"+
+						"<td></td>"+
+						"<td></td>"+
+						"<td></td>"+
+						"<td></td>"+
+						"<td></td>"+
+						"<td></td>"+
+						"<td></td>"+
+						"<td>&nbsp;</td></tr>";
+				}
+				$(".area.area9").find('tbody').html(area9_str);
+			}
+
+			$(".area.area9").on('click',test);
+		}
+	});	
+}
+
+function get_condition(){
+	condition_json = {
+		"starttime":null,
+		"endtime":null,
+		"serverip":null,
+		"usercode":null,
+		"inttype":null,
+		"intexception":null,
+		"moretime":null
+	};	
+	getDate();
+	c_today1 = now_date+' '+'00:00:00+08';
+	c_today2 = now_date+' '+'23:59:59+08';
+	var seven_days = GetDateStr(-6);
+	var one_days = GetDateStr(-1);
+
+	var date = new Date();
+
+	var currentdate = date.getFullYear() + "-" + seven_days + " " + "00:00:00+08";
+	condition_json.starttime = c_today1;
+	condition_json.endtime = c_today2;
+	condition_json.moretime = currentdate;
+}
+var now_date;
+function getDate(){
+	now_date = "";
+	var date = new Date();
+	var syear = date.getFullYear();
+	var smonth = date.getMonth()+1;
+	var sday=date.getDate();
+	if(String(smonth).length == 1){
+		smonth = '0' + String(smonth);
+	}
+	if(String(sday).length == 1){
+		sday = '0' + String(sday);
+	}	
+	now_date = syear +'-'+ smonth +'-'+ sday;
+}
+
+function more_info(){
+	var normal;
+	get_button_status();
+	if($("#sess_status").children().eq(0).attr('class') == 'on'){	
+		normal = 1;
+	}else{
+		normal = 2;
+	}	
+	document.frm_monitor.tasktype.value = 6;
+	document.frm_monitor.se.value = window.parent.document.frm.se.value;
+	document.frm_monitor.a1.value = 10;
+	document.frm_monitor.a2.value = 1;
+	document.frm_monitor.a3.value = normal;
+	document.frm_monitor.a4.value = button_status;
+	document.frm_monitor.a6.value = 1;		
+	document.frm_monitor.submit();
+}
+var oldHeight = 0;
+function winHeight(){
+	var winHeight = document.body.clientHeight;
+	if(oldHeight == winHeight){
+		return;
+	}
+	var normal;
+	//判断全部或者异常
+	if($("#sess_status").children().eq(0).attr('class') == "on"){
+		normal = 0;
+	}else{
+		normal = 2;
+	}	
+	if(screenWidth <= 1440 ){
+		if(winHeight > 830){	//F11情况下
+			AREA8_NUM = 8;
+			AREA9_NUM = 19;
+			Chart4(normal);
+		}else{					//非F11
+			AREA8_NUM = 3;
+			AREA9_NUM = 15;
+			Chart4(normal);
+		}
+		if(screenWidth <= 1280 ){
+			center_array = ['45%', '51%'];
+			textView_y = 67;
+			textView_x = 132;
+		}
+	}else if(screenWidth > 1440 && screenWidth <= 1920){
+		$('#screenSwitch').attr('href','/manage/css/control1920.css');
+		dotsize = 10;
+		if(winHeight > 940){
+			AREA8_NUM = 9;
+			AREA9_NUM = 22;
+			Chart4(normal);
+		}else{
+			AREA8_NUM = 5;
+			AREA9_NUM = 18;
+			Chart4(normal);
+		}
+	}else if(screenWidth > 1920 ){
+		$('#screenSwitch').attr('href','/manage/css/control2560.css');
+		_radius = [30,120];
+		dotsize = 15;
+		if(winHeight > 1300){
+			AREA8_NUM = 9;
+			AREA9_NUM = 30;
+			Chart4(normal);
+		}else{
+			AREA8_NUM = 6;
+			AREA9_NUM = 26;
+			Chart4(normal);
+		}
+	}
+	$("#server").css("background","url(/manage/images/background-monitoring.png) 50% 50%;");
+	$("#Comb").css("background","url(/manage/images/comb_1440.png) no-repeat;");
+	$('#showContent>tr').each(function(i,item){
+		if(i < showLen){
+			$(item).show();
+		}else{
+			$(item).hide();
+		}
+	});
+
+	oldHeight = winHeight;	
+}
+//获取证书
+function get_crt(){
+	$.ajax({
+		url:'/bhost/get_crt',
+		type: "post",
+		async:true,
+		data: {a0:sess},
+		success: function(result){
+			result = JSON.parse(result);
+			data_str = result.info.data[0];
+			if(data_str['istest'] == 1) var istest = '测试设备';
+			else var istest = '供货设备';
+			var time_str;
+			if(data_str['start'] == "" || data_str['end'] == ""){
+				time_str = "";
+			}else{
+				DateDiff(data_str['start'].toString(),data_str['end'].toString());
+				
+				if(parseInt(Month/12) == 0 && parseInt(Month%12) != 0){
+					time_str = Month%12+"个月";
+				}else if(parseInt(Month%12) == 0 && parseInt(Month/12) != 0){
+					time_str = parseInt(Month/12)+"年";
+				}else if(parseInt(Month%12) == 0 && parseInt(Month/12) == 0){
+					time_str = "";
+				}else{
+					time_str = parseInt(Month/12)+"年"+Month%12+"个月";
+				}
+			}
+			//time_str 是服务期限
+			var dev_str = data_str['dev_name'] + '('+istest+')';
+			$('.area.area1').find('.cont').children('ul').empty();
+			$('.area.area1').find('.cont').children('ul').append("<li style=\"margin-left: -20px\"><label>客户名称:&nbsp;</label>"+ data_str['client_name'] +"</li>"+
+				"<li style=\"float: right ;margin-right: -30px\"><label>托管上限:&nbsp;</label>"+ data_str['count'] +"</li>"+
+				"<li style=\"margin-left: -20px\"><label>设备型号:&nbsp;</label>"+ data_str['dev_name'] +"</li>"+
+				"<li style=\"float: right ;margin-right: -30px\"><label>设备类型:&nbsp;</label>"+ istest +"</li>"+				
+				"<li style=\"margin-left: -20px\"><label>授权起始:&nbsp;</label>"+ data_str['start'] +"</li>"+
+				"<li style=\"float: right ;margin-right: -30px\"><label>授权截止:&nbsp;</label>"+ data_str['end'] +"</li>");	
+		}
+	})
+}
+var Month;
+function  DateDiff(sDate1, sDate2){		//sDate1和sDate2是2017-10-20格式
+	var aDate, oDate1, oDate2, iDays  
+	aDate = sDate1.split("-")  
+	oDate1 = new Date(aDate[1] + '/' + aDate[2] + '/' + aDate[0])//转换为10-20-2017格式
+	aDate = sDate2.split("-")  
+	oDate2 = new Date(aDate[1] + '/' + aDate[2] + '/' + aDate[0])
+	Month = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24 / 30)//把相差的毫秒数转换为天数
+}
+//监控页面初始化
+function create_alert_form(){
+	//Chart5 告警部分
+	var thead_str = '"<tr><th style="width:17%;">会话</th><th>所有</th>"+';	//标题
+	var tbody_str1 = "<tr><td>当日</td><td>0</td>";			//内容 -->当天
+	var tbody_str2 = "<tr><td>当月</td><td>0</td>"; 		//内容 -->当月
+	for(j=0; j<4; j++){
+		var obj0 = $(".area.area7").children().find('.b').eq(j);
+		$(obj0).children().children('thead').empty();
+		$(obj0).children().children('thead').append(thead_str);
+		$(obj0).children().children('tbody').empty();
+		$(obj0).children().children('tbody').append(tbody_str1);
+		$(obj0).children().children('tbody').append(tbody_str2);
+		$(obj0).children().children('tbody').children('tr').eq(0).children('td').eq(1).text('');
+		var l0 = $(obj0).children().children('thead').children('tr').eq(0).children('th').length;
+		var l1 = $(obj0).children().children('tbody').children('tr').eq(0).children('td').length;
+		var l2 = $(obj0).children().children('tbody').children('tr').eq(1).children('td').length;
+		if(l0 != AREA7_NUM+2){
+			for(i = 1; i <= AREA7_NUM+2-l0; i++){
+				$(obj0).children().children('thead').children('tr').eq(0).append("<th></th>");
+			}
+		}
+		if(l1 != AREA7_NUM+2){
+			for(i = 1; i <= AREA7_NUM+2-l1; i++){
+				$(obj0).children().children('tbody').children('tr').eq(0).append("<td></td>");
+			}
+		}
+		if(l2 != AREA7_NUM+2){
+			for(i = 1; i <= AREA7_NUM+2-l2; i++){
+				$(obj0).children().children('tbody').children('tr').eq(1).append("<td></td>");
+			}
+		}
+		$(obj0).children().children('tbody').children('tr').eq(1).children('td').eq(1).text('');
+	}
+	var obj1 = $(".area.area7").children().find('.b').eq(1);
+	$(obj1).children().find('tr').children(':first').text('异常会话');
+	obj1 = $(".area.area7").children().find('.b').eq(2);
+	$(obj1).children().find('tr').children(':first').text('操作');
+	obj1 = $(".area.area7").children().find('.b').eq(3);
+	$(obj1).children().find('tr').children(':first').text('异常操作');
+	//Comb
+	// $('#Comb').empty();	
+	// $c = $('#Comb');
+	// for(var i = 1;i <= COMB_NUM;i++){
+	// 	if(i == 1){
+	// 		$c.append('<div class="item item'+i+'"></div>');
+	// 		$c.children('div.item'+i).addClass('disable');
+	// 	}else{	
+	// 		$c.append('<div class="item item'+i+'"></div>');
+	// 		$c.children('div.item'+i).addClass('disable');
+	// 	}
+	// }
+}
+
+//记录当前按钮状态
+var button_status;
+function get_button_status(){
+	button_status = "";
+	if($("#data_type").children().eq(0).attr("class") == 'on'){
+		button_status = '1';
+	}else{
+		button_status = '2';
+	}
+	if($("#dis_status").children().eq(0).attr("class") == 'on'){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#dis_type").children().eq(0).attr("class") == 'on'){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#ser_status").children().eq(0).attr("class") == 'on'){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#ser_type").children().eq(0).attr("class") == 'on'){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#user_status").children().eq(0).attr("class") == 'on'){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#user_type").children().eq(0).attr("class") == 'on'){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#sess_status").children().eq(0).attr("class") == 'on'){
+		button_status += '0';
+	}else{
+		button_status += '2';
+	}
+}
+//实时时间
+	// function show_time(){
+	//$.ajax({
+	//	url: "/bhost/get_systemTime",
+	//	type:"POST",
+	//	async:true,
+	//	data:{a0:$("input[name=se]").val()},
+	//	success:function(result){
+	//		var result = JSON.parse(result);
+	//		var time = result.info[0].time.replace("'","").replace("'","");
+	//		$("#local_time").text("系统时间："+time);
+	//	}
+	//})
+// }
+var t_get_msg;
+var time_load_second = 0;
+function show_time(){
+	clearInterval(t_get_msg);
+	var n=0;
+	time_load_second++;
+	if(time_load_second <= 5){//预留5秒 加载页面
+		$.ajax({
+			url: "/bhost/get_systemTime",
+			type:"POST",
+			async:true,
+			cache:false,
+			data:{a0:$("input[name=se]").val()},
+			success:function(result){
+				if(result.Result == false){
+					if(result.info.indexOf('系统异常')>=0 || result.info.indexOf('非法访问')>=0 || result.info.indexOf('系统超时') >=0  || result.info.indexOf('系统繁忙') >=0){
+						_alert(2,'系统',result.info);
+					}else{
+						_alert(2,'系统',result.info);
+					}
+					clearInterval(t_get_msg);
+					clearInterval(interval_output);
+				}
+				else{
+					var result = JSON.parse(result);
+					var time = result.info[0].time;
+					$("#local_time").text("系统时间："+time);
+				}
+			}
+		})		
+	}else{
+		oldDate = $("#local_time").text().split('：')[1];
+		oldTimeUnix = DateToUnix(oldDate);
+		newTimeUnix = UnixToDate(parseInt(oldTimeUnix)+1,true,8);
+
+		$("#local_time").text("系统时间："+newTimeUnix);
+	}
+
+	t_get_msg = setInterval(function(){show_time();},1000);
+	if(n) return false;	
+}
+
+function DateToUnix(string) {
+	var f = string.split(' ', 2);
+	var d = (f[0] ? f[0] : '').split('-', 3);
+	var t = (f[1] ? f[1] : '').split(':', 3);
+	return (new Date(
+	parseInt(d[0], 10) || null,
+	(parseInt(d[1], 10) || 1) - 1,
+	parseInt(d[2], 10) || null,
+	parseInt(t[0], 10) || null,
+	parseInt(t[1], 10) || null,
+	parseInt(t[2], 10) || null
+	)).getTime() / 1000;
+}
+
+function UnixToDate(unixTime, isFull, timeZone) {
+	if (typeof (timeZone) == 'number'){
+		unixTime = parseInt(unixTime) + parseInt(timeZone) * 60 * 60;
+	}
+	var time = new Date(unixTime * 1000);
+	var ymdhis = "";
+
+	if(time.getUTCMonth()+1 < 10){
+		var M1 = '0'+(time.getUTCMonth()+1).toString();
+	}else{
+		var M1 = time.getUTCMonth()+1;
+	}
+	if(time.getUTCDate() < 10){
+		var S1 = '0'+time.getUTCDate().toString();
+	}else{
+		var S1 = time.getUTCDate();
+	}
+	ymdhis += time.getUTCFullYear() + "-";
+	ymdhis += M1 + "-";
+	ymdhis += S1;
+	if (isFull === true){
+		if(time.getUTCHours() < 10){
+			var H = '0'+time.getUTCHours().toString();
+		}else{
+			var H = time.getUTCHours();
+		}
+		if(time.getUTCMinutes() < 10){
+			var M = '0'+time.getUTCMinutes().toString();
+		}else{
+			var M = time.getUTCMinutes();
+		}
+		if(time.getUTCSeconds() < 10){
+			var S = '0'+time.getUTCSeconds().toString();
+		}else{
+			var S = time.getUTCSeconds();
+		}
+		ymdhis += " " + H + ":";
+		ymdhis += M + ":";
+		ymdhis += S;
+	}
+	return ymdhis;
+}
+
+//生成协议列表
+var protocol_list = [];
+function get_protocol_list(){
+	var max_page = "null";
+	var ipage = "null";
+	var keyword = JSON.stringify([]);
+	$.ajax({
+		url:'/bhost/get_agreement_list',
+		type: "post",
+		async:true,
+		data: {a0:sess,data1:max_page,data2:ipage,data3:keyword},
+		success: function(result){
+			protocol_data = JSON.parse(result);
+			protocol_data = protocol_data.data;
+			protocol_list = [];
+			$.each(protocol_data,function(i,item){
+				var list = {
+					protocolname:"",
+					protocolid:""
+				}
+				list.protocolname = item.ProtocolName;
+				list.protocolid = item.ProtocolId;
+				protocol_list.push(list);
+			})
+		}
+	})
+}
+//获取date
+function GetDateStr(AddDayCount) { 
+	var dd = new Date(); 
+	dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期 
+	var y = dd.getFullYear(); 
+	var m = dd.getMonth()+1;//获取当前月份的日期 
+	var d = dd.getDate();
+	if (m < 10) m = "0" + m;
+	if (d < 10) d = "0" + d;
+	return m+"-"+d; 
+}
+//获取hour
+function GetHourStr(SubHourCount){
+	var d = new Date();
+	d.setTime(d.getTime()-SubHourCount*60*60*1000);
+	var now_Hour = d.getHours();
+	return now_Hour;
+};
+
+//获取操作数据分布data
+function get_ops_data_distribution(type,re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#distri_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ops_data_distribution",
+		type:"POST",
+		async:true,
+		cache:false,
+		data:{a0:$("input[name=se]").val(),a1:type,a2:re,a3:normal},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#distri_re").attr("onclick","_setType(this,0,2)");
+			if(result.Result){
+				data = result.info;
+				type = result.Type;//1: hour 2: day
+				if($(".area.area2").children('.title').children().find('a:first').attr('class') == ""){		//防跳转
+					return false;
+				}
+				// if(data == false){
+				// 	return false;
+				// }
+				var list1 = [];
+				var list1_ = [];
+				var list2 = [];
+				var data_all = [];
+				var flag_date = 0;
+				var d = new Date();
+				var now_Hour = d.getHours();
+				var now_Date = Date().split(" ")[2];
+				var before_Date = GetDateStr(-1);
+				before_Date = before_Date.split('-')[1];
+				if(type == 1){
+					// if(now_Hour == 0 || now_Hour == 3 || now_Hour == 6 || now_Hour == 9 || now_Hour == 12 || now_Hour == 15 || now_Hour == 18 || now_Hour == 21){
+					// 	var j = 0;
+					// 	for(i=0; i<24; i++){
+					// 		if(i%3 == 0){
+					// 			list1.push(GetHourStr(j));
+					// 			j += 3;
+					// 		}else{
+					// 			list1.push("");
+					// 		}
+					// 		list1_.push(GetHourStr(i));
+					// 	}
+					// }else if(now_Hour-1 == 0 || now_Hour-1 == 3 || now_Hour-1 == 6 || now_Hour-1 == 9 || now_Hour-1 == 12 || now_Hour-1 == 15 || now_Hour-1 == 18 || now_Hour-1 == 21){
+					// 		var j = 1;
+					// 		for(i=0; i<24; i++){
+					// 			if((i-1)%3 == 0){
+					// 				list1.push(GetHourStr(j));
+					// 				j += 3;
+					// 			}else{
+					// 				list1.push("");
+					// 			}
+					// 			list1_.push(GetHourStr(i));
+					// 		}
+					// }else if(now_Hour-2 == 0 || now_Hour-2 == 3 || now_Hour-2 == 6 || now_Hour-2 == 9 || now_Hour-2 == 12 || now_Hour-2 == 15 || now_Hour-2 == 18 || now_Hour-2 == 21){
+					// 		var j = 2;
+					// 		for(i=0; i<24; i++){
+					// 			if((i-2)%3 == 0){
+					// 				list1.push(GetHourStr(j));
+					// 				j += 3;
+					// 			}else{
+					// 				list1.push("");
+					// 			}
+					// 			list1_.push(GetHourStr(i));
+					// 		}
+					// }
+					list1_ = [24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0]
+					list1 = [24,"","",21,"","",18,"","",15,"","",12,"","",9,"","",6,"","",3,"","",0];
+
+					if(data == ""){
+						list2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+					}else{
+						$.each(list1_,function(i,item){
+							var flag_date = 0;
+							$.each(data,function(i1,item1){
+								var data_date = item1.name.split(" ")[0];
+								data_date = data_date.split('-')[1];
+								var data_hour = item1.name.split(" ")[1];
+								if(i == 0){
+									if(item == data_hour && data_date == now_Date){
+										list2.push(item1.value);
+										flag_date = 1;
+										return false;
+									}
+								}else{
+									if(item == data_hour){
+										list2.push(item1.value);
+										flag_date = 1;
+										return false;
+									}
+								}
+							})
+							if(flag_date == 0){
+								list2.push("0");
+							}
+						})
+					}
+				}else if(type == 2){
+					for(i=0; i<14; i++){
+						var _i = i - 2 * i;
+						list1.push(GetDateStr(_i));
+						flag_date = 0;
+						$.each(data,function(i,item){
+							if(item.name == GetDateStr(_i)){
+								list2.push(item.value);
+								flag_date = 1;
+							}
+						})
+						if(flag_date == 0){
+							list2.push('0');
+						}
+					}
+				}
+				var a = list1;
+				var b = list2;
+				b = list2.reverse();
+				a = list1.reverse();
+				data_all.push(a);
+				data_all.push(b);
+
+				var myChart = echarts.init(document.getElementById('chartBar1'));
+				myChart.clear();
+				var category = data_all[0];
+				var lineData =data_all[1];
+				if(type == 1){
+					var option = {
+						backgroundColor: 'transparent',
+						grid: {
+							left: '16%',
+							y: 55,
+							y2:38
+						},
+						tooltip: {
+							trigger: 'axis',
+							//formatter:'<span style="font-size:12px">{b}<br><i class="dot-fix"></i>数量: {c}</span>',
+							formatter:function(params){
+								var html = '';
+								if(params.length>0){
+									_tempValue = params[0];
+									html+='<span style="font-size:12px">'+params[0].name+'<br><i class="dot-fix"></i>数量: '+params[0].value+'</span>';
+								}
+								return html;
+							},
+							axisPointer: {
+								type: 'shadow'
+							},
+							backgroundColor:'rgba(63,182,210,0.2)'
+						},
+						legend: false,
+						xAxis: {
+							data: category,
+							axisLine: {
+								lineStyle: {
+									color: '#666'
+								}
+							}
+						},
+						yAxis: {
+								splitLine: {show: false},
+								axisLine: {
+									lineStyle: {
+										color: '#666'
+									}
+								},
+								minInterval: 1
+						},
+						series: [{
+								name: 'Hour',
+								type: 'line',
+								smooth: true,
+								showAllSymbol: true,
+								symbol: 'emptyCircle',
+								symbolSize: dotsize,
+								data: lineData
+							}, {
+								name: 'Hour',
+								type: 'bar',
+								barGap: '-100%',
+								barWidth: 10,
+								itemStyle: {
+									normal: {
+										color: new echarts.graphic.LinearGradient(
+											0, 0, 0, 1,
+											[	
+												{offset: 0, color: 'rgba(46,33,59,0)'},
+												{offset: 0.5, color: 'rgba(46,33,59,0.5)'},
+												{offset: 1, color: 'rgba(46,33,59,1)'}
+											]
+										)
+									}
+								},
+								z: -8,
+								data: lineData
+							}, {
+								name: 'Hour',
+								type: 'pictorialBar',
+								symbol: 'rect',
+								itemStyle: {
+									normal: {
+										color: '#54a7d6'
+									}
+
+								},
+								symbolRepeat: true,
+								symbolSize: [8, 1],
+								symbolMargin: 1,
+								z: -10,
+								data: lineData
+							}]
+					};
+				}else if(type == 2){
+					var option = {
+						backgroundColor: 'transparent',
+						grid: {
+							left: '16%',
+							y: 55,
+							y2:38
+						},
+						tooltip: {
+							trigger: 'axis',
+							formatter:'<span style="font-size:12px">{b}<br><i class="dot-fix"></i>数量: {c}</span>',
+							axisPointer: {
+								type: 'shadow'
+							},
+							backgroundColor:'rgba(63,182,210,0.2)'
+						},
+						legend: false,
+						xAxis: {
+							data: category,
+							axisLine: {
+								lineStyle: {
+									color: '#666'
+								}
+							},
+							axisLabel:{
+								interval:function(i){
+									if(i%2 != 0){
+										return true;
+									}
+								}
+							}
+						},
+						yAxis: {
+								splitLine: {show: false},
+								axisLine: {
+									lineStyle: {
+										color: '#666'
+									}
+								},
+								minInterval: 1
+							},
+						series: [{
+								name: 'Day',
+								type: 'line',
+								smooth: true,
+								showAllSymbol: true,
+								symbol: 'emptyCircle',
+								symbolSize: dotsize,
+								data: lineData
+							}, {
+								name: 'Day',
+								type: 'bar',
+								barGap: '-100%',
+								barWidth: 10,
+								itemStyle: {
+									normal: {
+										color: new echarts.graphic.LinearGradient(
+											0, 0, 0, 1,
+											[	
+												{offset: 0, color: 'rgba(46,33,59,0)'},
+												{offset: 0.5, color: 'rgba(46,33,59,0.5)'},
+												{offset: 1, color: 'rgba(46,33,59,1)'}
+											]
+										)
+									}
+								},
+								z: -8,
+								data: lineData
+							}, {
+								name: 'Day',
+								type: 'pictorialBar',
+								symbol: 'rect',
+								itemStyle: {
+									normal: {
+										color: '#54a7d6'
+									}
+
+								},
+								symbolRepeat: true,
+								symbolSize: [8, 1],
+								symbolMargin: 1,
+								z: -10,
+								data: lineData
+							}]
+					};
+				}
+
+				
+				myChart.setOption(option);
+				myChart.on('click',test);
+			}
+			else{
+				//alert('数据分布查询失败');
+			}
+		}
+	});
+	return data;
+}
+//获取会话数据分布data
+function get_ses_data_distribution(type,re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#distri_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ses_data_distribution",
+		type:"POST",
+		async:true,
+		cache:false,
+		data:{a0:$("input[name=se]").val(),a1:type,a2:re,a3:normal},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#distri_re").attr("onclick","_setType(this,0,2)");
+			if(result.Result){
+				data=result.info;
+				if($(".area.area2").children('.title').children().find('a:last').attr('class') == ""){
+					return false;
+				}
+				var list1 = [];
+				var list1_ = [];
+				var list2 = [];
+				var data_all = [];
+				var flag_date = 0;
+				var d = new Date();
+				var now_Hour = d.getHours();
+				var now_Date = Date().split(" ")[2];
+				var before_Date = GetDateStr(-1).split("-")[1];
+				if(type == 1){	
+					// if(now_Hour == 0 || now_Hour == 3 || now_Hour == 6 || now_Hour == 9 || now_Hour == 12 || now_Hour == 15 || now_Hour == 18 || now_Hour == 21){
+					// 	var j = 0;
+					// 	for(i=0; i<24; i++){
+					// 		if(i%3 == 0){
+					// 			list1.push(GetHourStr(j));
+					// 			j += 3;
+					// 		}else{
+					// 			list1.push("");
+					// 		}
+					// 		list1_.push(GetHourStr(i));
+					// 	}
+					// }else if(now_Hour-1 == 0 || now_Hour-1 == 3 || now_Hour-1 == 6 || now_Hour-1 == 9 || now_Hour-1 == 12 || now_Hour-1 == 15 || now_Hour-1 == 18 || now_Hour-1 == 21){
+					// 		var j = 1;
+					// 		for(i=0; i<24; i++){
+					// 			if((i-1)%3 == 0){
+					// 				list1.push(GetHourStr(j));
+					// 				j += 3;
+					// 			}else{
+					// 				list1.push("");
+					// 			}
+					// 			list1_.push(GetHourStr(i));
+					// 		}
+					// }else if(now_Hour-2 == 0 || now_Hour-2 == 3 || now_Hour-2 == 6 || now_Hour-2 == 9 || now_Hour-2 == 12 || now_Hour-2 == 15 || now_Hour-2 == 18 || now_Hour-2 == 21){
+					// 		var j = 2;
+					// 		for(i=0; i<24; i++){
+					// 			if((i-2)%3 == 0){
+					// 				list1.push(GetHourStr(j));
+					// 				j += 3;
+					// 			}else{
+					// 				list1.push("");
+					// 			}
+					// 			list1_.push(GetHourStr(i));
+					// 		}
+					// }
+					list1_ = [24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0]
+					list1 = [24,"","",21,"","",18,"","",15,"","",12,"","",9,"","",6,"","",3,"","",0];
+					$.each(list1_,function(i,item){
+						var flag_date = 0;
+						$.each(data,function(i1,item1){
+							var data_date = item1.name.split(" ")[0].split("-")[1];
+							var data_hour = item1.name.split(" ")[1];
+							if(i == 0){
+								if(item == data_hour && data_date == now_Date){
+									list2.push(item1.value);
+									flag_date = 1;
+									return false;
+								}
+							}else{
+								if(item == data_hour){
+									list2.push(item1.value);
+									flag_date = 1;
+									return false;
+								}
+							}
+						})
+						if(flag_date == 0){
+							list2.push("0");
+						}
+					})
+					if(data == ""){
+						list2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+					}
+				}else if(type == 2){
+					for(i=0; i<14; i++){
+						var _i = i - 2 * i;
+						list1.push(GetDateStr(_i));
+						flag_date = 0;
+						$.each(data,function(i,item){
+							if(item.name == GetDateStr(_i)){
+								list2.push(item.value);
+								flag_date = 1;
+							}
+						})
+						if(flag_date == 0){
+							list2.push('0');
+						}
+					}
+				}
+				var a = list1;
+				var b = list2;
+				b = list2.reverse();
+				a = list1.reverse();
+				data_all.push(a);
+				data_all.push(b);
+				var myChart = echarts.init(document.getElementById('chartBar1'));
+				myChart.clear();
+				var category = data_all[0];
+				var lineData =data_all[1] ;
+				if(type == 1){
+					var option = {
+						backgroundColor: 'transparent',
+						grid: {
+							left: '16%',
+							y: 55,
+							y2:38
+						},
+						tooltip: {
+							trigger: 'axis',
+							//formatter:'<span style="font-size:12px">{b}<br><i class="dot-fix"></i>数量: {c}</span>',
+							formatter:function(params){
+								var html = '';
+								if(params.length>0){
+									_tempValue = params[0];
+									html+='<span style="font-size:12px">'+params[0].name+'<br><i class="dot-fix"></i>数量: '+params[0].value+'</span>';
+								}
+								return html;
+							},
+							axisPointer: {
+								type: 'shadow'
+							},
+							backgroundColor:'rgba(63,182,210,0.2)'
+						},
+						legend: false,
+						xAxis: {
+							data: category,
+							axisLine: {
+								lineStyle: {
+									color: '#666'
+								}
+							}
+						},
+						yAxis: {
+								splitLine: {show: false},
+								axisLine: {
+									lineStyle: {
+										color: '#666'
+									}
+								},
+								minInterval: 1
+							},
+						series: [{
+								name: 'Hour',
+								type: 'line',
+								smooth: true,
+								showAllSymbol: true,
+								symbol: 'emptyCircle',
+								symbolSize: dotsize,
+								data: lineData
+							}, {
+								name: 'Hour',
+								type: 'bar',
+								barGap: '-100%',
+								barWidth: 10,
+								itemStyle: {
+									normal: {
+										color: new echarts.graphic.LinearGradient(
+											0, 0, 0, 1,
+											[	
+												{offset: 0, color: 'rgba(46,33,59,0)'},
+												{offset: 0.5, color: 'rgba(46,33,59,0.5)'},
+												{offset: 1, color: 'rgba(46,33,59,1)'}
+											]
+										)
+									}
+								},
+								z: -8,
+								data: lineData
+							}, {
+								name: 'Hour',
+								type: 'pictorialBar',
+								symbol: 'rect',
+								itemStyle: {
+									normal: {
+										color: '#54a7d6'
+									}
+
+								},
+								symbolRepeat: true,
+								symbolSize: [8, 1],
+								symbolMargin: 1,
+								z: -10,
+								data: lineData
+							}]
+					};
+				}else if(type == 2){
+					var option = {
+						backgroundColor: 'transparent',
+						grid: {
+							left: '16%',
+							y: 55,
+							y2:38
+						},
+						tooltip: {
+							trigger: 'axis',
+							formatter:'<span style="font-size:12px">{b}<br><i class="dot-fix"></i>数量: {c}</span>',
+							axisPointer: {
+								type: 'shadow'
+							},
+							backgroundColor:'rgba(63,182,210,0.2)'
+						},
+						legend: false,
+						xAxis: {
+							data: category,
+							axisLine: {
+								lineStyle: {
+									color: '#666'
+								}
+							},
+							axisLabel:{
+								interval:function(i){
+									if(i%2 != 0){
+										return true;
+									}
+								}
+							}
+						},
+						yAxis: {
+								splitLine: {show: false},
+								axisLine: {
+									lineStyle: {
+										color: '#666'
+									}
+								},
+								minInterval: 1
+							},
+						series: [{
+								name: 'Day',
+								type: 'line',
+								smooth: true,
+								showAllSymbol: true,
+								symbol: 'emptyCircle',
+								symbolSize: dotsize,
+								data: lineData
+							}, {
+								name: 'Day',
+								type: 'bar',
+								barGap: '-100%',
+								barWidth: 10,
+								itemStyle: {
+									normal: {
+										color: new echarts.graphic.LinearGradient(
+											0, 0, 0, 1,
+											[	
+												{offset: 0, color: 'rgba(46,33,59,0)'},
+												{offset: 0.5, color: 'rgba(46,33,59,0.5)'},
+												{offset: 1, color: 'rgba(46,33,59,1)'}
+											]
+										)
+									}
+								},
+								z: -8,
+								data: lineData
+							}, {
+								name: 'Day',
+								type: 'pictorialBar',
+								symbol: 'rect',
+								itemStyle: {
+									normal: {
+										color: '#54a7d6'
+									}
+
+								},
+								symbolRepeat: true,
+								symbolSize: [8, 1],
+								symbolMargin: 1,
+								z: -10,
+								data: lineData
+							}]
+					};
+				}
+				
+				myChart.setOption(option);
+				myChart.on('click',test);
+			}
+			else{
+				//alert('数据分布查询失败');
+			}
+		}
+	});
+	return data;
+}
+//时间趋势 #  1: hour    2: day
+function Chart1(type,i,re,normal){
+	if(type == 1){
+		get_ops_data_distribution(i,re,normal);
+	}else{
+		get_ses_data_distribution(i,re,normal);
+	}
+}
+
+
+//获取会话服务器data
+function get_ses_service_data(re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#server_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ses_service_data",
+		type:"POST",
+		async:true,
+		cache:false,
+		data:{a0:sess,a1:re,a2:normal,n1:AREA2_NUM},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#server_re").attr("onclick","_setType(this,0,3)");
+			if(result.Result){
+				data=result.info;
+				if($(".area.area3").children('.title').children().find('a:last').attr('class') == ""){
+					return false;
+				}
+				if(!data){
+					return false;
+				}
+				var myChart = echarts.init(document.getElementById('chartPie'));
+				myChart.clear();
+				var color;
+				var len = data.length;
+				if(len < 5){
+					color = ['#f56ad4','#22d0f5','#716dae','#3574e6'];
+				}else {
+					color = ['#f56ad4','#22d0f5','#716dae','#3574e6','#fe509f','#bae7ed','#bc5ba5','#fdb7c5','#b8b8b8','#25afe1'];
+				}
+				if(data != ''){
+					var max = data[0].value;
+					var min = data[len-1].value;
+					var num = (parseInt(max) - parseInt(min))/10;
+				}else{
+					num = 0;
+				}
+				num = parseInt(num);
+				$.each(data,function(i,item){
+					item.percent = item.percent * 100;
+					item.percent = item.percent.toFixed(2);
+					item.value = parseInt(item.value) + num;
+				})
+
+				var option = {
+					title : false,
+					color:color,
+					tooltip : {
+						trigger: 'item',
+						formatter: function (params) {
+							var value = params.value - num;
+							return '<span style="font-size:12px">'+params.data.name+"<br>"+value+" ("+params.data.percent+"%)"+'</span>'
+						},
+						backgroundColor:'rgba(63,182,210,0.2)'
+					},
+					legend: false,
+					toolbox: false,
+					calculable : true,
+					series : [
+						{
+							name:'面积模式',
+							type:'pie',
+							radius : _radius,
+							center : center_array,
+							roseType : 'area',
+							data:data,
+							itemStyle: {
+								normal: {
+									shadowColor: 'rgba(0, 0, 0, 0.8)',
+									shadowBlur: 24
+								},
+								emphasis: {
+									opacity: 0.8
+								}
+							}
+						}
+					]
+				};
+
+				myChart.setOption(option);
+				myChart.on('click',test);
+			}
+			else{
+				//alert('服务器查询失败');
+			}
+		}
+	});
+	return data;
+}
+//获取操作服务器data
+function get_ops_service_data(re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#server_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ops_service_data",
+		type:"POST",
+		async:true,
+		cache:false,
+		data:{a0:sess,a1:re,a2:normal,n1:AREA2_NUM},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#server_re").attr("onclick","_setType(this,0,3)");
+			if(result.Result){
+				data=result.info;
+				if($(".area.area3").children('.title').children().find('a:first').attr('class') == ""){
+					return false;
+				}
+				if(!data){
+					return false;
+				}
+				// data=[{"value":10, "name":"SERVICE1"},{"value":5, "name":"SERVICE2"},{"value":15, "name":"SERVICE3"},{"value":10, "name":"SERVICE4"},{"value":15, "name":"SERVICE5"},{"value":25, "name":"SERVICE6"},{"value":20, "name":"SERVICE7"},{"value":35, "name":"SERVICE8"}];
+
+				var myChart = echarts.init(document.getElementById('chartPie'));
+				myChart.clear();
+				var color;
+				var len = data.length;
+				if(len < 5){
+					color = ['#f56ad4','#22d0f5','#716dae','#3574e6'];
+				}else {
+					color = ['#f56ad4','#22d0f5','#716dae','#3574e6','#fe509f','#bae7ed','#bc5ba5','#fdb7c5','#b8b8b8','#25afe1'];
+				}
+				if(data != ''){
+					var max = data[0].value;
+					var min = data[len-1].value;
+					var num = (parseInt(max) - parseInt(min))/10;
+				}else{
+					num = 0;
+				}
+				num = parseInt(num);
+				$.each(data,function(i,item){
+					item.percent = item.percent * 100;
+					item.percent = item.percent.toFixed(2);
+					item.value = parseInt(item.value) + num;
+				})
+				var option = {
+					title : false,
+					color:color,
+					tooltip : {
+						trigger: 'item',
+						formatter: function (params) {
+							var value = params.value - num;
+							return '<span style="font-size:12px">'+params.data.name+"<br>"+value+" ("+params.data.percent+"%)"+'</span>'
+						},
+
+						backgroundColor:'rgba(63,182,210,0.2)'
+					},
+					legend: false,
+					toolbox: false,
+					calculable : true,
+					series : [
+						{
+							name:'面积模式',
+							type:'pie',
+							radius : _radius,
+							center : center_array,
+							roseType : 'area',
+							data:data,
+							itemStyle: {
+								normal: {
+									shadowColor: 'rgba(0, 0, 0, 0.8)',
+									shadowBlur: 24
+								},
+								emphasis: {
+									opacity: 0.8
+								}
+							}
+						}
+					]
+				};
+
+				myChart.setOption(option);
+				myChart.on('click',test);
+			}
+			else{
+				//alert('服务器查询失败');
+			}
+		}
+	});
+	return data;
+}
+//服务器
+function Chart2(type,re,normal){
+	var service_data;
+	if(type == 2){
+		get_ses_service_data(re,normal);
+	}else{
+		get_ops_service_data(re,normal);
+	}
+}
+
+//获取操作运维用户data
+function get_ops_user_data(re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#bhuser_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ops_user_data",
+		type:"POST",
+		async:true,
+		cache:false,
+		data:{a0:$("input[name=se]").val(),a1:re,a2:normal},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#bhuser_re").attr("onclick","_setType(this,0,4)");
+			if(result.Result){
+				$("#chartBar2").show();
+				if(result.info == ""){
+					$("#chartBar2").hide();
+					return false;
+				}
+				data=result.info;
+				if($(".area.area4").children('.title').children().find('a:first').attr('class') == ""){
+					return false;
+				}
+				var list1 = [];
+				var list2 = [];
+				var data_all = [];
+				$.each(data,function(i,item){
+					if(i < BH_USER_NUM){
+						//item.name = autoAddEllipsis(item.name, '5');
+						list1.push(item.name);
+						list2.push(item.value);
+					}
+				})
+				data_all.push(list1);
+				data_all.push(list2);
+				// data_all = [["名字甲乙丙丁","f甲乙丙丁","h","i","j"],[2,8,4,9,1]];
+				var myChart = echarts.init(document.getElementById('chartBar2'));
+				myChart.clear();
+				var dataAxis = data_all[0];
+				var data = data_all[1];
+				//shadow
+				// var yMax = Math.max.apply(null, data);
+				// //最大值
+				// var dataShadow = [];
+				// for (var i = 0; i < data.length; i++) {
+				// 	dataShadow.push(yMax);
+				// }
+				option = {
+					title: false,
+					grid: {
+						left: '16%',
+						y: 70,//图片上部拉伸
+						y2: 40//图片下部拉伸
+					},					
+					xAxis: {
+						data: dataAxis,
+						//axisLabel: {
+						//	textStyle: {
+						//		color: '#666'
+						//	}
+						//},
+						axisLabel: {
+							interval:0,
+							rotate:-30,
+							textStyle: {
+								color: '#666',
+							},
+							formatter: function (value) {
+								return (value.length > 5 ? (value.slice(0,5)+"...") : value );
+							}
+						},
+						// axisTick: {
+						// 	show: false
+						// },
+						axisLine: {
+							show: false,
+							lineStyle: {
+								color: '#666'
+							}
+						},
+						z: 1
+					},
+					yAxis: {
+						axisLine: {
+							lineStyle: {
+								color: '#666'
+							}
+						},
+						splitLine: {
+							lineStyle:{
+								color:'#666'
+							}
+						},
+						minInterval: 1
+					},
+					tooltip:{
+						trigger: 'axis',
+						//formatter:'<span style="font-size:12px">用户名称: {b}<br><i class="dot-fix"></i>操作数量: {c}</span>',
+						formatter:function(params){
+							var html = '';
+							if(params.length>0){
+								_tempValue = params[0];
+								for ( var int = 0; int < params.length; int++) {
+									html+='<span style="font-size:12px">用户名称: '+params[0].name+'<br><i class="dot-fix"></i>操作数量: '+params[0].value+'</span>';
+								}
+							}
+							return html;
+						},
+
+						axisPointer: {
+							type: 'shadow',
+						},
+						backgroundColor:'rgba(63,182,210,0.2)'
+					},
+					series: [
+						// { // For shadow
+						// 	name:'Bhuser',
+						// 		type:'bar',
+						// 		itemStyle: {
+						// 			normal: {color: 'rgba(255,255,255,0.05)'}
+						// 		},
+						// 		barGap:'-100%',
+						// 		barCategoryGap:'70%',
+						// 		data: dataShadow,
+						// 		animation: false
+						// },
+						{
+							name:'Bhuser',
+							type: 'bar',
+							barMaxWidth:'50px',
+							itemStyle: {
+								normal: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1,
+										[
+											{offset: 0, color: '#46dbfd'},
+											{offset: 0.5, color: '#377f9b'},
+											{offset: 1, color: '#292439'}
+										]
+									)
+								},
+								emphasis: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1,
+										[
+											{offset: 0, color: '#87e8fe'},
+											{offset: 0.5, color: '#377f9b'},
+											{offset: 1, color: '#292439'}
+										]
+									)
+								}
+							},
+							data: data
+						}
+					]
+				};
+
+				myChart.setOption(option);
+				myChart.on('click',test);
+			}
+			else{
+				//alert('运维用户查询失败');
+			}
+		}
+	});
+	return data;
+}
+//获取会话运维用户data
+function get_ses_user_data(re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#bhuser_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ses_user_data",
+		type:"POST",
+		async:true,
+		cache:false,
+		data:{a0:$("input[name=se]").val(),a1:re,a2:normal},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#bhuser_re").attr("onclick","_setType(this,0,4)");
+			if(result.Result){
+				$("#chartBar2").show();
+				if(result.info == ""){
+					$("#chartBar2").hide();
+					return false;
+				}
+				data=result.info;
+				if($(".area.area4").children('.title').children().find('a:last').attr('class') == ""){
+					return false;
+				}
+				var list1 = [];
+				var list2 = [];
+				var data_all = [];
+				$.each(data,function(i,item){
+					if(i < BH_USER_NUM){
+						list1.push(item.name);
+						list2.push(item.value);
+					}
+				})
+				data_all.push(list1);
+				data_all.push(list2);
+			// data_all = [["名字甲","名字甲","名字甲","名字甲","名字甲","名字甲","f甲乙丙","名字甲","名字甲","名字甲"],[200,130,124,352,256,89,87,98,158,154]];
+				var myChart = echarts.init(document.getElementById('chartBar2'));
+				myChart.clear();
+				var dataAxis = data_all[0];
+				var data = data_all[1];
+
+				//shadow
+				// var yMax = Math.max.apply(null, data);
+				// //最大值
+				// var dataShadow = [];
+				// for (var i = 0; i < data.length; i++) {
+				// 	dataShadow.push(yMax);
+				// }
+				option = {
+					title: false,
+					grid: {
+						left: '16%',
+						y: 70,
+						y2: 40
+					},
+					xAxis: {
+						data: dataAxis,
+						//axisLabel: {
+						//	textStyle: {
+						//		color: '#666'
+						//	}
+						//},
+						axisLabel: {
+							interval:0,
+							rotate:-30,
+							textStyle: {
+								color: '#666',
+							},
+							formatter: function (value) {
+								return (value.length > 5 ? (value.slice(0,5)+"...") : value );
+							}							
+						},
+						// axisTick: {
+						// 	show: false
+						// },
+						axisLine: {
+							show: false,
+							lineStyle: {
+								color: '#666'
+							}
+						},
+						z: 1
+						},
+					yAxis: {
+						// axisTick: {
+						// 	show: false
+						// },
+						// axisLabel: {
+						// 	textStyle: {
+						// 		color: '#666'
+						// 	}
+						// },
+						axisLine: {
+							lineStyle: {
+								color: '#666'
+							}
+						},
+						splitLine: {
+							lineStyle:{
+								color:'#666'
+							}
+						},
+						minInterval: 1
+						//max:yMax
+					},
+						tooltip:{
+							trigger: 'axis',
+							//formatter:'<span style="font-size:12px">用户名称: {b}<br><i class="dot-fix"></i>会话数量: {c}</span>',
+							formatter:function(params){
+								var html = '';
+								if(params.length>0){
+									_tempValue = params[0];
+									for ( var int = 0; int < params.length; int++) {
+										html+='<span style="font-size:12px">用户名称: '+params[0].name+'<br><i class="dot-fix"></i>会话数量: '+params[0].value+'</span>';
+									}
+								}
+								return html;
+							},
+							axisPointer: {
+								type: 'shadow',
+								// click:function(){
+								// 	alert(0)
+								// }
+							}
+						},
+						series: [
+								// { // For shadow
+								// 	name: 'Bhuser',
+								//     type: 'bar',
+								//     itemStyle: {
+								//         normal: {color: 'rgba(255,255,255,0.05)'}
+								//     },
+								//     barGap:'-100%',
+								//     barCategoryGap:'70%',
+								//     data: dataShadow,
+								//     animation: false
+								// },
+							{
+								name: 'Bhuser',
+								type: 'bar',
+								barMaxWidth:'50px',
+								itemStyle: {
+									normal: {
+										color: new echarts.graphic.LinearGradient(
+											0, 0, 0, 1,
+											[
+												{offset: 0, color: '#46dbfd'},
+												{offset: 0.5, color: '#377f9b'},
+												{offset: 1, color: '#292439'}
+											]
+										)
+									},
+									emphasis: {
+										color: new echarts.graphic.LinearGradient(
+											0, 0, 0, 1,
+											[
+												{offset: 0, color: '#87e8fe'},
+												{offset: 0.5, color: '#377f9b'},
+												{offset: 1, color: '#292439'}
+											]
+										)
+									}
+								},
+								data: data
+							}
+						]
+					};
+
+				myChart.setOption(option);
+				myChart.on('click',test);
+			}
+			else{
+				//alert('运维用户查询失败');
+			}
+		}
+	});
+	
+	return data;
+}
+//运维用户
+function Chart3(type,re,normal){
+	if(type == 1){
+		get_ops_user_data(re,normal);
+	}else{
+		get_ses_user_data(re,normal);
+	}
+}
+var _tempValue = "";
+function _setMouseup(){
+	if(_tempValue == ""){
+		return false;
+	}
+	if(_tempValue.seriesType == 'line' && _tempValue.seriesName == 'Hour' && _tempValue.data != "0"){
+		var type;		//1 -- > 操作; 2 -- > 会话;
+		var normal;		//1 -- > 全部; 2 -- > 异常;
+		if($("#dis_type").children().eq(0).attr('class') == 'on'){	
+			type = 1;
+		}else{
+			type = 2;
+		}
+		if($("#dis_status").children().eq(0).attr('class') == 'on'){	
+			normal = 1;
+		}else{
+			normal = 2;
+		}		
+		document.frm_monitor.tasktype.value = 2;
+		document.frm_monitor.se.value = window.parent.document.frm.se.value;
+		document.frm_monitor.a1.value = _tempValue.dataIndex;
+		document.frm_monitor.a2.value = type;
+		document.frm_monitor.a3.value = normal;
+		document.frm_monitor.submit();
+	}else if(_tempValue.seriesName == 'Bhuser'){
+		var type;		//1 -- > 操作; 2 -- > 会话;
+		var normal;		//1 -- > 全部; 2 -- > 异常;
+		if($("#user_type").children().eq(0).attr('class') == 'on'){	
+			type = 1;
+		}else{
+			type = 2;
+		}
+		if($("#user_status").children().eq(0).attr('class') == 'on'){	
+			normal = 1;
+		}else{
+			normal = 2;
+		}
+		document.frm_monitor.tasktype.value = 4;
+		document.frm_monitor.se.value = window.parent.document.frm.se.value;
+		document.frm_monitor.a1.value = _tempValue.name;
+		document.frm_monitor.a2.value = type;
+		document.frm_monitor.a3.value = normal;			
+		document.frm_monitor.submit();
+	}
+}
+
+
+//获取系统概要data-> cpu 内存 磁盘
+// function get_system_outline_data1(){
+	// 	var data=false;
+	// 	$.ajax({
+	// 		url: "/bhost/get_system_outline_data1",
+	// 		type:"POST",
+	// 		async:false,
+	// 		cache:false,
+	// 		data:{a0:$("input[name=se]").val()},
+	// 		success:function(result){
+	// 			var result = JSON.parse(result);
+	// 			if(result.Result){
+	// 				data=result.data;
+	// 			}
+	// 			else{
+	// 				//alert('系统概要查询失败');
+	// 			}
+	// 		}
+	// 	});
+	// 	return data;
+// }
+
+// 系统概要
+function newCharts(){
+	$.ajax({
+		url: "/bhost/get_server_all_data",
+		type:"POST",
+		async:false,
+		cache:false,
+		data:{a0:$("input[name=se]").val(),a1:1},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				var data_stat = result.info;
+				var timestamp_now = data_stat.local_time;
+				var timestamp_cpu = data_stat.CpuUsed.split(', ')[1].split('L')[0];
+				var CPUFlag = StorageFlag = DiskFlag = EthFlag = AppFlag = 1;
+				if(parseInt(timestamp_now) - parseInt(timestamp_cpu) <= 300){
+					CPUFlag = "1";
+					CPUData = data_stat.CpuUsed.split(', ')[0].split('[')[1];
+					CPUData = CPUData.trim();
+				}else{
+					CPUFlag = "2";
+				}
+				var timestamp_mem = data_stat.MemUsed.split(', ')[1].split('L')[0];
+				if(parseInt(timestamp_now) - parseInt(timestamp_mem) <= 300){
+					StorageFlag = "1";
+					StorageData = data_stat.MemUsed.split(', ')[0].split('%')[0].split('\'')[1];
+					StorageData = StorageData.trim();
+				}else{
+					StorageFlag = "2";
+				}
+				{% if flag_cloud == 0 %}
+				$.each(data_stat.disk,function(i,item){
+					if(item.diskstat == 1 && item.disk_stat == 0){
+						return true;
+					}else{
+						DiskFlag = "2";
+						return false;
+					}
+				})
+				{% endif %}
+				$.each(data_stat.eth_list,function(i,item){
+					if(item.f_display_none == 1){
+						return true;
+					}
+
+					if(item.eth_stat == 1 && item.isrun == 1 && item.isup == 1){
+						return true;
+					}else{
+						if(item.ip_addr=='' && item.bond_include==0){
+
+						}else{
+							EthFlag = "2";
+							return false;
+						}
+					}
+				})
+
+				if(CPUFlag == "2"){
+					$("#part_b").children().find('li').eq(0).find('i').attr("class","status1");
+					$("#part_b").children().find('li').eq(0).find('span').text("CPU：异常");
+				}else if(CPUFlag == "1"){
+					$("#part_b").children().find('li').eq(0).find('i').attr("class","status0");
+					$("#part_b").children().find('li').eq(0).find('span').text("CPU："+CPUData+'%');
+				}
+
+				if(StorageFlag == "2"){
+					$("#part_b").children().find('li').eq(1).find('i').attr("class","status1");
+					$("#part_b").children().find('li').eq(1).find('span').text("内存：异常");
+				}else if(StorageFlag == "1"){
+					$("#part_b").children().find('li').eq(1).find('i').attr("class","status0");
+					$("#part_b").children().find('li').eq(1).find('span').text("内存："+StorageData+'%');
+				}
+				//{% if flag_cloud == 0 %}
+					if(DiskFlag == "2"){
+						$("#part_b").children().find('li').eq(2).find('i').attr("class","status1");
+						$("#part_b").children().find('li').eq(2).find('span').text("磁盘：异常");
+					}else if(DiskFlag == "1"){
+						$("#part_b").children().find('li').eq(2).find('i').attr("class","status0");
+						$("#part_b").children().find('li').eq(2).find('span').text("磁盘：正常");
+					}
+
+					if(EthFlag == "2"){
+						$("#part_b").children().find('li').eq(3).find('i').attr("class","status1");
+						$("#part_b").children().find('li').eq(3).find('span').text("网卡：异常");
+					}else if(EthFlag == "1"){
+						$("#part_b").children().find('li').eq(3).find('i').attr("class","status0");
+						$("#part_b").children().find('li').eq(3).find('span').text("网卡：正常");
+					}
+
+					if(AppFlag == "2"){
+						$("#part_b").children().find('li').eq(4).find('i').attr("class","status1");
+						$("#part_b").children().find('li').eq(4).find('span').text("ACC：异常");
+					}else if(AppFlag == "1"){
+						$("#part_b").children().find('li').eq(4).find('i').attr("class","status0");
+						$("#part_b").children().find('li').eq(4).find('span').text("ACC：正常");
+					}
+				{% else %}
+					if(EthFlag == "2"){
+						$("#part_b").children().find('li').eq(2).find('i').attr("class","status1");
+						$("#part_b").children().find('li').eq(2).find('span').text("网卡：异常");
+					}else if(EthFlag == "1"){
+						$("#part_b").children().find('li').eq(2).find('i').attr("class","status0");
+						$("#part_b").children().find('li').eq(2).find('span').text("网卡：正常");
+					}
+
+					if(AppFlag == "2"){
+						$("#part_b").children().find('li').eq(3).find('i').attr("class","status1");
+						$("#part_b").children().find('li').eq(3).find('span').text("ACC：异常");
+					}else if(AppFlag == "1"){
+						$("#part_b").children().find('li').eq(3).find('i').attr("class","status0");
+						$("#part_b").children().find('li').eq(3).find('span').text("ACC：正常");
+					}
+				{%endif%}
+			}
+			else{
+			}
+		}
+	});	
+	$.ajax({
+		url: "/bhost/get_system_outline_data2",
+		type:"POST",
+		async:false,
+		cache:false,
+		data:{a0:$("input[name=se]").val()},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				data=result.data[0];
+				$("#part_c").children().find('li').eq(0).text("运维用户："+data.OperationalUsers+"个");
+				$("#part_c").children().find('li').eq(1).text("运维主机："+data.OperationalHosts+"个");
+				$("#part_c").children().find('li').eq(2).text("访问策略："+data.AccessStrategy+"个");
+				$("#part_c").children().find('li').eq(3).text("指令策略："+data.DirectiveStrategy+"个");
+				$("#part_c").children().find('li').eq(4).text("工单策略："+data.WorkOrderStrategy+"个");
+				if(data.SeviceStatus == "1"){
+					$("#service_status").empty().append("<span class=\"status\"><i class=\"on\"></i>服务状态：正常	&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;服务器数量："+data.ServiceNum+"</span>");
+				}else if(data.SeviceStatus == "2"){
+					$("#service_status").empty().append("<span class=\"status\"><i class=\"off\"></i>服务状态：异常&nbsp;&nbsp;&nbsp;&nbsp;服务器数量："+data.ServiceNum+"</span>");
+				}
+				Server_array = [];
+				if(data.ServiceDetail.length > 1){ //多服务器的时候隐part_b 显示服务器状态(最多显示6个)
+					$("#part_b").hide();
+					$("#part_b1").show();
+					html_tmp1 = "";
+					var index_num = 0;
+					$.each(data.ServiceDetail,function(i,item){
+						if(index_num > 6){
+							return true;
+						}
+						if(item.Status == 1){
+							html_tmp1 += '<li><i class="status0" id="server_'+item.ServerID+'"></i><span>服务器'+item.ServerID+'：</span></li>';
+						}else{
+							html_tmp1 += '<li><i class="status1" id="server_'+item.ServerID+'"></i><span>服务器'+item.ServerID+'：</span></li>';
+						}
+						Server_array.push(item.ServerID);
+						index_num++;
+					})
+					$("#part_b1").children('ul').empty().append(html_tmp1);
+					getSysSize();
+				}else{
+					Server_array.push(1);
+					$("#part_b").show();
+					$("#part_b1").hide();
+				}
+			}else{
+			}
+		}
+	});
+}
+//syssize
+var Server_array = [];
+var D_get_msg;
+function getSysSize(){
+	clearInterval(D_get_msg);
+	var sid_str = Server_array.join(',');
+	$.ajax({
+		url: "/bhost/getSSize",
+		type:"POST",
+		async:false,
+		cache:false,
+		data:{a0:$("input[name=se]").val(),a1:sid_str},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				//console.log(result.info.length);
+				if(result.info.length == 1){
+					$("#loadPer1").show();
+					var data_str = result.info[0].used+'G/'+result.info[0].total+'G';
+					var percentage = parseInt(result.info[0].percentage).toFixed(2);
+					if(result.info[0].status == "false"){
+						data_str +="(失效)";
+						loadPer(data_str,percentage,1);
+						$("#loadPer1").attr("title",'系统空间：'+percentage+'%(失效)');
+					}else{
+						loadPer(data_str,percentage,1);
+						$("#loadPer1").attr("title",'系统空间：'+percentage+'%');
+					}
+				}else if(result.info.length > 1){
+					$("#loadPer1").remove();
+					$.each(result.info,function(i,item){
+						var data_str = item.used+'G/'+item.total+'G';
+						var percentage = parseInt(item.percentage).toFixed(2);
+						var text_tmp = $("#server_"+item.server_id+"").next().text();
+						if(text_tmp.indexOf("%") == -1){
+							if(item.status == "true"){
+								text_tmp += "系统空间("+data_str+"  "+percentage+"%)";
+							}else{
+								text_tmp += "系统空间("+data_str+"  "+percentage+"%)(失效)";
+							}
+							$("#server_"+item.server_id+"").next().text(text_tmp);
+						}
+					})
+				}
+			}
+			else{
+				//alert('系统概要查询失败');
+			}
+		}
+	});
+	D_get_msg = setInterval(function(){getSysSize();},REFRESH_TIME);
+}
+//usersize
+var D_get_msg_u;
+function getUsrSize(){
+	clearInterval(D_get_msg_u);
+	$.ajax({
+		url: "/bhost/getUSize",
+		type:"POST",
+		async:false,
+		cache:false,
+		data:{a0:$("input[name=se]").val()},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				var data_str = result.info[0].used+'G/'+result.info[0].total+'G';
+				var percentage = result.info[0].percentage.toFixed(2);
+				if(result.status == "false"){
+					data_str +="(失效)";
+					loadPer(data_str,percentage,2);
+					$("#loadPer2").attr("title",'用户空间：'+percentage+'%(失效)');
+				}else{
+					loadPer(data_str,percentage,2);
+					$("#loadPer2").attr("title",'用户空间：'+percentage+'%');
+				}
+			}
+			else{
+				//alert('系统概要查询失败');
+			}
+		}
+	});
+	D_get_msg_u = setInterval(function(){getUsrSize();},REFRESH_TIME);
+}
+//系统容量 type1-->LoadPer1系统  2-->LoadPer2用户
+function loadPer(i,w,type){
+	var $_num,$_bar,pw;
+	if(type == 1){
+		var $_num = $('#loadPer1 span.num');
+		var $_bar = $('#loadPer1 span.bg');
+		var pw = $_bar.parent(".s").width();
+		var $_width = $('#loadPer1').width();
+	}else if(type == 2){
+		var $_num = $('#loadPer2 span.num');
+		var $_bar = $('#loadPer2 span.bg');
+		var pw = $_bar.parent(".s").width();
+		var $_width = $('#loadPer2').width();
+	}
+
+	var screenWidth = window.screen.width;
+	if(screenWidth >= 1440 && screenWidth < 1920){
+		var width=$_width * w / 100;
+	}else if(screenWidth >= 1920 && screenWidth < 2560){
+		var width=$_width * w / 121;
+	}
+
+	$_light = $(".light");
+	if(w >= 98 || w <= 1){
+		$_light.css("display","none");
+	}
+
+	$_bar.css('width',width);
+	$_num.text(i);
+}
+
+//获取协议data
+// function get_protocol_data(){
+	// 	var data=false;
+	// 	$.ajax({
+	// 		url: "/bhost/get_protocol_data",
+	// 		type:"POST",
+	// 		async:false,
+	// 		data:{a0:$("input[name=se]").val()},
+	// 		success:function(result){
+	// 			var result = JSON.parse(result);
+	// 			if(result.Result){
+	// 				data=result.data;
+	// 			}else{
+	// 				_alert(1,'协议','查询失败');
+	// 				pass=false;
+	// 			}
+	// 		}
+	// 	});
+	// 	return data;
+// }
+//协议
+function comb(re){
+	var day_ses;
+	var day_ops;
+	var isappend = true;
+	var offsetTop,offsetLeft,offsetWidth,offsetHeight;
+	$.ajax({
+		url: "/bhost/get_protocol_data",
+		type:"POST",
+		async:true,
+		cache:false,
+		data:{a0:sess,a1:re,a2:3,a3:0},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				day_ses = result.info;
+				var i,j;
+				var comb_data = {
+					"active":[],
+					"disable":[],
+					"len":0
+					};
+				var para1 = {
+					"id":0,
+					"name":"",
+					"count":0,
+					"type":0
+				}
+				var pro_array = [];
+				$.ajax({
+					url: "/bhost/get_protocol_data",
+					type:"POST",
+					async:true,
+					cache:false,
+					data:{a0:sess,a1:re,a2:4,a3:0},
+					success:function(result){
+						var result = JSON.parse(result);
+						day_ops = result.info;
+						$(day_ses).each(function(i,item){
+							var protocol_object = {
+								"name":"",
+								"normal_count":0,
+								"alert_count":0,
+								"normal_count_ops":0,
+								"alert_count_ops":0
+							}						
+							var flag_b = 0;
+							$(pro_array).each(function(i1,item1){
+								if(item1.name == item.name){
+									if(item.Type == 0){
+										item1.normal_count += parseInt(item.value);
+									}else{
+										item1.alert_count += parseInt(item.value);
+									}
+									flag_b = 1;
+								}
+							})
+							if(flag_b == 0){
+								if(item.Type == 0){
+									protocol_object.name = item.name;
+									protocol_object.normal_count = parseInt(item.value);
+								}else{
+									protocol_object.name = item.name;
+									protocol_object.alert_count = parseInt(item.value);
+								}
+									pro_array.push(protocol_object);							
+							}
+						})
+						$(day_ops).each(function(i,item){				
+							var protocol_object = {
+								"name":"",
+								"normal_count":0,
+								"alert_count":0,
+								"normal_count_ops":0,
+								"alert_count_ops":0
+							}	
+							var flag_b = 0;
+							$(pro_array).each(function(i1,item1){
+								if(item1.name == item.name){
+									if(item.Type == 0){
+										item1.normal_count_ops += parseInt(item.value);
+									}else{
+										item1.alert_count_ops += parseInt(item.value);
+									}
+									flag_b = 1;
+								}
+							})
+							// if(flag_b == 0){
+							// 	if(item.Type == 0){
+							// 		protocol_object.name = item.name;
+							// 		protocol_object.normal_count_ops = parseInt(item.value);
+							// 	}else{
+							// 		protocol_object.name = item.name;
+							// 		protocol_object.alert_count_ops = parseInt(item.value);
+							// 	}
+							// 		pro_array.push(protocol_object);							
+							// }
+						})
+						pro_array.sort(function(a,b){return b.normal_count - a.normal_count});
+
+						$(pro_array).each(function(i,item){
+							para1 = {
+								"id":0,
+								"name":""
+							}
+							para1.type = parseInt(item.name);
+							para1.count = "会话数量："+item.normal_count+"<br>异常会话数量："+item.alert_count+"<br>操作数量："+item.normal_count_ops+"<br>异常操作数量："+item.alert_count_ops;
+							comb_data.active.push(para1);
+						})
+
+						comb_data.len = comb_data.active.length;
+						$(comb_data.active).each(function(i,item){
+							item.id = i+1;
+						})
+						var len = comb_data.len,$c = $('#Comb');
+						$('#Comb').empty();	
+						for(var i =1;i <= COMB_NUM;i++){
+							var order = COMB_ORDER[i-1];
+							$c.append('<div class="item item'+order+'" style></div>');
+							$.each(comb_data.active,function(n,item){
+								$.each(protocol_list,function(i1,item1){
+									if(item1.protocolid == item.type){
+										item.name = item1.protocolname;
+										return false;
+									}
+								})
+								if(item.id == i){
+									$c.children('div.item'+order).text(item.name);
+									$c.children('div.item'+order).attr("type",item.type);
+									$c.children('div.item'+order).attr("style","cursor: pointer");
+									//浮层
+									$c.children('div.item'+order).text(item.name).data({'value':item.type,'name':item.count});
+								}
+							});
+							if(i > comb_data.len){
+								$c.children('div.item'+order).addClass('disable');
+							}
+						}	
+						if(len == 0){
+							$c.children().eq(0).attr("class","item item1");
+						}						
+					}
+				})
+			}
+			else{
+				//alert('当日会话统计查询失败');
+				return false;
+			}
+		}
+	});
+	var _hideText;
+	$('#Comb').on('mouseover','.item',function(){
+		var name = $(this).data('value');
+		var value = $(this).data('name');
+
+		if(!name || !value){
+			return;
+		}
+
+		clearTimeout(_hideText);
+		if($('#textView').length == 0){
+			$('body').append('<div id="textView" class="textview" />');
+		}
+
+		var $_txt = $('#textView');
+		$_txt.html(value).show();
+		$(this).mousemove(function(e){
+			var a = e.clientX;
+			var b = e.clientY;
+			/*if(screensize <= 1280){
+				$_txt.css({
+					top:b + 12,
+					left:a + 12
+				})
+			}else{*/
+				$_txt.css({
+					top:b + 12 + textView_y,
+					left:a + 12 + textView_x
+				})
+			//}
+		})
+	}).on('mouseout','.item',function(){
+		_hideText = setTimeout(function(){
+			$('#textView').hide();
+		},50);
+	});
+}
+function reload_c(){
+	$("#proto_re").attr("onclick","");
+	REFRESH_5 = 1;
+	Chart5_1();
+	Chart5_2();
+	Chart5_3();
+	Chart5_4();
+	comb(1);
+}
+
+function get_new_session(normal){
+	var limitrow = AREA8_NUM;
+	var offsetrow = 0;
+	var data=false;
+	if(normal == 2){
+		condition_json.intexception = 1;
+	}else{
+		condition_json.intexception = null;
+	}
+	$.ajax({
+		url: "/bhost/get_log_list_monitor",
+		type:"GET",
+		async:true,
+		cache:false,
+		data:{a0:sess,limit:limitrow,t2:JSON.stringify(condition_json),t4:'SESSION',t5:'xtime_04,xtime_05,int32_01,int08_03,str32_22,str32_23,ip_01,str32_25,str32_00,xtime_00'},
+		success:function(result){
+			var result = JSON.parse(result);
+
+			data=result.items;
+			//data = [];
+			if(data != ""){
+				tbody = $('.area.area8').children('.cont').children().children('tbody');
+				$(tbody).empty();
+				index = [];
+				$.each(data,function(i,item){
+					if(item.xtime_04 == 'None'){
+						item.xtime_04 = ' ';
+					}else{
+						item.xtime_04 = item.xtime_04.toString().replace("T", " ").replace("+08:00","");
+					}
+					if(item.xtime_05 == 'None' || item.xtime_05 == null){
+						item.xtime_05 = ' ';
+					}else{
+						item.xtime_05 = item.xtime_05.toString().replace("T", " ").replace("+08:00","");
+					}
+					// var protocolId = item.int32_01;
+					// if(item.int32_01 != 'None'){
+					// 	$.each(protocol_list,function(i1,item1){
+					// 		if(item1.protocolid == item.int32_01){
+					// 			item.int32_01 = item1.protocolname;
+					// 			return false;
+					// 		}
+					// 	})
+					// }
+					if(item.int08_03 == '0'){			//会话状态0-连接中，1-正常退出，2-异常退出
+						item.int08_03 = '连接中';
+					}else if(item.int08_03 == '1'){
+						item.int08_03 = '正常退出';
+					}else if(item.int08_03 == '2'){
+						item.int08_03 = '异常退出';
+					}
+					if(item.str32_25 == 'None'){
+						item.str32_25 = '';
+					}
+					if(item.str32_23 == 'None'){
+						item.str32_23 = '';
+					}
+					if(item.str32_00 == 'None' || item.str32_00 == ''){
+						item.str32_00 = '&nbsp;';
+					}
+					s = item.int08_03;
+					if(s == '连接中') statue = 0;
+					else if (s == '异常退出') statue = 2;
+					else statue = 1;
+
+					var html_msg1 = "";
+					var html_msg2 = "";
+					if(monitor_flag2 == 2){
+						if(item.int64_15 != 0 && item.int08_11 == '未处理'){//有确认
+							html_msg1 = "<a href=\"javascript:;\" class=\"msg1\" title=\"确认\" onclick=\"MarkWMsg1('"+item.xtime_00+"',2,this)\"></a>";
+						}else if(item.int64_15 != 	0 && item.int08_11 == '已处理'){
+							html_msg1 = "<a href=\"javascript:;\" class=\"msg1 disabled\" title=\"确认\"></a>";
+						}
+					}
+					if(monitor_flag1 == 2){
+						if(statue == 0){
+							// var protocolid;
+							// $.each(protocol_list,function(i1,item1){
+							// 	if(item1.protocolname == item.int32_01){
+							// 		protocolid = item1.protocolid;
+							// 		return false;
+							// 	}
+							// })
+							if(item.int32_01 == 'RDP' || item.int32_01 == 'SSH' || item.int32_01 == 'RLOGIN' || item.int32_01 == 'TELNET' || item.int32_01 == "X11" || item.int32_01 == "VNC" || item.str32_28.indexOf('acc') != -1){//有监控
+								ifacc = false;
+								if(item.str32_28.indexOf('acc') != -1){
+									ifacc = true;
+								}
+								item.str32_00 = item.str32_00.replace('\\','\\\\');
+								$(tbody).append("<tr style=\"cursor: pointer;\">"+
+									"<td>"+ item.xtime_04 +"</td>"+
+									"<td>"+ item.xtime_05 +"</td>"+
+									"<td>"+ item.int32_01 +"</td>"+
+									"<td>"+ item.int08_03 +"</td>"+
+									"<td>"+ item.str32_22 +"</td>"+
+									"<td>"+ item.str32_23 +"</td>"+
+									"<td>"+ item.ip_01 +"</td>"+
+									"<td>"+ item.str32_25 +"</td>"+
+									"<td>"+ item.str32_00 +
+									"<div class=\"tab-ctr\" _id="+item.xtime_00+"><div class=\"sss\"><a href=\"javascript:;\" class=\"m_ses_icon1\" title=\"指令查看\" onclick=\"_analysis('"+item.xtime_03+"','"+item.xtime_04+"','"+item.xtime_05+"','"+statue+"','"+item.int32_01+"','"+item.str32_00+"','"+item.ip_01+"','"+item.str32_22+"','"+item.IfReplay+"','"+item.IfReplayDrawing+"')\"></a><a href=\"javascript:;\" class=\"icon-block\" title=\"阻断\" onclick=\"_block('"+item.int32_14+"','"+item.int32_15+"','"+item.xtime_03+"')\"></a><a href=\"javascript:;\" class=\"icon-moni\" title=\"监控\" onclick=\"_cowork('"+item.str32_22+"','"+item.int32_14+"','"+item.int32_01+"',2,'"+item.ip_01+"','"+item.int16_01+"','"+item.int16_02+"','"+item.str32_00+"',"+ifacc+",'"+item.xtime_03+"','"+item.int32_15+"')\"></a>"+html_msg1+"</div></div></td></td>"+
+								"</tr>")
+							}else{
+								item.str32_00 = item.str32_00.replace('\\','\\\\');
+								$(tbody).append("<tr style=\"cursor: pointer;\">"+
+									"<td>"+ item.xtime_04 +"</td>"+
+									"<td>"+ item.xtime_05 +"</td>"+
+									"<td>"+ item.int32_01 +"</td>"+
+									"<td>"+ item.int08_03 +"</td>"+
+									"<td>"+ item.str32_22 +"</td>"+
+									"<td>"+ item.str32_23 +"</td>"+
+									"<td>"+ item.ip_01 +"</td>"+
+									"<td>"+ item.str32_25 +"</td>"+
+									"<td>"+ item.str32_00 +
+									"<div class=\"tab-ctr\" _id="+item.xtime_00+"><div class=\"sss\"><a href=\"javascript:;\" class=\"m_ses_icon1\" title=\"指令查看\" onclick=\"_analysis('"+item.xtime_03+"','"+item.xtime_04+"','"+item.xtime_05+"','"+statue+"','"+item.int32_01+"','"+item.str32_00+"','"+item.ip_01+"','"+item.str32_22+"','"+item.IfReplay+"','"+item.IfReplayDrawing+"')\"></a><a href=\"javascript:;\" class=\"icon-block\" title=\"阻断\" onclick=\"_block('"+item.int32_14+"','"+item.int32_15+"','"+item.xtime_03+"')\"></a>"+html_msg1+"</div></div></td></td>"+
+								"</tr>")
+							}
+						}else{
+							item.str32_00 = item.str32_00.replace('\\','\\\\');
+							$(tbody).append("<tr style=\"cursor: pointer;\">"+
+								"<td>"+ item.xtime_04 +"</td>"+
+								"<td>"+ item.xtime_05 +"</td>"+
+								"<td>"+ item.int32_01 +"</td>"+
+								"<td>"+ item.int08_03 +"</td>"+
+								"<td>"+ item.str32_22 +"</td>"+
+								"<td>"+ item.str32_23 +"</td>"+
+								"<td>"+ item.ip_01 +"</td>"+
+								"<td>"+ item.str32_25 +"</td>"+
+								"<td>"+ item.str32_00 +
+								"<div class=\"tab-ctr\" _id="+item.xtime_00+"><div class=\"sss\"><a href=\"javascript:;\" class=\"m_ses_icon1\" title=\"指令查看\" onclick=\"_analysis('"+item.xtime_03+"','"+item.xtime_04+"','"+item.xtime_05+"','"+statue+"','"+item.int32_01+"','"+item.str32_00+"','"+item.ip_01+"','"+item.str32_22+"','"+item.IfReplay+"','"+item.IfReplayDrawing+"')\"></a><a href=\"javascript:;\" class=\"m_ses_icon2\" title=\"回放\" onclick=\"_playback('"+item.xtime_03+"','"+item.xtime_04+"','"+item.xtime_05+"','"+statue+"','"+item.int32_01+"','"+item.str32_00+"','"+item.ip_01+"',"+item.IfReplay+","+item.IfReplayDrawing+",'"+item.int32_01+"','"+item.str32_28+"','"+item.ip_02+"','"+item.str32_22+"','"+item.str32_23+"','"+item.str+"')\"></a><a href=\"javascript:;\" class=\""+ (item.str32_28 != "" ? 'm_ses_icon3' : 'm_ses_icon3 disabled') +"\" title=\"下载\" onclick=\"download_file('"+item.xtime_00+"','"+item.str32_28+"')\"></a>"+html_msg1+"</div></div></td></td>"+
+							"</tr>")
+						}
+					}else{
+						if(statue != 0){
+							$(tbody).append("<tr style=\"cursor: pointer;\">"+
+								"<td>"+ item.xtime_04 +"</td>"+
+								"<td>"+ item.xtime_05 +"</td>"+
+								"<td>"+ item.int32_01 +"</td>"+
+								"<td>"+ item.int08_03 +"</td>"+
+								"<td>"+ item.str32_22 +"</td>"+
+								"<td>"+ item.str32_23 +"</td>"+
+								"<td>"+ item.ip_01 +"</td>"+
+								"<td>"+ item.str32_25 +"</td>"+
+								"<td>"+ item.str32_00 +
+								"<div class=\"tab-ctr\" _id="+item.xtime_00+"><div class=\"sss\"><a href=\"javascript:;\" class=\""+ (item.str32_28 != "" ? 'm_ses_icon3' : 'm_ses_icon3 disabled') +"\" title=\"下载\" onclick=\"download_file('"+item.xtime_00+"','"+item.str32_28+"')\"></a>"+html_msg1+"</div></div></td></td>"+
+							"</tr>")
+						}else{
+							$(tbody).append("<tr style=\"cursor: pointer;\">"+
+								"<td>"+ item.xtime_04 +"</td>"+
+								"<td>"+ item.xtime_05 +"</td>"+
+								"<td>"+ item.int32_01 +"</td>"+
+								"<td>"+ item.int08_03 +"</td>"+
+								"<td>"+ item.str32_22 +"</td>"+
+								"<td>"+ item.str32_23 +"</td>"+
+								"<td>"+ item.ip_01 +"</td>"+
+								"<td>"+ item.str32_25 +"</td>"+
+								"<td>"+ item.str32_00 +
+							"</tr>")
+							
+						}
+					}
+					index.push(item.xtime_00);
+				})
+				$('table > tbody > tr').unbind();
+				$('table > tbody > tr').hover(function(){
+					var i = $(this).index();
+					if(i == 0){
+						$(this).parent().prev().children('tr:last').addClass('before');
+					}else{
+						$(this).prev().addClass('before');
+					}
+				},function(){
+					var i = $(this).index();
+					if(i == 0){
+						$(this).parent().prev().children('tr:last').removeClass('before');
+					}else{
+						$(this).prev().removeClass('before');
+					}
+				})
+			}else{
+				var area8_str;
+				for(j=0; j<AREA8_NUM; j++){
+					area8_str += "<tr>"+
+						"<td style=\"width:15%;\">&nbsp;</td>"+
+						"<td style=\"width:15%;\"></td>"+
+						"<td>&nbsp;</td>"+
+						"<td>&nbsp;</td>"+
+						"<td>&nbsp;</td>"+
+						"<td>&nbsp;</td>"+
+						"<td>&nbsp;</td>"+
+						"<td>&nbsp;</td>"+
+						"<td>&nbsp;</td>"+
+					"</tr>";
+				}
+				$(".area.area8").find('tbody').html(area8_str);
+				$('table > tbody > tr').unbind();
+				$('table > tbody > tr').hover(function(){
+					var i = $(this).index();
+					if(i == 0){
+						$(this).parent().prev().children('tr:last').addClass('before');
+					}else{
+						$(this).prev().addClass('before');
+					}
+				},function(){
+					var i = $(this).index();
+					if(i == 0){
+						$(this).parent().prev().children('tr:last').removeClass('before');
+					}else{
+						$(this).prev().removeClass('before');
+					}
+				})
+			}
+
+			$(".area.area8").on('click',test);
+		}
+	});
+	return data;
+}
+
+//最新会话
+function Chart4(normal){	
+	get_new_session(normal);
+}
+//会话刷新
+function ses_refresh(){
+	var normal;
+	if($("#sess_status").children('a').eq(0).attr('class') == 'on'){
+		normal = 0;
+	}else{
+		normal = 2;
+	}
+	get_condition();
+	get_new_session(normal);
+}
+//获取告警信息
+function get_warnMsg(){
+	getDate();
+	var time1 = now_date+' '+'00:00:00+08';
+	var time2 = now_date+' '+'23:59:59+08';
+	condition_timeStr = time1+'**'+time2;
+	index_a = [];
+	$.ajax({
+		url: "/bhost/get_WarnMsg",
+		type:"POST",
+		async:true,
+		cache:false,
+		data:{a0:sess,a1:4,a2:0,a3:condition_timeStr},
+		success:function(result){
+			var Wmsg_result = JSON.parse(result);
+			var result_info = Wmsg_result.info;
+			var $obj1 = $('.area.area7').children().find('.a:last').children().find('tbody');
+			var TitleStr = "当日："+Wmsg_result.totalrow+"个    已处理："+Wmsg_result.solved+"个 未处理："+Wmsg_result.pending+"个";
+			$('.area.area7').children().find('.r:last').text(TitleStr);
+			$.each(result_info,function(i,item){
+				var warnMsg_tmp = autoAddEllipsis(item.msg+":"+item.moudule, '18');
+				$obj1.children('tr').eq(i).children('td').eq(0).text(item.time).attr('title',item.time);
+				$obj1.children('tr').eq(i).children('td').eq(0).attr('_id',item.id).attr('title',item.id);
+				$obj1.children('tr').eq(i).children('td').eq(1).text(warnMsg_tmp).attr('title',item.msg+":"+item.moudule);
+				if(monitor_flag2 == 2){
+					if(item.result == 0 || item.result == "None"){
+						$obj1.children('tr').eq(i).children('td').eq(2).text("未处理");
+						var html_str = '<div class="tab-ctr">'+
+											'<div class="sss">'+
+												'<a href="javascript:;" class="msg1" title="确认" onclick="MarkWMsg1('+item.id+',3,this)"></a>'+
+											'</div>'+
+										'</div>';
+					}else{
+						$obj1.children('tr').eq(i).children('td').eq(2).text("已处理");
+						var html_str = '<div class="tab-ctr">'+
+											'<div class="sss">'+
+												'<a href="javascript:;" class="msg1 disabled" title="确认"></a>'+
+											'</div>'+
+										'</div>';
+					}
+				}
+				$obj1.children('tr').eq(i).children('td').eq(2).append(html_str);
+				index_a.push(item.id);
+			})
+
+			$(".area.area7").find('.a').on('click',test1);
+		}
+	})
+}
+function MarkWMsg(s_id,type){
+	//1-操作，2-会话，3-系统
+	$.ajax({
+		url: "/bhost/set_logstat",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:type,a2:s_id,a10:"实时监控"},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				_alert(0,"实时监控","操作成功");
+				get_warnMsg();
+			}else{
+				_alert(1,"实时监控","操作失败");
+			}
+		}
+	})
+}
+/*
+*/ 
+var get_mon_ses;
+var get_mon_ases;
+var get_mon_ops;
+var get_mon_aops;
+/*
+*/
+var ses_d_type_list = [];
+var ases_d_type_list = [];
+var ops_d_type_list = [];
+var aops_d_type_list = [];
+/*
+*/ 
+
+// if(typeof Array.prototype.sorts!= 'fucntion'){
+// 	Array.prototype.sorts = mySort;
+// 	mySort = null;
+// }
+//获取当天会话数量
+get_ses_amount_d = function (){
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ses_amount_d",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:REFRESH_5},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				var s_data_d = result.info;
+				//当天数据合并到当月
+				$.each(s_data_d,function(i,item){
+					var flag_a = 0;
+					$.each(s_data_m,function(i1,item1){
+						if(item.Type == item1.Type){
+							item1.Count = (parseInt(item.Count)+parseInt(item1.Count)).toString();
+							flag_a = 1;
+						}
+					})
+					if(flag_a == 0){
+						s_data_m.push(item);
+					}
+				})
+				var compare = function (obj1, obj2) {
+					var val1 = parseInt(obj1.Count);
+					var val2 = parseInt(obj2.Count);
+					if (val1 > val2) {
+							return -1;
+					} else if (val1 < val2) {
+							return 1;
+					} else {
+							return 0;
+					}            
+				} 
+				s_data_m = s_data_m.sort(compare);		//Count由大到小排序
+				var html_thead_str = "";
+				var html_tbody_str_m = "";	
+				var ses_d_type_list = [];					
+				var thead_str = '"<th style="width:17%;">会话</th><th>所有</th>"+';	//标题
+				var tbody_str2 = "<td>当月</td><td>0</td>"; 		//内容 -->当月
+				var sub_m = 0;
+				$.each(s_data_m,function(i,item){
+					sub_m += parseInt(item.Count);
+					if(i < AREA7_NUM){
+						$.each(protocol_list,function(i1,item1){
+							if(item1.protocolid == item.Type){
+								ses_d_type_list.push(item.Type);
+								html_thead_str += "<th>"+ item1.protocolname +"</th>"
+								html_tbody_str_m += "<td>"+ item.Count +"</td>"
+								return false;
+							}
+						})
+					}
+				})
+				thead_str += '+'+ html_thead_str;
+				tbody_str2 += '+'+ html_tbody_str_m;
+				var obj0 = $(".area.area7").children().find('.b').eq(0);
+				$(obj0).children().children('thead').children('tr').eq(0).empty();
+				$(obj0).children().children('thead').children('tr').eq(0).append(thead_str);
+				$(obj0).children().children('tbody').children('tr').eq(1).empty();
+				$(obj0).children().children('tbody').children('tr').eq(1).append(tbody_str2);
+				var l0 = $(obj0).children().children('thead').children('tr').eq(0).children('th').length;
+				var l2 = $(obj0).children().children('tbody').children('tr').eq(1).children('td').length;
+				if(l0 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l0; i++){
+						$(obj0).children().children('thead').children('tr').eq(0).append("<th></th>");
+					}
+				}
+				if(l2 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l2; i++){
+						$(obj0).children().children('tbody').children('tr').eq(1).append("<td></td>");
+					}
+				}
+
+				$(obj0).children().children('tbody').children('tr').eq(1).children('td').eq(1).text(sub_m);
+
+				data_d1 = s_data_d;
+				var data_d = data_d1;
+				var html_tbody_str_d = "";
+				var tbody_str1 = "<td>当日</td><td>0</td>";			//内容 -->当天
+				var sub_d = 0;
+
+				$.each(data_d,function(i,item){
+					sub_d += parseInt(item.Count);
+				})
+				
+				$.each(ses_d_type_list,function(i1,item1){
+					var flag_type = 0;
+					$.each(data_d,function(i,item){
+						if(item1 == item.Type){
+							html_tbody_str_d += "<td>"+ item.Count +"</td>";
+							flag_type = 1;
+							return false;
+						}
+					})
+					if(flag_type == 0){
+						html_tbody_str_d += "<td></td>";
+					}
+				})
+				tbody_str1 += '+'+ html_tbody_str_d;
+				var obj0 = $(".area.area7").children().find('.b').eq(0);
+				$(obj0).children().children('tbody').children('tr').eq(0).empty();
+				$(obj0).children().children('tbody').children('tr').eq(0).append(tbody_str1);
+				$(obj0).children().children('tbody').children('tr').eq(0).children('td').eq(1).text(sub_d);
+				var l1 = $(obj0).children().children('tbody').children('tr').eq(0).children('td').length;
+				if(l1 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l1; i++){
+						$(obj0).children().children('tbody').children('tr').eq(0).append("<td></td>");
+					}
+				}
+			}
+			else{
+				//alert('会话统计查询失败');
+				pass=false;
+			}
+		}
+	});
+}
+//获取当月会话数量
+var s_data_m;		//当月回话数据
+function get_ses_amount_m(){
+	var data=false;
+	s_data_m = [];
+	get_mon_ses = $.ajax({
+		url: "/bhost/get_ses_amount_m",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:REFRESH_5},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				s_data_m = result.info;	//取出的data_d 和data_m 为count 高 -> 低排列
+
+				var data=false;
+				$.ajax({
+					url: "/bhost/get_ses_amount_d",
+					type:"POST",
+					async:true,
+					data:{a0:sess,a1:REFRESH_5},
+					success:function(result){
+						var result = JSON.parse(result);
+						if(result.Result){
+							var s_data_d = result.info;
+							//当天数据合并到当月
+							$.each(s_data_d,function(i,item){
+								var flag_a = 0;
+								$.each(s_data_m,function(i1,item1){
+									if(item.Type == item1.Type){
+										item1.Count = (parseInt(item.Count)+parseInt(item1.Count)).toString();
+										flag_a = 1;
+									}
+								})
+								if(flag_a == 0){
+									s_data_m.push(item);
+								}
+							})
+							var compare = function (obj1, obj2) {
+								var val1 = parseInt(obj1.Count);
+								var val2 = parseInt(obj2.Count);
+								if (val1 > val2) {
+										return -1;
+								} else if (val1 < val2) {
+										return 1;
+								} else {
+										return 0;
+								}            
+							} 
+							s_data_m = s_data_m.sort(compare);		//Count由大到小排序
+							var html_thead_str = "";
+							var html_tbody_str_m = "";	
+							var ses_d_type_list = [];					
+							var thead_str = '"<th style="width:17%;">会话</th><th>所有</th>"+';	//标题
+							var tbody_str2 = "<td>当月</td><td>0</td>"; 		//内容 -->当月
+							var sub_m = 0;
+							$.each(s_data_m,function(i,item){
+								sub_m += parseInt(item.Count);
+								if(i < AREA7_NUM){
+									$.each(protocol_list,function(i1,item1){
+										if(item1.protocolid == item.Type){
+											ses_d_type_list.push(item.Type);
+											html_thead_str += "<th>"+ item1.protocolname +"</th>"
+											html_tbody_str_m += "<td>"+ item.Count +"</td>"
+											return false;
+										}
+									})
+								}
+							})
+							thead_str += '+'+ html_thead_str;
+							tbody_str2 += '+'+ html_tbody_str_m;
+							var obj0 = $(".area.area7").children().find('.b').eq(0);
+							$(obj0).children().children('thead').children('tr').eq(0).empty();
+							$(obj0).children().children('thead').children('tr').eq(0).append(thead_str);
+							$(obj0).children().children('tbody').children('tr').eq(1).empty();
+							$(obj0).children().children('tbody').children('tr').eq(1).append(tbody_str2);
+							var l0 = $(obj0).children().children('thead').children('tr').eq(0).children('th').length;
+							var l2 = $(obj0).children().children('tbody').children('tr').eq(1).children('td').length;
+							if(l0 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l0; i++){
+									$(obj0).children().children('thead').children('tr').eq(0).append("<th></th>");
+								}
+							}
+							if(l2 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l2; i++){
+									$(obj0).children().children('tbody').children('tr').eq(1).append("<td></td>");
+								}
+							}
+
+							$(obj0).children().children('tbody').children('tr').eq(1).children('td').eq(1).text(sub_m);
+
+							data_d1 = s_data_d;
+							var data_d = data_d1;
+							var html_tbody_str_d = "";
+							var tbody_str1 = "<td>当日</td><td>0</td>";			//内容 -->当天
+							var sub_d = 0;
+
+							$.each(data_d,function(i,item){
+								sub_d += parseInt(item.Count);
+							})
+							
+							$.each(ses_d_type_list,function(i1,item1){
+								var flag_type = 0;
+								$.each(data_d,function(i,item){
+									if(item1 == item.Type){
+										html_tbody_str_d += "<td>"+ item.Count +"</td>";
+										flag_type = 1;
+										return false;
+									}
+								})
+								if(flag_type == 0){
+									html_tbody_str_d += "<td></td>";
+								}
+							})
+							tbody_str1 += '+'+ html_tbody_str_d;
+							var obj0 = $(".area.area7").children().find('.b').eq(0);
+							$(obj0).children().children('tbody').children('tr').eq(0).empty();
+							$(obj0).children().children('tbody').children('tr').eq(0).append(tbody_str1);
+							$(obj0).children().children('tbody').children('tr').eq(0).children('td').eq(1).text(sub_d);
+							var l1 = $(obj0).children().children('tbody').children('tr').eq(0).children('td').length;
+							if(l1 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l1; i++){
+									$(obj0).children().children('tbody').children('tr').eq(0).append("<td></td>");
+								}
+							}
+						}
+						else{
+							//alert('会话统计查询失败');
+							pass=false;
+						}
+					}
+				});
+			}
+			else{
+				//alert('会话统计查询失败');
+				pass=false;
+			}
+		}
+	});
+}
+//会话统计
+function Chart5_1(){
+	get_mon_ses = "";
+	get_ses_amount_m();
+	//$.when(get_mon_ses).then(get_ses_amount_d);
+}
+
+//获取当天异常会话数量
+get_ases_amount_d = function (){
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ases_amount_d",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:REFRESH_5},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				var as_data_d = result.info;
+				//当天数据合并到当月
+				$.each(as_data_d,function(i,item){
+					var flag_a = 0;
+					$.each(as_data_m,function(i1,item1){
+						if(item.Type == item1.Type){
+							item1.Count = (parseInt(item.Count)+parseInt(item1.Count)).toString();
+							flag_a = 1;
+						}
+					})
+					if(flag_a == 0){
+						as_data_m.push(item);
+					}
+				})
+				var compare = function (obj1, obj2) {
+					var val1 = parseInt(obj1.Count);
+					var val2 = parseInt(obj2.Count);
+					if (val1 > val2) {
+							return -1;
+					} else if (val1 < val2) {
+							return 1;
+					} else {
+							return 0;
+					}            
+				} 
+				as_data_m = as_data_m.sort(compare);		//Count由大到小排序
+				//显示当月数据
+				var html_thead_str = "";
+				var html_tbody_str_m = "";					
+				var ases_d_type_list = [];	
+				var thead_str = '"<th style="width:17%;">异常会话</th><th>所有</th>"+';	//标题
+				var tbody_str2 = "<td>当月</td><td>0</td>"; 		//内容 -->当月
+				var sub_m = 0;
+				$.each(as_data_m,function(i,item){
+					sub_m += parseInt(item.Count);
+					if(i < AREA7_NUM){
+						$.each(protocol_list,function(i1,item1){
+							if(item1.protocolid == item.Type){
+								ases_d_type_list.push(item.Type);
+								html_thead_str += "<th>"+ item1.protocolname +"</th>"
+								html_tbody_str_m += "<td>"+ item.Count +"</td>"
+								return false;
+							}
+						})
+					}
+				})
+				thead_str += '+'+ html_thead_str;
+				tbody_str2 += '+'+ html_tbody_str_m;
+				var obj0 = $(".area.area7").children().find('.b').eq(1);
+				$(obj0).children().children('thead').children('tr').eq(0).empty();
+				$(obj0).children().children('thead').children('tr').eq(0).append(thead_str);
+				$(obj0).children().children('tbody').children('tr').eq(1).empty();
+				$(obj0).children().children('tbody').children('tr').eq(1).append(tbody_str2);
+				var l0 = $(obj0).children().children('thead').children('tr').eq(0).children('th').length;
+				var l2 = $(obj0).children().children('tbody').children('tr').eq(1).children('td').length;
+				if(l0 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l0; i++){
+						$(obj0).children().children('thead').children('tr').eq(0).append("<th></th>");
+					}
+				}
+				if(l2 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l2; i++){
+						$(obj0).children().children('tbody').children('tr').eq(1).append("<td></td>");
+					}
+				}
+
+				$(obj0).children().children('tbody').children('tr').eq(1).children('td').eq(1).text(sub_m);
+
+
+				//显示当天数据
+				var data_d = as_data_d;
+				var html_tbody_str_d = "";	
+				var tbody_str1 = "<td>当日</td><td>0</td>";			//内容 -->当天
+				var sub_d = 0;
+				$.each(data_d,function(i,item){
+					sub_d += parseInt(item.Count);
+				})
+				$.each(ases_d_type_list,function(i1,item1){
+					var flag_type = 0;
+					$.each(data_d,function(i,item){
+						if(item1 == item.Type){
+							html_tbody_str_d += "<td>"+ item.Count +"</td>";
+							flag_type = 1;
+							return false;
+						}
+					})
+					if(flag_type == 0){
+						html_tbody_str_d += "<td></td>";
+					}
+				})
+				
+				tbody_str1 += '+'+ html_tbody_str_d;
+				var obj0 = $(".area.area7").children().find('.b').eq(1);
+				$(obj0).children().children('tbody').children('tr').eq(0).empty();
+				$(obj0).children().children('tbody').children('tr').eq(0).append(tbody_str1);
+				$(obj0).children().children('tbody').children('tr').eq(0).children('td').eq(1).text(sub_d);
+				var l1 = $(obj0).children().children('tbody').children('tr').eq(0).children('td').length;
+				if(l1 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l1; i++){
+						$(obj0).children().children('tbody').children('tr').eq(0).append("<td></td>");
+					}
+				}
+			}
+			else{
+				//alert('会话统计查询失败');
+				pass=false;
+			}
+		}
+	});
+}
+//获取当月异常会话数量
+var as_data_m;		//当月回话数据
+function get_ases_amount_m(){
+	var data=false;
+	as_data_m = [];
+	get_mon_ases = $.ajax({
+		url: "/bhost/get_ases_amount_m",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:REFRESH_5},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				as_data_m = result.info;	//取出的data_d 和data_m 为count 高 -> 低排列
+				var data=false;
+				$.ajax({
+					url: "/bhost/get_ases_amount_d",
+					type:"POST",
+					async:true,
+					data:{a0:sess,a1:REFRESH_5},
+					success:function(result){
+						var result = JSON.parse(result);
+						if(result.Result){
+							var as_data_d = result.info;
+							//当天数据合并到当月
+							$.each(as_data_d,function(i,item){
+								var flag_a = 0;
+								$.each(as_data_m,function(i1,item1){
+									if(item.Type == item1.Type){
+										item1.Count = (parseInt(item.Count)+parseInt(item1.Count)).toString();
+										flag_a = 1;
+									}
+								})
+								if(flag_a == 0){
+									as_data_m.push(item);
+								}
+							})
+							var compare = function (obj1, obj2) {
+								var val1 = parseInt(obj1.Count);
+								var val2 = parseInt(obj2.Count);
+								if (val1 > val2) {
+										return -1;
+								} else if (val1 < val2) {
+										return 1;
+								} else {
+										return 0;
+								}            
+							} 
+							as_data_m = as_data_m.sort(compare);		//Count由大到小排序
+							//显示当月数据
+							var html_thead_str = "";
+							var html_tbody_str_m = "";					
+							var ases_d_type_list = [];	
+							var thead_str = '"<th style="width:17%;">异常会话</th><th>所有</th>"+';	//标题
+							var tbody_str2 = "<td>当月</td><td>0</td>"; 		//内容 -->当月
+							var sub_m = 0;
+							$.each(as_data_m,function(i,item){
+								sub_m += parseInt(item.Count);
+								if(i < AREA7_NUM){
+									$.each(protocol_list,function(i1,item1){
+										if(item1.protocolid == item.Type){
+											ases_d_type_list.push(item.Type);
+											html_thead_str += "<th>"+ item1.protocolname +"</th>"
+											html_tbody_str_m += "<td>"+ item.Count +"</td>"
+											return false;
+										}
+									})
+								}
+							})
+							thead_str += '+'+ html_thead_str;
+							tbody_str2 += '+'+ html_tbody_str_m;
+							var obj0 = $(".area.area7").children().find('.b').eq(1);
+							$(obj0).children().children('thead').children('tr').eq(0).empty();
+							$(obj0).children().children('thead').children('tr').eq(0).append(thead_str);
+							$(obj0).children().children('tbody').children('tr').eq(1).empty();
+							$(obj0).children().children('tbody').children('tr').eq(1).append(tbody_str2);
+							var l0 = $(obj0).children().children('thead').children('tr').eq(0).children('th').length;
+							var l2 = $(obj0).children().children('tbody').children('tr').eq(1).children('td').length;
+							if(l0 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l0; i++){
+									$(obj0).children().children('thead').children('tr').eq(0).append("<th></th>");
+								}
+							}
+							if(l2 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l2; i++){
+									$(obj0).children().children('tbody').children('tr').eq(1).append("<td></td>");
+								}
+							}
+
+							$(obj0).children().children('tbody').children('tr').eq(1).children('td').eq(1).text(sub_m);
+
+
+							//显示当天数据
+							var data_d = as_data_d;
+							var html_tbody_str_d = "";	
+							var tbody_str1 = "<td>当日</td><td>0</td>";			//内容 -->当天
+							var sub_d = 0;
+							$.each(data_d,function(i,item){
+								sub_d += parseInt(item.Count);
+							})
+							$.each(ases_d_type_list,function(i1,item1){
+								var flag_type = 0;
+								$.each(data_d,function(i,item){
+									if(item1 == item.Type){
+										html_tbody_str_d += "<td>"+ item.Count +"</td>";
+										flag_type = 1;
+										return false;
+									}
+								})
+								if(flag_type == 0){
+									html_tbody_str_d += "<td></td>";
+								}
+							})
+							
+							tbody_str1 += '+'+ html_tbody_str_d;
+							var obj0 = $(".area.area7").children().find('.b').eq(1);
+							$(obj0).children().children('tbody').children('tr').eq(0).empty();
+							$(obj0).children().children('tbody').children('tr').eq(0).append(tbody_str1);
+							$(obj0).children().children('tbody').children('tr').eq(0).children('td').eq(1).text(sub_d);
+							var l1 = $(obj0).children().children('tbody').children('tr').eq(0).children('td').length;
+							if(l1 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l1; i++){
+									$(obj0).children().children('tbody').children('tr').eq(0).append("<td></td>");
+								}
+							}
+						}
+						else{
+							//alert('会话统计查询失败');
+							pass=false;
+						}
+					}
+				});
+			}
+			else{
+				//alert('会话统计查询失败');
+				pass=false;
+			}
+		}
+	});
+}
+//异常会话统计
+function Chart5_2(){
+	get_mon_ases = "";
+	get_ases_amount_m();
+	//$.when(get_mon_ases).then(get_ases_amount_d);
+}
+
+
+//获取当天操作数量
+get_ops_amount_d = function (){
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ops_amount_d",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:REFRESH_5},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				var o_data_d = result.info;
+				$("#proto_re").attr("onclick","reload_c()");
+				REFRESH_5 = 1;
+				//当天数据合并到当月
+				$.each(o_data_d,function(i,item){
+					var flag_a = 0;
+					$.each(o_data_m,function(i1,item1){
+						if(item.Type == item1.Type){
+							item1.Count = (parseInt(item.Count)+parseInt(item1.Count)).toString();
+							flag_a = 1;
+						}
+					})
+					if(flag_a == 0){
+						o_data_m.push(item);
+					}
+				})
+				var compare = function (obj1, obj2) {
+					var val1 = parseInt(obj1.Count);
+					var val2 = parseInt(obj2.Count);
+					if (val1 > val2) {
+							return -1;
+					} else if (val1 < val2) {
+							return 1;
+					} else {
+							return 0;
+					}            
+				} 
+				o_data_m = o_data_m.sort(compare);		//Count由大到小排序
+				//显示当月数据
+				var data_m = o_data_m;	//取出的data_d 和data_m 为count 高 -> 低排列
+				var html_thead_str = "";
+				var html_tbody_str_m = "";					
+				var ops_d_type_list = [];		
+				var thead_str = '"<th style="width:17%;">操作</th><th>所有</th>"+';	//标题
+				var tbody_str2 = "<td>当月</td><td>0</td>"; 		//内容 -->当月
+				var sub_m = 0;
+				$.each(data_m,function(i,item){
+					sub_m += parseInt(item.Count);
+					if(i < AREA7_NUM){
+						$.each(protocol_list,function(i1,item1){
+							if(item1.protocolid == item.Type){
+								ops_d_type_list.push(item.Type);
+								html_thead_str += "<th>"+ item1.protocolname +"</th>"
+								html_tbody_str_m += "<td>"+ item.Count +"</td>"
+								return false;
+							}
+						})
+					}
+				})
+				thead_str += '+'+ html_thead_str;
+				tbody_str2 += '+'+ html_tbody_str_m;
+				var obj0 = $(".area.area7").children().find('.b').eq(2);
+				$(obj0).children().children('thead').children('tr').eq(0).empty();
+				$(obj0).children().children('thead').children('tr').eq(0).append(thead_str);
+				$(obj0).children().children('tbody').children('tr').eq(1).empty();
+				$(obj0).children().children('tbody').children('tr').eq(1).append(tbody_str2);
+				var l0 = $(obj0).children().children('thead').children('tr').eq(0).children('th').length;
+				var l2 = $(obj0).children().children('tbody').children('tr').eq(1).children('td').length;
+				if(l0 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l0; i++){
+						$(obj0).children().children('thead').children('tr').eq(0).append("<th></th>");
+					}
+				}
+				if(l2 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l2; i++){
+						$(obj0).children().children('tbody').children('tr').eq(1).append("<td></td>");
+					}
+				}
+
+				$(obj0).children().children('tbody').children('tr').eq(1).children('td').eq(1).text(sub_m);
+
+
+				//显示当天数据
+				var data_d = o_data_d;
+				var html_tbody_str_d = "";	
+				var tbody_str1 = "<td>当日</td><td>0</td>";			//内容 -->当天
+				var sub_d = 0;
+				$.each(data_d,function(i,item){
+					sub_d += parseInt(item.Count);
+				})
+				$.each(ops_d_type_list,function(i1,item1){
+					var flag_type = 0;
+					$.each(data_d,function(i,item){
+						if(item1 == item.Type){
+							html_tbody_str_d += "<td>"+ item.Count +"</td>";
+							flag_type = 1;
+							return false;
+						}
+					})
+					if(flag_type == 0){
+						html_tbody_str_d += "<td></td>";
+					}
+				})
+				
+				tbody_str1 += '+'+ html_tbody_str_d;
+				var obj0 = $(".area.area7").children().find('.b').eq(2);
+				$(obj0).children().children('tbody').children('tr').eq(0).empty();
+				$(obj0).children().children('tbody').children('tr').eq(0).append(tbody_str1);
+				$(obj0).children().children('tbody').children('tr').eq(0).children('td').eq(1).text(sub_d);
+				var l1 = $(obj0).children().children('tbody').children('tr').eq(0).children('td').length;
+				if(l1 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l1; i++){
+						$(obj0).children().children('tbody').children('tr').eq(0).append("<td></td>");
+					}
+				}
+			}
+			else{
+				//alert('会话统计查询失败');
+				pass=false;
+			}
+		}
+	});
+}
+//获取当月操作数量
+var o_data_m;		//当月操作数据
+function get_ops_amount_m(){
+	var data=false;
+	o_data_m = [];
+	get_mon_ops = $.ajax({
+		url: "/bhost/get_ops_amount_m",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:REFRESH_5},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				o_data_m = result.info;	//取出的data_d 和data_m 为count 高 -> 低排列
+				var data=false;
+				$.ajax({
+					url: "/bhost/get_ops_amount_d",
+					type:"POST",
+					async:true,
+					data:{a0:sess,a1:REFRESH_5},
+					success:function(result){
+						var result = JSON.parse(result);
+						if(result.Result){
+							var o_data_d = result.info;
+							$("#proto_re").attr("onclick","reload_c()");
+							REFRESH_5 = 1;
+							//当天数据合并到当月
+							$.each(o_data_d,function(i,item){
+								var flag_a = 0;
+								$.each(o_data_m,function(i1,item1){
+									if(item.Type == item1.Type){
+										item1.Count = (parseInt(item.Count)+parseInt(item1.Count)).toString();
+										flag_a = 1;
+									}
+								})
+								if(flag_a == 0){
+									o_data_m.push(item);
+								}
+							})
+							var compare = function (obj1, obj2) {
+								var val1 = parseInt(obj1.Count);
+								var val2 = parseInt(obj2.Count);
+								if (val1 > val2) {
+										return -1;
+								} else if (val1 < val2) {
+										return 1;
+								} else {
+										return 0;
+								}            
+							} 
+							o_data_m = o_data_m.sort(compare);		//Count由大到小排序
+							//显示当月数据
+							var data_m = o_data_m;	//取出的data_d 和data_m 为count 高 -> 低排列
+							var html_thead_str = "";
+							var html_tbody_str_m = "";					
+							var ops_d_type_list = [];		
+							var thead_str = '"<th style="width:17%;">操作</th><th>所有</th>"+';	//标题
+							var tbody_str2 = "<td>当月</td><td>0</td>"; 		//内容 -->当月
+							var sub_m = 0;
+							$.each(data_m,function(i,item){
+								sub_m += parseInt(item.Count);
+								if(i < AREA7_NUM){
+									$.each(protocol_list,function(i1,item1){
+										if(item1.protocolid == item.Type){
+											ops_d_type_list.push(item.Type);
+											html_thead_str += "<th>"+ item1.protocolname +"</th>"
+											html_tbody_str_m += "<td>"+ item.Count +"</td>"
+											return false;
+										}
+									})
+								}
+							})
+							thead_str += '+'+ html_thead_str;
+							tbody_str2 += '+'+ html_tbody_str_m;
+							var obj0 = $(".area.area7").children().find('.b').eq(2);
+							$(obj0).children().children('thead').children('tr').eq(0).empty();
+							$(obj0).children().children('thead').children('tr').eq(0).append(thead_str);
+							$(obj0).children().children('tbody').children('tr').eq(1).empty();
+							$(obj0).children().children('tbody').children('tr').eq(1).append(tbody_str2);
+							var l0 = $(obj0).children().children('thead').children('tr').eq(0).children('th').length;
+							var l2 = $(obj0).children().children('tbody').children('tr').eq(1).children('td').length;
+							if(l0 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l0; i++){
+									$(obj0).children().children('thead').children('tr').eq(0).append("<th></th>");
+								}
+							}
+							if(l2 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l2; i++){
+									$(obj0).children().children('tbody').children('tr').eq(1).append("<td></td>");
+								}
+							}
+
+							$(obj0).children().children('tbody').children('tr').eq(1).children('td').eq(1).text(sub_m);
+
+
+							//显示当天数据
+							var data_d = o_data_d;
+							var html_tbody_str_d = "";	
+							var tbody_str1 = "<td>当日</td><td>0</td>";			//内容 -->当天
+							var sub_d = 0;
+							$.each(data_d,function(i,item){
+								sub_d += parseInt(item.Count);
+							})
+							$.each(ops_d_type_list,function(i1,item1){
+								var flag_type = 0;
+								$.each(data_d,function(i,item){
+									if(item1 == item.Type){
+										html_tbody_str_d += "<td>"+ item.Count +"</td>";
+										flag_type = 1;
+										return false;
+									}
+								})
+								if(flag_type == 0){
+									html_tbody_str_d += "<td></td>";
+								}
+							})
+							
+							tbody_str1 += '+'+ html_tbody_str_d;
+							var obj0 = $(".area.area7").children().find('.b').eq(2);
+							$(obj0).children().children('tbody').children('tr').eq(0).empty();
+							$(obj0).children().children('tbody').children('tr').eq(0).append(tbody_str1);
+							$(obj0).children().children('tbody').children('tr').eq(0).children('td').eq(1).text(sub_d);
+							var l1 = $(obj0).children().children('tbody').children('tr').eq(0).children('td').length;
+							if(l1 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l1; i++){
+									$(obj0).children().children('tbody').children('tr').eq(0).append("<td></td>");
+								}
+							}
+						}
+						else{
+							//alert('会话统计查询失败');
+							pass=false;
+						}
+					}
+				});
+			}
+			else{
+				//alert('操作统计查询失败');
+				pass=false;
+			}
+		}
+	});
+}
+//操作统计
+function Chart5_3(){
+	get_mon_ops = "";
+	get_ops_amount_m();
+	//$.when(get_mon_ops).then(get_ops_amount_d);
+}
+
+
+//获取当天异常操作数量
+get_aops_amount_d = function (){
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_aops_amount_d",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:REFRESH_5},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				var ao_data_d = result.info;
+				//当天数据合并到当月
+				$.each(ao_data_d,function(i,item){
+					var flag_a = 0;
+					$.each(ao_data_m,function(i1,item1){
+						if(item.Type == item1.Type){
+							item1.Count = (parseInt(item.Count)+parseInt(item1.Count)).toString();
+							flag_a = 1;
+						}
+					})
+					if(flag_a == 0){
+						ao_data_m.push(item);
+					}
+				})
+				var compare = function (obj1, obj2) {
+					var val1 = parseInt(obj1.Count);
+					var val2 = parseInt(obj2.Count);
+					if (val1 > val2) {
+							return -1;
+					} else if (val1 < val2) {
+							return 1;
+					} else {
+							return 0;
+					}            
+				} 
+				ao_data_m = ao_data_m.sort(compare);		//Count由大到小排序
+				//显示当月数据
+				var data_m = ao_data_m;	//取出的data_d 和data_m 为count 高 -> 低排列
+				var html_thead_str = "";
+				var html_tbody_str_m = "";	
+				var aops_d_type_list = [];					
+				var thead_str = '"<th style="width:17%;">异常操作</th><th>所有</th>"+';	//标题
+				var tbody_str2 = "<td>当月</td><td>0</td>"; 		//内容 -->当月
+				var sub_m = 0;
+				$.each(data_m,function(i,item){
+					sub_m += parseInt(item.Count);
+					if(i < AREA7_NUM){
+						$.each(protocol_list,function(i1,item1){
+							if(item1.protocolid == item.Type){
+								aops_d_type_list.push(item.Type);
+								html_thead_str += "<th>"+ item1.protocolname +"</th>"
+								html_tbody_str_m += "<td>"+ item.Count +"</td>"
+								return false;
+							}
+						})
+					}
+				})
+				thead_str += '+'+ html_thead_str;
+				tbody_str2 += '+'+ html_tbody_str_m;
+				var obj0 = $(".area.area7").children().find('.b').eq(3);
+				$(obj0).children().children('thead').children('tr').eq(0).empty();
+				$(obj0).children().children('thead').children('tr').eq(0).append(thead_str);
+				$(obj0).children().children('tbody').children('tr').eq(1).empty();
+				$(obj0).children().children('tbody').children('tr').eq(1).append(tbody_str2);
+				var l0 = $(obj0).children().children('thead').children('tr').eq(0).children('th').length;
+				var l2 = $(obj0).children().children('tbody').children('tr').eq(1).children('td').length;
+				if(l0 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l0; i++){
+						$(obj0).children().children('thead').children('tr').eq(0).append("<th></th>");
+					}
+				}
+				if(l2 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l2; i++){
+						$(obj0).children().children('tbody').children('tr').eq(1).append("<td></td>");
+					}
+				}
+				$(obj0).children().children('tbody').children('tr').eq(1).children('td').eq(1).text(sub_m);
+
+
+				//显示当天数据
+				var data_d = ao_data_d;
+				var html_tbody_str_d = "";	
+				var tbody_str1 = "<td>当日</td><td>0</td>";			//内容 -->当天
+				var sub_d = 0;
+				$.each(data_d,function(i,item){
+					sub_d += parseInt(item.Count);
+				})
+				$.each(aops_d_type_list,function(i1,item1){
+					var flag_type = 0;
+					$.each(data_d,function(i,item){
+						if(item1 == item.Type){
+							html_tbody_str_d += "<td>"+ item.Count +"</td>";
+							flag_type = 1;
+							return false;
+						}
+					})
+					if(flag_type == 0){
+						html_tbody_str_d += "<td></td>";
+					}
+				})
+				
+				tbody_str1 += '+'+ html_tbody_str_d;
+				var obj0 = $(".area.area7").children().find('.b').eq(3);
+				$(obj0).children().children('tbody').children('tr').eq(0).empty();
+				$(obj0).children().children('tbody').children('tr').eq(0).append(tbody_str1);
+				$(obj0).children().children('tbody').children('tr').eq(0).children('td').eq(1).text(sub_d);
+				var l1 = $(obj0).children().children('tbody').children('tr').eq(0).children('td').length;
+				if(l1 != AREA7_NUM+2){
+					for(i = 1; i <= AREA7_NUM+2-l1; i++){
+						$(obj0).children().children('tbody').children('tr').eq(0).append("<td></td>");
+					}
+				}
+			}
+			else{
+				//alert('会话统计查询失败');
+				pass=false;
+			}
+		}
+	});
+}
+//获取当月异常操作数量
+var ao_data_m;		//当月操作数据
+function get_aops_amount_m(){
+	var data=false;
+	ao_data_m = [];
+	get_mon_aops = $.ajax({
+		url: "/bhost/get_aops_amount_m",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:REFRESH_5},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				ao_data_m = result.info;	//取出的data_d 和data_m 为count 高 -> 低排列
+				var data=false;
+				$.ajax({
+					url: "/bhost/get_aops_amount_d",
+					type:"POST",
+					async:true,
+					data:{a0:sess,a1:REFRESH_5},
+					success:function(result){
+						var result = JSON.parse(result);
+						if(result.Result){
+							var ao_data_d = result.info;
+							//当天数据合并到当月
+							$.each(ao_data_d,function(i,item){
+								var flag_a = 0;
+								$.each(ao_data_m,function(i1,item1){
+									if(item.Type == item1.Type){
+										item1.Count = (parseInt(item.Count)+parseInt(item1.Count)).toString();
+										flag_a = 1;
+									}
+								})
+								if(flag_a == 0){
+									ao_data_m.push(item);
+								}
+							})
+							var compare = function (obj1, obj2) {
+								var val1 = parseInt(obj1.Count);
+								var val2 = parseInt(obj2.Count);
+								if (val1 > val2) {
+										return -1;
+								} else if (val1 < val2) {
+										return 1;
+								} else {
+										return 0;
+								}            
+							} 
+							ao_data_m = ao_data_m.sort(compare);		//Count由大到小排序
+							//显示当月数据
+							var data_m = ao_data_m;	//取出的data_d 和data_m 为count 高 -> 低排列
+							var html_thead_str = "";
+							var html_tbody_str_m = "";	
+							var aops_d_type_list = [];					
+							var thead_str = '"<th style="width:17%;">异常操作</th><th>所有</th>"+';	//标题
+							var tbody_str2 = "<td>当月</td><td>0</td>"; 		//内容 -->当月
+							var sub_m = 0;
+							$.each(data_m,function(i,item){
+								sub_m += parseInt(item.Count);
+								if(i < AREA7_NUM){
+									$.each(protocol_list,function(i1,item1){
+										if(item1.protocolid == item.Type){
+											aops_d_type_list.push(item.Type);
+											html_thead_str += "<th>"+ item1.protocolname +"</th>"
+											html_tbody_str_m += "<td>"+ item.Count +"</td>"
+											return false;
+										}
+									})
+								}
+							})
+							thead_str += '+'+ html_thead_str;
+							tbody_str2 += '+'+ html_tbody_str_m;
+							var obj0 = $(".area.area7").children().find('.b').eq(3);
+							$(obj0).children().children('thead').children('tr').eq(0).empty();
+							$(obj0).children().children('thead').children('tr').eq(0).append(thead_str);
+							$(obj0).children().children('tbody').children('tr').eq(1).empty();
+							$(obj0).children().children('tbody').children('tr').eq(1).append(tbody_str2);
+							var l0 = $(obj0).children().children('thead').children('tr').eq(0).children('th').length;
+							var l2 = $(obj0).children().children('tbody').children('tr').eq(1).children('td').length;
+							if(l0 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l0; i++){
+									$(obj0).children().children('thead').children('tr').eq(0).append("<th></th>");
+								}
+							}
+							if(l2 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l2; i++){
+									$(obj0).children().children('tbody').children('tr').eq(1).append("<td></td>");
+								}
+							}
+							$(obj0).children().children('tbody').children('tr').eq(1).children('td').eq(1).text(sub_m);
+
+
+							//显示当天数据
+							var data_d = ao_data_d;
+							var html_tbody_str_d = "";	
+							var tbody_str1 = "<td>当日</td><td>0</td>";			//内容 -->当天
+							var sub_d = 0;
+							$.each(data_d,function(i,item){
+								sub_d += parseInt(item.Count);
+							})
+							$.each(aops_d_type_list,function(i1,item1){
+								var flag_type = 0;
+								$.each(data_d,function(i,item){
+									if(item1 == item.Type){
+										html_tbody_str_d += "<td>"+ item.Count +"</td>";
+										flag_type = 1;
+										return false;
+									}
+								})
+								if(flag_type == 0){
+									html_tbody_str_d += "<td></td>";
+								}
+							})
+							
+							tbody_str1 += '+'+ html_tbody_str_d;
+							var obj0 = $(".area.area7").children().find('.b').eq(3);
+							$(obj0).children().children('tbody').children('tr').eq(0).empty();
+							$(obj0).children().children('tbody').children('tr').eq(0).append(tbody_str1);
+							$(obj0).children().children('tbody').children('tr').eq(0).children('td').eq(1).text(sub_d);
+							var l1 = $(obj0).children().children('tbody').children('tr').eq(0).children('td').length;
+							if(l1 != AREA7_NUM+2){
+								for(i = 1; i <= AREA7_NUM+2-l1; i++){
+									$(obj0).children().children('tbody').children('tr').eq(0).append("<td></td>");
+								}
+							}
+						}
+						else{
+							//alert('会话统计查询失败');
+							pass=false;
+						}
+					}
+				});
+			}
+			else{
+				//alert('操作统计查询失败');
+				pass=false;
+			}
+		}
+	});
+}
+//异常操作统计
+function Chart5_4(){
+	get_mon_aops = "";
+	get_aops_amount_m();
+	//$.when(get_mon_aops).then(get_aops_amount_d);
+}
+/*
+* type --> 0: 刷新  1: 操作  2: 会话  3: 小时  4: 天  5:全部  6:异常
+* p		--> 2:时间趋势   3:服务器   4:运维用户  (5:最新会话)
+*/
+function _setType(obj,type,p){
+	$(obj).addClass('on').siblings('.on').removeClass('on');
+	if(type == 2){
+		switch(p){
+			case 2:
+				var normal;
+				//判断全部或者异常
+				if($("#dis_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#data_type").children().eq(0).attr('class') == "on"){
+					Chart1(2,1,0,normal);
+					break;
+				}else{
+					Chart1(2,2,0,normal);
+					break;
+				}
+			case 3:
+				var normal;
+				//判断全部或者异常
+				if($("#ser_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart2(2,0,normal);
+				break;
+			case 4:
+				var normal;
+				//判断全部或者异常
+				if($("#user_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart3(2,0,normal);
+				break;
+			// case 5:
+			// 	Chart3(2);
+			// 	break;
+		}
+	}else if(type == 1){
+		switch(p){
+			case 2:
+				var normal;
+				//判断全部或者异常
+				if($("#dis_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#data_type").children().eq(0).attr('class') == "on"){
+					Chart1(1,1,0,normal);
+					break;
+				}else{
+					Chart1(1,2,0,normal);
+					break;
+				}
+			case 3:
+				var normal;
+				//判断全部或者异常
+				if($("#ser_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}			
+				Chart2(1,0,normal);
+				break;
+			case 4:
+				var normal;
+				//判断全部或者异常
+				if($("#user_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}			
+				Chart3(1,0,normal);
+				break;
+		}
+	}else if(type == 3){
+		var normal;
+		//判断全部或者异常
+		if($("#dis_status").children().eq(0).attr('class') == "on"){
+			normal = 1;
+		}else{
+			normal = 2;
+		}		
+		if($("#dis_type").children().eq(0).attr('class') == "on"){
+			Chart1(1,1,0,normal);
+		}else{
+			Chart1(2,1,0,normal);
+		}
+	}else if(type == 4){
+		var normal;
+		//判断全部或者异常
+		if($("#dis_status").children().eq(0).attr('class') == "on"){
+			normal = 1;
+		}else{
+			normal = 2;
+		}		
+		if($("#dis_type").children().eq(0).attr('class') == "on"){
+			Chart1(1,2,0,normal);
+		}else{
+			Chart1(2,2,0,normal);
+		}
+	}else if(type == 5){
+		switch(p){
+			case 2:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#dis_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#data_type").children().eq(0).attr('class') == "on"){
+					Chart1(type2,1,0,1);
+					break;
+				}else{
+					Chart1(type2,2,0,1);
+					break;
+				}
+			case 3:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#ser_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}		
+				Chart2(type2,0,1);
+				break;
+			case 4:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#user_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				Chart3(type2,0,1);
+				break;
+			case 5:
+				Chart4(0);
+				break;				
+		}
+	}else if(type == 6){
+		switch(p){
+			case 2:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#dis_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#data_type").children().eq(0).attr('class') == "on"){
+					Chart1(type2,1,0,2);
+					break;
+				}else{
+					Chart1(type2,2,0,2);
+					break;
+				}
+			case 3:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#ser_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}		
+				Chart2(type2,0,2);
+				break;
+			case 4:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#user_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}			
+				Chart3(type2,0,2);
+				break;
+			case 5:
+				Chart4(2);
+				break;
+		}
+	}else if(type == 0){
+		switch(p){
+			case 2:
+				var type1;	//  1: 小时  2: 天
+				var type2;	//  1: 操作  2: 会话
+				var normal;	//  1: 正常  2：异常
+				//判断全部或者异常
+				if($("#dis_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#data_type").children().eq(0).attr('class') == "on"){
+					type1 = 1;
+				}else{
+					type1 = 2;
+				}
+				//判断操作或者会话
+				if($("#dis_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				Chart1(type2,type1,1,normal);
+				break;
+			case 3:
+				var type2;	//  1: 操作  2: 会话
+				var normal;	//  1: 正常  2：异常
+				//判断全部或者异常
+				if($("#ser_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}				
+				//判断操作或者会话
+				if($("#ser_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				Chart2(type2,1,normal);
+				break;
+			case 4:
+				var type2;	//  1: 操作  2: 会话
+				var normal;	//  1: 正常  2：异常
+				//判断全部或者异常
+				if($("#user_status").children().eq(0).attr('class') == "on"){
+					normal = 1;
+				}else{
+					normal = 2;
+				}				
+				//判断操作或者会话
+				if($("#user_type").children().eq(0).attr('class') == "on"){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				Chart3(type2,1,normal);
+				break;
+		}
+	}
+}
+function  sys_log_info() {
+	get_button_status();
+	document.frm_monitor.tasktype.value = 6;
+	document.frm_monitor.se.value = window.parent.document.frm.se.value;
+	document.frm_monitor.a1.value = 10;
+	document.frm_monitor.a2.value = 3;
+	document.frm_monitor.a3.value = 1;
+	document.frm_monitor.a4.value = button_status;
+	document.frm_monitor.a6.value = 1;		
+	document.frm_monitor.submit();	
+}
+function  warn_log_info() {
+	get_button_status();
+	document.frm_monitor.tasktype.value = 6;
+	document.frm_monitor.se.value = window.parent.document.frm.se.value;
+	document.frm_monitor.a1.value = 10;
+	document.frm_monitor.a2.value = 3;
+	document.frm_monitor.a3.value = 2;
+	document.frm_monitor.a4.value = button_status;
+	document.frm_monitor.a6.value = 1;
+	document.frm_monitor.submit();
+}
+function _analysis(sessid,stime,etime,statue,type,server_user,server_ip,y_user,IfReplay,IfReplayDrawing){
+	/*起始时间：2017-12-07 14:01:12 结束时间：2017-12-07 14:02:04 会话类型：SSH 运维用户：yyt 服务器IP：192.168.0.82 服务器用户名：root*/
+	$('form[name=frm_analysis]').attr('target','_blank');
+	$('form[name=frm_analysis]').attr('method','get');
+	document.frm_analysis.s1.value = sessid;
+	document.frm_analysis.st.value = stime;
+	document.frm_analysis.et.value = etime;
+	document.frm_analysis.stat.value = statue;
+	document.frm_analysis.tp.value = type;
+	document.frm_analysis.su.value = server_user;
+	document.frm_analysis.si.value = server_ip;
+	document.frm_analysis.lo.value = 2;			
+	document.frm_analysis.yu.value = y_user;			
+			//
+	document.frm_analysis.ot.value = IfReplay+"@"+IfReplayDrawing;
+	document.frm_analysis.submit();
+	
+	//location.href='/bhost/analysis_index?a0={{se}}';
+}
+function _playback(sessid,stime,etime,statue,type,server_user,server_ip,IfReplay,IfReplayDrawing,pro,replay_path,client_ip,usercode,username){
+	if(IfReplay == true){
+		/*
+		{
+			"Cmd":"\"D:\Program Files\Java\jre1.8.0_131\bin\java.exe\" -jar CharReplay.jar",
+			"Protocol":"ssh",
+			"Usercode":"super",
+			"Username":"sup",
+			"Remote":"remote:/storage/LOG/Webmanager/Data/REPLAY/20180130/ssh/7854377188397616265.ssh@b64>>base64(ip):8080:0:0:客户端ip:服务器ip:发生时间戳（起始时间）",
+			"File":"pm02qgAra6HxipYvGc8czCBbrk8dM7NQ385dwKqhuor8cz9lAUMIeJfYQ+skvL6J3g== base64(会话标志)"
+		}
+		*/
+		MapPort = '8080';
+		$.ajax({
+			url: "/bhost/get_MapPort",
+			type:"POST",
+			async:false,		
+			data:{a0:window.parent.document.frm.se.value},
+			success:function(result){
+				var result=JSON.parse(result);
+				if(result.Result){
+					MapPort = result.info;
+				}else{
+					_alert(1,"实时监控",result.ErrMsg);
+				}
+			}
+		})
+		var sesstimet = (new Date()).valueOf();
+		cmd_json ={
+			"Cmd":"\"D:\\Program Files\\Java\\jre1.8.0_131\\bin\\java.exe\" -jar CharReplay.jar",
+			"Protocol":pro,
+			"ReplayPath":replay_path,
+			"UrlIp":document.domain+ (location.port!=''?':'+location.port:''),
+			"ClientIp":client_ip,
+			"ServerIp":server_ip,
+			"StartTime":(new Date(stime).valueOf())/1000,
+			"File":"",//SlasEncode 加密？？？
+			"Sessid":sessid,
+			"Usercode":usercode,
+			"Username":username,
+			"IfReplay":true,
+			"IfReplayDrawing":IfReplayDrawing,
+			"MapPort":MapPort,
+			"sesstimet":sesstimet,
+			"sess":window.parent.document.frm.se.value
+		}
+	
+		var if_html_client = false;
+		var base64_str = '';
+		$.ajax({
+			url: "/bhost/get_base64",
+			type:"POST",
+			async:false,		
+			data:{a0:window.parent.document.frm.se.value,z1:JSON.stringify(cmd_json)},
+			success:function(result){
+				var result=JSON.parse(result);
+				if(result.Result){
+					if_html_client = result.info;
+					base64_str = result.b64;
+				}else{
+					_alert(1,"实时监控",result.ErrMsg);
+				}
+			}
+		})
+		if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(cmd_json));
+		else{
+			//window.location.href = 'bhost://cmd&'+base64_str;
+			get_regedit('bhost',window.parent.document.frm.se.value,'',sesstimet);
+			$('#YuFrame1').remove();
+			$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+			$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);	
+		}
+		/*
+			{"BHUser":"zdp","ServerUser":"system","ServerPassword":"8d55abc0c514f0","BHIP":"192.168.0.157","ServerIP":"192.168.0.47","ServerPort":1521,"ClientPath":"","ClientName":"sqlplusw","Protocol":"ORACLE","ServerName":"orcll","ServerNameType":"SERVICE_NAME","ConnMode":"NORMAL","title":"","IsTunnel":"false","MapPort":8080,"Port":"1521","screensize":"0","fullscreen":"true","clip":"true","diskmap":"true","mapdisks":"C:|D:","AccAPP":"true"}
+		*/
+		return false;
+	}
+
+	$('form[name=frm_playback]').attr('target','_blank');
+	$('form[name=frm_playback]').attr('method','get');
+	document.frm_playback.s1.value = sessid;
+	document.frm_playback.st.value = stime;
+	document.frm_playback.et.value = etime;
+	document.frm_playback.stat.value = statue;
+	document.frm_playback.tp.value = type;
+	document.frm_playback.su.value = server_user;
+	document.frm_playback.si.value = server_ip;
+	document.frm_playback.lo.value = 2;
+	document.frm_playback.submit();
+}
+function save_style(type){
+	$.ajax({
+		url: "/bhost/Switch_MonitorStyle",
+		type:"POST",
+		async:false,
+		cache:false,
+		data:{a0:sess,a1:type},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result){
+				parent.$("#MonitorStyle").attr("value",type);
+				//parent.$("#nav-s1").children('ul').children().eq(0).children().attr("data-url","/bhost/index?tasktype=1_1&us={{us}}&se={{se}}");
+				parent.$("#detail").children().attr("src","/bhost/index?tasktype=1_1&us={{us}}&se={{se}}&ha2={{hash}}");
+				
+				document.frm_monitor.action = "/bhost/index";
+				document.frm_monitor.tasktype.value = '1_1';
+				document.frm_monitor.us.value = '{{us}}';
+				document.frm_monitor.se.value = '{{se}}';
+				document.frm_monitor.ha.value = '{{hash}}';
+				document.frm_monitor.submit();
+			}
+		}
+	});
+}
+//--hostname,port,username("bhuser@serveruser@sip:port:protocol@h5"),password(clientip:clientport@serverpassword)
+var url_str = "https://"+document.domain+':8443';
+function _cowork(bhname,pid,protoname,Type,ip,port1,port2,sername,ifacc,se_old,int32_15) {
+	var ip_domain='';
+	var getdomainpass=true;
+	$.ajax({
+		url: "/bhost/getdomain",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:int32_15},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				if(result.ip!=''){
+					ip_domain=result.ip
+				}
+			}else{
+				_alert(1,"实时监控",result.ErrMsg);
+				getdomainpass=false;
+				return false;
+			}
+		}
+	});
+	if(!getdomainpass){
+		return false;
+	}
+	if(ip_domain!=''){
+		url_str = "https://"+ip_domain+':8443';
+	}
+	var timestamp = new Date().getTime();
+	var username1 = sess + '@' + timestamp;
+	var param_host = '{"name":"hostname","value":"127.0.0.1"}';
+	var username;
+	var paramStr = "";
+	$.ajax({
+		url:'/bhost/get_user_name',
+		type:'post',
+		async:false,
+		data:{a0:$("input[name=se]").val()},
+		success:function(result){
+			var re_result = JSON.parse(result);
+			username = re_result.info;
+		}
+	});	
+	$.ajax({
+		url:'/bhost/module_app_set_list',
+		type:'post',
+		async:false,
+		data:{a0:$("input[name=se]").val()},
+		success:function(result){
+			var re_result = JSON.parse(result);
+			$.each(re_result.data,function(i,item){
+				if (item.ApplicationName == 'TELNET'){
+					param_port = '{"name":"port","value":"'+item.ServicePort+'"}';
+					return false;
+				}else if(item.ApplicationName == 'RDP|VNC|X11'){
+					param_port1 = '{"name":"port","value":"'+item.ServicePort+'"}';
+				}
+			});
+		}
+	});
+	$.ajax({
+		url:'/bhost/get_Param',
+		type:'post',
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:bhname,a2:ip,a3:protoname,a4:sername},
+		success:function(result){
+			var re_result = JSON.parse(result);
+			paramStr = '\\t'+re_result.ServiceName+'\\t'+re_result.ConnMode+'\\t'+re_result.ConnParam+'\\t'+re_result.ClientName;
+		}
+	});
+	var username0 = "";
+	var Type1 = 0;
+	var param_array = [];
+	if(Type == 2){
+		if(protoname == "RDP" || ifacc==true || protoname == "VNC" || protoname == "X11"){
+			Type1 = 1;
+			username0 = bhname+'@'+sername+'@'+ip+':'+port1+':'+protoname+':'+port2+'@h5:1:'+se_old+':'+'{{us}}'+':'+username;
+			if(ifacc == true){
+				username0 += ':1';
+			}else{
+				username0 += ':0';
+			}
+
+			param_array.push(JSON.parse(param_port1));
+			var pwd_str = parent.client_ip+':0@'+'d106f6959747';
+			param_password = '{"name":"password","value":"'+pwd_str+'"}';
+		}else{
+			username0 = '+'+'{{us}}'+'@'+username+'@'+pid+':'+protoname+'@ad';
+			param_array.push(JSON.parse(param_port));
+			param_password = '{"name":"password","value":"'+sess+'"}';
+		}
+	}
+	if(protoname == "SSH" || protoname == "TELNET" || protoname == "RLOGIN"){
+	}else{
+		username0 += paramStr;
+	}
+	var param_username = '{"name":"username","value":"'+username0+'"}';
+	param_array.push(JSON.parse(param_host));
+	param_array.push(JSON.parse(param_username.replace("\\","\\\\")));
+	param_array.push(JSON.parse(param_password));
+	var pwd = sess;
+	$.ajax({
+		url: "/bhost/get_token_remote_Monitor",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:url_str,a2:bhname,a3:pid,a4:protoname,a5:username1,a6:pwd,a7:JSON.stringify(param_array),a8:Type,a9:Type1},
+		success:function(result){
+			var result=JSON.parse(result);
+			$.ajax({
+				url: "/bhost/RealIPGet",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: document.domain},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if(result.result == true){
+						if(result.dev_type == "gluster"){
+							document_domain = result.info;
+						}else{
+							document_domain = document.domain;
+						}
+					}else{
+						document_domain = document.domain;
+					}
+				}
+			})
+			var url_addr = 'https://'+(ip_domain==''?document_domain:ip_domain)+':8443/bhremote/?token='+result.authToken;
+			window.open(url_addr);
+		}
+	});
+}
+function download_file(data1,data2){
+	if(data2 == ""){
+		return false;
+	}
+	var DownloadType = 1;		//1->回放文件  2->传输文件；
+	var log_id = data1;
+	var log_name = data2;
+	$.ajax({
+		url: "/bhost/download_fileCheck",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:log_id,a2:log_name,a3:DownloadType,a10:"实时监控"},
+		success:function(result){
+			var result=JSON.parse(result);
+			if(result.Result){
+				var referer_tmp = document.referrer.toString();
+				var referer_array_tmp = referer_tmp.split('/');
+				referer_array_tmp.pop();
+				var referer_new = referer_array_tmp.join('/');
+				var sesstimet = (new Date()).valueOf();
+				var json_download = {
+					"Type": "Download",
+					"Url": referer_new,
+					"Path": result.Path,
+					"Filename": log_name.split('/').pop(),
+					"Session": sess,
+					"sesstimet":sesstimet
+				}
+				// cmd_str = JSON.stringify(json_download);
+				// var evt = document.createEvent("CustomEvent");
+				// evt.initCustomEvent('LocalEvent', true, false, cmd_str);
+				// document.dispatchEvent(evt);
+				// window.open('https://'+window.location.host+'/bhost/test_html?se={{se}}&z1='+cmd_str);
+				var if_html_client = false;
+				var base64_str = '';
+				$.ajax({
+					url: "/bhost/get_base64",
+					type:"POST",
+					async:false,
+					data:{a0:window.parent.document.frm.se.value,z1:JSON.stringify(json_download)},
+					success:function(result){
+						var result=JSON.parse(result);
+						if(result.Result){
+							if_html_client = result.info;
+							base64_str = result.b64;
+						}else{
+							_alert(1,"实时监控",result.ErrMsg);
+						}
+					}
+				})
+				if(if_html_client) window.open('https://'+document.domain+':'+location.port+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(json_download));
+				else{
+					//window.location.href = 'bhost://cmd&'+base64_str;
+					get_regedit('bhost',window.parent.document.frm.se.value,'',sesstimet);
+					$('#YuFrame1').remove();
+					$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+					$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);	
+				}
+			}else{
+				_alert(1,"实时监控",result.ErrMsg);
+			}
+		}
+	})
+}
+// yt
+//阻断
+function _block(pid , server_id , sessid){
+	$.ajax({
+		url: "/bhost/block_session",
+		type:"POST",
+		async:true,		
+		data:{a0:sess,p1:pid,s1:server_id,s2:sessid},
+		success:function(result){
+			var result=JSON.parse(result);
+			if(result.Result){
+				_alert(0,"实时监控","操作成功");
+				setTimeout1("ses_refresh()",700);	
+			}else{
+				_alert(1,"实时监控",result.ErrMsg);
+			}
+		}
+	})
+}
+
+var $_hostGroupObj;
+var type_g;
+var s_id_g;
+function MarkWMsg1(s_id,type,obj){
+	$_hostGroupObj = $(obj);
+	type_g = type;
+	s_id_g = s_id;
+	hglayer = layer.open({
+		type:2,
+		title:'确认备注',
+		content:'/bhost/mark_layer?a0={{se}}&a1='+s_id+'&a2='+type+'&a3=实时监控',
+		area:['650px','350px'],
+		btn:false,
+		shade:0.7
+	});
+}
+
+function _closeHgLayer(flag,content){
+	if(flag == 0){
+		//1-操作，2-会话，3-系统
+		$.ajax({
+			url: "/bhost/set_logstat",
+			type:"POST",
+			async:false,
+			data:{a0:$("input[name=se]").val(),a1:type_g,a2:s_id_g,a3:content,a10:"实时监控"},
+			success:function(result){
+				var result = JSON.parse(result);
+				if(result.Result == true){
+					_alert(0,"实时监控","操作成功");
+					$_hostGroupObj.attr('class','msg1 disabled').attr('onclick','');
+				}else{
+					_alert(1,"实时监控","操作失败");
+				}
+			}
+		})		
+	}else{
+
+	}
+	layer.close(hglayer);
+}
+
+/*
+* 处理过长的字符串，截取并添加省略号
+* 注：半角长度为1，全角长度为2
+*
+* pStr:字符串
+* pLen:截取长度
+*
+* return: 截取后的字符串
+*/
+function autoAddEllipsis(pStr, pLen) {
+	var _ret = cutString(pStr, pLen);
+	var _cutFlag = _ret.cutflag;
+	var _cutStringn = _ret.cutstring;
+
+	if ("1" == _cutFlag) {
+		return _cutStringn + "...";
+	} else {
+		return _cutStringn;
+	}
+}
+
+/*
+* 取得指定长度的字符串
+* 注：半角长度为1，全角长度为2
+*
+* pStr:字符串
+* pLen:截取长度
+*
+* return: 截取后的字符串
+*/
+function cutString(pStr, pLen) {
+	// 原字符串长度
+	var _strLen = pStr.length;
+	var _tmpCode;
+	var _cutString;
+	// 默认情况下，返回的字符串是原字符串的一部分
+	var _cutFlag = "1";
+	var _lenCount = 0;
+	var _ret = false;
+	if (_strLen <= pLen / 2) {
+		_cutString = pStr;
+		_ret = true;
+	}
+	if (!_ret) {
+	  for (var i = 0; i < _strLen; i++) {
+			if (isFull(pStr.charAt(i))) {
+				_lenCount += 2;
+			} else {
+				_lenCount += 1;
+			}
+
+			if (_lenCount > pLen) {
+				_cutString = pStr.substring(0, i);
+				_ret = true;
+				break;
+			} else if (_lenCount == pLen) {
+				_cutString = pStr.substring(0, i + 1);
+				_ret = true;
+				break;
+			}
+	  }
+	}
+
+	if (!_ret) {
+		_cutString = pStr;
+		_ret = true;
+	}
+
+	if (_cutString.length == _strLen) {
+		_cutFlag = "0";
+	}
+
+	return { "cutstring": _cutString, "cutflag": _cutFlag };
+}
+/*
+* 判断是否为全角
+*
+* pChar:长度为1的字符串
+* return: true:全角
+*          false:半角
+*/
+function isFull(pChar) {
+	if ((pChar.charCodeAt(0) > 128)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<!--<script type="text/javascript" src="/manage/js/jquery.min.js"></script>-->
+	<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+<script src="/manage/js/base64.js"></script>
+<script type="text/javascript" src=""></script>
+<script>
+
+function startApp() {
+	
+	var cmd_str = "{{cmdstr}}";
+	var type="{{clienttype}}";
+	cmd_str = cmd_str.replace(/&#34;/g,"\"").replace(/&gt;/g,">").replace(/ /g,"+");
+	
+	try{
+	   window.location.href=type +'://cmd&'+cmd_str
+	} catch(e){
+		//alert(e);
+		//parent.alertError(type);
+	}
+	//win = window.open(type +'://cmd&'+cmd_str);
+	//var t=setTimeout("close();",1000);
+	
+	
+	/*try {
+		window.location.href = type +'://cmd&'+cmd_str;
+	} catch (e) {
+		parent.alertError();
+	}
+	parent.removeIframe();*/
+}
+$(function(){
+	$(document).ready(function () {
+		startApp();
+	})
+})
+</script>
+</head>
+<body>
+</body>
+</html>

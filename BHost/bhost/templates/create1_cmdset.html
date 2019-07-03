@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+	<!---->
+	<div class="rwrap">
+		<!---->
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3 onclick="parent.reload();">指令集合</h3>
+				-->
+				<div class="manual-head" style="width:100px;float:left;">
+					<div class="manual-title">
+						<span id="cmdset_reload" style="cursor:pointer;">指令集合</span>
+						<i class="cmdset_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			
+			<div class="container">
+				<div class="c-cont2">
+					<div class="c-form">
+						<div class="form">
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>名称：</span>
+								<div class="form-c">
+									<input id="CmdSetName" type="text" class="form-text" onblur="NameCheck(this)" maxlength="128"/><i class="v-check"></i>
+									<!--
+									<p class="form-tip">请不要使用"<"或">"字符</p>
+									-->
+									<p class="form-tip">特殊字符仅支持下划线、横杠、小数点</p>
+								</div>
+							</div>
+
+							<div class="form-item">
+								<span class="form-tag">描述：</span>
+								<div class="form-c">
+									<input id="Description" type="text" class="form-text" maxlength="128"/><i class="v-check"></i>
+								</div>
+							</div>
+
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>指令：</span>
+								<div class="form-c">
+									<textarea id="Content" class="form-textarea" name="" id="Content" cols="30" rows="10"></textarea>
+								</div>
+								 <div style="float:left;margin-left:195px"><span class="form-tip">多个指令请使用换行符分隔<br /><span class="form-tip">&lt;match&gt;通配符</span><span class="form-tip">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;nmatch&gt;取非</span><br/><span class="form-tip">&lt;regex&gt;正则表达式匹配</span><span class="form-tip">&lt;nregex&gt;取非</span><br /><span class="form-tip">&lt;include&gt;包含匹配</span><span class="form-tip">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ninclude&gt;取非</span><br /><span class="form-tip">&lt;equ&gt;完全匹配</span><br /><span class="form-tip">默认为包含匹配，增加如下例子的匹配方式，表示包含ls和-al，花括号需单独占一行：</span><br/><span class="form-tip">{</span><br /><span class="form-tip">ls</span><br /><span class="form-tip">-al</span><br /><span class="form-tip">}</span></span></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{%if 17 in manage_power_id %}
+			<div class="btns">
+				<a href="javascript:;" class="btn btn-normal" onclick="SaveSet()">保&nbsp;&nbsp;存</a>
+				<!--
+				<a href="javascript:;" class="btn btn-normal" onclick="cmdsetlist_back(1)">取&nbsp;&nbsp;消</a>
+				-->
+			</div>
+			{%endif%}
+			<div id="bBtn" style="position: fixed;z-index:5;">
+				<a href="javascript:;" class="btn" style="float: right;" onclick="cmdsetlist_back(1);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+			</div>
+		</div>
+		
+	</div>
+	<form action="/bhost/cmdset_list" method="POST" name="frm_cmdsetlist" id="frm_cmdsetlist">
+		<input type="hidden" name="tasktype" id = "tasktype" value="" />
+		<input type="hidden" name="a0" id = "a0" value="" />
+		<input type="hidden" name="z1" id = "z1" value="" />
+		<input type="hidden" name="z2" id = "z2" value="" />
+		<input type="hidden" name="z3" id = "z3" value="" />
+		<input type="hidden" name="z4" id = "z4" value="" />
+		<input type="hidden" name="z5" id = "z5" value="" />
+		<input type="hidden" name="z6" id = "z6" value="" />
+	</form>
+</body>
+</html>
+<script>
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+//c_page:z1,c_ipage:z2
+<!---->
+<script>
+var cmdsetid = "{{cmdsetid}}";
+var page = "{{page}}";
+var ipage = "{{ipage}}";
+var cmdset_list = "";
+var keyword_re = {{keyword|safe}};
+var filter_flag = {{filter_flag}};
+var selectid = {{selectid|safe}};
+var se;
+$(function(){
+	$("#cmdset_reload").on("click",function(){
+		document.frm_cmdsetlist.action = '/bhost/create_cmdset';
+		document.frm_cmdsetlist.a0.value = se;
+		document.frm_cmdsetlist.z1.value = cmdsetid;
+		document.frm_cmdsetlist.tasktype.value = {{tasktype}};
+		document.frm_cmdsetlist.z2.value = page;
+		document.frm_cmdsetlist.z3.value = ipage;
+		document.frm_cmdsetlist.z4.value = JSON.stringify(keyword_re);
+		document.frm_cmdsetlist.z5.value = filter_flag;
+		document.frm_cmdsetlist.z6.value = JSON.stringify(selectid);
+		document.frm_cmdsetlist.submit();
+	});
+	/*
+	$("#cmdset_reload").on("click",function(){
+		parent.reload();
+	});
+	*/
+	se = window.parent.document.frm.se.value;
+	if (cmdsetid != "0"){
+		$.ajax({
+		   url:'/bhost/select_cmdset_all',
+		   type:"post",
+		   async:false,
+		   data:{a0:se,z8:cmdsetid},
+		   success:function(results){
+				cmdadd = JSON.parse(results);
+				var content = "";
+				content = cmdadd.data[0].Content//replace(/,/g,"\n");
+				$("#Content").text(content);
+				$("#Description").val(cmdadd.data[0].Description);
+				$("#CmdSetName").val(cmdadd.data[0].Name);
+			}
+		});
+	}	
+	parent._switchBtn(0);//隐藏按钮
+	if (parseInt(cmdsetid) != 0){
+        $("#CmdSetName").prop("disabled","true");
+	}
+})
+
+
+var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+function NameCheck(obj){
+	var name = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check');
+	
+	if (!nameReg.test(name)){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+
+
+function cmdsetlist_back(type){
+	if (type == 2){
+		keyword_re = [];
+		if (parseInt(cmdsetid) != 0){
+			$.ajax({
+				url:'/bhost/get_index',
+				type:'post',
+				async:false,
+				data:{a0:se,z1:cmdsetid,z2:11},
+				success:function(result){
+					ipage = Math.ceil(parseInt(result)/MAX_PAGE);
+				}
+			});
+		}else{
+			$.ajax({
+				url:'/bhost/get_cmdset_list',
+				type:"post",
+				async:false,
+				data:{a0:se,z4:"null",z5:"null",z6:JSON.stringify(keyword_re)},
+				success:function(result){
+					var result = JSON.parse(result);
+					var remain = parseInt(result.totalrow) % MAX_PAGE;
+					if (remain > 0){
+						ipage = Math.ceil(parseInt(result.totalrow)/MAX_PAGE);
+					}else{
+						ipage = parseInt(result.totalrow)/MAX_PAGE + 1;
+					}
+				}
+			});
+		}
+		
+	}
+    document.frm_cmdsetlist.action='/bhost/cmdset_list';
+	document.frm_cmdsetlist.a0.value = se;
+	document.frm_cmdsetlist.z1.value = page;
+	document.frm_cmdsetlist.z2.value = ipage;
+	document.frm_cmdsetlist.z3.value = JSON.stringify(keyword_re);
+	document.frm_cmdsetlist.z4.value = filter_flag;
+	document.frm_cmdsetlist.z5.value = JSON.stringify(selectid);
+    document.frm_cmdsetlist.submit();
+}
+
+function SaveSet(){
+    var CmdSetName = $("#CmdSetName").val().trim();
+	var Description = $("#Description").val().trim();
+    var Content = $("#Content").val().trim();
+	var flag = 0;
+	if (CmdSetName == ""){
+		_alert(2,"指令集合","请输入名称",$("#CmdSetName"));
+		return false;
+	}
+	if (!nameReg.test(CmdSetName)){
+		_alert(1,"指令集合","名称格式不合格",$("#CmdSetName"));
+		return false;
+	}
+	if (Content == ""){
+		_alert(2,"指令集合","请输入指令",$("#Content"));
+		return false;
+	}
+
+	$.ajax({
+		url:'/bhost/save_cmdset',
+		type:'post',
+		async:false,
+		data:{a0:se,z3:CmdSetName,z4:Description,z5:Content,z6:{{tasktype}},z7:{{cmdsetid}}},
+		success:function(Result){
+			data = JSON.parse(Result);
+			if (data.Result == false){
+				_alert(1,"指令集合","执行失败：" + data.ErrMsg,$("#CmdSetName"));
+			}else{
+				$('.btn').blur();
+				parent.layer.open({
+					type:1,
+					title:"指令集合",
+					content:'<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn:['确定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					btn1:function(i){
+						parent.layer.close(i);
+						cmdsetid = data.CmdSetId;
+						cmdsetlist_back(2);
+					},
+					btn2:function(i){
+						 parent.layer.close(i);
+					}
+				});	
+			}
+		}
+	});
+}
+</script>
+</body>
+</html>

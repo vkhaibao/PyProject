@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<script src="/manage/js/jquery.datepick.js"></script>
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+</head>
+<style>
+	.form-c {
+		padding-left: 189px;
+	}
+	.form-tag {
+		width:189px;
+	}
+	.form-item .form-c a.btn {
+		float: left;
+		padding: 0 15px;
+		line-height: 24px;
+		color: #8D808A;
+		border: 1px solid #8D808A;
+		margin-right: 12px;
+		border-radius: 5px;
+		transition: all 0.4s;
+	}
+	.form-item .form-c a.btn:hover {
+		background-color: #8d808a;
+		color: #fff;
+	}
+	.form-text{
+		float: left;
+	}
+	.form-item{
+		width: 50%;
+		display: inline-block;
+		padding: 10px 0px 10px;
+	}
+	.h-tit .form-item{
+		width: 100%;
+	}
+	.h-tit .form-item .form-tag{
+		width: auto;    
+	}
+	.h-tit .form-item .form-c{
+		padding-left: 8px;
+	}
+	.form-text{
+		width: 50%;
+	}
+	.form-item{
+		width: 48%;
+	}
+</style>
+<body style="overflow:hidden;" class="bg-white">
+	<div class="rwrap">
+		<!--全局设定添加或编辑-->
+		<div class="c-top">
+			<div class="c-title">
+				<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+					<span id="access_global_setting_data">全局设定</span>
+					<i style="display: none;"></i>
+				</div>			
+				<div class="manual-title-other title-item" id="frist">
+					<span id="style_config">偏好设定</span>
+					<i class="config_manage_icon"></i>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap" style="padding: 0px 20px;">
+						<div class="c-exp">
+							<div class="h-explorer">
+								<div class="h-content" style="width :100%;height: auto;margin: 0 auto;padding: 20px 20px;overflow: hidden;min-width: 1119px;">
+									<div class="form-item" style="width:100%">
+										<span class="form-tag" style="">配色方案：</span>
+										<label class="form-label" style="margin: 6px 10px 0 0px;"> <input class="form-radio" type="radio" name="_action" id="_action0" value="true" checked>白色</label>
+										<label class="form-label" style="margin: 6px 0px 0 0px;"> <input class="form-radio" type="radio" name="_action" id="_action2" value="false">灰色</label>
+										<label class="form-label" style="margin: 6px 0px 0 10px;"> <input class="form-radio" type="radio" name="_action" id="_action1" value="false">绿色</label>	
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="c-form">
+					<div class="btns">
+						<a href="javascript:;" class="btn btn-normal">保&nbsp;&nbsp;存</a>
+					</div>
+				</div>
+				<div id="bBtn" style="position: fixed;z-index:5;">
+					<a href="javascript:;" class="btn" style="float: right;" onclick="parent._closePage(this);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form action="/bhost/access_global_setting_show" method="POST" name="style_config" id="style_config">
+		<input type="hidden" name="a0" id="a0" value="{{se}}" />
+		<!--e-->
+	</form>
+
+	<script>
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+		$('.form-select').select2({minimumResultsForSearch: -1});
+	</script>
+	<script language="javascript" type="text/javascript">
+		$(window).resize(function () {
+			if ($('.c-cont')[0].style.overflow!="hidden"&&$('.c-cont')[0].scroll!="no"&&$('.c-cont')[0].scrollHeight>$('.c-cont')[0].offsetHeight) {
+				var mb=myBrowser();
+				if(mb=='FF' || mb=='IE'){
+					parent.$('.btn-next').css('right',27);
+				}else{
+					parent.$('.btn-next').css('right',17);
+				}
+			} else {
+				parent.$('.btn-next').attr('style','');
+			}
+		});
+		function myBrowser(){
+			var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+			var isOpera = userAgent.indexOf("Opera") > -1;
+			if (isOpera) {
+				return "Opera"
+			}; //判断是否Opera浏览器
+			if (userAgent.indexOf("Firefox") > -1) {
+				return "FF";
+			} //判断是否Firefox浏览器
+			if (userAgent.indexOf("Chrome") > -1){
+				return "Chrome";
+			}
+			if (userAgent.indexOf("Safari") > -1) {
+				return "Safari";
+			} //判断是否Safari浏览器
+			if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera) {
+				return "IE";
+			}; //判断是否IE浏览器
+		}
+		$(function () {
+			$(".manual-title-other.title-item:first").on('click',function(){
+				style_config();
+			})
+			$(".manual-title-other.title-item:last").on('click',function(){
+				location.reload();
+			})
+			$(".btn.btn-normal").on('click',function(){
+				save_config();
+			})
+			showdata();
+		});
+		function showdata(){
+			$.ajax({
+				url: "/bhost/PGet_UserStyleConfig",
+				type:"POST",
+				async:false,
+				data:{a0:parent.$("input[name=se]").val()},
+				success:function(result){
+					var result = JSON.parse(result);
+					if(result.Result){
+						if(result.Value == 0){
+							$("#_action0").iCheck('check');
+						}else if(result.Value == 2){
+							$("#_action2").iCheck('check');
+						}else{
+							$("#_action1").iCheck('check');
+						}
+					}else{
+						_alert(1,'偏好设定',result.ErrMsg);
+						return false;
+					}					
+				}
+			})
+		}
+		function save_config() {
+			var ColorScheme = 0;//0-white 1-grey;
+			if($("#_action0").prop("checked") == true){
+				ColorScheme = 0;
+			}else if($("#_action1").prop("checked") == true){
+				ColorScheme = 1;
+			}else{
+				ColorScheme = 2;
+			}
+			$.ajax({
+				url: "/bhost/PSave_UserStyleConfig",
+				type:"POST",
+				async:false,
+				data:{a0:parent.$("input[name=se]").val(),a1:ColorScheme},
+				success:function(result){
+					var result = JSON.parse(result);
+					if(result.Result){
+						_alert(0,'偏好设定','保存成功');
+					}else{
+						_alert(1,'偏好设定',result.ErrMsg);
+						return false;
+					}					
+				}
+			})
+		}
+		function style_config() {
+			document.style_config.action = "/bhost/access_global_setting_show";
+			document.style_config.a0.value = parent.$("input[name=se]").val();
+			document.style_config.submit();
+		}
+	</script>
+</body>
+
+</html>

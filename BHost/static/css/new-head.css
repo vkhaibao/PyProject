@@ -1,0 +1,547 @@
+﻿.manual-head{
+	width: 100%;
+	height: 36px;
+	line-height: 36px;
+	background: #f4f4f4;
+	border-bottom: 1px solid #ddd;
+	box-shadow: #ddd 0 2px 5px;
+	position: relative;
+	z-index: 3;
+	font-size: 0;
+}
+.manual-title{
+	cursor: pointer;
+	position: relative;
+	width: 156px;
+	height: 36px;
+	background: url("../images/Operational-audit/icon_head_background.png");
+	background-repeat: no-repeat !important;
+	font-size: 16px;
+	color: white;
+	display: inline-block;
+	float: left;
+}
+.manual-title span{
+	display: block;
+	width: 127px;
+	height: 100%;
+	text-align: center;
+	line-height: 36px;
+}
+/*
+.manual-title i {
+	display: block;
+	position: absolute;
+	top: 8px;
+	right: 18px;
+	width: 17px;
+	height: 17px;
+	border-radius: 50%;
+	background: url("../images/Operational-audit/access_auth_icon.png");
+	background-color: #ffb400;
+}
+*/
+/*超时设置*/
+i.time_out_icon {
+        background: url("../images/Operational-audit/time_out_icon.png");
+}
+/*改密任务*/
+i.pwd_tack_icon {
+	background: url("../images/Operational-audit/pwd_tack_icon.png");
+}
+/*账号清单*/
+i.pwd_result_list_icon {
+	background: url("../images/Operational-audit/pwd_result_list_icon.png");
+}
+/*密码修改*/
+i.pwd_change_icon {
+	background: url("../images/Operational-audit/pwd_change_icon.png");
+}
+/*密码托管*/
+i.pwd_auth_icon {
+	background: url("../images/Operational-audit/pwd_auth_icon.png");
+}
+/*密码录入*/
+i.pwd_read_icon {
+	background: url("../images/Operational-audit/pwd_read_icon.png");
+}
+/*密码导出*/
+i.pwd_export_icon {
+	background: url("../images/Operational-audit/pwd_export_icon.png");
+}
+/*历史清单*/
+i.pwdresult_icon {
+	background: url("../images/Operational-audit/pwdresult_icon.png");
+}
+/*参数设定*/
+i.pwd_set_icon {
+	background: url("../images/Operational-audit/pwd_set_icon.png");
+}
+/*全局策略*/
+i.hostpwdstrategy_icon {
+	background: url("../images/Operational-audit/hostpwdstrategy_icon.png");
+}
+/*user && host*/
+i.userm_icon {
+	background: url("../images/Operational-audit/usermanage_icon.png");
+}
+i.rolem_icon {
+	background: url("../images/Operational-audit/rolemanage_icon.png");
+}
+i.hostm_icon {
+	background: url("../images/Operational-audit/hostmanage_icon.png");
+}
+/*主机测试*/
+i.hosttest_icon {
+	background: url("../images/Operational-audit/hosttest_icon.png");
+}
+/*数据管理-归档策略*/
+i.archive_strategy_icon {
+        background: url("../images/Operational-audit/archive_strategy_icon.png");
+}
+/*数据管理-数据备份*/
+i.lbackup_icon {
+        background: url("../images/Operational-audit/lbackup_icon.png");
+}
+/*数据管理-数据恢复*/
+i.data_recover_icon {
+        background: url("../images/Operational-audit/data_recover_icon.png");
+}
+/*数据管理-数据归档*/
+i.auto_archiving_icon {
+        background: url("../images/Operational-audit/auto_archiving_icon.png");
+}
+/*access_global_setting_icon*/
+i.access_global_setting_data_icon{
+        background: url("../images/Operational-audit/access_global_setting_icon.png");
+}
+/*发现主机*/
+i.findhost_icon {
+	background: url("../images/Operational-audit/findhost_icon.png");
+}
+/**/
+i.access_icon {
+	background: url("../images/Operational-audit/access_auth_icon.png");
+}
+/*工单授权*/
+i.work_icon {
+	background: url("../images/Operational-audit/work_auth_icon.png");
+}
+/**/
+i.cmdAuth_icon {
+	background: url("../images/Operational-audit/cmd_auth_icon.png");
+}
+i.icon-manual-genera{
+	background: url("../images/Operational-audit/manaul-genera.png");
+}
+i.icon-scheduled-task {
+	background-image: url("../images/Operational-audit/scheduled-task.png") !important;
+}
+/*账号*/
+i.account_icon {
+	background: url("../images/Operational-audit/account_icon.png");
+}
+i.cur_acc_icon {
+	background: url("../images/Operational-audit/cur_acc_icon.png");
+}
+/*协议*/
+i.protocol_icon {
+	background: url("../images/Operational-audit/protocol_icon.png");
+}
+/*设备类型*/
+i.devicetype_icon {
+	background: url("../images/Operational-audit/devicetype_icon.png");
+}
+/**/
+i.cmdAuth_user_icon {
+	background: url("../images/Operational-audit/cmdAuth_user_icon.png");
+}
+/**/
+i.cmdAuth_access_icon {
+	background: url("../images/Operational-audit/cmdAuth_access_icon.png");
+}
+/**/
+i.cmdAuth_work_icon {
+	background: url("../images/Operational-audit/cmdAuth_work_icon.png");
+}
+/*指令集合*/
+i.cmdset_icon {
+	background: url("../images/Operational-audit/cmdset_icon.png");
+}
+/*ACC客户端*/
+i.client_icon {
+	background: url("../images/Operational-audit/acc_client_icon.png");
+}
+/*路由设置*/
+i.route_icon {
+	background: url("../images/Operational-audit/route_icon.png");
+}
+/*模块应用设置*/
+i.module_icon {
+	background: url("../images/Operational-audit/module_set_icon.png");
+}
+/*系统告警*/
+i.syswarn_icon {
+	background: url("../images/Operational-audit/syswarn_icon.png");
+}
+/*输出设置*/
+i.out_set_icon {
+	background: url("../images/Operational-audit/out_set_icon.png");
+}
+i.ftp_icon {
+	background: url("../images/Operational-audit/ftp_icon.png");
+}
+i.snmp_icon {
+	background: url("../images/Operational-audit/snmp_icon.png");
+}
+i.syslog_icon {
+	background: url("../images/Operational-audit/syslog_icon.png");
+}
+i.smsm_icon {
+	background: url("../images/Operational-audit/smsm_icon.png");
+}
+i.smssvr_icon {
+	background: url("../images/Operational-audit/smssvr_icon.png");
+}
+i.mail_icon {
+	background: url("../images/Operational-audit/mail_icon.png");
+}
+/*全局设置*/
+i.gstrategy_icon {
+	background: url("../images/Operational-audit/gstrategy_icon.png");
+}
+/*系统升级*/
+i.sys_update_icon {
+	background: url("../images/Operational-audit/sys_update_icon.png");
+}
+/*网口设置*/
+i.int_icon {
+	background: url("../images/Operational-audit/int_icon.png");
+}
+i.dns_icon {
+	background: url("../images/Operational-audit/dns_icon.png");
+}
+i.material_icon{
+	background: url("../images/Operational-audit/material_icon.png");
+}
+/*授权许可*/
+i.licensing_icon {
+	background: url("../images/Operational-audit/licensing_icon.png");
+}
+/*证书生成*/
+i.certificate_generation_icon{
+	background: url("../images/Operational-audit/certificate_generation_icon.png");
+} 
+/*认证配置*/
+i.authmodule_icon{
+	background: url("../images/Operational-audit/authmodule_icon.png");
+} 
+/*安全策略*/
+i.pwdstrategy_icon{
+	background: url("../images/Operational-audit/pwdstrategy_icon.png");
+} 
+/*数据管理*/
+i.data_manage_icon{
+	background: url("../images/Operational-audit/data_manage_icon.png");
+} 
+/*配置管理*/
+
+i.config_manage_icon{
+	background: url("../images/Operational-audit/config_manage_icon.png");
+}
+/*系统时间*/
+ 
+i.time_config_icon{
+	background: url("../images/Operational-audit/time_config_icon.png");
+} 
+/*连接参数*/
+i.connection_data_icon{
+	background: url("../images/Operational-audit/connection_data_icon.png");
+}
+/*密钥管理*/
+i.sshkey_data_icon{
+        background: url("../images/Operational-audit/sshkey_data_icon.png") 0 -1px;
+} 
+/*AD域*/
+i.domain_icon{
+        background: url("../images/Operational-audit/domain_icon.png");
+}
+/*认证方式*/
+i.authtype_icon{
+        background: url("../images/Operational-audit/authtype_icon.png");
+}
+/*客户端集合*/
+i.client_set_icon{
+        background: url("../images/Operational-audit/client_set_icon.png");
+}
+/*服务器集合*/
+i.host_group_icon{
+        background: url("../images/Operational-audit/host_group_icon.png");
+}
+/*时间集合*/
+i.time_group_icon{
+        background: url("../images/Operational-audit/time_group_icon.png");
+}
+/*别名管理*/
+i.alias_group_icon{
+        background: url("../images/Operational-audit/alias_group_icon.png");
+}
+/*相关下载*/
+i.related_downloads_group_icon{
+        background: url("../images/Operational-audit/related_downloads_group_icon.png");
+}
+/*测试工具*/
+i.terminal_group_icon{
+        background: url("../images/Operational-audit/terminal_group_icon.png");
+}
+/*审批策略*/
+i.approve_strategy_icon{
+        background: url("../images/Operational-audit/approve_strategy_icon.png");
+}   
+/**/
+i.access_protocol_icon{
+        background: url("../images/Operational-audit/access_protocol_icon.png");
+}
+/*主机账号*/
+i.host_account_icon{
+        background: url("../images/Operational-audit/host_account_icon.png");
+}
+/*系统角色*/
+i.sysrole_icon{
+        background: url("../images/Operational-audit/sysrole_icon.png");
+}
+/*系统用户*/
+i.sys_user_icon{
+       
+        background: url("../images/Operational-audit/sys_user_icon.png");
+}
+/*主机*/
+i.host_add_icon{
+        background: url("../images/Operational-audit/host_add_icon.png");
+}
+/*管理授权*/
+i.manage_icon{
+        background: url("../images/Operational-audit/manage_icon.png");
+}
+/*历史报表*/
+i.report_task_icon{
+        background: url("../images/Operational-audit/export_task_icon.png");
+}
+/*历史检索*/
+i.history_task_icon{
+        background: url("../images/Operational-audit/history_task_icon.png");
+}
+
+/*监控会话*/
+i.ses_icon{
+        background: url("../images/Operational-audit/ses_icon.png");
+}
+/*监控操作*/
+i.ops_icon{
+        background: url("../images/Operational-audit/ops_icon.png");
+}
+/*监控异常会话*/
+i.ases_icon{
+        background: url("../images/Operational-audit/ases_icon.png");
+}
+/*监控异常操作*/
+i.aops_icon{
+        background: url("../images/Operational-audit/aops_icon.png");
+}
+/*连接测试任务*/
+i.htesttask_icon{
+        background: url("../images/Operational-audit/htesttask_icon.png");
+}
+/*连接测试结果*/
+i.htestresult_icon{
+        background: url("../images/Operational-audit/htestresult_icon.png");
+}
+
+/*检索历史任务*/
+i.history_task_icon{
+        background: url("../images/Operational-audit/history_task_icon.png");
+}
+
+/*最新会话*/
+i.ses_icon{
+        background: url("../images/Operational-audit/ses_icon.png");
+}
+/*最新异常会话*/
+i.ases_icon{
+        background: url("../images/Operational-audit/ases_icon.png");
+}
+/*最新操作*/
+i.ops_icon{
+        background: url("../images/Operational-audit/ops_icon.png");
+}
+/*最新异常操作*/
+i.aops_icon{
+        background: url("../images/Operational-audit/aops_icon.png");
+}
+
+/*收件箱i*/
+i.msg_1_icon{
+        background: url("../images/Operational-audit/msg_1_icon.png");
+}
+/*发件箱*/
+i.msg_2_icon{
+        background: url("../images/Operational-audit/msg_icon.png") 0 -17px ;
+}
+/*新建消息*/
+i.msg_3_icon{
+        background: url("../images/Operational-audit/msg_icon.png") 0 -34px;
+}
+/*系统全部消息*/
+i.msg_4_icon{
+        background: url("../images/Operational-audit/msg_icon.png") 0 -51px;
+}
+/*备份消息*/
+i.msg_5_icon{
+        background: url("../images/Operational-audit/msg_icon.png") 0 -68px;
+}
+/*消息归档*/
+i.msg_6_icon{
+        background: url("../images/Operational-audit/msg_icon.png") 0 -85px;
+}
+
+i.jq_manager_icon{
+        background: url("../images/Operational-audit/jq_manager_icon.png") 0 -85px;
+}
+/*reboot*/
+i.reboot_icon{
+        background: url("../images/Operational-audit/reboot.png");
+}
+/*shudown*/
+i.shutdown_icon{
+        background: url("../images/Operational-audit/shutdown.png");
+}
+i.sysLog_icon{
+	background: url("../images/Operational-audit/sys_log_icon.png");
+}
+
+i.batchr_icon{
+	background: url("../images/Operational-audit/batchr-icon.png");
+}
+
+i.batchs_icon{
+	background: url("../images/Operational-audit/batchs-icon.png");
+}
+
+/*
+manual-title-other i{
+	display: block;
+	position: absolute;
+	top: 8px;
+	right: 20px;
+	width: 17px;
+	height: 17px;
+	border-radius: 50%;
+	background: url("../images/Operational-audit/icon_user.png");
+	background-color: #ffb400;
+}
+*/
+.manual-title-other{
+	display: inline-block;
+	position: relative;
+	width: 158px;
+	height: 100%;
+	background-color: #dfdfdf;
+	font-size: 16px;
+	color: #797979;
+	text-align: center;
+}
+.manual-title-other:before{
+	content: "";
+	width: 1px;
+	height: 21px;
+	display: inline-block;
+	background-color: #CCCCCC;
+	float: left;
+	margin-top: 8px;
+	margin-left: -4px;
+}
+.add-item{
+	width: 34px;
+	height: 34px;
+	margin-top: 4px;
+	display: inline-block;
+	float: left;
+	background: url("../images/icon_plus.png") no-repeat 50%;
+	background-color: #dfdfdf;
+}
+.add-item:before{
+	content: "";
+	width: 1px;
+	height: 21px;
+	display: inline-block;
+	background-color: #CCCCCC;
+	float: left;
+	margin-top: 8px;
+}
+.search3-frist{
+	background: url("../images/Operational-audit/icon_head_background.png");
+	background-position: 0 -4px;
+	background-color: #dedede;
+	color: white;
+}
+.search3-frist i {
+	display: block;
+	position: absolute;
+	top: 8px;
+	right: 14px;
+	width: 17px;
+	height: 17px;
+	border-radius: 50%;
+	background: url("../images/icon_js04.png");
+	background-color: #ffb400;
+}
+#frist{
+	background: url("../images/Operational-audit/icon_head_background.png");
+	background-color: #dedede;
+	color: white;
+	background-repeat: no-repeat;
+}
+.search3 i{
+	display: block;
+	position: absolute;
+	top: 14px;
+	right: 16px;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	background: url("../images/icon_plus.png") no-repeat;
+	transform:rotate(45deg);
+	z-index: 111;
+}
+.title-item{
+	cursor: pointer;
+	height: 36px;
+	float: left;
+}
+.title-item span{
+	width: 122px;
+	line-height: 36px;
+	height: 100%;
+	display: block;
+	text-align: center;
+}
+.addclass {
+	background: url(../images/icon_js04.png) 0% 0% / cover rgb(255, 180, 0) !important;
+	width: 17px !important;
+	height: 17px !important;
+	top: 8px !important;
+	transform: none !important;
+
+}
+.manual-title i,.manual-title-other i{
+	display: block;
+        position: absolute;
+        top: 10px;
+        right: 18px;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        background-color: #ffb400;
+	/*background-position:0 -1px;*/
+}
+

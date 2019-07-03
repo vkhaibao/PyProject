@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>manager</title>
+    <link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+    <link rel="stylesheet" href="/manage/css/select2.min.css">
+    <link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+
+<body style="overflow:hidden;min-width: 800px" class="bg-white">
+    <div class="mainer">
+        <div class="container">
+            <div class="c-top">
+                <div class="c-title">
+					<!--
+                    <div class="tit-nav">
+                        <h3 class="tit"><span>计划任务</span><i class="icon-edit"></i></h3>
+                    </div>
+					-->
+					<div class="manual-head" style="float:left;width:auto">
+						<div class="manual-title-other title-item" id="manual_genera" style="color:rgb(123,121,123);background:rgb(222,222,222)">
+							<span id="">手动生成</span>
+							<i style ="display:none"></i>
+						</div>
+						<div class="manual-title-other title-item"  style="" id="frist">
+							<span id="scheduled_task"> 计划任务</span>
+							<i style ="" class="icon-scheduled-task"></i>
+						</div>
+					</div>
+                </div>
+            </div>
+            <div class="bb-cont datetask" id="bbCont">
+                <div id="dateWrap">
+                    <div class="tctr" id="timeHead">
+                        <span class="tbtn prevYear"><i></i></span>
+                        <span class="tbtn prevMonth"><i></i></span>
+                        <span class="curr"></span>
+                        <span class="tbtn nextMonth"><i></i></span>
+                        <span class="tbtn nextYear"><i></i></span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>周一</th>
+                                <th>周二</th>
+                                <th>周三</th>
+                                <th>周四</th>
+                                <th>周五</th>
+                                <th>周六</th>
+                                <th>周日</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dateValue"></tbody>
+                    </table>
+                </div>
+
+                <div id="taskList">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="3" style="text-align: center">计划任务列表</th>
+                            </tr>
+                        </thead>
+                        <tbody id="taskListCont"></tbody>
+                    </table>
+                </div>
+            </div>
+		<!--
+            <div class="btns">
+                <a class="btn btn-normal" href="javascript:;" onclick="back();">返&nbsp;&nbsp;回</a>
+            </div>
+		-->
+		<div id="bBtn" style="position: fixed;z-index:5;">
+			<a href="javascript:;" class="btn" style="float: right;" onclick="back();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+		</div>
+        </div>
+    </div>
+    <!---->
+    <!--script-->
+    <script src="/manage/js/jquery.min.js"></script>
+    <script src="/manage/js/jquery.easing.js"></script>
+    <script src="/manage/js/layer.js"></script>
+    <script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+    <!--select2-->
+    <script src="/manage/js/select2.full.min.js"></script>
+    <script>
+    $('.bb-select').select2({ minimumResultsForSearch: -1 });
+    </script>
+    <!--icheck-->
+    <script src="/manage/js/icheck.min.js"></script>
+    <script>
+    $('.bb-checkbox,.bb-radio').iCheck({
+        checkboxClass: 'icheckbox_minimal-blue',
+        radioClass: 'iradio_minimal-blue',
+        increaseArea: '0' // optional
+    });
+    </script>
+    <!--jedate-->
+    <script src="/manage/js/jquery.jedate.min.js"></script>
+    <link rel="stylesheet" href="/manage/css/jedate.css">
+	<style>
+	#taskListCont span.d {
+		float: left;
+		width: 13px;
+		height: 13px;
+		margin-left: 3px;
+		background: url(/manage/images/bb-icon-dwm.png) no-repeat 0 0;
+		margin-top: 12px;
+	}
+	#taskListCont span.w {
+		float: left;
+		width: 13px;
+		height: 13px;
+		margin-left: 3px;
+		background: url(/manage/images/bb-icon-dwm.png) no-repeat 0 0;
+		margin-top: 12px;
+		background-position: -16px 0;
+	}
+	#taskListCont span.m {
+		float: left;
+		width: 13px;
+		height: 13px;
+		margin-left: 3px;
+		background: url(/manage/images/bb-icon-dwm.png) no-repeat 0 0;
+		margin-top: 12px;
+		background-position: -32px 0;
+	}
+	</style>
+    <script>
+	
+	var se;
+	var if_disabled = '{{_power_mode}}'
+    $(function() {
+		se = window.parent.document.frm.se.value;
+		$("#manual_genera").on("click",function(){
+			location.href = '/bhost/report_task?se='+se+'&module_name={{module_name}}';
+		});
+		$("#frist").on("click",function(){
+			location.href = '/bhost/scheduled_task_show?se='+se+'&module_name={{module_name}}';
+		});
+        _initSize();
+        var thisTime = new Date();
+        _setDateVal(thisTime);
+        _loadTaskList();
+        _eventBtn();
+        _viewEvent();
+    })
+
+    $(window).resize(function() {
+        _initSize();
+    })
+
+    function _initSize() {
+        var h = $(window).height();
+        $('#bbCont').height(h - 123);
+		$(".task-vc").css("display","none");
+    }
+
+    function _setDateVal(date) {
+        var $_tb = $('#dateValue');
+        $_tb.empty();
+        var $_tr = $('<tr />');
+        for (var i = 0; i < 7; i++) {
+            $_tr.append('<td />');
+        }
+        for (var n = 0; n < 6; n++) {
+            $_tb.append($_tr.clone());
+        }
+
+        //var now = new Date(date);
+        var now = date;
+        if (typeof now == 'string') {
+            now = new Date(date);
+        }
+        var year = now.getFullYear(),
+            month = now.getMonth() + 1,
+            date = now.getDate();
+        var _ym = year + '-' + month;
+
+        $('#timeHead>span.curr').text(year + '年' + month + '月').data('year', year).data('month', month);
+
+        var _startDay = new Date(_ym + '-1');
+        var day = _startDay.getDay();
+        day > 0 ? day-- : day = 6;
+        var _date = 1,
+            _s = 0;
+
+        var $_ftd = $('>tr:first>td', $_tb).eq(day);
+        $_ftd.text(_date).attr('id', 'date_' + _ym + '-' + _date);
+        var _tr = 0;
+
+        var _nextMonth = month,
+            _nextDay = 2;
+        var _run = function() {
+            if (_nextMonth == month) {
+                _date++;
+                var _nextTime = new Date(_startDay).getTime() + 24 * 60 * 60 * 1000;
+                _nextTime = new Date(_nextTime);
+                _newYear = _nextTime.getFullYear();
+                _nextMonth = _nextTime.getMonth() + 1;
+                _nextDay = _nextTime.getDay();
+                _nextDay > 0 ? _nextDay-- : _nextDay = 6;
+
+                _startDay = _newYear + '-' + _nextMonth + '-' + _date;
+
+                if (_nextDay % 7 == 0) {
+                    _s++;
+                }
+
+                $('>tr', $_tb).eq(_s).children('td').eq(_nextDay % 7).text(_date).attr('id', 'date_' + _ym + '-' + _date);
+
+                _run();
+            } else {
+                $('>tr', $_tb).eq(_s).children('td').eq(_nextDay % 7).empty().attr('id', '');
+            }
+        }
+
+        var _removeTr = function() {
+            var text = $('>tr:last>td:first', $_tb).text();
+            if (text == '') {
+                $('>tr:last', $_tb).remove();
+                _removeTr();
+            }
+        }
+        _run();
+        _removeTr();
+
+        var _nextDate = 0;
+        $('>tr:last>td', $_tb).each(function(i, item) {
+            var text = $(item).text();
+            if (text == '') {
+                _nextDate++;
+                $(item).text(_nextDate).addClass('disable');
+            }
+        });
+
+        var _prevMonth = month - 1;
+        var _prevYear = year;
+        var _prevDate = 1;
+        if (_prevMonth == 0) {
+            _prevYear--;
+            _prevMonth = 12;
+        }
+
+        var _prevTime = _prevYear + '-' + _prevMonth + '-' + _prevDate;
+        var _prevPrevMonth = _prevMonth;
+        var _prevArr = new Array();
+        var _prevRun = function() {
+            if (_prevPrevMonth == _prevMonth) {
+                _prevDate++;
+                _prevTime = new Date(_prevTime).getTime() + 24 * 60 * 60 * 1000;
+                _prevTime = new Date(_prevTime);
+                _prevYear = _prevTime.getFullYear();
+                _prevPrevMonth = _prevTime.getMonth() + 1;
+                _prevArr.push(_prevDate);
+                _prevRun();
+            } else {
+                _prevArr.pop();
+            }
+        }
+        _prevRun();
+
+        var x = 0;
+        $('>tr:first>td', $_tb).each(function(i, item) {
+            if ($(item).text() == '') {
+                x++;
+            }
+        });
+
+        for (var y = x - 1; y >= 0; y--) {
+            $('>tr:first>td', $_tb).eq(y).text(_prevArr.pop()).addClass('disable');
+        }
+
+        //
+
+        _loadDate(year+'-'+month);
+    }
+
+    function _eventBtn() {
+        var $_py = $('#timeHead>span.prevYear'),
+            $_ny = $('#timeHead>span.nextYear'),
+            $_pm = $('#timeHead>span.prevMonth'),
+            $_nm = $('#timeHead>span.nextMonth');
+
+        var $_curr = $('#timeHead>span.curr');
+        var year = parseInt($_curr.data('year')),
+            month = parseInt($_curr.data('month'));
+
+        $_py.on('click', function() {
+            year--;
+            _setDateVal(year + '-' + month + '-1');
+        });
+
+        $_ny.on('click', function() {
+            year++;
+            _setDateVal(year + '-' + month + '-1');
+        });
+
+        $_pm.on('click', function() {
+            month--;
+            if (month == 0) {
+                month = 12;
+                year--;
+            }
+            _setDateVal(year + '-' + month + '-1');
+        });
+
+        $_nm.on('click', function() {
+            month++;
+            if (month == 13) {
+                month = 1;
+                year++;
+            }
+            _setDateVal(year + '-' + month + '-1');
+        });
+    }
+	
+    function _loadDate(date){
+        /*
+        $.post(url,{date:date},function(r){
+
+		
+        })*/
+		year = $('.curr').text().split('年')[0];
+		month = ($('.curr').text().split('年')[1]).split('月')[0];
+		$.ajax({
+			url:'/bhost/get_static_candler',
+			type:'post',
+			async:true,
+			data:{a0:{{se}},y1:year,m1:month},
+			success:function(result){
+				result = JSON.parse(result);
+				if(result.Result == true){
+					
+					var data = result.info;
+					$.each(data,function(i,item){
+						if (item.d.length == 0 && item.w.length == 0 && item.m.length == 0) return true;
+						var $_obj = $('#date_'+item.date);
+						var $_c = $('<div class="task-vc" style="display:none" />');
+						var $_cc = $('<div class="task-vc-c" />');
+						var $_cb = $('<div class="task-vc-b"></div>');
+						$_cb.append('<span class="ss d"><i></i>日报</span><span class="ss w"><i></i>周报</span><span class="ss m"><i></i>月报</span>');
+						$_c.append($_cb,$_cc);
+
+						$_obj.addClass('hasData').prepend('<div class="cc" />').append($_c).on('click',function(){
+							_getView($_obj);
+						});
+						
+						if(item.d.length > 0){							
+							$('>div.cc',$_obj).append('<span class="d"></span>');
+							$('>span.d',$_cb).addClass('color');
+													
+							var $_clist = $('<ul class="d" style="display:none" />');
+							$.each(item.d,function(){
+								NextExecuteTime = Date.parse(new Date(this.NextExecuteTime));
+								PrevExecuteTime =  (NextExecuteTime/1000 - 24 * 60 * 60) * 1000; //时间戳 
+								xtime = PrevExecuteTime +'_'+NextExecuteTime;
+								$_clist.append('<li><i class="del s-hide" style="cursor:pointer;" onclick="del_static_report_data(\''+this.path+'\',1,this,\''+this.name+'\');" /><a target="_blank" class="'+this.type+'" href="/bhost/read_report?z1='+this.path+'&a0={{se}}&is=1&fmt=d&xt='+xtime+'&d1='+this.downfile+'&fy='+this.filetype+'">'+this.name+'</a></li>');
+							});
+							$_cc.append($_clist);
+						}
+
+						if(item.w.length > 0){
+							
+							$('>div.cc',$_obj).append('<span class="w"></span>');
+							$('>span.w',$_cb).addClass('color');
+
+							var $_clist = $('<ul class="w" style="display:none" />');
+							$.each(item.w,function(){
+								NextExecuteTime = Date.parse(new Date(this.NextExecuteTime));
+								PrevExecuteTime = (NextExecuteTime/1000 - 7*24 * 60 * 60) * 1000; //时间戳							
+								xtime = PrevExecuteTime +'_'+NextExecuteTime;
+								$_clist.append('<li><i class="del s-hide" style="cursor:pointer;" onclick="del_static_report_data(\''+this.path+'\',1,this,\''+this.name+'\');" /><a target="_blank" class="'+this.type+'" href="/bhost/read_report?z1='+this.path+'&a0={{se}}&is=1&fmt=w&xt='+xtime+'&d1='+this.downfile+'&fy='+this.filetype+'">'+this.name+'</a></li>');
+							});
+							$_cc.append($_clist);
+						}
+
+						if(item.m.length > 0){
+							
+							
+							$('>div.cc',$_obj).append('<span class="m"></span>');
+							$('>span.m',$_cb).addClass('color');
+
+							var $_clist = $('<ul class="m" style="display:none" />');
+							$.each(item.m,function(){
+								NextExecuteTime = Date.parse(new Date(this.NextExecuteTime));
+								PrevExecuteTime = (NextExecuteTime/1000 - 30 * 7 * 24 * 60 * 60) * 1000; //时间戳							
+								xtime = PrevExecuteTime +'_'+NextExecuteTime;
+								$_clist.append('<li><i class="del s-hide" style="cursor:pointer;" onclick="del_static_report_data(\''+this.path+'\',1,\''+this.name+'\');" /><a target="_blank" class="'+this.type+'" href="/bhost/read_report?z1='+this.path+'&a0={{se}}&is=1&fmt=m&xt='+xtime+'&d1='+this.downfile+'&fy='+this.filetype+'">'+this.name+'</a></li>');
+							});
+
+							$_cc.append($_clist);
+						}
+
+						$('>span.color',$_cb).on('mouseover',function(){
+							var i = $_cb.children('span.color').index(this);
+							$(this).addClass('active').siblings().removeClass('active');
+							$('>ul',$_cc).eq(i).show().siblings('ul').hide();
+						})
+
+						$('>span.color:first',$_cb).trigger('mouseover');
+						
+						if(if_disabled == '1') $('.s-hide').remove();
+					})
+				}else{
+					_alert(1,'计划任务',result.info);
+					return false;
+				}
+			}
+		})
+    }
+
+    function _viewEvent(){
+        
+    }
+
+    function _getView(obj){
+        var $_this = $(obj);
+        var $_c = $_this.children('div.task-vc');
+
+        if($_c.is(':hidden')){
+            var offset = $_this.offset();
+            var w = $_this.outerWidth();
+
+            var bw = $('body').width();
+            var left = offset.left + w + 1;
+            if(left + 300 > bw){
+                left = offset.left - 300;
+            }
+            $_c.css({
+                top: offset.top + 1,
+                left: left
+            }).show();
+
+            $_this.siblings().children('div.task-vc').hide();
+            $_this.parent().siblings().find('div.task-vc').hide();
+        }else{
+            //$_this.children('div.task-vc').fadeOut();
+        }
+
+        document.onclick = null;
+
+        $('#dateValue td.hasData,#dateValue div.task-vc').hover(function(){
+            document.onclick = null;
+        },function(){
+            document.onclick = function(){
+                $('div.task-vc').hide();
+            }
+        })
+    }
+
+    var taskList = [
+        {
+            id:1,
+            name:'网络及安全设备服务器地址趋势分析报告(时)'
+        },
+        {
+            id:2,
+            name:'网络及安全设备服务器地址趋势分析报告(时)'
+        },
+        {
+            id:3,
+            name:'网络及安全设备服务器地址趋势分析报告(时)'
+        },
+        {
+            id:4,
+            name:'网络及安全设备服务器地址趋势分析报告(时)'
+        },
+        {
+            id:5,
+            name:'网络及安全设备服务器地址趋势分析报告(时)'
+        },
+        {
+            id:6,
+            name:'网络及安全设备服务器地址趋势分析报告(时)'
+        },
+        {
+            id:7,
+            name:'网络及安全设备服务器地址趋势分析报告(时)'
+        }
+    ]
+
+    function _loadTaskList(){
+		$('#taskListCont').empty();
+		var task_r;
+		$.ajax({
+			url:'/bhost/get_scheduled_task',
+			type:'post',
+			async:true,
+			data:{a0:se},
+			success:function(result){
+				task_r = JSON.parse(result);
+				var data = task_r;
+				var _tr = '<tr><td/><td/><td/></tr>';
+				
+				var data_len = data[0].d.length + data[0].w.length + data[0].m.length;
+				//console.log(Math.ceil(data_len/3));
+				/*
+				for(var i=0;i<Math.ceil(data_len/3);i++){
+					$('#taskListCont').append(_tr);
+				}
+				*/
+				for(var i=0;i<Math.ceil(data_len/3);i++){
+					if (data_len % 3 == 0){
+						$('#taskListCont').append(_tr);
+					}else{
+						if (i == Math.floor(data_len/3)){
+							$('#taskListCont').append('<tr>'+new Array((data_len % 3) + 1).join('<td/>')+'</tr>');
+						}else{
+							$('#taskListCont').append(_tr);
+						}
+					}
+				}
+				var td_index = 0;
+				$.each(data[0].d,function(i,item){
+					var $_td = $('#taskListCont td').eq(td_index);
+					var name_index_f = item.Condition.indexOf('<RptName>');
+					var name_index_l = item.Condition.indexOf('</RptName>');
+					var report_name = item.Condition.substring(name_index_f+9,name_index_l);
+					$_td.html('<span class="d" style=""></span><i class="del s-hide" title="删除" onclick="del_report('+item.TaskId+',this)" /><span href="#'+item.TaskId+'">'+report_name+'</span>');
+					td_index++;
+				});
+				$.each(data[0].w,function(i,item){
+					var $_td = $('#taskListCont td').eq(td_index);
+					var name_index_f = item.Condition.indexOf('<RptName>');
+					var name_index_l = item.Condition.indexOf('</RptName>');
+					var report_name = item.Condition.substring(name_index_f+9,name_index_l);
+					$_td.html('<span class="w" style=""></span><i class="del s-hide" title="删除" onclick="del_report('+item.TaskId+',this)" /><span href="#'+item.TaskId+'">'+report_name+'</span>');
+					td_index++;
+				});
+				$.each(data[0].m,function(i,item){
+					var $_td = $('#taskListCont td').eq(td_index);
+					var name_index_f = item.Condition.indexOf('<RptName>');
+					var name_index_l = item.Condition.indexOf('</RptName>');
+					var report_name = item.Condition.substring(name_index_f+9,name_index_l);
+					$_td.html('<span class="m" style=""></span><i class="del s-hide" title="删除" onclick="del_report('+item.TaskId+',this)" /><span href="#'+item.TaskId+'">'+report_name+'</span>');
+					td_index++;
+				});
+				if(if_disabled == '1') $('.s-hide').remove();
+			}
+			
+		});
+		
+        
+		/*
+        for(var i=0;i<Math.ceil(data.length/3);i++){
+            $('#taskListCont').append(_tr);
+        }
+		
+        $.each(data,function(i,item){
+            var $_td = $('#taskListCont td').eq(i);
+			var name_index_f = item.Condition.indexOf('<RptName>');
+			var name_index_l = item.Condition.indexOf('</RptName>');
+			var report_name = item.Condition.substring(name_index_f+9,name_index_l);
+            $_td.html('<span class="d" style=""></span><i class="del" onclick="alert('+item.TaskId+')" /><a href="#'+item.TaskId+'">'+report_name+'</a>');
+        });
+		*/
+		
+    }
+	
+	$('#bbCont').scroll(function() {
+		$('.task-vc').hide();
+	});
+	
+	function back(){
+		location.href = '/bhost/index?tasktype=2&us={{us}}&se='+se;
+	}
+	
+	//删除
+	function del_report(id,obj){
+		$('.btn').blur();
+		parent.layer.open({
+			type:1,
+			title:"计划任务",
+			content:'<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+			btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+			btnAlign:'c',
+			closeBtn: false,
+			skin:'layer-custom',
+			area:['380px','310px'],
+			move: false,
+			resize: false,
+			btn1:function(i){
+				parent.layer.close(i);
+				$.ajax({
+					url:'/bhost/report_delete',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:0,z2:id,z3:'计划任务',z4:'{{module_name}}'},
+					success:function(results){
+						var re_data = JSON.parse(results);
+						if (re_data.Result == "false"){
+							_alert(1,"计划任务","删除失败,失败原因:"+re_data.ErrMsg);
+						}else{
+							_alert(0,"计划任务","删除成功");
+							//$(obj).parent('td').remove();
+							_loadTaskList();
+						}
+					}
+				});
+				//delete_report(0,id);
+			},
+			btn2:function(i){
+				parent.layer.close(i);
+			}
+		});
+	}
+	function del_static_report_data(path,index,obj,name){
+		$('.btn').blur();
+		dat = $(obj).parents('td').attr('id').split('date_')[1];
+		tp = $(obj).parents('ul').attr('class');
+		if(tp == 'd'){
+			tpy = '日报'
+		}else if(tp == 'w'){
+			tpy = '周报'
+		}else if(tp == 'm'){
+			tpy = '月报'
+		}
+		oper = '删除计划任务'+tpy+": "+name+"("+dat+")";
+		//console.log(oper);
+		parent.layer.open({
+			type:1,
+			title:"计划任务报表",
+			content:'<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+			btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+			btnAlign:'c',
+			closeBtn: false,
+			skin:'layer-custom',
+			area:['380px','310px'],
+			move: false,
+			resize: false,
+			btn1:function(i){
+				parent.layer.close(i);
+				$.ajax({
+					url:'/bhost/del_static_report_data',
+					type:'post',
+					async:true,
+					data:{a0:se,p1:path,o1:oper},
+					success:function(results){
+						var re_data = JSON.parse(results);
+						if (re_data.Result == "false"){
+							_alert(1,"计划任务报表","删除失败,失败原因:"+re_data.info);
+						}else{
+							//_alert(0,"计划任务报表","删除成功");
+							//var thisTime = new Date();
+							//_setDateVal(thisTime);
+							//$(".task-vc").css("display","none");
+							
+							$('.btn').blur();
+							parent.layer.open({
+								type:1,
+								title:"计划任务报表",
+								content:'<div class="layer-alert"><i class="alert succ"></i>删除成功</div>',
+								btn:['确&nbsp;&nbsp;定'],
+								btnAlign:'c',
+								closeBtn: false,
+								skin:'layer-custom',
+								area:['380px','310px'],
+								move: false,
+								resize: false,
+								btn1:function(i){
+									parent.layer.close(i);
+									document.location.reload();									
+								}
+							})	
+							
+							
+						}
+					}
+				});
+				//delete_report(0,id);
+			},
+			btn2:function(i){
+				parent.layer.close(i);
+			}
+		});
+	}
+	
+	
+    </script>
+</body>
+
+</html>

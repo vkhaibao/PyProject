@@ -1,0 +1,838 @@
+{% extends  "index.html" %}
+<!---->
+{% block main %}
+		<div class="page-wrap">
+			<div class="page-cont">
+				<div class="flow">
+					<div class="f-title">
+						<h2 style="padding-top: 15px;">运维管理流程</h2>
+						<div class="f-wrap">
+						{%if (13 in _power_sonid) or (  14 in _power_sonid ) or (  33 in _power_sonid )%}		
+							<div class="f-ww f-ww1" style="">
+								<div class="f-cont flow-auth1 flow-auth1-1" style="margin: 60px auto 0;">
+									{%if 2 in _power_sonid %}
+										<a href="javascript:;" class="a0 flow-auth1-2 u1" onclick="role_add();" tabindex=-1 style="top: 12px;">系统角色<i class="a0-icon"></i></a>
+									{% endif %}
+									{%if 33 in _power_sonid %}
+										<a href="javascript:;" class="a0 flow-auth1-33 u1" onclick="authtype_module();" tabindex=-1 style="top: 10px;left: 348px;">认证模块<i class="a33-icon"></i></a>
+									{% endif %}
+									{%if 13 in _power_sonid %}
+										<a href="javascript:;" class="a4 flow-auth1-13 u2" onclick="user_add()" tabindex=-1 style="top: 96px;">系统用户<i class="a4-icon"></i></a>
+									{% endif %}
+									{%if 14 in _power_sonid %}
+										<a href="javascript:;" class="a1 flow-auth1-14 z1" onclick="Account_add();" style="top: 120px;" tabindex=-1>主机账号<i class="a1-icon"></i></a>
+										<a href="javascript:;" class="a3 flow-auth1-14 z2" onclick="Add_Devicetype();" style="top: 185px;" tabindex=-1>设备类型<i class="a2-icon"></i></a>
+										<a href="javascript:;" class="a2 flow-auth1-14 z3" onclick="AccessProtocol_add()" style="top: 250px;" tabindex=-1>访问协议<i class="a3-icon"></i></a>
+										<a href="javascript:;" class="a6 flow-auth1-14 z4" style="top: 250px;" onclick="acc_client_list();" tabindex=-1>应用发布<i class="a6-icon"></i></a>
+										
+										<a href="javascript:;" class="a5 flow-auth1-14 z5" onclick="host_add()" style="    top: 185px;" tabindex=-1>主&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机<i class="a5-icon"></i></a>
+									{% endif %}
+										<a href="javascript:;" class="b0 flow-auth1-1-a" onclick="_scroll(0)" style="    top: 108px;" tabindex=-1>授权</a>
+									
+								</div>
+							
+							</div>
+						{% endif %}
+						{%if (13 in _power_sonid) or (  14 in _power_sonid ) or(  15 in _power_sonid ) or(  16 in _power_sonid ) or(  17 in _power_sonid ) or(  18 in _power_sonid ) %}	
+							<div class="f-ww f-ww2">
+								<div class="f-cont flow-auth2" style="margin: 60px auto 0;">
+								{%if 15 in _power_sonid %}
+									<a href="javascript:;" class="a0 flow-auth1-15" onclick="creat_access()" tabindex=-1>访问授权<i class="a0-icon"></i></a>
+								{% endif %}	
+								{%if 16 in _power_sonid %}
+									<a href="javascript:;" class="a1 flow-auth1-16" onclick="creat_workorder();" tabindex=-1>工单授权<i class="a1-icon"></i></a>
+								{% endif %}
+								{%if 18 in _power_sonid %}
+									<a href="javascript:;" class="a2 flow-auth1-18" onclick="manage_add();" tabindex=-1>管理授权<i class="a2-icon"></i></a>
+								{% endif %}
+								{%if 17 in _power_sonid %}
+									<a href="javascript:;" class="a3 flow-auth1-17 c1" onclick="byuser_auth()" tabindex=-1>&nbsp;&nbsp;&nbsp;按对象授权<i class="a3-icon"></i></a>
+									<a href="javascript:;" class="a4 flow-auth1-17 c2" onclick="byaccess_auth()" tabindex=-1>&nbsp;&nbsp;&nbsp;按访问授权<i class="a4-icon"></i></a>
+									<a href="javascript:;" class="a5 flow-auth1-17 c3" onclick="bywork_auth()" tabindex=-1>&nbsp;&nbsp;&nbsp;按工单授权<i class="a5-icon"></i></a>
+								{% endif %}
+									<a href="javascript:;" class="b0 flow-auth1-1-b" onclick="_scroll(1)" tabindex=-1>创建</a>
+								</div>
+							</div>
+						{% elif  (32 in _power_sonid)%}
+							<div class="f-ww">
+								<div class="f-cont flow-auth2" style="background:none">
+									<a href="javascript:;" class="b0 flow-auth1-1-b" tabindex=-1>授权</a>
+								</div>
+							</div>
+						
+						{% endif %}
+						
+						
+						
+						</div>
+						
+					</div>
+				</div>
+				
+
+				<div class="f-btns">
+					<div class="f-title">
+						<h2 style="padding-top: 15px;">查看与管理</h2>
+					</div>
+
+					<div class="btns1 btns-s" style="padding: 15px 0;">
+						{%if 32 in _power_sonid %}
+						<a href="javascript:;" class="btn btn-normal" onclick="global_manage();" tabindex=-1>全局策略</a>
+						{% endif %}
+						{%if 13 in _power_sonid %}
+						<a data-modeid="13" href="javascript:;" class="btn btn-normal" onclick="user_manage();" tabindex=-1>用户管理</a>
+						{% endif %}
+						{%if 14 in _power_sonid %}
+						<a data-modeid="14" href="javascript:;" class="btn btn-normal" onclick="host_manage();" tabindex=-1>主机管理</a>
+						{% endif %}
+						{%if (15 in _power_sonid) or (16 in _power_sonid) or (17 in _power_sonid) or (18 in _power_sonid) %}
+						<a data-modeid="15-16-17-18" href="javascript:;" class="btn btn-normal" onclick="auth_manage();" tabindex=-1>授权管理</a>
+						{% endif %}
+						<!--<a href="javascript:;" class="btn btn-normal" onclick="replay();">回放</a>-->
+					</div>
+				</div>
+			</div>
+			
+			<!---->
+			<div class="page-cont">
+				<div class="apps apps-auth">
+					<div class="apps-title">
+						<h2>访问资源管理</h2>
+					</div>
+					{%if 14 in _power_sonid %}
+						<div class="item"><a href="javascript:;" data-uri="/bhost/account_list?a0={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app3"><span class="i"></span></i>账号</a></div>
+						<div class="item"><a href="javascript:;" data-uri="/bhost/protocol_app_show?a0={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app1"><span class="i"></span></i>协议</a></div>
+						<div class="item"><a href="javascript:;" data-uri="/bhost/devicetype_manage?a0={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app2"><span class="i"></span></i>设备类型</a></div>
+						<div class="item"><a href="javascript:;" data-uri="/bhost/connection_show?se={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app4"><span class="i"></span></i>连接参数</a></div>
+						<div class="item"><a href="javascript:;" data-uri="/bhost/domain_show?se={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app14"><span class="i"></span></i>AD域</a></div>
+					{% endif %}
+					{%if 33 in _power_sonid %}
+						<div class="item"><a href="javascript:;" data-uri="/bhost/authtype_show?se={{se}}" onclick="_loadPage(this);" tabindex=-1><i class="app5"><span class="i"></span></i>认证方式</a></div>
+					{% endif %}
+					{%if (13 in _power_sonid) or  (15 in _power_sonid)  or (16 in _power_sonid) or  (18 in _power_sonid) %}
+						<div class="item"><a href="javascript:;" data-uri="/bhost/client_show?se={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app6"><span class="i"></span></i>客户端集合</a></div>
+					{% endif %}
+					{%if (15 in _power_sonid)  or (16 in _power_sonid) or (17 in _power_sonid) or  (18 in _power_sonid) %}	
+						<div class="item"><a href="javascript:;" data-uri="/bhost/hostgroup_show?se={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app7"><span class="i"></span></i>服务器集合</a></div>
+					{% endif %}
+					{%if (15 in _power_sonid)  %}	
+						<div class="item"><a href="javascript:;" data-uri="/bhost/time_show?se={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app8"><span class="i"></span></i>时间集合</a></div>
+						<!--<div class="item"><a href="javascript:;" data-uri="/bhost/mac_list" onclick="_loadPage(this)"><i class="app11"><span class="i"></span></i>MAC集合</a></div>-->
+					{% endif %}
+					{%if (17 in _power_sonid) %}
+						<div class="item"><a href="javascript:;" data-uri="/bhost/cmdset_list?a0={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app10"><span class="i"></span></i>指令集合</a></div>
+					{% endif %}
+					{%if (15 in _power_sonid)  or (16 in _power_sonid) or (17 in _power_sonid) or 32 in _power_sonid %}
+						<div class="item"><a href="javascript:;" data-uri="/bhost/eventinfo_show?se={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="app12"><span class="i"></span></i>事件告警</a></div>
+					{% endif %}
+					{%if (15 in _power_sonid)  or (16 in _power_sonid) or (17 in _power_sonid) or 32 in _power_sonid %}	
+						<div class="item"><a href="javascript:;" data-uri="/bhost/approve_strategy?se={{se}}" onclick="document.frm_access.tasktype.value=1;_loadPage(this)" tabindex=-1><i class="app13"><span class="i"></span></i>审批策略</a></div>
+					<div class="item"><a href="javascript:;" data-uri="/bhost/sshkey_show?se={{se}}&type=1" onclick="_loadPage(this)" tabindex=-1><i class="sshkeyicon"><span class="i"></span></i>密钥管理</a></div>
+						<!--
+						<div class="item"><a href="javascript:;" data-uri="/bhost/acc_client_list" onclick="_loadPage(this)"><i class="app18"><span class="i" style="background: url(/manage/images/icons-apps-sys.png) no-repeat 0 0;    background-position: -300px -120px;"></span></i>应用发布客户端</a></div>
+						-->
+					{% endif %}
+				</div>
+
+				<div id="LoadArea" style="display: none;">
+					<!--<div class="c-top">
+						<div class="c-title">
+							<h3 onclick="reload();" ></h3>
+
+							<div class="ctr">
+								<a href="javascript:;" class="ret" onclick="_closePage(this)"><i></i></a>
+							</div>
+						</div>
+					</div>-->
+
+					<div class="c-cont" id="cCont">
+						<span class="btn btn-prev" onclick="_pagePrev(this)" tabindex=-1></span>
+						<span class="btn btn-next" onclick="_pageNext(this)" tabindex=-1></span>
+						
+						<iframe src="" width="100%" height="100%" frameborder="0" name="mframe" id="mframe"></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!---->
+		<div id="bBtn">
+			<a href="javascript:;" class="btn" onclick="_scrpage(0,this)" tabindex=-1><i class="icon2"></i>资源管理 </a>
+			<a href="javascript:;" class="btn" style="display: none;" onclick="_scrpage(1,this)" tabindex=-1><i class="icon2"></i>授权流程 </a>
+		</div>
+
+		<!-- 浮层 -->
+		<!-- 服务-->
+		<div class="dialog-cont" id="scDCTab1" style="display:none;">
+			<div class="container">
+				<div class="c-cont" style="max-height:280px;overflow:auto; min-height: 310px;">
+					<div class="c-wrap" style="padding:0 0 90px;margin-top: -10px;overflow: hidden;">
+					<div class="c-form c-form-host col3">
+						
+						<div class="clearfix"></div>
+						<div class="c-table" style="padding: 0;">
+							<div class="form" style="overflow: hidden;">
+								<div class="form-item">
+									<span class="form-tag"><em class="imp">*</em>服务名称：</span>
+									<div class="form-c">
+										<input type="text" class="form-text" id="DeviceServiceName" maxlength="128" style="width:108px">
+									</div>
+								</div>
+
+								<div class="form-item">
+									<span class="form-tag"><em class="imp">*</em>协议：</span>
+									<div class="form-c">
+										<select class="form-select" name="" id="ProtocolName" style="width: 140px;">
+											<option value="">请选择</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-item">
+									<span class="form-tag"><em class="imp">*</em>端口：</span>
+									<div class="form-c">
+										<input type="text" class="form-text" id="Port" maxlength="5" onkeyup="port_check(this);" style="width:108px">
+									</div>
+								</div>
+
+								<div class="form-item">
+									<span class="form-tag">连接参数：</span>
+									<div class="form-c">
+										<select class="form-select" name="" id="ConnParamName" style="width: 140px;">
+											<option value="">请选择</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-item">
+									<span class="form-tag">AD域：</span>
+									<div class="form-c">
+										<select class="form-select" name="" id="DomainName" style="width: 140px;">
+											<option value="">请选择</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-item form-item-100">
+									<span class="form-tag" style="line-height:33px;">前置机IP：</span>
+									<div class="h-content3" id="select_accIP" style="margin-top: -7px;max-height:100px">
+										<div class="item" style="">
+											<select class="filter-select" name="accIP" id="accIP" style="width:140px;" tabindex="-1" aria-hidden="false"> 
+												<option value="">请选择</option>
+											</select>
+											<!--
+											<select class="filter-select" name="accIP" id="accIP" style="width:140px;" tabindex="-1" aria-hidden="false"  onchange="set_select(this)"> 
+												<option value="">请选择</option>
+											</select>
+											-->
+											<i class="ctrl add" onclick="_addaccIP(this)"></i>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+						
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal btn-submit" >确&nbsp;&nbsp;定</a>
+							<a href="javascript:;" class="btn btn-normal" onclick="clear_server();">重&nbsp;&nbsp;置</a>
+						</div>
+					</div>
+					</div>
+				</div>  
+			</div>
+		</div>
+
+		<form action="/bhost/access_user_index" method="POST" name="frm_access">
+			<input type="hidden" name="tasktype" id = "tasktype" value="" />
+			<input type="hidden" name="user" id = "user" value="{{us}}" />
+			<input type="hidden" name="z1" id = "z1" value="" />
+			<input type="hidden" name="z2" id = "z2" value="" />
+			<input type="hidden" name="z3" id = "z3" value="" />
+			<input type="hidden" name="z4" id = "z4" value="" />
+			<input type="hidden" name="z5" id = "z5" value="" />
+			<input type="hidden" name="z6" id = "z6" value="" />
+			<input type="hidden" name="se" id = "" value="{{se}}" />
+			<input type="hidden" name="a0" id = "" value="{{se}}" />
+			<input type="hidden" name="a1" id = "user" value="{{us}}" />
+			
+		</form>
+{% endblock  %}
+
+
+
+{% block script %}
+<script>
+
+var _power={{_power|safe}};
+$(function(){
+	var w = $(window).width();
+	
+	if(index==0){
+                $('.f-ww1').css('margin-left',-w);
+        }else{
+                $('.f-ww1').css('margin-left',0);
+        }
+		
+	_flowLoad();
+	//console.log(new Date());
+	/*
+	{
+        "Mode": 2,
+        "SubMenuId": 13,
+        "SubMenuName": "用户管理",
+        "SystemMenuId": 3,
+        "SystemMenuName": "访问授权"
+    },
+    {
+        "Mode": 2,
+        "SubMenuId": 14,
+        "SubMenuName": "主机管理",
+        "SystemMenuId": 3,
+        "SystemMenuName": "访问授权"
+    },
+    {
+        "Mode": 2,
+        "SubMenuId": 15,
+        "SubMenuName": "访问授权",
+        "SystemMenuId": 3,
+        "SystemMenuName": "访问授权"
+    },
+    {
+        "Mode": 2,
+        "SubMenuId": 16,
+        "SubMenuName": "工单授权",
+        "SystemMenuId": 3,
+        "SystemMenuName": "访问授权"
+    },
+    {
+        "Mode": 2,
+        "SubMenuId": 17,
+        "SubMenuName": "指令授权",
+        "SystemMenuId": 3,
+        "SystemMenuName": "访问授权"
+    },
+    {
+        "Mode": 2,
+        "SubMenuId": 18,
+        "SubMenuName": "管理授权",
+        "SystemMenuId": 3,
+        "SystemMenuName": "访问授权"
+    }
+	*/
+	// 改变 a的状态
+	$('div.f-cont a').hide();
+	$(_power).each(function(i,item){
+		$('div.f-cont a.flow-auth1-'+item.SubMenuId).show();
+		if(item.Mode == 1){
+			$('div.f-cont a.flow-auth1-'+item.SubMenuId).addClass('disable').removeAttr('onclick');
+		}
+	})
+	
+	_access_power_SubMenuId_left = [];
+	_access_power_SubMenuId_right = [];
+	$(_power).each(function(i,item){
+		if(item.SubMenuId == 2) _access_power_SubMenuId_left.push(2);
+		if(item.SubMenuId == 13) _access_power_SubMenuId_left.push(13);
+		if(item.SubMenuId == 14) _access_power_SubMenuId_left.push(14);
+		if(item.SubMenuId == 33) _access_power_SubMenuId_left.push(33);
+		
+		
+		if(item.SubMenuId == 15) _access_power_SubMenuId_right.push(15);
+		if(item.SubMenuId == 16) _access_power_SubMenuId_right.push(16);
+		if(item.SubMenuId == 17) _access_power_SubMenuId_right.push(17);
+		if(item.SubMenuId == 18) _access_power_SubMenuId_right.push(18);
+	})
+	
+	//2个左右大图标
+	//全局策略
+	
+	if(_access_power_SubMenuId_left.length == 0 && _access_power_SubMenuId_right.length ==0){
+		$('a.flow-auth1-1-b').show();
+		$('a.flow-auth1-1-b').css('background','url(/manage/images/access_flow/flow-auth1-right.png)');
+		$('a.flow-auth1-1-b').css("cursor","default").css('left','344px');
+	}
+	else if(_access_power_SubMenuId_left.length == 0 && _access_power_SubMenuId_right.length >= 1){
+		$('div.flow-auth1').hide();
+		$('a.flow-auth1-1-b').css('background','url(/manage/images/access_flow/flow-auth1-right.png)');
+		$('a.flow-auth1-1-b').removeAttr('onclick').css("cursor","default");
+		$('a.flow-auth1-1-b').show();
+	}else if(_access_power_SubMenuId_left.length >=1 && _access_power_SubMenuId_right.length == 0){
+		$('div.flow-auth2').hide();
+		$('div.flow-auth1').show();
+		 $('.f-ww:first').css('margin-left',0);
+		$('a.flow-auth1-1-a').css('background','url(/manage/images/access_flow/flow-auth1-left.png)');
+		$('a.flow-auth1-1-a').removeAttr('onclick').css("cursor","default");
+		$('a.flow-auth1-1-a').show();
+	}else if(_access_power_SubMenuId_left.length >=1 && _access_power_SubMenuId_right.length >=1){
+		$('a.flow-auth1-1-a').css('background','url(/manage/images/access_flow/flow-auth1-right.png)');
+		$('div.flow-auth2').show();
+		$('div.flow-auth1').show();
+		$('a.flow-auth1-1-a').show();
+		$('a.flow-auth1-1-b').show();
+	}
+	
+	
+	
+	//左侧流程图
+	if(_access_power_SubMenuId_left.length == 1){ // 
+		
+		if($.inArray(13,_access_power_SubMenuId_left)>=0){//用户管理 			 flow-auth1-13
+			$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-2.png) no-repeat 220px 115px');
+			$('a.flow-auth1-'+_access_power_SubMenuId_left[0]).css("top","114px").css("left","160px");
+			$('a.flow-auth1-1-a').css('left','480px').css("top","80px");
+
+		}else if($.inArray(14,_access_power_SubMenuId_left)>=0){//主机管理 														 flow-auth1-14
+			$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-'+_access_power_SubMenuId_left[0]+'.png) no-repeat 0 15px');
+			$('div.flow-auth1 a').eq(0).css("top","30px");
+			$('div.flow-auth1 a').eq(1).css("top","115px");
+			$('div.flow-auth1 a').eq(3).css("top","115px");
+			$('div.flow-auth1 a').eq(2).css("top","202px");
+			$('div.flow-auth1 a').eq(4).css("top","202px");
+			
+			$('a.flow-auth1-1-a').css("top","80px");
+		}else{
+			$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-2.png) no-repeat 220px 115px');
+			$('a.flow-auth1-'+_access_power_SubMenuId_left[0]).css("top","114px").css("left","160px");
+			$('a.flow-auth1-1-a').css('left','480px').css("top","80px");
+		}
+	}else if(_access_power_SubMenuId_left.length == 2){
+		if($.inArray(33,_access_power_SubMenuId_left)>=0){ //认证模块
+			if($.inArray(13,_access_power_SubMenuId_left)>=0){ //用户管理
+				$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-2.png) no-repeat 220px 115px');
+				$('a.flow-auth1-13').css("top","114px").css("left","160px");
+				$('a.flow-auth1-33').css("top","42px").css("left","160px");
+				$('a.flow-auth1-1-a').css('left','480px').css("top","80px");
+			}else{ //主机管理
+				$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-22.png) no-repeat 0 0px');
+				$('div.flow-auth1 a').eq(0).css("top","48px");
+				$('div.flow-auth1 a').eq(1).css("top","90px");
+				$('div.flow-auth1 a').eq(2).css("top","175px");
+				$('div.flow-auth1 a').eq(4).css("top","175px");
+				$('div.flow-auth1 a').eq(3).css("top","261px");
+				$('div.flow-auth1 a').eq(5).css("top","261px");
+				$('a.flow-auth1-1-a').css("top","77px");
+			}
+		}else{
+			if($.inArray(2,_access_power_SubMenuId_left)>=0){//用户管理、角色管理	 flow-auth1-13
+				$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-'+_access_power_SubMenuId_left[1]+'.png) no-repeat 0 80px');
+				$('a.flow-auth1-'+_access_power_SubMenuId_left[1]).css("top","114px");
+				$('a.flow-auth1-'+_access_power_SubMenuId_left[0]).css("top","75px");
+				$('.flow-auth1-1-a').css("top","80px");
+			}else{//用户管理、主机管理												 flow-auth1-
+				$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-22.png) no-repeat 0 0px');
+				$('div.flow-auth1 a').eq(0).css("top","48px");
+				$('div.flow-auth1 a').eq(1).css("top","90px");
+				$('div.flow-auth1 a').eq(2).css("top","175px");
+				$('div.flow-auth1 a').eq(4).css("top","175px");
+				$('div.flow-auth1 a').eq(3).css("top","261px");
+				$('div.flow-auth1 a').eq(5).css("top","261px");
+				$('a.flow-auth1-1-a').css("top","77px");
+			}
+		}
+	}else if(_access_power_SubMenuId_left.length == 3){
+		if($.inArray(33,_access_power_SubMenuId_left)>=0){ //认证模块
+			if($.inArray(2,_access_power_SubMenuId_left)>=0){ //用户管理、角色管理
+				$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-1-33.png) no-repeat 0 72px');
+				$('div.flow-auth1 a').eq(0).css("top","65px");
+				$('div.flow-auth1 a').eq(1).css("top","60px");
+				$('div.flow-auth1 a').eq(2).css("top","148px");
+			}else{ //主机管理、用户管理
+				$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-22.png) no-repeat 0 0px');
+				$('div.flow-auth1 a').eq(0).css("top","-20px");
+				$('div.flow-auth1 a').eq(1).css("top","48px");
+				$('div.flow-auth1 a').eq(2).css("top","90px");
+				$('div.flow-auth1 a').eq(3).css("top","175px");
+				$('div.flow-auth1 a').eq(5).css("top","175px");
+				$('div.flow-auth1 a').eq(4).css("top","261px");
+				$('div.flow-auth1 a').eq(6).css("top","261px");
+				$('a.flow-auth1-1-a').css("top","77px");
+				$('div.flow-auth1-1').css('margin','75px auto 0px');
+				
+			}
+		}else{
+			$('div.flow-auth1').css('background','url(/manage/images/access_flow/flow-auth1-1-34.png) no-repeat 0 0px');
+			$('div.flow-auth1 a').eq(0).css("top","-37px");
+			$('div.flow-auth1 a').eq(1).css("top","48px");
+			$('div.flow-auth1 a').eq(2).css("top","90px");
+			$('div.flow-auth1 a').eq(3).css("top","175px");
+			$('div.flow-auth1 a').eq(5).css("top","175px");
+			$('div.flow-auth1 a').eq(4).css("top","261px");
+			$('div.flow-auth1 a').eq(6).css("top","261px");
+			$('a.flow-auth1-1-a').css("top","77px");
+		}
+	}
+	
+	
+	//右侧流程图
+	if(_access_power_SubMenuId_right.length == 1){ //	
+		if($.inArray(17,_access_power_SubMenuId_right)>=0){
+			$('div.flow-auth2').css('background','url(/manage/images/access_flow/flow-auth1-'+_access_power_SubMenuId_right[0]+'.png) no-repeat 0 44px');
+			$('div.flow-auth2 a').each(function(){
+				if($(this).attr("class").indexOf('flow-auth1-1-b') >=0) return true;
+				$(this).css("top",parseInt($(this).css("top")) - 45  +'px');
+			})
+		}else{
+			$('div.flow-auth2').css('background','url(/manage/images/access_flow/flow-auth1-'+_access_power_SubMenuId_right[0]+'.png) no-repeat 0 138px').css("margin-left","454px");
+			$('a.flow-auth1-'+_access_power_SubMenuId_right[0]).css("top","138px");
+		}		
+	}else if(_access_power_SubMenuId_right.length == 2){
+		if($.inArray(17,_access_power_SubMenuId_right)>=0){
+			if($.inArray(18,_access_power_SubMenuId_right)>=0){
+				$('div.flow-auth2').css('background','url(/manage/images/access_flow/flow-auth1-17-18.png) no-repeat 0 0px');
+				$('div.flow-auth2 a').each(function(){
+					if($(this).attr("class").indexOf('flow-auth1-1-b') >=0) return true;
+					$(this).css("top",parseInt($(this).css("top")) - 90 +'px');
+				})
+			}else{
+				$('div.flow-auth2').css('background','url(/manage/images/access_flow/flow-auth1-'+_access_power_SubMenuId_right[0]+'-17.png) no-repeat 0 90px');
+				$('a.flow-auth1-'+_access_power_SubMenuId_right[0]).css("top","90px");
+			}
+		}else{
+			$('div.flow-auth2').css('background','url(/manage/images/access_flow/flow-auth1-'+_access_power_SubMenuId_right[0]+'-'+_access_power_SubMenuId_right[1]+'.png) no-repeat 0 90px').css("margin-left","400px");
+			$('a.flow-auth1-'+_access_power_SubMenuId_right[0]).css("top","93px");
+			$('a.flow-auth1-'+_access_power_SubMenuId_right[1]).css("top","171px");
+		}
+	}else if(_access_power_SubMenuId_right.length == 3){
+		if($.inArray(17,_access_power_SubMenuId_right)>=0){
+			if($.inArray(18,_access_power_SubMenuId_right)>=0){
+				$('div.flow-auth2').css('background','url(/manage/images/access_flow/flow-auth1-'+_access_power_SubMenuId_right[0]+'-17-18.png) no-repeat 0 50px');
+				$('div.flow-auth2 a').each(function(){
+					if($(this).attr("class").indexOf('flow-auth1-1-b') >=0) return true;
+					$(this).css("top",parseInt($(this).css("top")) - 40 +'px');
+				})
+				$('a.flow-auth1-'+_access_power_SubMenuId_right[0]).css("top","50px");
+			}else{
+				$('div.flow-auth2').css('background','url(/manage/images/access_flow/flow-auth1-15-16-17.png) no-repeat 0 0px');
+				$('a.flow-auth1-1-b').css("top","50px");
+				//$('div.flow-auth2 a').each(function(){
+					//if($(this).attr("class").indexOf('flow-auth1-1-b') >=0) return true;
+					//$(this).css("top",parseInt($(this).css("top")) + 50 +'px');
+				//})
+				$('div.f-ww').eq(1).css('margin-top','40px');
+			}
+			
+		}else{
+			$('div.flow-auth2').css('background','url(/manage/images/access_flow/flow-auth1-15-16-18.png) no-repeat 0 50px').css("margin-left","460px");;
+			$('div.flow-auth2 a').each(function(){
+				if($(this).attr("class").indexOf('flow-auth1-1-b') >=0) return true;
+				$(this).css("top",parseInt($(this).css("top")) + 50 +'px');
+			})
+			$('a.flow-auth1-18').css("top","222px");
+		}
+	}
+	
+	
+
+	if($.inArray(2,_access_power_SubMenuId_left)>=0){
+		$('a[data-modeid=2]').show();
+	}else{
+		$('a[data-modeid=2]').hide();
+	}
+	if($.inArray(13,_access_power_SubMenuId_left)>=0){
+		$('a[data-modeid=13]').show();
+	}else{
+		$('a[data-modeid=13]').hide();
+	}
+	if($.inArray(14,_access_power_SubMenuId_left)>=0){
+		$('a[data-modeid=14]').show();
+	}else{
+		$('a[data-modeid=14]').hide();
+	}
+	if($.inArray(15,_access_power_SubMenuId_right)>=0 || $.inArray(16,_access_power_SubMenuId_right)>=0 || $.inArray(17,_access_power_SubMenuId_right)>=0 || $.inArray(18,_access_power_SubMenuId_right)>=0){
+		$('a[data-modeid=15-16-17-18]').show();
+	}else{
+		$('a[data-modeid=15-16-17-18]').hide();
+	}
+	
+	//console.log(new Date());
+})
+
+$(window).resize(function(){
+	_flowLoad();
+});
+function reload(){
+	$("#mframe").attr('src',$("#mframe").attr('src'));		
+}
+function _flowLoad(){
+	var w = $(window).width();
+	$('.f-wrap,.page-wrap').width(2*w);
+	$('.f-ww').width(w);
+	/*
+	if(index==0){
+		$('.f-ww:first').css('margin-left',-w);
+	}else{
+		$('.f-ww:first').css('margin-left',0);
+	}
+	$('.f-ww:first').css('margin-left',-w);
+	*/
+	var f_wwml=parseInt($('.f-ww:first').css('margin-left'));
+	if (f_wwml<0){
+		$('.f-ww:first').css('margin-left',-w);
+	}
+	$('.page-cont').width(w).show();
+	var pageml = parseInt($('div.page-cont').css('margin-left'));
+
+	if(pageml < 0){
+		$('div.page-cont').eq(0).css('margin-left',-w);
+	}
+}
+var index={{index}};
+function _scroll(i){
+	var w = $(window).width();
+	if(i==0){
+		//if(index==0){
+			$('.f-ww').eq(0).stop().animate({'margin-left':-w});
+		//}else{
+		//	$('.f-ww').eq(0).stop().animate({'margin-left':0});
+		//}
+	}else if(i==1){
+		//if(index==0){
+			$('.f-ww').eq(0).stop().animate({'margin-left':0});
+		//}else{
+		//	$('.f-ww').eq(0).stop().animate({'margin-left':-w});
+		//}
+	}
+}
+
+function _scrpage(i,obj){
+	var w = $(window).width();
+	if(i==0){
+		$(obj).hide().next('a').show();
+		$('div.page-cont').eq(0).animate({'margin-left':-w});
+	}else if(i==1){
+		$(obj).hide().prev('a').show();
+		$('div.page-cont').eq(0).animate({'margin-left':0});
+	}
+}
+function user_add(){
+	document.frm_access.tasktype.value=1;
+	
+	document.frm_access.submit();
+}
+function byuser_auth()
+{
+	document.frm_access.tasktype.value=1;
+	document.frm_access.action = '/bhost/cmdAuth_show';
+	document.frm_access.submit();
+}
+function byaccess_auth()
+{
+	document.frm_access.tasktype.value=1;
+	document.frm_access.action = '/bhost/cmdAuth_show_a';
+	document.frm_access.submit();
+}
+function bywork_auth()
+{
+	document.frm_access.tasktype.value=1;
+	document.frm_access.action = '/bhost/cmdAuth_show_w';
+	document.frm_access.submit();
+}
+function acc_client_list(){
+	document.frm_access.action = '/bhost/acc_client_list';
+        document.frm_access.submit();
+}
+function role_add(){
+	document.frm_access.tasktype.value=7;
+	//document.frm_access.action = '/bhost/role_add'
+	document.frm_access.submit();
+}
+//type 0 授权流程->资源管理    1  资源管理->授权流程
+function access_switch(type){
+	document.frm_access.tasktype.value=type;
+	document.frm_access.action = '/bhost/access_switch'
+	document.frm_access.submit();
+}
+function global_manage(){
+	//document.frm_access.tasktype.value=0;
+	document.frm_access.action = '/bhost/globalstrategy_show';
+	document.frm_access.submit();
+}
+
+function user_manage(){
+	document.frm_access.tasktype.value=0;
+	document.frm_access.action = '/bhost/user_manage';
+	document.frm_access.submit();
+}
+function role_manage(){
+	document.frm_access.tasktype.value=0;
+	document.frm_access.action = '/bhost/role_manage';
+	document.frm_access.submit();
+}
+
+function host_manage(){
+	document.frm_access.tasktype.value=1;
+	document.frm_access.action = '/bhost/host_manage';
+	document.frm_access.submit();
+}
+function auth_manage(){
+	//document.frm_access.tasktype.value=0;
+	$.each(_power,function(i,item){
+		if (item.SubMenuId == 15){//访问授权
+			document.frm_access.z3.value=2;
+			document.frm_access.z4.value="[]";
+			document.frm_access.z5.value=0;
+			document.frm_access.z6.value="[]";
+			document.frm_access.action = '/bhost/show_manage_accessauth';
+			document.frm_access.submit();
+			return false;
+		}else if (item.SubMenuId == 16){//工单授权
+			document.frm_access.z1.value=1;
+			document.frm_access.z3.value=2;
+			document.frm_access.z4.value="[]";
+			document.frm_access.z5.value=0;
+			document.frm_access.z6.value="[]";
+			document.frm_access.action = '/bhost/show_manage_workorder';
+			document.frm_access.submit();
+			return false;
+		}else if (item.SubMenuId == 17){//指令授权
+			document.frm_access.tasktype.value=0;
+			document.frm_access.z1.value=0;
+			document.frm_access.z2.value="[]";
+			document.frm_access.action = '/bhost/auth_manage_xtc';
+			document.frm_access.submit();
+			return false;
+		}else if (item.SubMenuId == 18){//管理授权
+			document.frm_access.tasktype.value=3;
+			document.frm_access.se.value = {{se}};
+			document.frm_access.user.value = window.parent.document.frm.us.value;
+			document.frm_access.action = '/bhost/manage_auth_add';
+			document.frm_access.submit();
+			return false;
+		}
+	});
+	
+}
+function creat_access(){
+	document.frm_access.tasktype.value=0;
+	document.frm_access.z1.value=1;
+	document.frm_access.z2.value="None";
+	document.frm_access.z4.value="[]";
+	document.frm_access.z5.value=0;
+	document.frm_access.z6.value="[]";
+	document.frm_access.action = '/bhost/add_access_auth';
+	document.frm_access.submit();
+}
+function host_add(){
+	document.frm_access.tasktype.value=4;
+	document.frm_access.action = '/bhost/host_add';
+	document.frm_access.submit();
+}
+/*
+function Devicetype_add(){
+	document.frm_access.tasktype.value=5;
+	document.frm_access.action = '/bhost/Devicetype_add';
+    document.frm_access.submit();
+}
+*/
+function Add_Devicetype(){
+	document.frm_access.tasktype.value=5;
+	document.frm_access.z1.value=1;
+	document.frm_access.z2.value="None";
+	document.frm_access.z4.value="[]";
+	document.frm_access.z5.value=0;
+	document.frm_access.z6.value="[]";
+	document.frm_access.action = '/bhost/add_devicetype';
+ 	document.frm_access.submit();	
+}
+/*
+function AccessProtocol_add(){
+	document.frm_access.tasktype.value=6;
+    document.frm_access.action = '/bhost/AccessProtocol_add';
+    document.frm_access.submit();
+}
+*/
+function AccessProtocol_add(){
+	document.frm_access.tasktype.value=6;
+	document.frm_access.z1.value=1;
+	document.frm_access.z2.value="None";
+	document.frm_access.z3.value="1";
+	document.frm_access.z4.value="[]";
+	document.frm_access.action = '/bhost/create_AccessProtocol_z';
+ 	document.frm_access.submit();	
+}
+function Account_add(){
+	document.frm_access.tasktype.value=8;
+	document.frm_access.action = '/bhost/Account_add';
+    document.frm_access.submit();
+}
+function manage_add(){
+	document.frm_access.tasktype.value=4;
+	document.frm_access.action = '/bhost/manage_auth_add';
+	document.frm_access.submit();
+}
+function creat_workorder(){
+	//console.log($("#u_i").text());
+	document.frm_access.z1.value=1;
+	document.frm_access.z2.value="None";
+	document.frm_access.z3.value=1;
+	document.frm_access.z4.value="[]";
+	document.frm_access.z5.value=0;
+	document.frm_access.z6.value="[]";
+	document.frm_access.action = '/bhost/add_workorder';
+	document.frm_access.submit();
+}
+function authtype_module(){
+	document.frm_access.action = '/bhost/authtype_module';
+	document.frm_access.submit();
+}
+/*
+function _switchBtn(i){
+	if(i==0){
+		$('#cCont>span.btn').hide();
+	}else{
+		$('#cCont>span.btn').show();
+	}
+}*/
+
+function _switchBtn(i){
+	var $c = $('.apps a.active').parent();
+	var n = $('.apps .item').index($c), len = $('.apps .item').length - 1;
+
+	if(i==0){
+		$('#cCont>span.btn').hide();
+	}else if(n==0){
+		$('#cCont>span.btn-prev').hide();
+		$('#cCont>span.btn-next').show();
+	}else if(n==len){
+		$('#cCont>span.btn-prev').show();
+		$('#cCont>span.btn-next').hide();
+	}else{
+		$('#cCont>span.btn').show();
+	}
+}
+
+function replay(){
+	window.open("/bhost/replay"); 
+}
+//层
+function _getDialog1(type,name){
+	//clear_server();
+	var $dialogCont = $('#scDCTab1').show();
+	if(type == 'edit'){
+		title = '编辑服务';
+	}else{
+		title = '添加服务';
+	}
+	var d = dialog({
+		title:title,
+		content:$dialogCont,
+		id:"scDCTab1",
+		width:"800px"
+	});
+	d.addEventListener('close', function () {
+		$dialogCont.appendTo("body").hide();
+	});
+	d.showModal();
+	
+	if(type == 'edit'){
+		//_editServer(name);
+	}
+	$("a.btn-cancel",$dialogCont).unbind().bind("click",function(){
+		d.close().remove();
+	});
+	$("a.btn-submit",$dialogCont).unbind().bind("click",function(){
+		//if(_addServer(type) == false) return false;
+		d.close().remove();
+	})
+}
+</script>
+
+{% endblock  %}

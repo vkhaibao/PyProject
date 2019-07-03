@@ -1,0 +1,782 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+
+</head>
+<style>
+	.filter-select2 + .select2-container--default >.selection > .select2-selection--single{
+		border-bottom-left-radius: 0;
+		border-top-left-radius: 0;
+		margin-left: -1px;
+	}
+	.filter-select2 + .select2-container--default{
+		display: none;
+	}
+</style>
+<body style="overflow:hidden;display:none;" class="bg-white">
+		<!--审批策略表-->
+		<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+			
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title" >
+						<span id="approve_strategy" style="cursor: pointer;">审批策略</span>
+						<i class="approve_strategy_icon"></i>
+					</div>
+				</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer" name="approve" id="approve" >
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr" style="width:288px;">
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="approve_add();">创建</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="delete_list();">删除</a>
+									<a href="javascript:;" class="btn btn-default perm_disabled" onclick="click_all_list();">全选</a>
+									<a href="javascript:;" class="btn btn-default" onclick="approve_page(0);clear_all();">刷新</a>
+								</div>
+								<div class="filter">
+									<div class="search">
+										<select name="approve_select" id="approve_select" class="filter-select">
+											<option value="all" selected>所有</option>
+											<option value="Name">名称</option>
+											<option value="ApproveType">方式</option>
+											<option value="ApproveNum">审批人数</option>
+											<option value="UserSet">审批者</option>
+										</select>
+
+										<input type="text" style="/*display:none;*/padding-right: 22px;"  
+										class="filter-text" placeholder="输入关键字" 
+										name="approve_text" id="approve_text" maxlength="128" 
+										onchange="if($('#approve_text').val()==''){$('#approve_text_check').hide();}else{$('#approve_text_check').show();}"
+										onkeyup="if($('#approve_text').val()==''){$('#approve_text_check').hide();}else{$('#approve_text_check').show();}"
+										onblur="if($('#approve_text').val()=='' && search_typeall_new!=''){search_typeall_new='';_addFilter(this,false,1);}"
+										onkeydown="if($('#approve_text').val()==''){$('#approve_text_check').hide();}else{$('#approve_text_check').show();}; if (event.keyCode == 13){_addFilter(this,false);return false;} else return; ">
+										<i class="v-check v-wrong" id="approve_text_check" 
+										onclick="_clearFilter(this,1)" 
+										style="display:none;cursor: pointer;float: left;position: static;"></i>
+										<select name="ApproveType" id="ApproveType" style="" class="filter-select filter-select2">
+											<option value="all" selected>所有</option>
+											<option value="1">消息</option>
+											<option value="4">短信</option>
+											<option value="8">邮件</option>
+										</select>
+										<button class="btn filter-btn" onclick="_addFilter(this,false);"><i class="add-filter"></i></button>
+										<button class="btn filter-btn" onclick="_addFilter(this,true)"><i class="append-filter"></i></button>
+									</div>
+									<div class="search" id="clearFilter" style="margin: 0px 15px 0px -16px;display:none;">
+										<button class="filter-btn" onclick="_clearFilter(this)"><i class="clear-filter"></i></button>
+									</div>
+									<div class="selector selector-multiple" id="filterWW" style="display:none;">
+										<span class="ww">搜索条件</span>
+										<ul>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div class="box-table">
+								<table cellpadding="0" cellspacing="0">
+									<thead>
+										<tr>
+											<th width="50" class="perm_disabled"><input type="checkbox" class="form-checkbox" id="check_one_page"/></th>
+											<th>名称</th>
+											<th>方式</th>
+											<th>审批人数</th>
+											<th>审批者</th>
+											<th id="approve_list_th" width="55"></th>
+										</tr>
+									</thead>
+									<tbody name="approve_list" id="approve_list">
+									</tbody>
+								</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_nums">10</span>条 总数：<span id = "approve_total">0</span><span class="perm_disabled">  选中：</span><span class="sum perm_disabled">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" id="approve_begin" onclick="approve_page(0.1);" ><i></i></a>
+									<a href="javascript:;" class="nav prev" id="approve_prev" onclick="approve_page(-1);" ><i></i></a>
+									<input type="text" id = "approve_page" value="1" onblur="showMsg();" onchange="showMsg();">/&nbsp;<span id = "approve_pages">1</span>
+									<a href="javascript:;" class="nav next" id="approve_next" onclick="approve_page(1);" ><i></i></a>
+									<a href="javascript:;" class="nav2 end" id="approve_end" onclick="approve_page(0.9);" ><i></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="clearfix"></div>
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="save_approve();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<form action="/bhost/get_approve_list" method="POST" name="frm_approve" id="frm_approve">	
+			<input type="hidden" name="tasktype" id = "tasktype" value="{{tasktype}}" />
+			<!--创建 编辑 列表-->
+			<input type="hidden" name="a" id = "a" value="{{a}}" />
+			<!--需要查询id-->
+			<input type="hidden" name="c" id = "c" value="{{c}}" />
+			<!--页码-->
+			<input type="hidden" name="d" id = "d" value="{{d}}" />
+			<!--search_typeall-->
+			<input type="hidden" name="e" id = "e" value="{{e}}" />
+			<input type="hidden" name="se" id = "se" value="{{se}}" />
+			<!--search_typeall_new-->
+	</form>
+
+<script>
+	var perm={{perm}};
+	if (perm==0) parent.parent.$('#nav-s1 a.active').click();
+	else{
+		$('.bg-white').show();
+		if(perm==1){
+			$('.perm_disabled').remove();
+			$('#approve_list_th').attr('width',25);
+		}
+	}
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+
+<script>
+$('.filter-select').select2({minimumResultsForSearch: -1});
+$('#approve_select').parents('div.search').hide();
+$('#approve_select').on('change',function () {
+	var approve_select=$('#approve_select').val();
+	switch (approve_select) {
+		case 'ApproveType':
+			$('#ApproveType').next('.select2').show();
+			$('#approve_text').hide();
+			break;
+		default:
+			$('#ApproveType').next('.select2').hide();
+			$('#approve_text').show();
+			break;
+	}
+});
+$('#approve_select').val('all').trigger('change');
+$('#approve_select').parents('div.search').show();
+</script>
+
+<script type="text/javascript">
+var delect_str = new Array();
+var check_num=0;
+var total_all_r=0;
+//总数
+var fenye_r=0;
+var approve_array=null;
+//总页码
+var search_typeall_r=document.frm_approve.d.value;
+//关键字
+function save_approve()
+{
+	window.parent._closePage(null); 
+}
+$(function(){
+	//console.log(window.parent.document.frm.se.value);
+	if(search_typeall_r!=""){
+		var v1="";
+		var id="";
+		var str_new="";
+		var search_typeall_str=search_typeall_r.split('\t');
+		$.each(search_typeall_str,function(i,item){
+			if(item==""){
+				return false;
+			}
+			var str_sea=item.split("-");
+			v1=$('#approve_select').find('option[value='+str_sea[0]+']').text();
+			id=item;
+			str_sea[0]=v1;
+			str_new=str_sea.join('-');
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'</span><span class="ww">'+str_new+'</span><i class="del" onclick="_delFilter(this);"></i></li>');
+			selView();
+		});
+	}
+	var search_typeall_select=document.frm_approve.e.value.substr(document.frm_approve.e.value.indexOf(':')+1,document.frm_approve.e.value.length-1);
+	if(search_typeall_select!=''){
+		var array=new Array();
+		array[0]=search_typeall_select.substr(0,search_typeall_select.indexOf('-'));
+		array[1]=search_typeall_select.substr(search_typeall_select.indexOf('-')+1,search_typeall_select.length);
+		$('#approve_select').val(array[0]).trigger('change');
+		switch (array[0]) {
+			case 'ApproveType':
+				$('#'+array[0]).val(array[1]).trigger('change');
+				break;
+			default:
+				$('#approve_text').val(array[1]).trigger('change');
+				break;
+		}
+	}
+	//输入数字
+	$("#approve_page").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	//页码显示
+	$("#page_nums").val(MAX_PAGE);
+	//list show
+	show_approve_list();
+	parent._switchBtn(1);//显示按钮
+	//tr双击事件
+	$("#approve_list").on('dblclick','tr',function(e){
+		x=e.target;
+		var id=$(this).find("td");
+		if(x.nodeName !='A' && x.nodeName !='INS'){
+			var id=$(this).find("td");
+			var edit_item=$(id).eq(1).text();
+			document.frm_approve.a.value=edit_item;
+			document.frm_approve.tasktype.value=2;
+			document.frm_approve.d.value=search_typeall_r;	
+			var select_id=$('#approve_select').val();
+			var select_value=null;
+			switch (select_id) {
+				case 'ApproveType':
+					select_value=$('#'+select_id).val();
+					break;
+				default:
+					select_value=$('#approve_text').val();
+					break;
+			}
+			document.frm_approve.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+			document.frm_approve.action = '/bhost/approve_strategy';
+			document.frm_approve.submit();
+		}
+	}).on("click", "tr", function (e){  
+		x=e.target;
+		//删除按钮
+		if(x.id == 'del'){ 
+			var id=$(this).find("td");
+			var input  = $(this).find("input"); 
+			$('.btn').blur();parent.layer.open({
+				type:1,
+				title: '审批策略',
+				content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+				btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+				btnAlign:'c',
+				closeBtn: false,
+				skin:'layer-custom',
+				area:['380px','310px'],
+				move: false,
+				resize: false,
+				yes:function(i){
+					parent.layer.close(i);
+					var delete_item=$(id).eq(1).text();	
+					delete_fun(delete_item+'\t'+$(id).eq(2).text());
+				}
+			});
+		}
+		//编辑按钮
+		if(x.id == 'edit'){
+			var id=$(this).find("td");
+			var edit_item=$(id).eq(1).text();
+			document.frm_approve.a.value=edit_item;
+			document.frm_approve.tasktype.value=2;
+			document.frm_approve.d.value=search_typeall_r;	
+			var select_id=$('#approve_select').val();
+			var select_value=null;
+			switch (select_id) {
+				case 'ApproveType':
+					select_value=$('#'+select_id).val();
+					break;
+				default:
+					select_value=$('#approve_text').val();
+					break;
+			}
+			document.frm_approve.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+			document.frm_approve.action = '/bhost/approve_strategy';
+			document.frm_approve.submit();
+		}
+	});
+	$('#check_one_page').on(' ifClicked',function(e){
+		if(!$('#check_one_page').is(':checked')){
+			$("table tbody tr input").iCheck('check');
+		}else{
+			$("table tbody tr input").iCheck('uncheck');
+		}
+		
+	});
+	$("#approve_list").on("ifChecked",function(e){
+		check_num++;
+		$("span.sum").text(check_num);		
+		if($("table tbody tr input:checked").length==$("table tbody tr").length){
+			$('#check_one_page').iCheck('check');
+		}
+	}).on("ifUnchecked",function(e){
+		check_num--;
+		$("span.sum").text(check_num);	
+		$('#check_one_page').iCheck('uncheck');	
+	});
+})
+//显示创建页面
+function approve_add(){
+	document.frm_approve.tasktype.value=3;
+	document.frm_approve.a.value=0;
+	document.frm_approve.action = '/bhost/approve_strategy';
+	document.frm_approve.d.value=search_typeall_r;
+	var select_id=$('#approve_select').val();
+	var select_value=null;
+	switch (select_id) {
+		case 'ApproveType':
+			select_value=$('#'+select_id).val();
+			break;
+		default:
+			select_value=$('#approve_text').val();
+			break;
+	}
+	document.frm_approve.e.value=search_typeall_new+':'+select_id+'-'+select_value;
+	document.frm_approve.submit();
+}
+//刷新
+function clear_all(){
+	$("table tbody tr input").iCheck('uncheck');
+	delect_str=new Array();
+	check_num=0;
+	$("span.sum").text(check_num);
+}
+function update_array(){
+	var approveId=document.frm_approve.a.value;
+	var search_typeall=search_typeall_r+search_typeall_new;
+	$.ajax({
+		url: "/bhost/get_approve_list",
+		type:"POST",
+		async:true,
+		data:{a0:$("input[name=se]").val(),a2:search_typeall,a1:approveId,dsc:true},
+		success:function(result){
+			var approve_result = JSON.parse(result);
+			if (approve_result.Result){
+				var approve_data = approve_result.info;
+				var delect_str_old=delect_str;
+				delect_str=new Array();
+				approve_array=approve_data.data.map(function (params) {
+					if($.inArray(params.ApproveStrategyId+'\t'+params.ApproveStrategyName,delect_str_old)>=0){
+						delect_str.push(params.ApproveStrategyId+'\t'+params.ApproveStrategyName);
+					}
+					return params.ApproveStrategyId+'\t'+params.ApproveStrategyName;
+				});
+				
+			}else{
+				_alert(1,'审批策略',approve_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+String.prototype.ResetBlank=function(){
+		var regEx = /\s+/g; 
+		return this.replace(regEx, ' '); 
+	};
+function _addFilter(obj,type,type_num){
+	var id = $(obj).parent().children('select').eq(0).children('option:selected').val();
+	var v1 = $(obj).parent().children('select').eq(0).children('option:selected').text();
+	var v2 = $(obj).parent().children('input[type=text]').val().trim();
+	if(id=='all'){
+		v1='';
+	}else{
+		v1=v1+'-';
+	}
+	switch (id) {
+		case 'ApproveType':
+			var v3 = $('#'+id).children('option:selected').text();
+			v2=v3;
+			break;
+	}
+	v2=v2.ResetBlank();
+	if(v2 == '' && type_num!=1){
+		$(obj).parent().children('input[type=text]').blur();
+		_alert(2,'搜索','请输入关键字', $(obj).parent().children('input[type=text]'));
+		return false;
+	}
+	// else
+	{
+		switch (id) {
+			case 'Name':
+				var Reg=/^[\u4e00-\u9fa5a-zA-Z\d_\-\.\s]+$/;
+				break;
+			case 'ApproveType':
+				var Reg=/^[\u4e00-\u9fa5\s]+$/;
+				break;
+			case 'ApproveNum':
+				var Reg=/^[\d\s]+$/;
+				break;
+		}
+		if(id!='all' && id!="UserSet" && !Reg.test(v2) && type_num!=1){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(1,'搜索','关键字格式不正确', $(obj).parent().children('input[type=text]'));
+			return false;
+		}
+		if($.inArray(id+'-'+v2,search_typeall_r.split('\t'))>=0 && type_num!=1){
+			$(obj).parent().children('input[type=text]').blur();
+			_alert(2,'搜索','关键字重复', $(obj).parent().children('input[type=text]'));
+			return false;
+		}
+		
+		if(type){
+			search_typeall_r=search_typeall_r+id+'-'+v2+'\t';
+			search_typeall_new='';
+			$('#filterWW>ul').append('<li><span style = "display:none">'+id+'-'+v2+'</span><span class="ww">'+v1+v2+'</span><i class="del" onclick="_delFilter(this);"></i></li>')
+			$("#approve_text").val('');
+			$('#approve_text_check').hide();
+			selView();
+		}else{
+			if(type_num!=1)search_typeall_new=id+'-'+v2+'\t';
+		}
+	}
+	$("table tbody tr input").iCheck('uncheck');
+	
+	delect_str=new Array();
+	approve_page(0.1);
+	check_num=0;
+	$("span.sum").text(check_num);
+}
+var search_typeall_new=document.frm_approve.e.value.substr(0,document.frm_approve.e.value.indexOf(':'));
+function _delFilter(obj){
+	var id = $(obj).parent().find("span");
+	var ids=$(id).eq(0).text();
+	var search_typeall_r_arr=search_typeall_r.split('\t');
+	search_typeall_r_arr.splice($.inArray(ids,search_typeall_r_arr),1);
+	search_typeall_r=search_typeall_r_arr.join('\t');
+	// search_typeall_r = search_typeall_r.replace(ids+'\t','');
+	var approve_text=$('#approve_text').val().trim();
+	$(obj).parent().remove();
+	selView();
+	$("table tbody tr input").iCheck('uncheck');	
+	
+	delect_str=new Array();
+	approve_page(0.1);
+	check_num=0;
+	$("span.sum").text(check_num);
+}
+function _clearFilter(obj,num){
+	if(num==1){
+		$('#approve_text_check').hide();
+	$('#approve_text').val('');
+	search_typeall_new='';
+	$("table tbody tr input").iCheck('uncheck');
+	delect_str=new Array();
+	approve_page(0.1);
+	check_num=0;
+	$("span.sum").text(check_num);
+		return;
+	}
+	$('#clearFilter').next().children('ul').empty();
+	$('#approve_text_check').hide();
+	$('#approve_text').val('');
+	search_typeall_new='';
+	search_typeall_r='';
+	$('#clearFilter').hide();
+	selView();
+	$("table tbody tr input").iCheck('uncheck');
+	delect_str=new Array();
+	approve_page(0.1);
+	check_num=0;
+	$("span.sum").text(check_num);
+}
+function selView(){
+	var $sel = $('#filterWW');
+	var len = $('li',$sel).length;
+	if(len == 0){
+		$sel.hide();
+		$('#clearFilter').hide();
+	}else{
+		$("#filterWW").show();
+		$('#clearFilter').show();
+		$('>span.ww',$sel).show();
+		$sel.addClass('selector-multiple');
+	}
+}
+//选中字段存储
+function delect_save(){
+	$(">tr","#approve_list").each(function(){
+		var input  = $(this).find("input[type='checkbox']");
+		var delect_item=$(">td",this).eq(1).text()+'\t'+$(">td",this).eq(2).text();
+		var index=$.inArray(delect_item,delect_str);
+		if($(input).is(':checked')){
+			if(index<0){
+				delect_str.push(delect_item);
+			}
+		}else{
+			if(index>=0){
+				delect_str.splice(index,1);
+			}
+		}
+	});
+}
+//check显示
+function check_show(){
+	$(">tr","#approve_list").each(function(){
+		var check_id=$(">td",this).eq(1).text()+'\t'+$(">td",this).eq(2).text();
+		if($.inArray(check_id,delect_str)>=0){
+			$(this).find("input[type='checkbox']").iCheck('check');
+		}
+	});
+}
+//input回车触发事件
+function showMsg(){
+	delect_save();
+	var cur = $("#approve_page").val();
+	cur=cur.replace(/\D/g, "");
+	if(cur=='' || parseInt(cur) < 1){
+		cur=1;
+	}else if(parseInt(cur)>fenye_r){
+		cur=fenye_r;
+	}
+	if(parseInt(cur)==parseInt(document.frm_approve.c.value)){
+		$("#approve_page").val(cur);
+		return false;
+	}
+	document.frm_approve.c.value=cur;
+	show_approve_list();
+}
+//以每页显示数显示列表函数
+function show_approve_list(){
+	update_array();
+	var paging = document.frm_approve.c.value;
+	var page_num = MAX_PAGE;
+	var approveId=document.frm_approve.a.value;
+	var search_typeall=search_typeall_r+search_typeall_new;
+	$.ajax({
+		url: "/bhost/get_approve_list",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a4:page_num,a3:paging,a2:search_typeall,a1:approveId,dsc:true},
+		success:function(result){
+			var approve_result = JSON.parse(result);
+			if (approve_result.Result==true){
+				var approve_data = approve_result.info;
+				var total_all = approve_data.totalrow;
+				if(total_all%MAX_PAGE==0){
+					fenye_r=parseInt(total_all/MAX_PAGE);
+				}else{
+					fenye_r=parseInt(total_all/MAX_PAGE)+1;
+				}
+				if(approve_data.data=="" && paging!="1"){
+					approve_page(0.9);
+				}else{
+					//total = 0;
+					total_all_r = total_all;
+					if(total_all){
+						$("#approve_list").empty();
+						$.each(approve_data.data,function(i,item){
+							//if (total<page_num){
+								//total++;//
+								if(item.ApproveStrategyName==null){
+									item.ApproveStrategyName="";
+								}
+								var set_str="";
+								if(item.UserSet!=null){
+									$.each(item.UserSet,function(i1,item1){
+										set_str=set_str+item1.UserCode+"，";
+									});
+									set_str=set_str.substr(0,set_str.length-1);	
+								}
+								var type_value=new Array();
+								if(item.ApproveType & 1){
+									type_value.push('消息');
+								}
+								if(item.ApproveType & 2){
+									type_value.push('短信猫');
+								}
+								if(item.ApproveType & 4){
+									type_value.push('短信');
+								}
+								if(item.ApproveType & 8){
+									type_value.push('邮件');
+								}
+								if(item.ApproveType & 16){
+									type_value.push('TOKEN');
+								}
+								// float_str = "<p>用户："+HTMLEncode(set_str)+"</p>";
+								$("#approve_list").append("<tr>"+
+								(perm==2?"<td class=\"in\"><input type=\"checkbox\" class=\"input_checkbox\" /></td>":"<td title='"+item.ApproveStrategyName+"'>"+item.ApproveStrategyName+"</td>")+
+								"<td style = \"display:none\">"+item.ApproveStrategyId+"</td>"+
+								(perm==2?"<td title='"+item.ApproveStrategyName+"'>"+item.ApproveStrategyName+"</td>":'')+
+								"<td title='"+type_value.join('，')+"'>"+type_value.join('，')+"</td>"+
+								"<td>"+(item.UserSet==null?'0':(item.UserSet.length<item.ApproveNum?item.UserSet.length:item.ApproveNum))+"</td>"+
+								"<td title='"+set_str+"'>"+set_str+"</td>"+
+								"<td><div class=\"tab-ctr\">"+
+								(perm==2?"<a href=\"javascript:;\" class=\"edit\" id=\"edit\" title='编辑'></a>":"<a href=\"javascript:;\" class=\"search_result\" id=\"edit\" title='查看'></a>")+
+								(perm==2?"<a href=\"javascript:;\" class=\"del\" id=\"del\" title='删除'></a>":"")+
+								"</div>"+
+								// "<div class=\"tab-moreinfo\">"+float_str+"</div>"+
+								"</td></tr>");
+							//}
+						})
+						// tabArr();
+						$(".input_checkbox","#approve_list").iCheck({
+							checkboxClass: 'icheckbox_minimal-blue',
+							radioClass: 'iradio_minimal-blue',
+							increaseArea: '0' // optional
+						});
+						$("#approve_total").text(total_all);
+	
+						if(paging>=fenye_r){
+							paging=fenye_r;
+						}
+						document.frm_approve.c.value=paging;
+						document.getElementById("approve_page").value=paging;
+						$("#approve_pages").text(fenye_r);
+						$('#check_one_page').iCheck('uncheck');	
+						$("table tbody tr input").iCheck('uncheck');
+						check_show();
+						check_num=delect_str.length;
+						$("span.sum").text(check_num);
+					}else{
+						$('#check_one_page').iCheck('uncheck');	
+						$("span.sum").text(0);
+						$("table tbody tr input").iCheck('uncheck');
+						$("#approve_list").empty();
+						$("#approve_total").text(total_all);
+						$("#approve_pages").text(1);
+						document.frm_approve.c.value=1;
+						fenye_r=1;
+						document.getElementById("approve_page").value=1;
+					}	
+				}
+			}else{
+				_alert(1,"审批策略",approve_result.ErrMsg);
+				$('#check_one_page').iCheck('uncheck');	
+				$("table tbody tr input").iCheck('uncheck');
+				$("span.sum").text(0);
+				$("#approve_total").text(0);
+				$("#approve_pages").text(1);
+				document.frm_approve.c.value=1;
+				fenye_r=1;
+				document.getElementById("approve_page").value=1;
+				return false;
+			}
+		}
+	});
+	
+}
+//分页 and 刷新
+function approve_page(num){
+	var paging=parseInt(document.frm_approve.c.value)+num;
+	if(paging==0 || paging==fenye_r+1){
+		return false;
+	}
+	delect_save();
+	var approve_list_s = [];
+	if (num == 0.1){
+		paging = 1;
+	}else if(num == 0.9){
+		paging=fenye_r;
+	}
+	$("span.sum").text(0);
+	document.getElementById("approve_page").value=paging;
+	document.frm_approve.c.value=paging;
+	show_approve_list();
+}
+//全选按钮
+function click_all_list(){
+	delect_save();
+	if(approve_array.length==delect_str.length){
+		delect_str=new Array();
+	}else{
+		delect_str=approve_array;
+	}
+	show_approve_list();
+}
+//删除函数
+function delete_fun(delect_str_1){
+	$.ajax({
+		url: '/bhost/del_approve',
+		type: "POST",
+		async:false,
+		data: {a0:$("input[name=se]").val(),a1:delect_str_1},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				approve_page(0);
+				//_alert(0,"审批策略","删除成功");
+				if(result.fail_num!=0){
+                                        if (result.success_num!=0)
+                                                _alert(0,"审批策略","成功："+result.success_num+'，失败：'+result.fail_num);
+                                        else
+                                                if ((result.fail_num+result.success_num)==1)
+                                                        _alert(1,"审批策略",result.ErrMsg);
+                                                else
+                                                        _alert(0,"审批策略",'失败：'+result.fail_num);
+                                }else{
+                                        _alert(0,"审批策略","删除成功");
+                                }
+			}else{
+				approve_page(0);
+				_alert(1,"审批策略",result.ErrMsg);
+				return false;
+			}	
+		}
+	});
+}
+//删除按钮
+function delete_list(){
+	delect_save();
+	if(delect_str.length == 0){
+		_alert(2,"审批策略","请选择要删除的数据");
+		return false;
+	}
+	//利用对话框返回的值 （true 或者 false） 
+	$('.btn').blur();parent.layer.open({
+		type:1,
+		title: '审批策略',
+		content: '<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		yes:function(i){
+			parent.layer.close(i);
+			delete_fun(delect_str.join(',')); 
+			delect_str=new Array();
+			check_num=0;
+			$("span.sum").text(check_num);
+		}
+	});
+}
+$(function(){
+	
+	$("#approve_strategy").on("click",function(){
+		parent.reload();
+	});
+ });
+</script>
+</body>
+</html>

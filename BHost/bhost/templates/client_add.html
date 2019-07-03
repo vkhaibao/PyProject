@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+
+</head>
+
+<body style="overflow:hidden;display:none;" class="bg-white">
+	<!--客户端IP集合添加或编辑-->
+	<div class="rwrap">
+		<div class="c-top">
+			<div class="c-title">
+				<!--<h3 onclick="parent.reload();">客户端集合</h3>-->
+				<div class="manual-head" style="float:left;width:100px">
+    				<div class="manual-title" >
+       					<span id="client_set" style="cursor: pointer;">客户端集合</span>
+        				<i class="client_set_icon"></i>
+   					</div>
+				</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="mainer" style="">
+			<div class="container">
+				<div class="c-cont" style="">
+					<div class="c-form c-form2" style="padding: 0;">
+						<div class="form-item" style="border-bottom: 1px solid #dedede;padding: 20px 0 20px;">
+							<span class="form-tag" style="width: 107px;"><em class="imp">*</em>名称：</span>
+							<div class="form-c" style="padding-left: 115px;">
+								<input type="text" class="form-text" id="d_n" name="d_n" maxlength="128" onblur="regCheck(this,nameReg);"><i class="v-check"></i>
+								<p class="form-tip">特殊字符仅支持下划线、横杠、小数点</p>
+							</div>
+						</div>
+						<div class="form form1">
+							<div class="c-form c-form-host" style="width: 450px;min-width: 450px;padding-top:0px;">
+								<div class="form">
+									<div class="form-item form-item-100 " style="width: 490px;font-size:16px;">
+										<span class="form-tag" style="width: 63px;float: left;">IP地址：</span>
+										<div id="ip_n1" name="ip_n1" class="form-c" style="padding-left: 8px;width:370px;float: left;" value="0">
+											<span class="ss ss-add" id="ip_span1" value="0" style="float:left;position:static;padding: 0 0 10px 0;">
+												<input type="text" class="form-text" style="width:137px;padding-right: 8px;">
+												<i class="ctr ctr-add" onclick="_addIp1(this);" style="margin-left: 3px;"></i>
+											</span>
+										</div>
+										<span class="form-tag" style="width: 63px;float: left;padding-top: 10px;">IP区间：</span>
+										<div id="ip_n" name="ip_n" class="form-c" style="padding-left: 8px;width:370px;float: left;padding-top: 10px;" value="0">
+											<span class="ss ss-add" id="ip_span" value="0" style="float:left;position:static;padding: 0 0 10px 0;width: 340px;">
+												<input type="text" class="form-text"placeholder="起始IP地址" style="width: 123px;">
+												<span style="vertical-align:middle;">-</span>
+											<input type="text" class="form-text" placeholder="结束IP地址" style="width:137px;padding-right: 8px;">
+											<i class="ctr ctr-add" onclick="_addIp(this);" style="margin-left: 5px;"></i>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!---->
+						<div class="form">
+							<div class="c-form c-form-host" style="width:500px;min-width:500px;padding-top:0px;">
+								<div class="form">
+									<div class="form-item form-item-100 " style="width: 500px;font-size:16px;">
+										<span class="form-tag" style="width: 86px;float: left;">MAC地址：</span>
+										<div id="MACAddress" name="MACAddress" class="form-c" style="padding-left: 0px;width: 410px;float:left;" value="0">
+											<span class="ss ss-add" value="0" style="float:left;position:static;width: 205px;padding: 0 0 10px 0;">
+												<input type="text" class="form-text" maxlength="17" style="width:152px;padding-right:8px;;">
+												<i class="ctr ctr-add" onclick="_addMAC(this)" style=" margin-left: 5px;"></i>
+											</span>
+										</div>
+										<span class="form-tag" style="width: 86px;padding-top: 10px;">MAC区间：</span>
+										<div id="MACAddress1" name="MACAddress1" class="form-c" style="padding-left: 0px;width: 410px;float:left;padding-top: 10px;" value="0">
+											<span class="ss ss-add" value="0" style="float:left;position:static;padding: 0 0 10px 0;width: 380px;">
+												<input type="text" class="form-text" maxlength="17" placeholder="起始MAC地址" style="width:152px;padding-right:8px;;">
+												<span style="vertical-align:middle;">-</span>
+											<input type="text" class="form-text" maxlength="17" placeholder="结束MAC地址" style="width:152px;padding-right:8px;;">
+											<i class="ctr ctr-add" onclick="_addMAC1(this)" style=" margin-left: 5px;"></i>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+			<div class="btns perm_disabled">
+				<a href="javascript:;" class="btn btn-normal" onclick="client_add();">保&nbsp;&nbsp;存</a>
+				<!--
+				<a href="javascript:;" class="btn btn-normal" onclick="client_list(0);">取&nbsp;&nbsp;消</a>
+				-->
+			</div>
+			<div id="bBtn" style="position: fixed;z-index:5;">
+				<a href="javascript:;" class="btn" style="float: right;" onclick="client_list(0);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+			</div>
+		</div>
+	</div>
+	<form action="/bhost/client_handle" method="POST" name="frm_client_add" id="frm_client_add">
+		<input type="hidden" name="tasktype" id="tasktype" value="{{ tasktype }}" />
+		<!--创建 编辑 列表-->
+		<input type="hidden" name="clientId" id="clientId" value="{{ clientId }}" />
+		<!--clientId-->
+		<input type="hidden" name="paging" id="paging" value="{{paging}}" />
+		<!--页码-->
+		<input type="hidden" name="search_typeall" id="search_typeall" value="{{search_typeall}}" />
+		<!--search_typeall-->
+		<input type="hidden" name="e" id="e" value="{{e}}" />
+		<!--e-->
+		<input type="hidden" name="se" id="se" value="{{se}}" />
+		<!--se-->
+	</form>
+	<script>
+		var perm={{perm}};
+		var perm_server={{perm_server}};
+		if (perm==0) parent.parent.$('#nav-s1 a.active').click();
+		else{
+			$('.bg-white').show();
+			if(perm==1){
+				$('.perm_disabled').remove();
+			}
+		}
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+	</script>
+
+
+	<script>
+
+	</script>
+	<script>
+		var client = {
+			"ClientScopeId": 0,
+			"ClientScopeName": "",
+			"IsApplyToServerScope": false,
+			"IPList": {
+				"IPSetId": 0,
+				"Set": new Array()
+			},
+			"MACList": {
+				"MACSetId": 0,
+				"Set": new Array()
+			}
+		};
+		var MACReg = /([A-Fa-f0-9]{2}:){5}[A-Fa-f0-9]{2}/;
+		var nameReg = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+		var ipReg =/(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+		//var ip_num=0;
+		$(function () {
+			//$("#ip_n").attr("value","10")
+			////console.log($("#ip_n").attr("value"));
+			parent._switchBtn(0);//隐藏按钮
+			//编辑页面
+			var tasktype = document.frm_client_add.tasktype.value;
+			if (tasktype == "2") {
+				var clientId = document.frm_client_add.clientId.value;
+				$.ajax({
+					url: "/bhost/get_client_list",
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: clientId },
+					success: function (result) {
+						var client_result = JSON.parse(result);
+						if (client_result.Result == true) {
+							var client_data = client_result.info.data[0];
+							$("#d_n").val(client_data.ClientScopeName);
+							$("#d_n").attr("disabled", true);
+							if (client_data.IPList != null) {
+								client.IPList.IPSetId = client_data.IPList.IPSetId;
+								if(client_data.IPList.Set!=null){
+									var IPset_group=client_data.IPList.Set.filter(function (params) {
+										return params.StartIP != params.EndIP
+									});
+									var IP_group=client_data.IPList.Set.filter(function (params) {
+										return params.StartIP == params.EndIP
+									});
+									for(var i=0;i<IPset_group.length-1;i++){
+										var $c = $('<span class="ss" value="' + IPset_group[i].IPSetMemberId + '" style="float:left;width: 340px;position:static;padding: 0 0 10px 0;"/>');
+										$c.html('<input type="text" class="form-text" style="width:137px;padding-right: 8px;"value="' + IPset_group[i].StartIP + '" >'
+											+ '<span style="vertical-align:middle;padding-left: 5px;    padding-right: 4px;">-</span>'
+											+ '<input type="text" class="form-text" style="width:137px;padding-right: 8px;" value="' + IPset_group[i].EndIP + '" >'
+											+ '<i class="ctr ctr-del" onclick="_delIp(this)" style="margin-top: 5px;margin-left: -3px;"></i>');
+										$("#ip_span").after($c);
+									}
+									if(IPset_group.length!=0){
+										$('#ip_span').attr('value',IPset_group[i].IPSetMemberId);
+										var $ip_input=$('#ip_span').find('input');
+										$ip_input.first().val(IPset_group[i].StartIP);
+										$ip_input.last().val(IPset_group[i].EndIP);
+									}
+									for(var i=0;i<IP_group.length-1;i++){
+										var $c = $('<span class="ss" style="float:left;position:static;padding: 0 0 10px 0;" value=' + IP_group[i].IPSetMemberId + '/>');
+										$c.html('<input type="text" class="form-text" style="width:137px;padding-right: 8px;" value="' + IP_group[i].StartIP + '" >'
+											+ '<i class="ctr ctr-del" onclick="_delIp(this)" style="margin-top: 5px;margin-left: -5px;"></i>');
+										$("#ip_span1").after($c);
+									}
+									if(IP_group.length!=0){
+										$('#ip_span1').attr('value',IP_group[i].IPSetMemberId);
+										$('#ip_span1').find('input').val(IP_group[i].StartIP);
+									}
+								}
+							}
+							if (client_data.MACList != null) {
+								client.MACList.MACSetId = client_data.MACList.MACSetId;
+								if(client_data.MACList.Set!=null){
+									var MACset_group=client_data.MACList.Set.filter(function (params) {
+										return params.StartMACAddress != params.EndMACAddress
+									});
+									var MAC_group=client_data.MACList.Set.filter(function (params) {
+										return params.StartMACAddress == params.EndMACAddress
+									});
+									for(var i=0;i<MACset_group.length-1;i++){
+										var $c = $('<span class="ss" value="' + MACset_group[i].MACSetMemberId + '" style="float:left;width: 380px;position: static;padding: 0 0 10px 0;"/>');
+										$c.html('<input type="text" class="form-text" maxlength="17"  value="' + MACset_group[i].StartMACAddress + '" style="width:152px;padding-right:8px;">'
+											+ '<span style="vertical-align:middle;padding-left: 5px;padding-right: 5px;">-</span>'
+											+ '<input type="text" class="form-text" maxlength="17"  value="' + MACset_group[i].EndMACAddress + '" style="width:152px;padding-right:8px;">'
+											+ '<i class="ctr ctr-del" style="margin-top: 4px;margin-left: -3px;" onclick="_delMAC(this)"></i>');
+										$("#MACAddress1").find("span[class='ss ss-add']").after($c);
+									}
+									if(MACset_group.length!=0){
+										$("#MACAddress1").find("span[class='ss ss-add']").attr('value',MACset_group[i].MACSetMemberId);
+										var $mac_input=$("#MACAddress1").find("span[class='ss ss-add']").find('input');
+										$mac_input.first().val(MACset_group[i].StartMACAddress);
+										$mac_input.last().val(MACset_group[i].EndMACAddress);
+									}
+									for(var i=0;i<MAC_group.length-1;i++){
+										var $c = $('<span class="ss" value="' + MAC_group[i].MACSetMemberId + '" style="float:left;position:static;width: 205px;padding: 0 0 10px 0;"/>');
+										$c.html('<input type="text" class="form-text" maxlength="17" style="width:152px;padding-right:8px;;" value="' + MAC_group[i].StartMACAddress + '" >'
+											+ '<i class="ctr ctr-del" style="    margin-top: 4px;margin-left: -3px;" onclick="_delMAC(this)"></i>');
+										$("#MACAddress").find("span[class='ss ss-add']").after($c);
+									}
+									if(MAC_group.length!=0){
+										$("#MACAddress").find("span[class='ss ss-add']").attr('value',MAC_group[i].MACSetMemberId);
+										$("#MACAddress").find("span[class='ss ss-add']").find('input').val(MAC_group[i].StartMACAddress);
+									}
+								}
+							}
+						} else {
+							_alert(1, '客户端集合', client_result.ErrMsg);
+							return false;
+						}
+					}
+				});
+			}
+		});
+		function _addMAC(obj) {
+			var pass = 1;
+			var v = $(obj).prev('input').val().trim();
+
+			if (v == '') {
+				_alert(2, "客户端集合", "请输入MAC地址", $(obj).prev('input'))
+				return false;
+			} else if (!MACReg.test(v)) {
+				_alert(1, "客户端集合", "MAC地址格式不正确", $(obj).prev('input'))
+				return false;
+			} else {
+				$(">span[class='ss']", "#MACAddress").each(function () {
+					mac_str = $(this).find("input").val().trim();
+					if (v.toLowerCase() == mac_str.toLowerCase()) {
+						_alert(2, "客户端集合", "MAC地址重复", $(obj).prev('input'))
+						pass = 0;
+						return false;
+					}
+				});
+			}
+			var mac_id = $(obj).parent().attr("value");
+			//console.log('mac_id' + mac_id);
+			if (pass == 1) {
+				var $c = $('<span class="ss" value="' + mac_id + '" style="float:left;position:static;width: 205px;padding: 0 0 10px 0;"/>');
+				$c.html('<input type="text" class="form-text" maxlength="17" style="width:152px;padding-right:8px;;" value="' + v + '" >'
+					+ '<i class="ctr ctr-del" style="    margin-top: 4px;margin-left: -3px;" onclick="_delMAC(this)"></i>');
+				$(obj).parent().after($c);
+				$(obj).prev('input').val("");
+				$(obj).prev('input').focus();
+			}
+		}
+		function manualLowercase(s) {
+			s.replace(/[A-Z]/g, function(ch) {return String.fromCharCode(ch.charCodeAt(0) | 32);});
+		}
+		function _addMAC1(obj) {
+			var pass = 1;
+			var v1 = $(obj).prev('input').val().trim();
+			var v = $(obj).prev('input').prev().prev('input').val().trim();
+
+			if (v == '') {
+				_alert(2, "客户端集合", "请输入起始MAC地址", $(obj).prev('input').prev().prev('input'))
+				return false;
+			} else if (!MACReg.test(v)) {
+				_alert(1, "客户端集合", "起始MAC地址格式不正确", $(obj).prev('input').prev().prev('input'))
+				return false;
+			}
+			if (v1 == '') {
+				_alert(2, "客户端集合", "请输入结束MAC地址", $(obj).prev('input'))
+				//$(obj).prev('input').val("");
+				return false;
+			} else if (!MACReg.test(v1)) {
+				_alert(1, "客户端集合", "结束MAC地址格式不正确", $(obj).prev('input'))
+				//$(obj).prev('input').val("");
+				return false;
+			}
+			if (v.toLowerCase() == v1.toLowerCase()) {
+				_alert(1, '客户端集合', '起始MAC地址不能大于等于结束MAC地址', $(obj).prev('input').prev().prev('input'));
+				return false;
+			}
+			var v_str = v.split(':');
+			var v1_str = v1.split(':');
+			for (var i = 0; i < 6; i++) {
+				//console.log(parseInt(v_str[i], 16));
+				//console.log(parseInt(v1_str[i], 16));
+				if (parseInt(v_str[i], 16) > parseInt(v1_str[i], 16)) {
+					_alert(1, '客户端集合', '起始MAC地址不能大于等于结束MAC地址', $(obj).prev('input').prev().prev('input'));
+					return false;
+				} else if (parseInt(v_str[i], 16) < parseInt(v1_str[i], 16)) {
+					break;
+				}
+			}
+			$('>span[class=ss]', '#MACAddress1').each(function () {
+				var input1 = $(this).find('input').eq(0).val().trim();
+				var input2 = $(this).find('input').eq(1).val().trim();
+				if (v.toLowerCase() == input1.toLowerCase() && input2.toLowerCase() == v1.toLowerCase()) {
+					_alert(2, '客户端集合', '相同的MAC区间已存在', $(obj).prev().prev().prev())
+					pass = 0;
+					return false;
+				}
+			});
+			if (pass == 1) {
+				var mac_id = $(obj).parent().attr("value");
+				//console.log('mac_id' + mac_id);
+				var $c = $('<span class="ss" value="' + mac_id + '" style="float:left;width: 380px;position: static;padding: 0 0 10px 0;"/>');
+				$c.html('<input type="text" class="form-text" maxlength="17"  value="' + v + '" style="width:152px;padding-right:8px;;;">'
+					+ '<span style="vertical-align:middle;padding-left: 5px;padding-right: 5px;">-</span>'
+					+ '<input type="text" class="form-text" maxlength="17"  value="' + v1 + '" style="width:152px;padding-right:8px;;;">'
+					+ '<i class="ctr ctr-del" style="margin-top: 4px;margin-left: -3px;" onclick="_delMAC(this)"></i>');
+				$(obj).parent().after($c);
+				$(obj).prev('input').val("");
+				$(obj).prev('input').prev().prev('input').val("");
+				$(obj).prev('input').prev().prev('input').focus();
+			}
+		}
+		function _delMAC(obj) {
+			var $c = $(obj).parent();
+			$c.fadeOut(function () {
+				$c.remove();
+			});
+		}
+		//删除ip
+		function _delIp(obj) {
+			var $c = $(obj).parent();
+			$c.fadeOut(function () {
+				$c.remove();
+			});
+		}
+		//加入ip
+		function _addIp(obj) {
+			var pass = 1;
+			var v1 = $(obj).prev().val().trim();
+			var v = $(obj).prev().prev().prev().val().trim();
+
+			if (v == '') {
+				_alert(2, '客户端集合', '请输入起始IP地址', $(obj).prev().prev().prev());
+				//$(obj).prev().prev().prev().val("");
+				return false;
+			} else if (!ipReg.test(v) || v=='0.0.0.0' || v=='255.255.255.255') {
+				_alert(1, '客户端集合', '起始IP格式不正确', $(obj).prev().prev().prev());
+				//$(obj).prev().prev().prev().val("");
+				return false;
+			}
+			if (v1 == '') {
+				_alert(2, '客户端集合', '请输入结束IP地址', $(obj).prev());
+				//$(obj).prev().val("");
+				return false;
+			} else if (!ipReg.test(v1) || v=='0.0.0.0' || v=='255.255.255.255') {
+				_alert(1, '客户端集合', '结束IP格式不正确', $(obj).prev());
+				//$(obj).prev().val("");
+				return false;
+			}
+			if (v == v1) {
+				_alert(1, '客户端集合', '起始IP不能大于等于结束IP', $(obj).prev().prev().prev());
+				//$(obj).prev().prev().prev().val("");
+				return false;
+			}
+			//add zero
+			var v_str = v.split(".");
+			var v1_str = v1.split(".");
+			for (var i = 0; i < 4; i++) {
+				//console.log(parseInt(v_str[i]));
+				//console.log(parseInt(v1_str[i]));
+				if (parseInt(v_str[i]) > parseInt(v1_str[i])) {
+					_alert(1, '客户端集合', '起始IP不能大于等于结束IP', $(obj).prev().prev().prev());
+					return false;
+				} else if (parseInt(v_str[i]) < parseInt(v1_str[i])) {
+					break;
+				}
+			}
+			$('>span[class=ss]', '#ip_n').each(function () {
+				var input1 = $(this).find('input').eq(0).val().trim();
+				var input2 = $(this).find('input').eq(1).val().trim();
+				if (input1 == v && input2 == v1) {
+					_alert(2, '客户端集合', '相同的IP区间已存在', $(obj).prev().prev().prev())
+					pass = 0;
+					return false;
+				}
+			});
+			if (pass == 1) {
+				var ip_id = $("#ip_span").attr("value");
+				var $c = $('<span class="ss" value="' + ip_id + '" style="float:left;width: 340px;position:static;padding: 0 0 10px 0;"/>');
+				$c.html('<input type="text" class="form-text" style="width:137px;padding-right: 8px;"value="' + v + '" >'
+					+ '<span style="vertical-align:middle;padding-left: 5px;    padding-right: 4px;">-</span>'
+					+ '<input type="text" class="form-text" style="width:137px;padding-right: 8px;" value="' + v1 + '" >'
+					+ '<i class="ctr ctr-del" onclick="_delIp(this)" style="margin-top: 5px;margin-left: -3px;"></i>');
+				$(obj).parent().after($c);
+				$(obj).prev().val("");
+				$(obj).prev().prev().prev().val("");
+				$(obj).prev().prev().prev().focus();
+				$("#ip_span").attr("value", "0");
+			}
+		}
+		//加入ip
+		function _addIp1(obj) {
+			var pass = 1;
+			var v = $(obj).prev('input').val().trim();
+			if (v == '') {
+				_alert(2, '客户端集合', '请输入IP地址', $(obj).prev('input'));
+				//$(obj).prev('input').val("");
+				return false;
+			} else if (!ipReg.test(v) || v=='0.0.0.0' || v=='255.255.255.255') {
+				_alert(1, '客户端集合', 'IP格式不正确', $(obj).prev('input'));
+				//$(obj).prev('input').val("");
+				return false;
+			} else {
+				$(">span[class='ss']", "#ip_n1").each(function () {
+					ip_str = $(this).find("input").val().trim();
+					if (ip_str == v) {
+						_alert(2, '客户端集合', '相同的IP已存在', $(obj).prev('input'));
+						//$(obj).prev('input').val("");
+						pass = 0;
+						return false;
+					}
+				});
+			}
+			var ip_id = $("#ip_span1").attr("value");
+			if (pass == 1) {
+				var $c = $('<span class="ss" style="float:left;position:static;padding: 0 0 10px 0;" value=' + ip_id + '/>');
+				$c.html('<input type="text" class="form-text" style="width:137px;padding-right: 8px;" value="' + v + '" >'
+					+ '<i class="ctr ctr-del" onclick="_delIp(this)"  style="margin-top: 5px;margin-left: -5px;"></i>');
+				$(obj).parent().after($c);
+				$(obj).prev('input').val("");
+				$(obj).prev('input').focus();
+				$("#ip_span1").attr("value", "0");
+			}
+		}
+		//创建
+		function client_add() {
+			var ip_section = 1;
+			var mac_address = 1;
+			var ip_section1 = 1;
+			var mac_address1 = 1;
+			//console.log(ip_section+':'+ip_section1+':'+mac_address+':'+mac_address1);
+			var pass = 1;
+			var no_pass = "";
+			var val = $("#d_n").val();
+			var $i = $("#d_n").next('i.v-check');
+			if (val == "") {
+				_alert(2, '客户端集合', '请输入名称', $("#d_n"));
+				return false;
+
+			} else if (!nameReg.test(val)) {
+				_alert(1, '客户端集合', '名称格式不正确', $("#d_n"));
+				return false;
+			}
+			var $all=$('#ip_n1').find('span.ss');
+			//console.log($all.length);
+			for(var i=0;i<$all.length;i++){
+				var ip_str = $all.eq(i).find("input").val().trim();
+				//console.log(i+':'+ip_str+':'+$all.length);
+				if(i==0 && ip_str=='' && $all.length==1){
+					ip_section1 = 0;
+				}else if(i!=0 && ip_str==''){
+					_alert(2, '客户端集合', '请输入IP地址',$all.eq(i).find("input"));
+					return false;
+				}else if(ip_str!='' && (!ipReg.test(ip_str) || ip_str=='0.0.0.0' || ip_str=='255.255.255.255')){
+					_alert(1, '客户端集合', 'IP地址格式不正确', $all.eq(i).find("input"));
+					return false;
+				}
+				for (var j=i+1;j<$all.length;j++){
+					var ip_str_2 = $all.eq(j).find("input").val().trim();
+					if(ip_str_2!='' && ip_str==ip_str_2){
+					_alert(2, '客户端集合', '相同的IP已存在',$all.eq(i).find("input"));
+					return false;
+					}
+				}
+			}
+			var $all=$('#ip_n').find('span.ss');
+			//console.log($all.length);
+			for (var i=0;i<$all.length;i++){
+				var input1 = $all.eq(i).find('input').first().val().trim();
+				var input2 = $all.eq(i).find('input').last().val().trim();
+				//console.log(i+':'+input1+':'+input2+':'+$all.length);
+				if(i==0 && input1=="" && input2=="" && $all.length==1){
+					ip_section = 0;
+				}else if(i!=0 && input1==""){
+					_alert(2, '客户端集合', '请输入起始IP地址', $all.eq(i).find('input').first());
+					return false;
+				}else if(input1!='' && (!ipReg.test(input1) || input1=='0.0.0.0' || input1=='255.255.255.255')){
+					_alert(1, '客户端集合', '起始IP格式不正确', $all.eq(i).find('input').first());
+					return false;
+				}else  if(i!=0 && input2==""){
+					_alert(2, '客户端集合', '请输入结束IP地址', $all.eq(i).find('input').last());
+					return false;
+				}else if(input2!='' && (!ipReg.test(input2) || input2=='0.0.0.0' || input2=='255.255.255.255')){
+					_alert(1, '客户端集合', '结束IP格式不正确', $all.eq(i).find('input').last());
+					return false;
+				}else if(input1!='' && input2!='' && input1==input2){
+					_alert(1, '客户端集合', '起始IP不能大于等于结束IP', $all.eq(i).find('input').first());
+					return false;
+				}else if(input1!='' && input2!=''){
+					var v_str = input1.split(".");
+					var v1_str = input2.split(".");
+					for (var m= 0; m < 4; m++) {
+						if (parseInt(v_str[m]) > parseInt(v1_str[m])) {
+							_alert(1, '客户端集合', '起始IP不能大于等于结束IP',$all.eq(i).find('input').first());
+							return false;
+						} else if (parseInt(v_str[m]) < parseInt(v1_str[m])) {
+							break;
+						}
+					}
+				}
+				for (var j=i+1;j<$all.length;j++){
+					var input1_j = $all.eq(j).find('input').first().val().trim();
+					var input2_j = $all.eq(j).find('input').last().val().trim();
+					if(input1!='' && input2!='' && input1==input1_j && input2==input2_j){
+					_alert(2, '客户端集合', 'IP地址重复',$all.eq(i).find("input").first());
+					return false;
+					}
+				}
+			}
+			var $all=$('#MACAddress').find('span.ss');
+			//console.log($all.length);
+			for(var i=0;i<$all.length;i++){
+				var mac_str = $all.eq(i).find("input").val().trim();
+				//console.log(i+':'+mac_str+':'+$all.length);
+				if(i==0 && mac_str=='' && $all.length==1){
+					mac_address = 0;
+				}else if(i!=0 && mac_str==''){
+					_alert(2, '客户端集合', '请输入MAC地址',$all.eq(i).find("input"));
+					return false;
+				}else if(mac_str!='' && (!MACReg.test(mac_str))){
+					_alert(1, '客户端集合', 'MAC地址格式不正确', $all.eq(i).find("input"));
+					return false;
+				}
+				for (var j=i+1;j<$all.length;j++){
+					var mac_str_2 = $all.eq(j).find("input").val().trim();
+					if(mac_str_2!='' && mac_str_2.toLowerCase() == mac_str.toLowerCase()){
+					_alert(2, '客户端集合', 'MAC地址重复',$all.eq(i).find("input"));
+					return false;
+					}
+				}
+			}
+			var $all=$('#MACAddress1').find('span.ss');
+			//console.log($all.length);
+			for (var i=0;i<$all.length;i++){
+				var input1 = $all.eq(i).find('input').first().val().trim();
+				var input2 = $all.eq(i).find('input').last().val().trim();
+				//console.log(i+':'+input1+':'+input2+':'+$all.length);
+				if(i==0 && input1=="" && input2=="" && $all.length==1){
+					mac_address1 = 0;
+				}else if(i!=0 && input1==""){
+					_alert(2, '客户端集合', '请输入起始MAC地址', $all.eq(i).find('input').first());
+					return false;
+				}else if(input1!='' && (!MACReg.test(input1))){
+					_alert(1, '客户端集合', '起始MAC地址格式不正确', $all.eq(i).find('input').first());
+					return false;
+				}else  if(i!=0 && input2==""){
+					_alert(2, '客户端集合', '请输入结束MAC地址', $all.eq(i).find('input').last());
+					return false;
+				}else if(input2!='' && (!MACReg.test(input2))){
+					_alert(1, '客户端集合', '结束MAC地址格式不不正确', $all.eq(i).find('input').last());
+					return false;
+				}else if(input1!='' && input2!='' && input1.toLowerCase() == input2.toLowerCase()){
+					_alert(1, '客户端集合', '起始MAC地址不能大于等于结束MAC地址', $all.eq(i).find('input').first());
+					return false;
+				}else if(input1!='' && input2!=''){
+					var v_str = input1.split(":");
+					var v1_str = input2.split(":");
+					for (var m = 0; m < 6; m++) {
+						if (parseInt(v_str[m], 16) > parseInt(v1_str[m], 16)) {
+							_alert(1, '客户端集合', '起始MAC地址不能大于等于结束MAC地址',$all.eq(i).find('input').first());
+							return false;
+						} else if (parseInt(v_str[m], 16) < parseInt(v1_str[m], 16)) {
+							break;
+						}
+					}
+				}
+				for (var j=i+1;j<$all.length;j++){
+					var input1_j = $all.eq(j).find('input').first().val().trim();
+					var input2_j = $all.eq(j).find('input').last().val().trim();
+					if(input1!='' && input2!='' && input1.toLowerCase() == input1_j.toLowerCase() && input2.toLowerCase() == input2_j.toLowerCase()){
+					_alert(2, '客户端集合', '相同的MAC区间已存在',$all.eq(i).find("input").first());
+					return false;
+					}
+				}
+			}
+			//console.log(ip_section+':'+ip_section1+':'+mac_address+':'+mac_address1);
+			if (mac_address == 0 && ip_section == 0 && mac_address1 == 0 && ip_section1 == 0) {
+				_alert(1, "客户端集合", "请输入IP地址或MAC地址", $("#ip_n1").find("span[class='ss ss-add']").children("input"));
+				return false;
+			}
+			var clientId = document.frm_client_add.clientId.value;
+			client.ClientScopeId = clientId;
+			client.ClientScopeName = val;
+			client.IPList.Set = new Array();
+			client.MACList.Set = new Array();
+			var i = 1;
+			var $all = $('#ip_n').find('span.ss');
+			var len = $all.length;
+			for (j = len - 1; j >= 0; j--) {
+				var ip_id = $all.eq(j).attr("value");
+				var input1 = $all.eq(j).find("input").eq(0).val().trim();
+				var input2 = $all.eq(j).find("input").eq(1).val().trim();
+				if((j==0 && input1!='' && input2!='')|| j!=0){
+					var json_a = '{"IPSetMemberId":' + ip_id + ',"Order":' + (i) + ',"StartIP":"' + input1 + '","EndIP":"' + input2 + '"}';
+					client.IPList.Set.push(JSON.parse(json_a));
+					i++;
+				}
+				
+			}
+			var $all = $('#ip_n1').find('span.ss');
+			var len = $all.length;
+			for (var j = len - 1; j >= 0; j--) {
+				var ip_id = $all.eq(j).attr("value");
+				var ip_str = $all.eq(j).find("input").val().trim();
+				if((j==0 && ip_str!='')|| j!=0){
+					var json_a = '{"IPSetMemberId":' + ip_id + ',"Order":' + (i) + ',"StartIP":"' + ip_str + '","EndIP":"' + ip_str + '"}';
+					client.IPList.Set.push(JSON.parse(json_a));
+					i++;
+				}
+			}
+			var i = 1;
+			var $all = $("#MACAddress").find('span.ss');
+			var len = $all.length;
+			for (var j = len - 1; j >= 0; j--) {
+				var mac_id = $all.eq(j).attr("value");
+				var mac_str = $all.eq(j).find("input").val().trim();
+				if((j==0 && mac_str!='') || j!=0){
+					var json_a = '{"MACSetMemberId":' + mac_id + ',"Order":' + (i) + ',"StartMACAddress":"' + mac_str + '","EndMACAddress":"' + mac_str + '"}';
+					client.MACList.Set.push(JSON.parse(json_a));
+					i++;
+				}
+			}
+			var $all = $('#MACAddress1').find('span.ss');
+			var len = $all.length;
+			for (var j = len - 1; j >= 0; j--) {
+				var mac_id = $all.eq(j).attr("value");
+				var mac_0 = $all.eq(j).find("input").eq(0).val().trim();
+				var mac_1 = $all.eq(j).find("input").eq(1).val().trim();
+				if((j==0 && mac_0!='' && mac_1!='')||j!=0){
+					var json_a = '{"MACSetMemberId":' + mac_id + ',"Order":' + (i) + ',"StartMACAddress":"' + mac_0 + '","EndMACAddress":"' + mac_1 + '"}';
+					client.MACList.Set.push(JSON.parse(json_a));
+					i++;
+				}
+			}
+			client.IsApplyToServerScope = false;
+			save_client(client);
+		}
+		function save_client(client) {
+			var msstr = aceg(JSON.stringify(client),$("input[name=se]").val());
+			$.ajax({
+				url: '/bhost/add_client',
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: JSON.stringify(client), a2: "0", a3: "null" ,m1:msstr},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if (result.Result == true) {
+						$('.btn').blur(); parent.layer.open({
+							type: 1,
+							title: '客户端集合',
+							content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+							btn: ['确&nbsp;&nbsp;定'],
+							btnAlign: 'c',
+							closeBtn: false,
+							skin: 'layer-custom',
+							area: ['380px', '310px'],
+							move: false,
+							resize: false,
+							yes: function (i) {
+								parent.layer.close(i);
+								client_list(1,result.ClientScopeId);
+							}
+						});
+					} else {
+						_alert(1, '客户端集合', result.ErrMsg, $("#d_n"));
+						return false;
+					}
+				}
+			});
+		}
+		//显示列表页面
+		function client_list(num,id) {
+			if(num==1){
+				$.ajax({
+					url: '/bhost/PGetRecordRownum',
+					type: "POST",
+					async: false,
+					data: { a0: $("input[name=se]").val(), a1: id,a2:9 },
+					success: function (result) {
+						var result = JSON.parse(result);
+						if (result.Result == true) {
+							if(result.info%MAX_PAGE==0){
+								document.frm_client_add.paging.value=parseInt(result.info/MAX_PAGE);
+							}else{
+								document.frm_client_add.paging.value=parseInt(result.info/MAX_PAGE)+1;
+							}
+						}
+					}
+				});
+				document.frm_client_add.search_typeall.value = '';
+				document.frm_client_add.e.value = ':';
+			}
+			document.frm_client_add.tasktype.value = 3;
+			document.frm_client_add.action = '/bhost/client_handle'
+			document.frm_client_add.submit();
+		}
+
+$(function(){
+	
+	$("#client_set").on("click",function(){
+		location.reload();
+	});
+  });
+
+	</script>
+</body>
+
+</html>

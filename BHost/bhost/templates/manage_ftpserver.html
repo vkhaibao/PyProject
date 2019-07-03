@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<!---->
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3 class="unsel" onclick="switch_Smtp()">邮件服务器</h3>
+				<h3 class="unsel" onclick="switch_Syslog();">Syslog</h3>
+				<h3 class="unsel" onclick="switch_Snmptrap();">Snmp trap</h3>
+				<h3 onclick="switch_SmsSvr();">FTP</h3>
+				<h3 class="unsel" onclick="switch_SmsM();">短信猫</h3>
+				-->
+				<div class="manual-head" style="float:left;width:auto;">
+					<div class="manual-title title-item" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+						<span id="mail_span">邮件</span>
+						<i style="display: none;"></i>
+					</div>
+					<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);">
+						<span id="sms_svr">短信网关</span>
+						<i style="display:none;"></i>
+					</div>
+					<!--
+					<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);">
+						<span id="sms_m">短信猫</span>
+						<i style="display: none;"></i>
+					</div>
+					-->
+					<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);">
+						<span id="syslog_span">SYSLOG</span>
+						<i style="display: none;"></i>
+					</div>
+					<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);">
+						<span id="Snmptrap">SNMP</span>
+						<i style="display: none;"></i>
+					</div>
+					<div class="manual-title-other title-item" id="frist">
+						<span id="ftp_span">FTP</span>
+						<i class="ftp_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			
+			<div class="container1">
+				<div class="c-cont">
+					<div class="c-wrap">
+						<div class="c-table r-list">
+							<div class="tab-t">
+								<div class="ctr">
+									{% if _power_mode == 2 %}
+									<a href="javascript:;" class="btn btn-default s-hide" onclick="create_ftp()">创建</a>
+									<a href="javascript:;" class="btn btn-default s-hide" onclick="delete_all()">删除</a>
+									<a href="javascript:;" class="btn btn-default s-hide" onclick="select_all()">全选</a>
+									{% endif %}				
+									<a href="javascript:;" class="btn btn-default" onclick="refresh()">刷新</a>
+								</div>
+								<!--
+								<div class="filter">
+									<div class="search">
+										<select name="" id="filtername" class="filter-select" onchange="filter_change();">
+											<option value="0">所有</option>
+											<option value="1">名称</option>
+										</select>
+
+										<input type="text" class="filter-text" id="keyword" placeholder="输入关键字">
+
+										<button class="filter-btn" onclick="_addFilter(this)"><img src="/manage/images/search-icon.png"></button>
+									</div>
+
+									<div class="selector selector-multiple" id="filterWW">
+										<span class="ww">搜索条件</span>
+										<ul>
+
+										</ul>
+									</div>
+								</div>
+								-->
+							</div>
+							<div class="box-table">
+							<table cellpadding="0" cellspacing="0" id="ftp_list">
+								<thead>
+									<tr>		
+										<th width="50" class="s-hide" ><input type="checkbox" class="form-checkbox" id="check_page"/></th>
+										<th>配置名称</th>
+										<!--
+										<th>DNS服务地址</th>
+										-->
+										<th>服务器地址</th>
+										<th>用户名</th>
+										<th>上传路径</th>
+										<th width="60"></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									
+								</tbody>
+							</table>
+							</div>
+							<div class="tab-i">
+								<div class="il">
+									每页显示<span id="page_total">10</span>条 总数：<span id="ftp_total">25</span>  选中：<span id = "select_total">0</span>
+								</div>
+
+								<div class="ipage">
+									<a href="javascript:;" class="nav2 begin" onclick="firstpage()"><i></i></a>
+									<a href="javascript:;" class="nav prev" onclick="prevpage()"><i></i></a>
+									<input type="text" value="1" id="curpage" onchange="jumppage()">/&nbsp;<span id = "totalpage">25</span>
+									<a href="javascript:;" class="nav next" onclick="nextpage()"><i></i></a>
+									<a href="javascript:;" class="nav2 end" onclick="lastpage()"><i></i></a>
+								</div>
+							</div>
+						</div>
+						
+						<div class="clearfix"></div>
+						<!--
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-cancel1 btn-normal" onclick="list_cancel()">返&nbsp;&nbsp;回</a>
+						</div>
+						-->
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="list_cancel();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<form action="/bhost/create_smssvr" method="POST" name="frm_ftp" id="frm_ftp">
+		<input type="hidden" name="tasktype" id = "tasktype" value="" />
+		<input type="hidden" name="z1" id = "z1" value="" />		
+		<input type="hidden" name="z2" id = "z2" value=""/>
+		<input type="hidden" name="z3" id = "z3" value=""/>
+		<input type="hidden" name="z4" id = "z4" value=""/>
+		<input type="hidden" name="a0" value=""/>
+	</form>
+</body>
+
+
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' 
+});
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+
+
+<script>
+var se;
+var _if_disable ='2';
+var first_style='';
+$(function(){
+	if('{{error_msg}}' !=""){
+		_alert(2,'FTP','{{error_msg}}');
+		return false;
+	}
+	_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+	if(_if_disable == '1'){
+		$('.s-hide').remove();
+		$('thead tr').eq(0).children('th:last').css('width',30);
+		first_style="style=\"border-left: 1px solid #FFF;\"";
+	}
+	$("#mail_span").on("click",function(){
+		switch_Smtp();
+	});
+	$("#syslog_span").on("click",function(){
+		switch_Syslog();
+	});
+	$("#Snmptrap").on("click",function(){
+		switch_Snmptrap();
+	});
+	$("#sms_svr").on("click",function(){
+		switch_SmsSvr();
+	});
+	$("#sms_m").on("click",function(){
+		switch_SmsM();
+	});
+	$("#ftp_span").on("click",function(){
+		switch_ftp();
+	});
+	se = window.parent.document.frm.se.value;
+	$("#curpage").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	tabArr();
+	if (now != "" && now != "None"){
+		$('#curpage').val(now);
+	}
+	if (keyword_re.length != 0){
+		var key_len = keyword_re.length;
+		$.each(keyword_re,function(i,item){
+			var filter = item.substring(0,2);
+			var filter_value = 0;
+			if (filter == "名称"){
+				filter_value = 1;
+				$("#filterWW ul").append("<li><span class=\"ww\">"+item+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+			}
+			if (i+1 == key_len){
+				$("#filtername").val(filter_value).trigger('change');
+			}
+		});
+		get_ftp_list();
+	}else{
+		$("#filterWW").hide();
+		$("#keyword").hide();
+		get_ftp_list();
+	}
+	parent._switchBtn(1);//显示按钮
+});
+
+var selectid={{selectid|safe}};
+var num=0;
+var now="{{now}}";
+var keyword_re = {{keyword|safe}};
+
+function select_all(){
+	selectid=[];
+	var num = 0;
+	var select_total = $("#select_total").text();
+	var ftp_total = $("#ftp_total").text();
+	
+	if (ftp_total == select_total){
+		$("#ftp_list").find('input').iCheck('uncheck');
+	}else{
+		$.ajax({
+			url:'/bhost/get_ftp_list',
+			type:'post',
+			async:false,
+			data:{a0:se},
+			success:function(result){
+				var all_id = JSON.parse(result);
+				$.each(all_id.data,function(i,item){
+					selectid.push(item.FTPServerId);
+				});	
+			}
+		});
+		$("#ftp_list tbody input[type='checkbox']").each(function(){
+			$(this).iCheck('check');
+		});
+	}
+	num = selectid.length;
+	$("#select_total").text(num);
+}
+
+
+function nextpage(){
+	var cpage = $("#curpage").val();
+	var total = $("#totalpage").text();
+	var npage = 0;
+	if (total == cpage){
+		return;
+	}else{
+		npage = parseInt(cpage)+1;
+	}
+	$("#curpage").val(npage);
+	get_ftp_list();
+}
+
+function prevpage(){
+	var cpage = $("#curpage").val();
+	var ppage = 0;
+	if (parseInt(cpage) == 1){
+		return;
+	}else{
+		ppage = parseInt(cpage)-1;
+	}
+	$("#curpage").val(ppage);
+	get_ftp_list();
+}
+
+function firstpage(){
+	$("#curpage").val(1);
+	get_ftp_list();
+}
+
+function lastpage(){
+	var cpage = $("#curpage").val();
+	var lpage = $("#totalpage").text();
+	if (cpage == lpage){
+		return;
+	}
+	$("#curpage").val(lpage);
+	get_ftp_list();
+}
+
+function jumppage(){
+		var cur = $("#curpage").val();
+		var numReg = /\D/;
+        if (numReg.test(cur)){
+            $("#curpage").val(1);
+        }
+	if (parseInt(cur) < 1 || cur == ""){
+		$("#curpage").val(1);
+	}
+	get_ftp_list();
+}
+
+
+function get_ftp_list(){
+    var ipage = $("#curpage").val(); //页数
+				$.ajax({  
+		url:'/bhost/get_ftp_list',
+		type:"post",
+		async:false,
+		data:{a0:se,z1:MAX_PAGE,z2:ipage,z3:JSON.stringify(keyword_re)},
+		success:function(result){
+			ftp_list = JSON.parse(result);
+			$("#ftp_list tbody").empty();
+			var _flag;
+			var ftp_dns;
+			var FTPServerName;
+			$.each(ftp_list.data,function(i,item){
+				if (item.DNS == null){
+					ftp_dns = "";
+				}else{
+					ftp_dns = item.DNS;
+				}
+				if (item.Flag == 2){
+					_flag = "(默认)";
+					FTPServerName = autoAddEllipsis(item.FTPServerName,'15');
+				}else if (item.Flag == 1){
+					_flag = "(备用)";
+					FTPServerName = autoAddEllipsis(item.FTPServerName,'15');
+				}else{
+					_flag = "";
+					FTPServerName = item.FTPServerName;
+				}
+				if(_if_disable == '1'){
+					edit_class = 'search_result';
+					title_str = '查看';
+				}else{
+					edit_class = 'edit';
+					title_str ='编辑';
+				}
+				$("#ftp_list tbody").append("<tr><td class=\"s-hide\"><input class=\"form-checkbox\" type=\"checkbox\" name=\""+item.FTPServerName+"\" value=\""+item.FTPServerId+"\"></td><td title=\""+item.FTPServerName+_flag+"\" "+first_style+">"+FTPServerName+_flag+"</td><td title=\""+item.ServerIP+"\">"+item.ServerIP+"</td><td title=\""+item.ServerUser+"\">"+item.ServerUser+"</td><td title=\""+item.ServerPath+"\">"+item.ServerPath+"</td><td><div class=\"tab-ctr\"><a href=\"javascript:;\" title=\""+title_str+"\" class=\""+edit_class+"\" onclick=\"edit_ftp("+item.FTPServerId+")\"></a><a href=\"javascript:;\" class=\"del\" title=\"删除\" id=\"del s-hide\" onclick=\"delete_ftp("+item.FTPServerId+")\"></a></div></td></tr>");  
+				if(_if_disable == '1'){
+					$('.s-hide').remove();
+				}
+				tabArr();
+				$('.form-checkbox,.form-radio').iCheck({
+					checkboxClass: 'icheckbox_minimal-blue',
+					radioClass: 'iradio_minimal-blue',
+					increaseArea: '0' 
+				});
+			});
+		}
+	});
+    $("#ftp_total").text(ftp_list.totalrow);
+	totalpage = Math.ceil(parseInt(ftp_list.totalrow)/MAX_PAGE);
+	if (totalpage < 1){
+		totalpage = 1;
+	}
+		$("#totalpage").text(totalpage.toString());
+	$("#page_total").text(MAX_PAGE);
+	$('#check_page').iCheck('uncheck');
+	var check_page_flag = 0;
+	$("#ftp_list tbody input[type='checkbox']").each(function(){
+		if ($.inArray(parseInt(this.value), selectid) != -1){					
+			$(this).iCheck('check');
+			check_page_flag++;
+		}
+    });
+	if (check_page_flag == $("#ftp_list tbody input[type='checkbox']").length && check_page_flag != 0){
+		$('#check_page').iCheck('check');
+	}
+	
+	if (parseInt(ipage) > totalpage){
+		$("#curpage").val(totalpage);
+		get_ftp_list();
+	}
+
+	$("#ftp_list tbody >tr").bind("dblclick",function(e){
+		x=e.target;
+		if (x.nodeName != "INS"){
+			$(this).children('td:last').find('.edit').click();
+			$(this).children('td:last').find('.search_result').click();
+		}
+	});
+	$('#check_page').on('ifClicked',function(e){
+		if(!$('#check_page').prop('checked')){
+			$("#ftp_list").children('tbody').find('input[type=checkbox]').iCheck('check');
+		}else{
+			$("#ftp_list").children('tbody').find('input[type=checkbox]').iCheck('uncheck');
+		}
+		
+	});
+
+	num = selectid.length;
+	$("#select_total").text(num);
+	$("#ftp_list tbody input[type='checkbox']").on("ifChanged",function(){
+		num = $("#select_total").text();  
+		if ($(this).prop("checked")){
+			num++;
+			if (selectid.indexOf(parseInt(this.value)) == -1){
+					selectid.push(parseInt(this.value))     
+			}
+		}else{
+			num--;
+			selectid.splice($.inArray(parseInt(this.value),selectid),1);
+		}
+		$("#select_total").text(num);
+		if ($("#ftp_list tbody").find('input[type=checkbox]:checked').length == $("#ftp_list tbody input[type='checkbox']").length){
+			$('#check_page').iCheck('check');
+		}else{
+			$('#check_page').iCheck('uncheck');
+		}
+	});		
+}
+
+function delete_all(){
+	if (selectid.length == 0){
+		_alert(2,"FTP","请选择要删除的数据");
+		return;
+	}
+	var id = JSON.stringify(selectid);
+		$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"FTP",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否批量删除</div>',
+		btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			$("#select_total").text(0);
+			deleteftp(1,id);
+			selectid=[];
+			get_ftp_list();
+		},
+		btn2:function(i){
+			parent.layer.close(i);
+		}
+	});	
+}
+
+function delete_ftp(id){
+	$('.btn').blur();
+	parent.layer.open({
+		type:1,
+		title:"FTP",
+		content:'<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+		btn:['确&nbsp;&nbsp;定','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		btn1:function(i){
+			parent.layer.close(i);
+			deleteftp(0,id);
+			for (var i = 0; i < selectid.length; i++){      
+				if (selectid[i] == parseInt(id)){
+					num = $("#select_total").text();
+					num = parseInt(num)-1;
+					$("#select_total").text(num);
+					selectid.splice($.inArray(parseInt(id),selectid),1);
+					break;
+				}
+        	}
+			get_ftp_list();
+		},
+		btn2:function(i){
+			parent.layer.close(i);
+		}
+	});
+}
+
+function deleteftp(type,id){
+	$.ajax({
+		url:'/bhost/ftp_delete',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:type,z2:id},
+		success:function(results){
+			data = JSON.parse(results);
+			if (data.Result == false){
+				_alert(1,"FTP","删除失败："+data.ErrMsg);
+			}else{
+				_alert(0,"FTP","删除成功");
+			}
+		}
+	});
+}
+
+function filter_change(){
+	var name = $("#filtername").val();
+		if (name == '0'){
+		$("#keyword").hide();
+		$("#filterWW").hide();
+	}else{
+		$("#keyword").show();
+		$("#filterWW").show();
+	}
+}
+
+function _addFilter(){
+	var keyword = $("#keyword").val().trim();
+	var name = $("#filtername").val();
+	var add = 0;
+	var nameReg = /[<>]|(^\s*$)/;
+			if (keyword == ""){
+		_alert(2,"FTP","请输入关键字");
+		return;
+	}
+	if (name == "0"){
+		$("#keyword").val('');
+		$("#filterWW ul li").each(function(){
+			$(this).remove();
+		})
+		get_ftp_list();
+		return;
+	}else{
+		keyword = "名称-" + keyword;
+	}
+	$("#filterWW li").each(function(i,item){
+		var filter = $(item).find('.ww').text();
+		if (filter == keyword){
+			add = 1;
+		}
+	});
+	if (add != 1){  //名称
+		$("#filterWW ul").append("<li><span class=\"ww\">"+keyword+"</span><i class=\"del\" onclick=\"_delFilter(this)\"></i></li>");
+		keyword_re.push(keyword);
+	}
+	$("#keyword").val('');
+	$("#curpage").val(1);
+	get_ftp_list();
+}
+
+function _delFilter(obj){
+	var filter_text = $(obj).parent().children('span').text();
+	$(obj).parent().remove();
+	keyword_re.splice($.inArray(filter_text,keyword_re),1);
+	get_ftp_list();
+}
+
+
+function create_ftp(){	
+	document.frm_ftp.action = '/bhost/create_ftp';
+	document.frm_ftp.z1.value = $("#curpage").val();
+	document.frm_ftp.z2.value = JSON.stringify(keyword_re);
+	document.frm_ftp.z3.value = "None";
+	document.frm_ftp.z4.value = JSON.stringify(selectid);
+	document.frm_ftp.submit();
+}
+
+//编辑
+function edit_ftp(id){
+	$.ajax({
+		url:'/bhost/get_ftp_list',
+		type:'post',
+		async:false,
+		data:{a0:se,z4:id},
+		success:function(result){
+			var results = JSON.parse(result);
+						if (result.totalrow == "0"){
+				_alert(2,"FTP","该FTP设置已删除")
+				refresh();
+			}else{
+				var ipage = $("#curpage").val();
+				var deliver = JSON.stringify(keyword_re);
+				var data = JSON.stringify(results);
+				document.frm_ftp.action='/bhost/create_ftp';
+				document.frm_ftp.z1.value = ipage;
+				document.frm_ftp.z2.value = deliver;
+				document.frm_ftp.z3.value = data;
+				document.frm_ftp.z4.value = JSON.stringify(selectid);
+				document.frm_ftp.submit();	
+			}
+		}
+	});
+}
+
+function refresh(){
+	selectid=[];
+	$("#ftp_list input[type='checkbox']").each(function(){                                 
+		$(this).iCheck('uncheck');
+	});
+	$("#select_total").text(0);
+	get_ftp_list();
+	return false;
+}
+
+
+function list_cancel(){
+	window.parent._closePage(null); 
+}
+
+function switch_SmsM(){
+	document.frm_ftp.action='/bhost/manage_smsm';
+	document.frm_ftp.z1.value = 1;
+	document.frm_ftp.z2.value = "[]";
+	document.frm_ftp.z3.value = "[]";
+	document.frm_ftp.a0.value = se;
+	document.frm_ftp.submit();	
+}
+
+function switch_Syslog(){
+	document.frm_ftp.action='/bhost/manage_syslog';
+	document.frm_ftp.z1.value = 1;
+	document.frm_ftp.z2.value = "[]";
+	document.frm_ftp.z3.value = "[]";
+	document.frm_ftp.a0.value = se;
+	document.frm_ftp.submit();	
+}
+
+function switch_Snmptrap(){
+	document.frm_ftp.action='/bhost/manage_snmp';
+	document.frm_ftp.z1.value = 1;
+	document.frm_ftp.z2.value = "[]";
+	document.frm_ftp.z3.value = "[]";
+	document.frm_ftp.a0.value = se;
+	document.frm_ftp.submit();	
+}
+
+function switch_Smtp(){
+	document.frm_ftp.action='/bhost/mailserver_manage';
+	document.frm_ftp.z1.value = 1;
+	document.frm_ftp.z2.value = "[]";
+	document.frm_ftp.z3.value = "[]";
+	document.frm_ftp.a0.value = se;
+	document.frm_ftp.submit();	
+}
+
+function switch_SmsSvr(){
+	document.frm_ftp.action='/bhost/manage_smssvr';
+	document.frm_ftp.z1.value = 1;
+	document.frm_ftp.z2.value = "[]";
+	document.frm_ftp.z3.value = "[]";
+	document.frm_ftp.a0.value = se;
+	document.frm_ftp.submit();	
+}
+
+function switch_ftp(){
+	document.frm_ftp.action='/bhost/manage_ftp';
+	document.frm_ftp.z1.value = 1;
+	document.frm_ftp.z2.value = "[]";
+	document.frm_ftp.z3.value = "[]";
+	document.frm_ftp.a0.value = se;
+	document.frm_ftp.submit();
+	
+}
+
+/* 
+* 处理过长的字符串，截取并添加省略号 
+* 注：半角长度为1，全角长度为2 
+*  
+* pStr:字符串 
+* pLen:截取长度 
+*  
+* return: 截取后的字符串 
+*/
+function autoAddEllipsis(pStr, pLen) {
+	var _ret = cutString(pStr, pLen);
+	var _cutFlag = _ret.cutflag;
+	var _cutStringn = _ret.cutstring;
+	
+	if ("1" == _cutFlag) {
+		return _cutStringn + "...";
+	} else {
+		return _cutStringn;
+	}
+}
+/* 
+* 取得指定长度的字符串 
+* 注：半角长度为1，全角长度为2 
+*  
+* pStr:字符串 
+* pLen:截取长度 
+*  
+* return: 截取后的字符串 
+*/
+function cutString(pStr, pLen) {
+	// 原字符串长度  
+	var _strLen = pStr.length;
+
+	var _tmpCode;
+
+	var _cutString;
+
+	// 默认情况下，返回的字符串是原字符串的一部分  
+	var _cutFlag = "1";
+
+	var _lenCount = 0;
+
+	var _ret = false;
+
+	if (_strLen <= pLen / 2) {
+		_cutString = pStr;
+		_ret = true;
+	}
+
+	if (!_ret) {
+		for (var i = 0; i < _strLen; i++) {
+			if (isFull(pStr.charAt(i))) {
+				_lenCount += 2;
+			} else {
+				_lenCount += 1;
+			}
+
+			if (_lenCount > pLen) {
+				_cutString = pStr.substring(0, i);
+				_ret = true;
+				break;
+			} else if (_lenCount == pLen) {
+				_cutString = pStr.substring(0, i + 1);
+				_ret = true;
+				break;
+			}
+		}
+	}
+
+	if (!_ret) {
+		_cutString = pStr;
+		_ret = true;
+	}
+
+	if (_cutString.length == _strLen) {
+		_cutFlag = "0";
+	}
+
+	return { "cutstring": _cutString, "cutflag": _cutFlag };
+}
+
+/* 
+* 判断是否为全角 
+*  
+* pChar:长度为1的字符串 
+* return: true:全角 
+*          false:半角 
+*/
+function isFull(pChar) {
+	if ((pChar.charCodeAt(0) > 128)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+</script>

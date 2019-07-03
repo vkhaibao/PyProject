@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<script src="/manage/js/jquery.datepick.js"></script>
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+</head>
+<style>
+	.form-c {
+		padding-left: 189px;
+	}
+	.form-tag {
+		width:189px;
+	}
+	.form-item .form-c a.btn {
+		float: left;
+		padding: 0 15px;
+		line-height: 24px;
+		color: #8D808A;
+		border: 1px solid #8D808A;
+		margin-right: 12px;
+		border-radius: 5px;
+		transition: all 0.4s;
+	}
+	.form-item .form-c a.btn:hover {
+		background-color: #8d808a;
+		color: #fff;
+	}
+	.form-text{
+		float: left;
+	}
+	.form-item{
+		width: 50%;
+		display: inline-block;
+		padding: 10px 0px 10px;
+	}
+	.form-item:nth-child(2n){
+		float: right;
+	}
+	.form-item:nth-child(2n+1){
+		float: left;
+	}
+	.h-tit .form-item{
+		width: 100%;
+	}
+	.h-tit .form-item .form-tag{
+		width: auto;    
+	}
+	.h-tit .form-item .form-c{
+		padding-left: 8px;
+	}
+	.form-text{
+		width: 50%;
+	}
+	.form-item{
+		width: 48%;
+	}
+</style>
+<body style="overflow:hidden;" class="bg-white">
+	<div class="rwrap">
+		<!--全局设定添加或编辑-->
+		<div class="c-top">
+			<div class="c-title">
+				<div class="manual-title-other title-item" onclick="parent.reload();" id="frist">
+					<span id="access_global_setting_data">全局设定</span>
+					<i class="access_global_setting_data_icon"></i>
+				</div>
+				<div class="manual-title-other title-item" onclick="style_config()" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222);">
+					<span id="style_config">偏好设定</span>
+					<i style="display: none;"></i>
+				</div>
+				<!-- <div class="manual-head" style="float:left;width:100px;display: none;"> 
+					<div class="manual-title" >
+							<span id="access_global_setting_data" onclick="parent.reload();" style="cursor: pointer;">全局设定</span>
+							<i class="access_global_setting_data_icon"></i>
+					</div>
+				</div> -->
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-wrap" style="padding: 0px 20px;">
+						<div class="c-exp">
+							<div class="h-explorer">
+								<div class="h-top" style="display: none;">
+									<div class="h-tit">
+										<div class="form-item">
+											<span class="form-tag">remoteapp(应用发布)：</span>
+											<div class="form-c">
+												<label class="form-label" style="">
+													<input id="check1" name="0" class="form-checkbox" type="checkbox" style="">
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="h-content" style="width :100%;height: auto;margin: 0 auto;padding: 20px 20px;overflow: hidden;min-width: 1119px;">
+									<div class="form-item">
+										<span class="form-tag">Netterm(TELNET)：</span>											
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="Netterm_TELNET" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>										
+									</div>
+									<div class="form-item">
+										<span class="form-tag">SqlAdvantage(SYBASE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="SqlAdvantage_SYBASE" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>											
+									</div>
+									<div class="form-item">
+										<span class="form-tag">isqlw(SYBASE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="isqlw_SYBASE" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">Putty(SSHCONSOLE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="Putty_SSH" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">SecureCRT(SSHCONSOLE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="SecureCRT_SSH" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">XShell(SSHCONSOLE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="XShell_SSH" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">PLSql(ORACLE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="PLSql_ORACLE" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">PowerBuilder(ORACLE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="PowerBuilder_ORACLE" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">SqlPlus(ORACLE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="SqlPlus_ORACLE" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">SqlPlusW(ORACLE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="SqlPlusW_ORACLE" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">Toad(ORACLE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="Toad_ORACLE" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">sqlldr(ORACLE)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="sqlldr_ORACLE" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">MySql(MYSQL)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="MySql_MYSQL" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">FlashfXP(FTP/SFTP)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="FlashfXP_FTP" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">LeapFtp2.0(FTP)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="LeapFtp2-0_FTP" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">LeapFtp3.0(FTP)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="LeapFtp3-0_FTP" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">WinSCP(FTP/SFTP)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="WinSCP_FTP" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">filezilla(FTP/SFTP)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="filezilla_FTP" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<div class="form-item">
+										<span class="form-tag">DB2Cmd(DB2)：</span>
+										<div class="form-c">
+											<label style="float: left;margin-right:8px;">
+												<select class="form-select select_clt" name=""  style="width: 60px;">
+													<option value="0" selected >全局</option>
+													<option value="1"  >指定</option>
+												</select>
+											</label>
+											<input type="text" class="form-text" id="DB2Cmd_DB2" name="0" onblur="" maxlength="128">
+										</div>
+										<a href="javascript:;" class="btn btn-normal btn-global" onclick="get_win_path(this);">浏&nbsp;&nbsp;览</a>
+									</div>
+									<!-- <div class="form-item">
+										<span class="form-tag">isqlw(SYBASE)：</span>
+										<div class="form-c">
+											<input type="text" class="form-text" id="isqlw_SYBASE" name="0" onblur="" maxlength="128">
+										</div>
+									</div> -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="c-form">
+					<div class="btns">
+						<a href="javascript:;" class="btn btn-normal" onclick="access_global_setting_add();">保&nbsp;&nbsp;存</a>
+					</div>
+				</div>
+				<div id="bBtn" style="position: fixed;z-index:5;">
+					<a href="javascript:;" class="btn" style="float: right;" onclick="parent._closePage(this);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form action="/bhost/access_global_setting_handle" method="POST" name="frm_access_global_setting" id="frm_access_global_setting">
+		<input type="hidden" name="se" id="se" value="{{se}}" />
+		<!--e-->
+	</form>
+	<style>
+		a.btn-global{
+			float: left;
+			padding: 0px 8px;
+			line-height: 26px;
+			color: #8D808A;
+			border: 1px solid #8D808A;
+			margin-left:8px;
+			border-radius: 5px;
+			transition: all 0.4s;
+		}
+		a.btn-global:hover{
+			background-color: #8D808A;
+			border-color: #8D808A;
+			color: #fff;
+		}
+	</style>
+	<script>
+		$('.form-checkbox,.form-radio').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+		$('.form-select').select2({minimumResultsForSearch: -1});
+	</script>
+	<script language="javascript" type="text/javascript">
+		// window.open('https://www.baidu.com/');
+		function browes(obj){
+		$(obj).next('input').click();
+		}
+		$(window).resize(function () {
+			if ($('.c-cont')[0].style.overflow!="hidden"&&$('.c-cont')[0].scroll!="no"&&$('.c-cont')[0].scrollHeight>$('.c-cont')[0].offsetHeight) {
+				var mb=myBrowser();
+				if(mb=='FF' || mb=='IE'){
+					parent.$('.btn-next').css('right',27);
+				}else{
+					parent.$('.btn-next').css('right',17);
+				}
+			} else {
+				parent.$('.btn-next').attr('style','');
+			}
+		});
+		function myBrowser(){
+			var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+			var isOpera = userAgent.indexOf("Opera") > -1;
+			if (isOpera) {
+				return "Opera"
+			}; //判断是否Opera浏览器
+			if (userAgent.indexOf("Firefox") > -1) {
+				return "FF";
+			} //判断是否Firefox浏览器
+			if (userAgent.indexOf("Chrome") > -1){
+				return "Chrome";
+			}
+			if (userAgent.indexOf("Safari") > -1) {
+				return "Safari";
+			} //判断是否Safari浏览器
+			if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera) {
+				return "IE";
+			}; //判断是否IE浏览器
+		}
+		var client_ip_global = '';
+		var data_client =[];
+		$(function () {
+			$.ajax({
+				url: "/bhost/PGet_UserGlobalConfig",
+				type:"POST",
+				async:false,
+				data:{a0:$("input[name=se]").val()},
+				success:function(result){
+					var result=JSON.parse(result);
+					if(result.Result){
+						if(result.info==null){
+							$('#check1').iCheck('uncheck');
+						}else {
+							$('#check1').attr('name',result.info.UserGlobalConfigId);
+							if(result.info.EnableRemoteApp){
+								$('#check1').iCheck('check');
+							}else{
+								$('#check1').iCheck('uncheck');
+							}
+						}
+					}else{
+						_alert(2,'全局设定',result.ErrMsg);
+					}
+				}
+			});
+			$(".select_clt").change(function () {
+				_s = $(this).val();
+				_input = $(this).parents('.form-item').find('input')
+				_input.val('');
+				_input.attr('name',0);
+				_id = _input.attr('id').split('_');
+				
+				$.each(data_client,function(i,item){
+					if(_s == 1){	
+						if(item.ClientName.replace(/\./g,'-') == _id[0] && item.ProtocolName == _id[1] && item.ClientIP ==client_ip_global){
+							_input.val(item.ClientProgram);
+							_input.attr('name',item.LocalClientId);
+							return false;
+						}
+					}else{
+						if(item.ClientName.replace(/\./g,'-') == _id[0] && item.ProtocolName == _id[1] && item.ClientIP ==null){
+							_input.val(item.ClientProgram);
+							_input.attr('name',item.LocalClientId);
+							return false;
+						}
+					}		
+				})
+			})
+			$.ajax({
+				url: "/bhost/PGet_LocalClient",
+				type:"POST",
+				async:true,
+				data:{a0:$("input[name=se]").val()},
+				success:function(result){
+					var result=JSON.parse(result);
+					if(result.Result){
+						data_client = result.info.data;
+						client_ip_global = result.client_ip_global;
+						$.each(result.info.data,function(i,item){
+							_obj = $('#'+item.ClientName.replace(/\./g,'-')+'_'+item.ProtocolName);	
+							if(_obj.parent().parent().find('select').val() == 1) return true; //说明已经存在本地
+							$(_obj).val(item.ClientProgram);
+							$(_obj).attr('name',item.LocalClientId);
+							if(item.ClientIP == client_ip_global){
+								_obj.parent().parent().find('select').val(1).trigger('change');							
+							}else{
+								_obj.parent().parent().find('select').val(0).trigger('change');			
+							}
+						});
+			
+					}else{
+						_alert(2,'全局设定',result.ErrMsg);
+						return false;
+					}
+				}
+			});
+		});
+		function access_global_setting_add() {
+			var pass=true;
+			var all=$('.form-item');
+			var UserGlobalConfig_json={
+				"UserGlobalConfigId": 0,
+				"EnableRemoteApp": true
+			}
+			UserGlobalConfig_json.UserGlobalConfigId=parseInt($('#check1').attr('name'));
+			UserGlobalConfig_json.EnableRemoteApp=false;
+			var msstr = aceg(JSON.stringify(UserGlobalConfig_json),$("input[name=se]").val());
+			$.ajax({
+				url: "/bhost/PSave_UserGlobalConfig",
+				type:"POST",
+				async:false,
+				data:{a0:$("input[name=se]").val(),a1:JSON.stringify(UserGlobalConfig_json),m1:msstr},
+				success:function(result){
+					var result=JSON.parse(result);
+					if(result.Result){
+						pass=true;
+					}else{
+						_alert(2,'全局设定',result.ErrMsg);
+						pass=false;
+						return false;
+					}
+				}
+			});
+			if(!pass){
+				return false;
+			}
+			for(var i=1;i<all.length;i++){
+				var input=$('.form-item').eq(i).find('input');
+				var select_obj = $('.form-item').eq(i).find('select');
+				var input_value=input.val();
+				var input_id=input.attr('id').split('_');
+				var input_name=parseInt(input.attr('name'));
+				if(input_value=='' && input_name!=0){
+					$.ajax({
+						url: "/bhost/PDelete_LocalClient",
+						type:"POST",
+						async:false,
+						data:{a0:$("input[name=se]").val(),a1:input_name,a2:input.attr('id')}, 
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+								pass=true;
+							}else{
+								_alert(2,'全局设定',result.ErrMsg);
+								pass=false;
+								return false;
+							}
+						}
+					});
+					if(!pass){
+						return false;
+					}
+				}else if(input_value!=''){
+					var LocalClient_json={
+						"LocalClientId": 0,
+						"ProtocolName": null,
+						"ClientName": null,
+						"ClientProgram": null,
+						"ClientIP":null
+					};
+					LocalClient_json.LocalClientId=input_name;
+					LocalClient_json.ProtocolName=input_id[1];
+					LocalClient_json.ClientName=input_id[0].replace(/\-/g,'.');
+					LocalClient_json.ClientProgram=input_value;
+					if(select_obj.val() == '1') LocalClient_json.ClientIP=client_ip_global;
+					var msstr = aceg(JSON.stringify(LocalClient_json),$("input[name=se]").val());
+					$.ajax({
+						url: "/bhost/PSave_LocalClient",
+						type:"POST",
+						async:false,
+						data:{a0:$("input[name=se]").val(),a1:JSON.stringify(LocalClient_json),m1:msstr}, 
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+								pass=true;
+							}else{
+								_alert(2,'全局设定',result.ErrMsg);
+								pass=false;
+								return false;
+							}
+						}
+					});
+					if(!pass){
+						return false;
+					}
+				}
+			}
+			if(pass){
+				$('.btn').blur(); parent.layer.open({
+					type: 1,
+					title: '全局设定',
+					content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn: ['确&nbsp;&nbsp;定'],
+					btnAlign: 'c',
+					closeBtn: false,
+					skin: 'layer-custom',
+					area: ['380px', '310px'],
+					move: false,
+					resize: false,
+					yes: function (i) {
+						parent.layer.close(i);
+						parent.reload();
+					}
+				});
+			}
+		}
+		function filetip(obj){
+			var c = $(obj).val();
+			$(obj).siblings('input').val(c);
+		}
+		function get_win_path(obj){
+			sesstime = new Date().getTime();
+			//{"Session":"1533965498777","ClientName":"xShell","BHostUrl":"https://192.168.0.167"}
+			cmd_json ={
+				"ClientName":"xShell",
+				"Session": ""+sesstime,//
+				"BHostUrl":"https://"+document.domain+ (location.port!=''?':'+location.port:'')		
+			}
+			var base64_str = '';
+			var sesstimet = (new Date()).valueOf()+1;
+			cmd_json['sesstimet'] = sesstimet;
+			$.ajax({
+				url: "/bhost/get_base64",
+				type:"POST",
+				async:false,		
+				data:{a0:$("input[name=se]").val(),z1:JSON.stringify(cmd_json)},
+				success:function(result){
+					var result=JSON.parse(result);
+					if(result.Result){
+						if_html_client = result.info;
+						base64_str = result.b64;
+					}else{
+						_alert(1,"全局设定",result.ErrMsg);
+					}
+				}
+			})
+			
+			//window.location.href = 'bhost://cmd&'+base64_str;
+			get_regedit('bhost', $("input[name=se]").val(),'',sesstimet);
+			$('#YuFrame1').remove();
+			$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+			$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+			//插入数据库数据
+			$.ajax({
+				url: "/bhost/insert_usbkeys",
+				type:"POST",
+				async:false,		
+				data:{a0:$("input[name=se]").val(),z1:sesstime,t1:"find_client_path",u1:' ',c1:' ',a10:"全局设定"},
+				success:function(result){
+					var result=JSON.parse(result);
+					if(result.Result){
+					}else{
+						_alert(1,"全局设定",result.ErrMsg);
+						return false;
+					}
+				}
+			})
+			
+			//循环获取 数据库状态
+			var c = 0;
+			
+			if_ok_down = setInterval(function(){
+				ret = repeat_get_path(sesstime);
+				
+				if(ret[0] == 1){
+					clearInterval(if_ok_down);
+					$(obj).prev('div').find('input').val(ret[1]);
+					return 0;				
+				}
+				if(ret[0] == 2){
+					clearInterval(if_ok_down);
+					_alert(1,"全局设定",'浏览失败');
+					return 0;
+				}
+				if(c >=60){
+					clearInterval(if_ok_down);
+					
+				}			
+				c = c + 1;
+			},500)
+		}
+		function repeat_get_path(sesstime){
+			var st = 0;
+			$.ajax({
+				url: "/bhost/repeat_get_path",
+				type:"POST",
+				async:false,		
+				data:{a0:$("input[name=se]").val(),z1:sesstime},
+				success:function(result){
+					var result=JSON.parse(result);
+					if(result.Result){
+						st = result.info;
+						absolute_path = result.path;
+					}else{
+						_alert(1,"最近访问",result.ErrMsg);
+						return false;
+					}
+				}
+			})
+			return [st,absolute_path];
+		}
+		function style_config() {
+			document.frm_access_global_setting.action = "/bhost/styleConfig_show";
+			document.frm_access_global_setting.submit();
+		}
+	</script>
+</body>
+
+</html>

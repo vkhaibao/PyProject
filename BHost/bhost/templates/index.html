@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" http-equiv="X-UA-Compatible" content="IE=11;IE=10;IE=9; IE=8; IE=EDGE,chrome=1" />
+	<title>Logbase运维安全管理系统</title>
+	<script>
+		var userAgent = navigator.userAgent;
+		var ie8 = userAgent.indexOf('Trident/4.0');
+
+		if(ie8 != -1){
+			document.write('<script src="/manage/js/jquery-IE8.js"></' + 'script>');
+		}else{
+			document.write('<script src="/manage/js/jquery.min.js"></' + 'script>');
+		}
+	</script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<script src="/manage/js/select2.full.min.js"></script>
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/jquery.plugin.js"></script>
+	<script src="/manage/js/jquery.datepick.js"></script>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/jquery.datepick.css">
+	<script type="text/javascript" src="/manage/js/dialog-plus.js"></script>
+	<link rel="stylesheet" href="/manage/css/ui-dialog.css" type="text/css" />
+        <link rel="stylesheet" href="/manage/css/new-head.css">
+	{% block head %}
+		
+	{% endblock  %}
+</head>
+<body style="overflow:hidden;" class="bg-white">
+{% block main %}
+		
+{% endblock  %}
+
+<form action="/bhost/index" method="POST" name="frm">
+	<input type="hidden" name="tasktype" id = "tasktype"value = ""/>
+	<input type="hidden" name="us" value = "{{us}}"/>
+	<input type="hidden" name="se" value = "{{se}}"/>  
+	<input type="hidden" name="flag" value = ""/>
+	<input type="hidden" name="i10" value = ""/>
+	<input type="hidden" name="first" value = ""/>
+	<input type="hidden" name="a0" value = "{{se}}"/>  
+	<input type="hidden" name="ha" id = "ha" value="{{hash}}"/>
+	<input type="hidden" name="use_BH" value = "0"/> 	
+</form>
+<script type="text/javascript">
+$(function () {
+var sess ='{{se}}';
+
+});
+function _switchBtn(i){
+        if(i==0){
+                $('#cCont>span.btn').hide();
+        }else{
+                $('#cCont>span.btn').show();
+        }
+}
+
+</script>
+<script>
+	$('.form-checkbox,.form-radio').iCheck({
+		checkboxClass: 'icheckbox_minimal-blue',
+	    radioClass: 'iradio_minimal-blue',
+	    increaseArea: '0' // optional
+	});
+</script>
+<script>
+//$('.filter-select').select2();
+</script>
+{% block script %}
+
+{% endblock  %}
+</body>
+</html>

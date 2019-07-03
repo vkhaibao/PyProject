@@ -1,0 +1,466 @@
+{% extends  "index.html" %}
+{% block head %}
+<link rel="stylesheet" href="/manage/css/style_pwd.css">        
+{% endblock  %}
+<!---->
+{% block main %}
+		<div class="page-wrap">
+			<div class="page-cont" style="display:none;width: 1189px;overflow: auto;">
+				<div class="flow">
+					<div class="f-title">
+						<h2 style="padding-top: 15px;">密码管理流程</h2>
+						<div class="f-wrap" style="width: 1181px;">
+							<div class="f-ww" style="width: 1135px;">
+								<div class="f-cont flow-auth3 " id="pwd_icon_class" style="display:block">
+								{%if 19 in _power_sonid %}
+									<a href="javascript:;" class="m0 flow-auth3-19" onclick="pwd_read();" style="top: 79px;" tabindex=-1>密码录入<i class="m1-icon"></i></a>
+								{% endif %}
+								{%if 29 in _power_sonid %}
+									<a href="javascript:;" class="m1 flow-auth3-29" onclick="pwd_export();" style="top: -7px;" tabindex=-1>密码导出<i class="m1-icon" style="background-position: -150px 0;"></i></a>
+								{% endif %}
+								{%if 30 in _power_sonid %}
+									<a href="javascript:;" class="m2 flow-auth3-30" onclick="pwd_setting();" style="top: 79px;" tabindex=-1>主机设定<i class="m1-icon" style="background-position: -120px 0;"></i></a>
+								{% endif %}
+								<a href="javascript:;" class="m2 flow-auth3-99" onclick="hostpwd_showing();" style="top:165px;" tabindex=-1>改密设定<i class="m1-icon" style="background-position: -180px 0;"></i></a>
+								{%if 20 in _power_sonid %}
+									<a href="javascript:;" onclick="pwd_trust();"  class="m3 flow-auth3-20" style="top: 79px;" tabindex=-1>自动改密<i class="m2-icon"></i></a>
+								{% endif %}
+								{%if 21 in _power_sonid %}
+									<a href="javascript:;" class="m4 flow-auth3-21" onclick="pwdchange_add();" style="top: 165px;" tabindex=-1>手工改密<i class="m3-icon"></i></a>
+								{% endif %}									
+								</div>
+							</div>
+
+						</div>
+						
+					</div>
+				</div>
+
+				<div class="f-btns">
+					<div class="f-title">
+						<h2 style="padding-top: 15px;">查看与管理</h2>
+					</div>
+
+					<div class="btns1 btns-s" style="padding: 15px 0;">
+					{%if 31 in _power_sonid %}
+						<a href="javascript:;" data-modeid="31" class="btn btn-normal"  onclick="hostpwdstrategy();" tabindex=-1>全局策略</a>
+					{% endif %}
+					{%if 20 in _power_sonid %}
+						<a data-modeid="20" href="javascript:;" class="btn btn-normal" onclick="pwdauth_list();" tabindex=-1>自动改密</a>
+					{% endif %}
+					<!-- {%if 21 in _power_sonid %}
+						<a data-modeid="21" href="javascript:;" class="btn btn-normal" onclick="pwdchange();" tabindex=-1>手工改密</a>
+					{% endif %} -->
+					{%if 22 in _power_sonid %}
+						<a data-modeid="22" href="javascript:;" class="btn btn-normal" onclick="pwdresult_list();" tabindex=-1>历史清单</a>
+					{% endif %}
+					</div>
+				</div>
+			</div>
+			<!---->
+			<div class="page-cont">
+				<div class="apps apps-auth">
+					<div class="apps-title">
+						<h2>密码资源管理</h2>
+					</div>
+					<div class="item"><a href="javascript:;" data-uri="/bhost/hostgroup_show?se={{se}}&a10=1" onclick="_loadPage(this)" tabindex=-1><i class="app7"><span class="i"></span></i>服务器集合</a></div>
+					<!--<div class="item"><a href="javascript:;" data-uri="/bhost/sshkey_show?se={{se}}" onclick="_loadPage(this)" tabindex=-1><i class="sshkeyicon"><span class="i"></span></i>密钥管理</a></div>-->
+				</div>
+
+				<div id="LoadArea" style="display: none;">
+					<div class="c-cont" id="cCont">
+						<span class="btn btn-prev" onclick="_pagePrev(this)" tabindex=-1></span>
+						<span class="btn btn-next" onclick="_pageNext(this)" tabindex=-1></span>
+						
+						<iframe src="" width="100%" height="100%" frameborder="0" name="mframe" id="mframe"></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!---->
+		{%if (20 in _power_sonid) or (21 in _power_sonid) %}
+		<div id="bBtn" style="">
+			<a href="javascript:;" class="btn" onclick="_scrpage(0,this)" tabindex=-1><i class="icon2"></i>资源管理</a>
+			<a href="javascript:;" class="btn" style="display: none;" onclick="_scrpage(1,this)" tabindex=-1><i class="icon2"></i>密码流程</a>
+		</div>
+		{%endif%}
+		<form action="/bhost/access_user_index" method="POST" name="frm_access">
+			<input type="hidden" name="tasktype" id = "tasktype" value="" />
+			<input type="hidden" name="us" id = "us" value="{{us}}" />
+			<input type="hidden" name="se" id="se" value="{{se}}"/>
+		</form>
+{% endblock  %}
+
+
+
+{% block script %}
+<style>
+.flow-auth3 {
+    width: 800px;
+    height: 230px;
+    margin: 80px auto 0;
+}
+
+.flow-auth3 {
+    display: block;
+    background: url(../manage/images/flow-auth3.png) no-repeat 50% 0;
+}  
+.flow-auth3 a.disable {
+    background-color: #AAA !important;
+    cursor: default;
+    text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
+    color: #f0f0f0;
+}
+</style>
+<script>
+var _power={{_power|safe}};
+// var _power=[
+//     {
+//         "Mode": 2,
+//         "SubMenuId": 19,
+//         "SubMenuName": "密码录入",
+//         "SystemMenuId": 4,
+//         "SystemMenuName": "密码管理"
+//     },
+//     {
+//         "Mode": 2,
+//         "SubMenuId": 20,
+//         "SubMenuName": "自动改密",
+//         "SystemMenuId": 4,
+//         "SystemMenuName": "密码管理"
+//     },
+//     {
+//         "Mode": 2,
+//         "SubMenuId": 21,
+//         "SubMenuName": "手工改密",
+//         "SystemMenuId": 4,
+//         "SystemMenuName": "密码管理"
+//     },
+//     {
+//         "Mode": 2,
+//         "SubMenuId": 29,
+//         "SubMenuName": "密码导出",
+//         "SystemMenuId": 4,
+//         "SystemMenuName": "密码管理"
+//     },
+//     {
+//         "Mode": 2,
+//         "SubMenuId": 30,
+//         "SubMenuName": "主机设定",
+//         "SystemMenuId": 4,
+//         "SystemMenuName": "密码管理"
+//     }
+// ];
+
+function down(x, y) {
+	if(parseInt(x) > parseInt(y)){
+		return 1;
+	}else{
+		return -1;
+	}
+}
+$(function(){
+	_flowLoad();
+	
+	//流程图 权限限制
+	var _power_SubMenuId_arr=_power.map(function (params) {
+		return params.SubMenuId;
+	});
+	//自动改密  手工改密 历史清单
+	if($.inArray(20,_power_SubMenuId_arr)>=0) $('div.f-btns a[data-modeid=20]').show();
+	else $('div.f-btns a[data-modeid=20]').hide();
+	if($.inArray(21,_power_SubMenuId_arr)>=0) $('div.f-btns a[data-modeid=21]').show();
+	else $('div.f-btns a[data-modeid=21]').hide();
+	if($.inArray(22,_power_SubMenuId_arr)>=0) $('div.f-btns a[data-modeid=22]').show();
+	else $('div.f-btns a[data-modeid=22]').hide();
+	if($.inArray(31,_power_SubMenuId_arr)>=0) $('div.f-btns a[data-modeid=31]').show();
+	else $('div.f-btns a[data-modeid=31]').hide();
+	//
+	_pwd_power_SubMenuId = [];
+	$(_power).each(function(i,item){
+		if(item.SubMenuId ==22) return true;
+		if(item.SubMenuId ==31) return true;
+		if(item.SystemMenuId == 4 && $.inArray(item.SubMenuId,_pwd_power_SubMenuId)<0){
+			_pwd_power_SubMenuId.push(item.SubMenuId);
+		}
+	})
+	// if($.inArray(30,_pwd_power_SubMenuId)<0) _pwd_power_SubMenuId.push(30)
+	//console.log(_pwd_power_SubMenuId);
+	_pwd_power_SubMenuId.sort(down);
+	//console.log(_pwd_power_SubMenuId);
+	// 流程图
+	// if($.inArray(22,_pwd_power_SubMenuId)>=0) _pwd_power_SubMenuId.splice(3,1);
+	if (_pwd_power_SubMenuId.length == 0){
+		$('#pwd_icon_class').css('background','url(/manage/images/pwd_flow/flow-auth3-99.png) no-repeat 50% 0');
+		$('div.flow-auth3 a.flow-auth3-99').css("top","34px").css("left","460px");
+		$('#pwd_icon_class').css('margin-left','370px').css('margin-top','140px');
+	}
+	else if(_pwd_power_SubMenuId.length == 1){ //只有一个图标   ok
+		$('#pwd_icon_class').css('background','url(/manage/images/pwd_flow/flow-auth3-'+_pwd_power_SubMenuId[0]+'.png) no-repeat 50% 0');
+		if($.inArray(19,_pwd_power_SubMenuId)>=0){
+			$('#pwd_icon_class').css('margin-left','370px').css('margin-top','140px');
+			$('div.flow-auth3 a.flow-auth3-19').css("top","-8px");
+			$('div.flow-auth3 a.flow-auth3-99').css("top","-8px").css("left","460px");
+		}else{
+			if($.inArray(20,_pwd_power_SubMenuId)>=0 || $.inArray(21,_pwd_power_SubMenuId)>=0){
+				$('#pwd_icon_class').css('margin-left','288px').css('margin-top','140px');
+				$('div.flow-auth3 a.flow-auth3-99').css("top","34px");
+				$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[0]).css("top","34px");
+			}else{
+				$('#pwd_icon_class').css('margin-left','370px').css('margin-top','140px');
+				$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[0]).css("top","-8px").css("left","460px");
+				$('div.flow-auth3 a.flow-auth3-99').css("top","77px").css("left","460px");
+			}
+			
+		}
+	}
+	else if (_pwd_power_SubMenuId.length == 2){ // 2个图标
+		$('#pwd_icon_class').css('background','url(/manage/images/pwd_flow/flow-auth3-'+_pwd_power_SubMenuId.join('-')+'.png) no-repeat 50% 0');								
+		if($.inArray(19,_pwd_power_SubMenuId)< 0){ //无密码录入 
+			if($.inArray(29,_pwd_power_SubMenuId)>=0){ //密码导出
+				if($.inArray(30,_pwd_power_SubMenuId)>=0){ //参数设定
+					$('#pwd_icon_class').css('margin-left','370px');
+					$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[0]).css("top","-6px").css("left","460px");
+					$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[1]).css("top","80px").css("left","460px");
+					$('div.flow-auth3 a.flow-auth3-99').css("top","165px").css("left","460px");
+				}else{
+					$('#pwd_icon_class').css('margin-left','288px');
+					$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[1]).css("top","32px").css("left","640px");
+					$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[0]).css("top","119px").css("left","640px");
+					$('div.flow-auth3 a.flow-auth3-99').css("top","119px");
+				}							
+			}else{
+				$('#pwd_icon_class').css('margin-left','235px').css('margin-top','140px');
+				if($.inArray(30,_pwd_power_SubMenuId)>=0){
+					$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[0]).css("top","34px").css("left","692px");
+					$('div.flow-auth3 a.flow-auth3-30').css("top","-11px").css("left","373px");
+					$('div.flow-auth3 a.flow-auth3-99').css("top","74px").css("left","373px");
+				}else{
+					$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[0]).css("top","-11px").css("left","692px");
+					$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[1]).css("top","74px").css("left","692px");
+					$('div.flow-auth3 a.flow-auth3-99').css("top","34px").css("left","373px");
+				}
+			}
+				 
+		}else{ //有密码录入 
+			if($.inArray(29,_pwd_power_SubMenuId)>=0 || $.inArray(30,_pwd_power_SubMenuId)>=0){
+				$('#pwd_icon_class').css('margin-left','370px').css('margin-top','140px');
+				$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[1]).css("top","0px").css("left","460px");
+				$('div.flow-auth3 a.flow-auth3-19').css("top","0px");
+				$('div.flow-auth3 a.flow-auth3-99').css("top","86px").css("left","460px");
+			}else{
+				$('div.flow-auth3 a.flow-auth3-19').css("top","-4px");
+				$('#pwd_icon_class').css('margin-left','288px').css('margin-top','140px');
+				$('div.flow-auth3 a.flow-auth3-99').css("top","-4px");
+				$('div.flow-auth3 a.flow-auth3-'+_pwd_power_SubMenuId[1]).css("top","-4px");
+			}
+		}
+		
+	}
+	else if(_pwd_power_SubMenuId.length == 3){
+		$('#pwd_icon_class').css('background','url(/manage/images/pwd_flow/flow-auth3-'+_pwd_power_SubMenuId.join('-')+'.png) no-repeat 50% 0');								
+		if($.inArray(19,_pwd_power_SubMenuId)>=0){			
+			if($.inArray(29,_pwd_power_SubMenuId)>=0){
+				if($.inArray(30,_pwd_power_SubMenuId)>=0){ //19 > 29 > 30
+					$('#pwd_icon_class').css('margin-left','370px');
+					$('div.flow-auth3 a.flow-auth3-29').css("left","460px");
+					$('div.flow-auth3 a.flow-auth3-99').css("left","460px");
+					$('div.flow-auth3 a.flow-auth3-30').css("left","460px");
+				}else{//19 > 29 > 20 21
+					$('#pwd_icon_class').css('margin-top','140px');
+					$('div.flow-auth3 a.flow-auth3-99').css("top","85px");
+					$('div.flow-auth3 a.flow-auth3-29').css("top","-2px");
+					$('div.flow-auth3 a.flow-auth3-21').css("top","85px");
+					$('div.flow-auth3 a.flow-auth3-20').css("top","85px");
+					$('div.flow-auth3 a.flow-auth3-19').css("top","-2px");
+				}
+			}else{
+				if($.inArray(30,_pwd_power_SubMenuId)>=0){ //19 > 30 > 20,21
+					$('#pwd_icon_class').css('margin-left','235px').css('margin-top','140px');
+					$('div.flow-auth3 a.flow-auth3-30').css("top","-11px").css('left','373px');
+					$('div.flow-auth3 a.flow-auth3-20').css("top","32px").css('left','692px');
+					$('div.flow-auth3 a.flow-auth3-21').css("top","32px").css('left','692px');
+					$('div.flow-auth3 a.flow-auth3-19').css("top","32px").css('left','52px');
+					$('div.flow-auth3 a.flow-auth3-99').css("top","75px").css('left','373px');
+				}else{//19 > 20 > 21
+					$('div.flow-auth3 a.flow-auth3-20').css("top","-2px");
+					$('div.flow-auth3 a.flow-auth3-21').css("top","85px");
+					$('div.flow-auth3 a.flow-auth3-99').css("top","-2px");
+					$('div.flow-auth3 a.flow-auth3-19').css("top","-2px");
+				}
+			}			
+		}else{
+			if($.inArray(29,_pwd_power_SubMenuId)>=0){
+				if($.inArray(30,_pwd_power_SubMenuId)>=0){// 30 > 29 > 20,21
+					$('div.flow-auth3 a.flow-auth3-20').css("top","124px");
+					$('div.flow-auth3 a.flow-auth3-21').css("top","124px");
+				}else{//29 > 20 > 21
+					$('div.flow-auth3 a.flow-auth3-99').css("top","118px");
+					$('div.flow-auth3 a.flow-auth3-29').css("top","32px");
+					$('div.flow-auth3 a.flow-auth3-20').css("top","118px");
+					$('div.flow-auth3 a.flow-auth3-21').css("top","204px");
+				}					
+				
+			}else{
+				// 30 > 21 > 20
+				$('#pwd_icon_class').css('margin-left','235px').css('margin-top','140px');
+				$('div.flow-auth3 a.flow-auth3-99').css("top","75px").css('left','373px');
+				$('div.flow-auth3 a.flow-auth3-30').css("top","-11px").css('left','373px');
+				$('div.flow-auth3 a.flow-auth3-20').css("top","-11px").css('left','692px');
+				$('div.flow-auth3 a.flow-auth3-21').css("top","75px").css('left','692px');
+			}
+		}
+	}
+	else if(_pwd_power_SubMenuId.length == 4){
+		$('#pwd_icon_class').css('background','url(/manage/images/pwd_flow/flow-auth3-'+_pwd_power_SubMenuId.join('-')+'.png) no-repeat 50% 0');								
+		if($.inArray(19,_pwd_power_SubMenuId)>=0){
+			if($.inArray(29,_pwd_power_SubMenuId)>=0){
+				if($.inArray(30,_pwd_power_SubMenuId)>=0){// 19 29 30 > 20,21
+					$('div.flow-auth3 a.flow-auth3-20').css("top","124px");	
+					$('div.flow-auth3 a.flow-auth3-21').css("top","124px");	
+				}else{//19 29 20 21
+					// // $('div.flow-auth3 a.flow-auth3-21').css("top","178px").css('left','460px');
+					$('div.flow-auth3 a.flow-auth3-21').css("top","172px");	
+					$('div.flow-auth3 a.flow-auth3-20').css("top","86px");	
+					$('div.flow-auth3 a.flow-auth3-29').css("top","0px");	
+					$('div.flow-auth3 a.flow-auth3-19').css("top","0px");	
+					$('div.flow-auth3 a.flow-auth3-99').css("top","86px");	
+				}
+			}else{//19 30 20 21		
+				$('#pwd_icon_class').css('margin-left','235px').css('margin-top','140px');
+				$('div.flow-auth3 a.flow-auth3-21').css("top","75px").css('left','692px');
+				$('div.flow-auth3 a.flow-auth3-20').css("top","-11px").css('left','692px');
+				$('div.flow-auth3 a.flow-auth3-30').css("top","-11px").css('left','373px');
+				$('div.flow-auth3 a.flow-auth3-19').css("top","34px").css('left','52px');
+				$('div.flow-auth3 a.flow-auth3-99').css("top","75px").css('left','373px');
+			}
+		}else{//19 20 21 29
+		}
+	}
+	else if(_pwd_power_SubMenuId.length == 5){
+		$('#pwd_icon_class').css('background','url(/manage/images/pwd_flow/flow-auth3-'+_pwd_power_SubMenuId.join('-')+'.png) no-repeat 50% 0');								
+	}
+	
+	// 改变 a的状态
+	$('div.f-cont a').hide();
+	$('div.f-cont a.flow-auth3-99').show();		
+	$(_pwd_power_SubMenuId).each(function(i,item){
+		$('div.f-cont a.flow-auth3-'+item).show();		
+	})
+	$(_power).each(function(i,item){
+		if(item.Mode == 1){
+			if(item.SubMenuId == 30) return true;
+			if(item.SubMenuId == 29) return true;
+			$('div.f-cont a.flow-auth3-'+item.SubMenuId).addClass('disable').removeAttr('onclick');
+		}
+	})
+
+})
+
+$(window).resize(function(){
+	_flowLoad();
+});
+
+function _flowLoad(){
+	var w = $(window).width();
+
+	//$('.f-wrap,.page-wrap').width(2*w);
+	$('.f-wrap,.page-wrap').width(w);
+	$('.f-ww').width(w);
+
+	$('.page-cont').width(w).show();
+	var pageml = parseInt($('div.page-cont').css('margin-left'));
+	if(pageml < 0){
+		$('div.page-cont').eq(0).css('margin-left',-w);
+	}
+}
+function _scroll(i){
+	var w = $(window).width();
+	if(i==0){
+		$('.f-ww').eq(0).stop().animate({'margin-left':-w});
+	}else if(i==1){
+		$('.f-ww').eq(0).stop().animate({'margin-left':0});
+	}
+}
+
+function _scrpage(i,obj){
+	var w = $(window).width();
+	if(i==0){
+		$(obj).hide().next('a').show();
+		$('div.page-cont').eq(0).animate({'margin-left':-w});
+	}else if(i==1){
+		$(obj).hide().prev('a').show();
+		$('div.page-cont').eq(0).animate({'margin-left':0});
+	}
+}
+function hostpwdstrategy(){
+	//console.log(document.frm.us.value );
+	document.frm_access.action = '/bhost/hostpwdstrategy_show'
+	document.frm_access.submit();
+};
+
+function pwd_trust(){
+	document.frm_access.action = '/bhost/pwd_trust';
+	document.frm_access.tasktype.value = 4;
+	document.frm_access.submit();	
+}
+function pwdauth_list(){
+	document.frm_access.action = '/bhost/pwd_trust';
+	document.frm_access.tasktype.value = 3;
+	document.frm_access.submit();	
+}
+function pwdresult_list(){
+	document.frm_access.action = '/bhost/pwdresult_handle';
+	document.frm_access.tasktype.value = 5;
+	document.frm_access.submit();	
+}
+function pwd_export() {
+	document.frm_access.action = '/bhost/pwd_export';
+	document.frm_access.tasktype.value = 1;
+	document.frm_access.submit();	
+}
+function pwd_setting() {
+	document.frm_access.action = '/bhost/pwd_setting';
+	document.frm_access.tasktype.value = 1;
+	document.frm_access.submit();	
+}
+function hostpwd_showing() {
+	document.frm_access.action = '/bhost/hostpwd_showing';
+	document.frm_access.submit();
+}
+function pwdchange(){
+	document.frm_access.action = '/bhost/pwdchange_handle';
+	document.frm_access.tasktype.value = 3;
+	document.frm_access.submit();	
+}
+function pwdchange_add(){
+	document.frm_access.action = '/bhost/pwdchange_handle';
+	document.frm_access.tasktype.value = 1;
+	document.frm_access.submit();	
+}
+function pwd_read(){
+	document.frm_access.action = '/bhost/password_entry_show';
+	document.frm_access.submit();	
+}
+function _switchBtn(i){
+	var $c = $('.apps a.active').parent();
+	var n = $('.apps .item').index($c), len = $('.apps .item').length - 1;
+	//console.log('n'+n);
+	//console.log('len'+len);
+	$('#cCont>span.btn').show();
+	if(i==0){
+		//console.log('i==0');
+		$('#cCont>span.btn').hide();
+	}
+	if(n==0){
+		//console.log('n==0');
+		$('#cCont>span.btn-prev').hide();
+	}
+	if(n==len){
+		//console.log('n==len');
+		$('#cCont>span.btn-next').hide();
+	}
+}
+</script>
+
+{% endblock  %}

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<style>
+		.form-item{
+			padding: 16px 0 10px;
+		}
+		.form-text {
+			padding: 0 8px;
+		}
+	</style>
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<!--密码设置添加或编辑-->
+		<div class="rwrap">
+		<div class="c-top">
+			<!--
+			<div class="c-title">
+				<div class="manual-head" style="float:left;width:100px">
+					<div class="manual-title">
+						 <span id="pwdstrategy" style="cursor: pointer;">安全策略</span>
+						 <i class="pwdstrategy_icon"></i>
+					</div>
+				</div>
+
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+			-->
+			<div class="manual-head">
+				<div class="manual-title-other title-item" style="color: rgb(121, 121, 121);background: rgb(222, 222, 222)">
+					<span id="global_reload">访问设置</span>
+					<i style="display:none;"></i>
+				</div>
+				<div class="manual-title-other title-item" id="frist">
+					<span id="pwdstrategy">用户设置</span>
+					<i class="pwdstrategy_icon"></i>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-form" style="padding-bottom:10px;width:900px;padding-left:50px;">
+						<div class="form">	
+							<div class="form-item" >
+								<span class="form-tag"><em class="imp">*</em>密码最小长度：</span>
+								<div class="form-c">
+									<input type="text" class="form-text" id="PwdMinLen" name="PwdMinLen" maxlength="2" style="width:164px;" onkeyup="dataCheck1(this);" onblur="dataCheck1(this);">
+									<p class="form-tip">长度值在6到32之间</p>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">密码使用期限：</span>
+								<div class="form-c">
+									<label class="form-label" style="margin-top:-1px;">
+										<input id="IfPwdUseExpire" name="IfPwdUseExpire" class="form-checkbox" type="checkbox">
+										
+										<span style="vertical-align:middle;font-size:14px;">启用</span>
+										
+									</label>
+									<label class="form-label" style="padding-left:30px;">
+										<input id="PwdUseExpire" name="PwdUseExpire" class="form-text" type="text" style="width:54px;"  maxlength="5" onkeyup="dataCheck(this,0, 365);" onblur="dataCheck(this,0, 365);">
+										<span style="vertical-align:middle;font-size:14px;">天，过期前</span>
+										<input id="PwdUseExpireNotify" name="PwdUseExpireNotify" class="form-text" type="text"  style="width:54px;"  maxlength="5" onkeyup="dataCheck1(this);" onblur="dataCheck1(this);">
+										<span style="vertical-align:middle;font-size:14px;">天将自动提醒（0表示不提醒）</span>
+									</label>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">密码复杂度要求：</span>
+								<div class="form-c">
+									<label class="form-label" style="margin-top:3px;">
+										<input id="IfPwdComplex" name="IfPwdComplex" class="form-checkbox" type="checkbox">
+										
+										<span style="vertical-align:middle;font-size:14px;">启用</span>
+										
+									</label>
+									<label class="form-label" style="padding-left:30px;">
+										<label class="form-label">
+											<input id="IfPwdIncUpperApha" name="IfPwdIncUpperApha" class="form-checkbox" type="checkbox" >
+											<span style="vertical-align:middle;font-size:14px;">大写字母</span>
+										</label>
+										<label class="form-label" style="    margin-left: 10px;">
+											<input id="IfPwdIncLowerApha" name="IfPwdIncLowerApha" class="form-checkbox" type="checkbox" >
+											<span style="vertical-align:middle;font-size:14px;">小写字母</span>
+										</label>
+										<label class="form-label" style="    margin-left: 10px;">
+											<input id="IfPwdIncNumber" name="IfPwdIncNumber" class="form-checkbox" type="checkbox" >
+											<span style="vertical-align:middle;font-size:14px;">数字</span>
+										</label>
+										<label class="form-label" style="    margin-left: 10px;">
+											<input id="IfPwdIncSpecialChar" name="IfPwdIncSpecialChar" class="form-checkbox" type="checkbox" >
+											<span style="vertical-align:middle;font-size:14px;">特殊字符</span>
+										</label>
+									</label>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">密码安全策略：</span>
+								<div class="form-c">
+									<label class="form-label" style="margin-top:-1px;">
+										<input id="IfPwdUnRepeat" name="IfPwdUnRepeat" class="form-checkbox" type="checkbox">
+										
+										<span style="vertical-align:middle;font-size:14px;">启用</span>
+										
+									</label>
+									<label class="form-label" style="padding-left:30px;">
+										<span style="vertical-align:middle;font-size:14px;">不能与前</span>
+										<input id="PwdUnRepeat" name="PwdUnRepeat" class="form-text" type="text" style="width:54px;"  maxlength="1" onkeyup="dataCheck(this, 1, 5);" onblur="dataCheck(this,1,5);">
+										<span style="vertical-align:middle;font-size:14px;">次密码重复 次数在1到5之间</span>
+									</label>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">账户锁定策略：</span>
+								<div class="form-c">
+									<label class="form-label" style="margin-top:-1px;">
+										<input id="IfPwdErrorLock" name="IfPwdErrorLock" class="form-checkbox" type="checkbox">
+										
+										<span style="vertical-align:middle;font-size:14px;">启用</span>
+										
+									</label>
+									<label class="form-label" style="padding-left:30px;">
+										<input id="PwdErrorLockExpire" name="PwdErrorLockExpire" class="form-text" type="text" style="width:54px;"  maxlength="5" onkeyup="dataCheck1(this);" onblur="dataCheck1(this);">
+										<span style="vertical-align:middle;font-size:14px;">分钟内连续输错</span>
+										<input id="PwdErrorLockNumber" name="PwdErrorLockNumber" class="form-text" type="text" style="width:54px;"  maxlength="5" onkeyup="dataCheck1(this);" onblur="dataCheck1(this);">
+										<span style="vertical-align:middle;font-size:14px;">次即锁定账户，锁定账户可以由管理员解锁</span>
+									</label>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">账户自动解锁：</span>
+								<div class="form-c">
+									<label class="form-label" style="margin-top:-1px;">
+										<input id="IfAccountAutoUnLock" name="IfAccountAutoUnLock" class="form-checkbox" type="checkbox">
+										
+										<span style="vertical-align:middle;font-size:14px;">启用</span>
+										
+									</label>
+									<label class="form-label" style="padding-left:30px;">
+										<input id="AccountAutoUnLock" name="AccountAutoUnLock" class="form-text" type="text" style="width:54px;"  maxlength="3" onkeyup="dataCheck1(this);" onblur="dataCheck1(this);">
+										<span style="vertical-align:middle;font-size:14px;">分钟后自动解锁 时限在10到120之间</span>
+									</label>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">登录验证码：</span>
+								<div class="form-c">
+									<label class="form-label" style="margin-top:3px;">
+										<input id="IfNeedCode" name="IfNeedCode" class="form-checkbox" type="checkbox" name="">
+										
+										<span style="vertical-align:middle;font-size:14px;">启用</span>
+										
+									</label>
+								</div>
+							</div>
+							<!--
+							<div class="form-item" >
+								<span class="form-tag"><em class="imp">*</em>页面超时设置：</span>
+								<div class="form-c">
+									<input type="text" class="form-text" id="web_t" name="web_t" onfocus="this.select()" maxlength="6" style="width:252px;" onkeyup="dataCheck1(this);" onblur="dataCheck1(this);">
+									<p class="form-tip">最小超时时间为300秒,最大超时时间为86400秒</p>
+								</div>
+							</div>
+							<div class="form-item" >
+								<span class="form-tag"><em class="imp">*</em>客户端超时设置：</span>
+								<div class="form-c">
+									<input type="text" class="form-text" id="client_t" name="client_t" onfocus="this.select()" maxlength="6" style="width:252px;" onkeyup="dataCheck1(this);" onblur="dataCheck1(this);">
+									<p class="form-tip">最小超时时间为300秒,最大超时时间为86400秒</p>
+								</div>
+							</div>
+							-->
+						</div>
+					</div>
+					<div class="c-form">
+						<div class="btns">
+							<a href="javascript:;" class="btn btn-normal"onclick="pwdstrategy_update();">确&nbsp;&nbsp;定</a>
+							<!--
+							<a href="javascript:;" class="btn btn-normal" onclick="pwdstrategy_return();">取&nbsp;&nbsp;消</a> 
+							-->
+						</div>
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="pwdstrategy_return();"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form action="/bhost/pwdstrategy_handle" method="POST" name="frm_pwdstrategy_add" id="frm_pwdstrategy_add">
+		<input type="hidden" name="se" id = "" value="{{se}}" />
+		<input type="hidden" name="tasktype" id = "" value="" />
+		<input type="hidden" name="us" id = "" value="" />
+	</form>
+
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+</script>
+
+<script>
+var time_out={
+	"TimeOutConfigId": 0,
+    "PageTimeOut": 300,
+    "ClientTimeOut": 300
+}
+var min_t=300;
+var max_t=86400;
+var pwdstrategy={
+	"PwdStrategyId": 1,
+    "PwdMinLen": 8,
+    "IfPwdUseExpire": true,    
+    "PwdUseExpire": 100,
+    "PwdUseExpireNotify": 0,    
+    "IfPwdComplex": false,
+    "IfPwdIncUpperApha": false,
+    "IfPwdIncLowerApha": true, 
+    "IfPwdIncNumber": true,
+    "IfPwdIncSpecialChar": true,
+    "IfPwdUnRepeat": false,    
+    "PwdUnRepeat": 3,
+    "IfPwdErrorLock": false,
+    "PwdErrorLockExpire": 5,
+    "PwdErrorLockNumber": 5,
+    "IfAccountAutoUnLock": false, 
+    "AccountAutoUnLock": 10,                                             
+    "IfNeedCode": false
+};
+$(function(){
+	
+	$("#pwdstrategy").on("click",function(){
+		//location.reload();
+		document.frm_pwdstrategy_add.action = '/bhost/pwdstrategy_change_show';
+		document.frm_pwdstrategy_add.submit();
+	});
+	$("#global_reload").on("click",function(){
+		document.frm_pwdstrategy_add.action = '/bhost/globalstrategy_show';
+		document.frm_pwdstrategy_add.submit();
+	});
+});
+$(function(){
+	document.frm_pwdstrategy_add.se.value=window.parent.document.frm.se.value;
+	parent._switchBtn(1);//显示按钮
+	//输入数字
+	$("#PwdMinLen,#PwdUseExpire,#PwdUseExpireNotify,#PwdUnRepeat,#PwdErrorLockExpire,#PwdErrorLockNumber,#AccountAutoUnLock,#web_t,#client_t").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	//密码使用期限：
+	$("#IfPwdUseExpire").on("ifChecked",function(e){
+		$("#PwdUseExpire").removeAttr("disabled");
+		$("#PwdUseExpireNotify").removeAttr("disabled");	
+	});
+	$("#IfPwdUseExpire").on("ifUnchecked",function(e){
+		$("#PwdUseExpire").attr("disabled",true);
+		$("#PwdUseExpireNotify").attr("disabled",true);	
+	});
+	//密码复杂度要求：
+	$("#IfPwdComplex").on("ifChecked",function(e){
+		$("#IfPwdIncUpperApha").removeAttr("disabled");
+		$("#IfPwdIncLowerApha").removeAttr("disabled");	
+		$("#IfPwdIncNumber").removeAttr("disabled");
+		$("#IfPwdIncSpecialChar").removeAttr("disabled");	
+		$('#IfPwdIncUpperApha,#IfPwdIncLowerApha,#IfPwdIncNumber,#IfPwdIncSpecialChar').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+	});
+	$("#IfPwdComplex").on("ifUnchecked",function(e){
+		$("#IfPwdIncUpperApha").attr("disabled",true);
+		$("#IfPwdIncLowerApha").attr("disabled",true);	
+		$("#IfPwdIncNumber").attr("disabled",true);
+		$("#IfPwdIncSpecialChar").attr("disabled",true);	
+		$('#IfPwdIncUpperApha,#IfPwdIncLowerApha,#IfPwdIncNumber,#IfPwdIncSpecialChar').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+			increaseArea: '0' // optional
+		});
+	});
+	//密码安全策略：
+	$("#IfPwdUnRepeat").on("ifChecked",function(e){
+		$("#PwdUnRepeat").removeAttr("disabled");	
+	});
+	$("#IfPwdUnRepeat").on("ifUnchecked",function(e){
+		$("#PwdUnRepeat").attr("disabled",true);
+	});
+	//账户锁定策略：
+	$("#IfPwdErrorLock").on("ifChecked",function(e){
+		$("#PwdErrorLockExpire").removeAttr("disabled");	
+		$("#PwdErrorLockNumber").removeAttr("disabled");	
+	});
+	$("#IfPwdErrorLock").on("ifUnchecked",function(e){
+		$("#PwdErrorLockExpire").attr("disabled",true);
+		$("#PwdErrorLockNumber").attr("disabled",true);
+	});
+	//账户自动解锁：
+	$("#IfAccountAutoUnLock").on("ifChecked",function(e){
+		$("#AccountAutoUnLock").removeAttr("disabled");		
+	});
+	$("#IfAccountAutoUnLock").on("ifUnchecked",function(e){
+		$("#AccountAutoUnLock").attr("disabled",true);
+	});	
+	/*	
+	$.ajax({
+		url: "/bhost/get_time_out",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val()},
+		success:function(result){
+			var time_out_result = JSON.parse(result);
+			if(time_out_result.Result==true){
+				var time_out_data = time_out_result.info;
+				time_out.TimeOutConfigId=time_out_data.TimeOutConfigId;
+				$("#web_t").val(time_out_data.PageTimeOut);
+				$("#client_t").val(time_out_data.ClientTimeOut);
+			}else{
+				_alert(1,"用户设置",result.ErrMsg);
+				return false;
+			}	
+		}
+	});
+	*/	
+	$.ajax({
+		url: "/bhost/get_pwdstrategy",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val()},
+		success:function(result){
+			var pwdstrategy_result = JSON.parse(result);
+			if(pwdstrategy_result.Result==true){
+				var pwdstrategy_data = pwdstrategy_result.info; 
+				//长度
+				$("#PwdMinLen").val(pwdstrategy_data.PwdMinLen);
+				$("#PwdUseExpire").val(pwdstrategy_data.PwdUseExpire);
+				$("#PwdUseExpireNotify").val(pwdstrategy_data.PwdUseExpireNotify);
+				//密码使用期限：
+				if(pwdstrategy_data.IfPwdUseExpire){
+					$("#IfPwdUseExpire").iCheck('check');
+					$("#PwdUseExpire").removeAttr("disabled");
+					$("#PwdUseExpireNotify").removeAttr("disabled");
+					
+				}else{
+					$("#IfPwdUseExpire").iCheck('uncheck');
+					$("#PwdUseExpire").attr("disabled",true);
+					$("#PwdUseExpireNotify").attr("disabled",true);
+				}
+				//大写
+				if(pwdstrategy_data.IfPwdIncUpperApha){
+					$("#IfPwdIncUpperApha").iCheck('check');
+				}else{
+					$("#IfPwdIncUpperApha").iCheck('uncheck');
+				}
+				//小写
+				if(pwdstrategy_data.IfPwdIncLowerApha){
+					$("#IfPwdIncLowerApha").iCheck('check');
+				}else{
+					$("#IfPwdIncLowerApha").iCheck('uncheck');
+				}
+				//数字
+				if(pwdstrategy_data.IfPwdIncNumber){
+					$("#IfPwdIncNumber").iCheck('check');
+				}else{
+					$("#IfPwdIncNumber").iCheck('uncheck');
+				}
+				//特殊字符
+				if(pwdstrategy_data.IfPwdIncSpecialChar){
+					$("#IfPwdIncSpecialChar").iCheck('check');
+				}else{
+					$("#IfPwdIncSpecialChar").iCheck('uncheck');
+				}
+				//密码复杂度要求：
+				if(pwdstrategy_data.IfPwdComplex){
+					$("#IfPwdComplex").iCheck('check');
+					$("#IfPwdIncUpperApha").removeAttr("disabled");
+					$("#IfPwdIncLowerApha").removeAttr("disabled");
+					$("#IfPwdIncNumber").removeAttr("disabled");
+					$("#IfPwdIncSpecialChar").removeAttr("disabled");
+					$('#IfPwdIncUpperApha,#IfPwdIncLowerApha,#IfPwdIncNumber,#IfPwdIncSpecialChar').iCheck({
+						checkboxClass: 'icheckbox_minimal-blue',
+						radioClass: 'iradio_minimal-blue',
+						increaseArea: '0' // optional
+					});
+				}else{
+					$("#IfPwdComplex").iCheck('uncheck');
+					$("#IfPwdIncUpperApha").attr("disabled",true);
+					$("#IfPwdIncLowerApha").attr("disabled",true);
+					$("#IfPwdIncNumber").attr("disabled",true);
+					$("#IfPwdIncSpecialChar").attr("disabled",true);
+					$('#IfPwdIncUpperApha,#IfPwdIncLowerApha,#IfPwdIncNumber,#IfPwdIncSpecialChar').iCheck({
+						checkboxClass: 'icheckbox_minimal-blue',
+						radioClass: 'iradio_minimal-blue',
+						increaseArea: '0' // optional
+					});
+				}
+				$("#PwdUnRepeat").val(pwdstrategy_data.PwdUnRepeat);
+				//密码安全策略：
+				if(pwdstrategy_data.IfPwdUnRepeat){
+					$("#IfPwdUnRepeat").iCheck('check');
+					$("#PwdUnRepeat").removeAttr("disabled");
+				}else{
+					$("#IfPwdUnRepeat").iCheck('uncheck');
+					$("#PwdUnRepeat").attr("disabled",true);
+				}
+				$("#PwdErrorLockExpire").val(pwdstrategy_data.PwdErrorLockExpire);
+				$("#PwdErrorLockNumber").val(pwdstrategy_data.PwdErrorLockNumber);
+				//账户锁定策略：
+				if(pwdstrategy_data.IfPwdErrorLock){
+					$("#IfPwdErrorLock").iCheck('check');
+					$("#PwdErrorLockExpire").removeAttr("disabled");
+					$("#PwdErrorLockNumber").removeAttr("disabled");
+				}else{
+					$("#IfPwdErrorLock").iCheck('uncheck');
+					$("#PwdErrorLockExpire").attr("disabled",true);
+					$("#PwdErrorLockNumber").attr("disabled",true);
+				}
+				$("#AccountAutoUnLock").val(pwdstrategy_data.AccountAutoUnLock);
+				//账户自动解锁：
+				if(pwdstrategy_data.IfAccountAutoUnLock){
+					$("#IfAccountAutoUnLock").iCheck('check');
+					$("#AccountAutoUnLock").removeAttr("disabled");
+				}else{
+					$("#IfAccountAutoUnLock").iCheck('uncheck');
+					$("#AccountAutoUnLock").attr("disabled",true);
+				}
+				//登录验证码：
+				if(pwdstrategy_data.IfNeedCode){
+					$("#IfNeedCode").iCheck('check');
+				}else{
+					$("#IfNeedCode").iCheck('uncheck');
+				}
+			}else{
+				_alert(1,"用户设置",pwdstrategy_data.ErrMsg);
+			}
+		}
+	});
+});
+//检查数字范围
+function dataCheck(obj, min, max){
+	obj.value = obj.value.replace(/\D/g, "");
+	if(min){
+		if(parseInt(obj.value, 10) < parseInt(min, 10)) obj.value = min;
+	}
+	if(max){
+		if(parseInt(obj.value, 10) > parseInt(max, 10)) obj.value = max;
+	}
+}
+//检查数字范围
+function dataCheck1(obj, min, max){
+	obj.value = obj.value.replace(/\D/g, "");
+}
+//pwdstrategy_update
+function pwdstrategy_update(){
+	//长度
+	var pass=1;
+	var PwdMinLen = $("#PwdMinLen").val();
+	if(PwdMinLen==""){
+		_alert(2,"用户设置","请输入密码最小长度");
+		$("#PwdMinLen").val('6');
+		return false;
+	}else if(parseInt(PwdMinLen)>32){
+		//_alert(1,"用户设置","密码最小长度不符合要求");
+		$("#PwdMinLen").val('32');
+		PwdMinLen=32;
+	}else if(parseInt(PwdMinLen)<6){
+		//_alert(1,"用户设置","密码最小长度不符合要求");
+		$("#PwdMinLen").val('6');
+		PwdMinLen=6;
+	}
+	if($('#IfPwdComplex').is(':checked')){
+		var i=0;
+		if($('#IfPwdIncUpperApha').is(':checked')) i++;
+		if($('#IfPwdIncLowerApha').is(':checked')) i++;
+		if($('#IfPwdIncNumber').is(':checked')) i++;
+		if($('#IfPwdIncSpecialChar').is(':checked')) i++;
+		if(i==0){
+			_alert(2,'用户设置','请选择密码复杂度选项');
+			return false;
+		}
+	}
+	var PwdUseExpire = $("#PwdUseExpire").val();
+	if(PwdUseExpire==""){
+		if($("#IfPwdUseExpire").is(':checked')){
+			_alert(2,"用户设置","请输入天数");
+			$("#PwdUseExpire").val('100');
+			return false;
+		}else{
+			$("#PwdUseExpire").val('100');
+			PwdUseExpire=100;
+		}	
+	}
+	var PwdUseExpireNotify = $("#PwdUseExpireNotify").val();
+	if(PwdUseExpireNotify==""){
+		if($("#IfPwdUseExpire").is(':checked')){
+			_alert(2,"用户设置","请输入提醒天数");
+			$("#PwdUseExpireNotify").val('0');
+			return false;
+		}else{
+			$("#PwdUseExpireNotify").val('0');
+			PwdUseExpireNotify=0;
+		}
+		
+	}
+	if(parseInt(PwdUseExpireNotify)>parseInt(PwdUseExpire)){
+		_alert(1,"用户设置","过期自动提醒时间不能大于总时间");
+		$("#PwdUseExpireNotify").val('0');
+		$("#PwdUseExpire").val('100');
+		return false;
+	}
+	var PwdUnRepeat = $("#PwdUnRepeat").val();
+	if(PwdUnRepeat==""){
+		if($('#IfPwdUnRepeat').is(':checked')){
+			_alert(2,"用户设置","请输入重复次数");
+			$("#PwdUnRepeat").val('3');
+			return false;
+		}else{
+			$("#PwdUnRepeat").val('3');
+			PwdUnRepeat=3;
+		}
+		
+	}
+	var PwdErrorLockExpire = $("#PwdErrorLockExpire").val();
+	if(PwdErrorLockExpire==""){
+		if($("#IfPwdErrorLock").is(":checked")){
+			_alert(2,"用户设置","请输入限制时间");
+			$("#PwdErrorLockExpire").val('5');
+			return false;
+		}else{
+			$("#PwdErrorLockExpire").val('5');
+			PwdErrorLockExpire=5;
+		}
+		
+	}
+	var PwdErrorLockNumber = $("#PwdErrorLockNumber").val();
+	if(PwdErrorLockNumber==""){
+		if($("#IfPwdErrorLock").is(":checked")){
+			_alert(2,"用户设置","请输入输错次数");
+			$("#PwdErrorLockNumber").val('5');
+			return false;
+		}else{
+			$("#PwdErrorLockNumber").val('5');
+			PwdErrorLockNumber=5;
+		}
+		
+	}
+	var AccountAutoUnLock=$('#AccountAutoUnLock').val();
+	if(AccountAutoUnLock==""){
+		if($('#IfAccountAutoUnLock').is(':checked')){
+			_alert(2,"用户设置","请输入时间");
+			$('#AccountAutoUnLock').val('10');
+			return false;
+		}else{
+			$('#AccountAutoUnLock').val('10');
+			AccountAutoUnLock=10;
+		}
+		
+	}
+	/*
+	var web_t = $("#web_t").val();
+	var client_t = $("#client_t").val();
+	if(web_t==""){
+		_alert(2,"用户设置","请输入页面超时设置",$("#web_t"));
+		$("#web_t").val(300);
+		return false;
+	}
+	if(client_t==""){
+		_alert(2,"用户设置","请输入客户端超时设置",$("#client_t"));
+		$("#client_t").val(300);
+		return false;
+	}
+	
+	if(min_t){
+		if(parseInt(web_t, 10) < parseInt(min_t, 10)) {
+			_alert(1,"用户设置","超时设置不能小于"+min_t+"",$("#web_t"));
+			$("#web_t").val(min_t);
+			return false;
+		}
+		if(parseInt(client_t, 10) < parseInt(min_t, 10)) {
+			_alert(1,"用户设置","超时设置不能小于"+min_t+"",$("#client_t"));
+			$("#client_t").val(min_t);
+			return false;
+		}
+	}
+	if(max_t){
+		if(parseInt(web_t, 10) > parseInt(max_t, 10)){
+			_alert(1,"用户设置","超时设置不能大于"+max_t+"",$("#web_t"));
+			$("#web_t").val(max_t);
+			return false;
+		}
+		if(parseInt(client_t, 10) > parseInt(max_t, 10)){
+			_alert(1,"用户设置","超时设置不能大于"+max_t+"",$("#client_t"));
+			$("#client_t").val(max_t);
+			return false;
+		}
+	}
+	*/
+	if(parseInt(AccountAutoUnLock)>120){
+		$("#AccountAutoUnLock").val('120');
+		AccountAutoUnLock=120;
+	}
+	if(parseInt(AccountAutoUnLock)<10){
+		$("#AccountAutoUnLock").val('10');
+		AccountAutoUnLock=10;
+	}
+	//密码使用期限：
+	var IfPwdUseExpire=$("#IfPwdUseExpire").is(':checked');
+	//密码复杂度要求：
+	var IfPwdComplex=$("#IfPwdComplex").is(':checked');
+	var IfPwdIncUpperApha=$("#IfPwdIncUpperApha").is(':checked');
+	var IfPwdIncLowerApha=$("#IfPwdIncLowerApha").is(':checked');
+	var IfPwdIncNumber=$("#IfPwdIncNumber").is(':checked');
+	var IfPwdIncSpecialChar=$("#IfPwdIncSpecialChar").is(':checked');
+
+	//密码安全策略：
+	var IfPwdUnRepeat=$("#IfPwdUnRepeat").is(':checked');
+	//账户锁定策略：
+	var IfPwdErrorLock=$("#IfPwdErrorLock").is(':checked');
+	//账户自动解锁：
+	var IfAccountAutoUnLock=$("#IfAccountAutoUnLock").is(':checked');
+	//登录验证码：
+	var IfNeedCode=$("#IfNeedCode").is(':checked');
+	pwdstrategy.PwdMinLen=parseInt(PwdMinLen);
+	pwdstrategy.IfPwdUseExpire=IfPwdUseExpire;
+	pwdstrategy.PwdUseExpire=parseInt(PwdUseExpire);	  
+	pwdstrategy.PwdUseExpireNotify=parseInt(PwdUseExpireNotify);	
+	pwdstrategy.IfPwdComplex=IfPwdComplex;
+	pwdstrategy.IfPwdIncUpperApha=IfPwdIncUpperApha;
+	pwdstrategy.IfPwdIncLowerApha=IfPwdIncLowerApha;
+	pwdstrategy.IfPwdIncNumber=IfPwdIncNumber;
+	pwdstrategy.IfPwdIncSpecialChar=IfPwdIncSpecialChar;    
+	pwdstrategy.IfPwdUnRepeat=IfPwdUnRepeat;
+	pwdstrategy.PwdUnRepeat=parseInt(PwdUnRepeat);
+	pwdstrategy.IfPwdErrorLock=IfPwdErrorLock;
+	pwdstrategy.PwdErrorLockExpire=parseInt(PwdErrorLockExpire);
+	pwdstrategy.PwdErrorLockNumber=parseInt(PwdErrorLockNumber);
+	pwdstrategy.IfAccountAutoUnLock=IfAccountAutoUnLock;
+	pwdstrategy.AccountAutoUnLock=parseInt(AccountAutoUnLock);
+	pwdstrategy.IfNeedCode=IfNeedCode;
+	msstr = aceg(JSON.stringify(pwdstrategy),$("input[name=se]").val());
+	$.ajax({
+			url: '/bhost/add_pwdstrategy',
+			type: "POST",
+			async:false,
+			data: {a0:$("input[name=se]").val(),a1:JSON.stringify(pwdstrategy),m1:msstr},
+			success: function(result) {
+				var result = JSON.parse(result);
+				if(result.Result == true){
+					
+				}else{
+					_alert(1,"用户设置",result.ErrMsg);
+					pass=0;
+					return false;
+				}
+			}
+		});
+	/*
+	time_out.PageTimeOut=parseInt(web_t);
+	time_out.ClientTimeOut=parseInt(client_t);
+	$.ajax({
+		url: '/bhost/add_time_out',
+		type: "POST",
+		async:false,
+		data: {a0:$("input[name=se]").val(),a1:JSON.stringify(time_out)},
+		success: function(result) {
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				
+			}else{
+				_alert(1,"用户设置",result.ErrMsg);
+				pass=0;
+				return false;
+			}
+		}
+	});
+	*/	
+	if(pass==1){
+		$('.btn').blur();parent.layer.open({
+			type:1,
+			title: '用户设置',
+			content: '<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+			btn:['确&nbsp;&nbsp;定'],
+			btnAlign:'c',
+			closeBtn: false,
+			skin:'layer-custom',
+			area:['380px','310px'],
+			move: false,
+			resize: false,
+			yes:function(i){
+				parent.layer.close(i);
+			}
+		});	
+	}
+}
+//显示列表页面
+/*
+function pwdstrategy_return(){
+	window.parent._closePage(null); 
+}
+*/
+function pwdstrategy_return(){
+	document.frm_pwdstrategy_add.tasktype.value=3;
+	document.frm_pwdstrategy_add.se.value = $("input[name=se]").val();
+	document.frm_pwdstrategy_add.us.value = window.parent.document.frm.us.value;
+	document.frm_pwdstrategy_add.action = '/bhost/index';
+	document.frm_pwdstrategy_add.submit();
+}
+</script>
+</body>
+</html>

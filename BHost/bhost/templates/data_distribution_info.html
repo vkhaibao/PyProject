@@ -1,0 +1,4224 @@
+{% extends "index.html" %} {% block head %}
+	<!--icheck-->
+	<script src="/manage/js/echarts.min.js"></script>
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<script src="/manage/js/echarts.min.js"></script>
+	<script src="/manage/js/icheck.min.js"></script>
+	<script src="/manage/js/Sortable.js"></script>
+	<script src="/manage/js/xTable2.js"></script>	
+	<style>
+		.layui-layer-setwin .layui-layer-close1{
+			background-position:0;
+		}
+		.layui-layer-ico{
+			background: url(/manage/images/icon_close.png) no-repeat 0 0;
+		}	
+		.layer-custom {
+			background: #fff url(/manage/images/layer_custom_bg.jpg) no-repeat 0 0;
+			color: #fff;
+			font-size: 14px;
+		}
+
+		.layer-custom .layui-layer-title {
+			background: transparent;
+			padding: 0;
+			font-size: 16px;
+			line-height: 36px;
+			color: #fff;
+			border-bottom: 0;
+			height: auto;
+		}
+
+		.layer-custom .layui-layer-title:before {
+			float: left;
+			content: '';
+			width: 3px;
+			height: 16px;
+			margin: 10px 5px 0 10px;
+			background-color: #3fb4ce;
+		}
+
+		.layer-alert {
+			text-align: center;
+		}
+
+		.layer-alert i.alert {
+			display: block;
+			width: 122px;
+			height: 122px;
+			background: url(/manage/images/layer_alert_icons.png) no-repeat 0 0;
+			margin: 15px auto;
+		}
+
+		.layer-alert i.alert.fail {
+			background-position: -122px 0;
+		}
+
+		.layer-alert i.alert.warning {
+			background-position: -244px 0;
+		}
+
+		.layer-custom .layui-layer-btn {
+			padding: 15px 0;
+		}
+
+		.layer-custom .layui-layer-btn a {
+			height: 34px;
+			padding: 0 45px;
+			line-height: 34px;
+			border: 1px solid #8f828c;
+			background-color: #fff;
+			color: #91848e;
+			border-radius: 18px;
+			transition: all 0.4s;
+		}
+
+		.layer-custom .layui-layer-btn a:hover {
+			background-color: #8e828b;
+			color: #fff;
+			box-shadow: rgba(0, 0, 0, 0.15) 0 0 10px;
+		}
+		/**/
+	</style>
+{% endblock %} {% block main %}
+
+<div class="jkWrap">
+	<div class="jk-s">
+		<div class="jksItem">
+			<div class="jks-title">
+				<h3>时间趋势</h3>
+				<div class="r">
+					<div class="ss" id="btn_0" style="display: none">
+						<a class="a active" href="javascript:;" onclick="_setType(this,3,2)">小时</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,4,2)">天</a>
+					</div>
+					<div class="ss" id="btn_5">
+						<a class="a active" href="javascript:;" onclick="_setType(this,5,2)">全部</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,6,2)">异常</a>
+					</div>
+					<div class="ss" id="btn_5_1" style="display: none;">
+						<a class="a active" href="javascript:;" onclick="_setType(this,5,5)">全部</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,6,5)">异常</a>
+					</div>					
+					<div class="ss" id="btn_1">
+						<a class="a active" href="javascript:;" onclick="_setType(this,1,2)">操作</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,2,2)">会话</a>
+					</div>
+					<div class="ss" id="btn_4_1" style="display: none;">
+						<a class="a active" href="javascript:;" onclick="_setType(this,1,5)">操作</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,2,5)">会话</a>
+					</div>
+					<a class="c" href="javascript:;" id="distri_re" onclick="_setType(this,0,2)"><i class="reload"></i></a>
+				</div>
+			</div>
+			<div class="jksCont" id="jksChart1" onmouseup="_setMouseup()">
+			</div>
+		</div>
+		<div class="jksItem">
+			<div class="jks-title">
+				<h3>服务器</h3>
+				<div class="r">
+					<div class="ss" id="btn_6">
+						<a class="a active" href="javascript:;" onclick="_setType(this,5,3)">全部</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,6,3)">异常</a>
+					</div>
+					<div class="ss" id="btn_6_1" style="display: none;">
+						<a class="a active" href="javascript:;" onclick="_setType(this,5,6)">全部</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,6,6)">异常</a>
+					</div>									
+					<div class="ss" id="btn_2">
+						<a class="a active" href="javascript:;" onclick="_setType(this,1,3)">操作</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,2,3)">会话</a>
+					</div>
+					<div class="ss" id="btn_4_2" style="display: none;">
+						<a class="a active" href="javascript:;" onclick="_setType(this,1,6)">操作</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,2,6)">会话</a>
+					</div>
+					<a class="c" href="javascript:;" id="server_re" onclick="_setType(this,0,3)"><i class="reload"></i></a>
+				</div>
+			</div>
+			<div class="jksCont" id="jksChart2">
+			</div>
+		</div>
+		<div class="jksItem">
+			<div class="jks-title">
+				<h3>运维用户</h3>
+				<div class="r">
+					<!--<div class="ss">
+						<a class="a active" href="javascript:;">天</a>
+						<a class="b" href="javascript:;">小时</a>
+					</div> -->
+					<div class="ss" id="btn_7">
+						<a class="a active" href="javascript:;" onclick="_setType(this,5,4)">全部</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,6,4)">异常</a>
+					</div>
+					<div class="ss" id="btn_7_1" style="display: none;">
+						<a class="a active" href="javascript:;" onclick="_setType(this,5,7)">全部</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,6,7)">异常</a>
+					</div>				
+					<div class="ss" id="btn_3">
+						<a class="a active" href="javascript:;" onclick="_setType(this,1,4)">操作</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,2,4)">会话</a>
+					</div>
+					<div class="ss" id="btn_4_3" style="display: none;">
+						<a class="a active" href="javascript:;" onclick="_setType(this,1,7)">操作</a>
+						<a class="b" href="javascript:;" onclick="_setType(this,2,7)">会话</a>
+					</div>
+					<a class="c" href="javascript:;" id="bhuser_re" onclick="_setType(this,0,4)"><i class="reload"></i></a>
+				</div>
+			</div>
+			<div class="jksCont" id="jksChart3" onmouseup="_setMouseup()">
+			</div>
+		</div>
+	</div>
+	<!---->
+	<div class="jk-m">
+		<div class="jkmItem">
+			<div class="jkm-title">
+				<h3>最新会话</h3>				
+				<div class="r">
+					<div class="ss" id="btn_ses">
+						<a class="a active" href="javascript:;" onclick="change_mode(this,1)">全部</a>
+						<a class="b" href="javascript:;" onclick="change_mode(this,1)">异常</a>
+					</div>				
+					<a class="a" href="javascript:;" class="active" id="ses_re" onclick="refresh(1)"><i class="reload"></i>刷新</a>
+					<a class="b" href="javascript:;" onclick="more(1)"><i class="more"></i>更多</a>
+				</div>
+			</div>
+			<div class="jkmCont">
+				<div id="jkmMMG1" class="xTable"></div>
+			</div>
+		</div>
+		<div class="jkmItem">
+			<div class="jkm-title">
+				<h3>最新操作</h3>
+				<div class="r">
+					<div class="ss" id="btn_ops">
+						<a class="a active" href="javascript:;" onclick="change_mode(this,2)">全部</a>
+						<a class="b" href="javascript:;" onclick="change_mode(this,2)">异常</a>
+					</div>				
+					<a class="a" href="javascript:;" class="active" id="ops_re" onclick="refresh(2)"><i class="reload"></i>刷新</a>
+					<a class="b" href="javascript:;" onclick="more(2)"><i class="more"></i>更多</a>
+				</div>
+			</div>
+			<div class="jkmCont">
+				<div id="jkmMMG2" class="xTable"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<form action="/bhost/monitor_route" method="POST" name="data_dis_frm" id="data_dis_frm">
+	<!--2 - 时间趋势; 3 - 服务器; 4 - 运维用户; 5 - 协议; 6 - 最新会话; -->
+	<input type="hidden" name="tasktype" id="tasktype" value="{{tasktype}}" />	
+	<!-- name -->
+	<input type="hidden" name="a1" id="a1" value="{{a1}}" />
+	<!-- type -->
+	<input type="hidden" name="a2" id="a2" value="{{a2}}" />
+	<!-- normal 1 - 全部; 2 - 异常; -->
+	<input type="hidden" name="a3" id="a3" value="{{a3}}" />
+	<!-- btn_status  -->
+	<input type="hidden" name="a4" id="a4" value="{{a4}}"/>
+	<!-- condition  -->
+	<input type="hidden" name="a5" id="a5" value="{{a5}}"/>
+	<!-- condition  -->
+	<input type="hidden" name="a6" id="a6" value="{{a6}}"/>
+	<!-- 二层过滤条件 -->
+	<input type="hidden" name="a8" id="a8" value=""/>
+	<!-- session -->
+	<input type="hidden" name="se" id="se" value="{{se}}" />
+	<!--操作-->
+	<input name="service_1" id="service_1" value="xtime_00,编号;xtime_01,入库时间;xtime_02,发生时间;xtime_03,会话标识;xtime_04,起始时间;int08_11,告警处理;int08_14,告警类型;int08_15,告警等级;int16_00,客户端端口;int16_01,服务器端口;int32_01,日志类型;ip_00,发生地址;ip_01,服务端地址;ip_02,客户端地址;int64_15,告警动作;str32_00,服务器用户;str32_01,操作;str32_02,信息;str32_05,客户端工具;str32_08,数据库;str32_20,运维访问策略;str32_21,运维操作备注;str32_22,运维用户帐号;str32_23,运维用户姓名;str32_24,审批用户帐号;str32_25,审批用户姓名;str32_28,回放文件;str32_29,策略名称;str32_30,事件信息;str32_31,告警对象"  type="hidden">
+	<!--会话-->
+	<input name="service_2" id="service_2" value="xtime_00,编号;xtime_01,入库时间;xtime_03,会话标识;xtime_04,起始时间;xtime_05,结束时间;int08_03,会话状态;int08_11,告警处理;int08_14,告警类型;int08_15,告警等级;int16_00,客户端端口;int16_01,服务器端口;int32_01,日志类型;ip_00,发生地址;ip_01,服务端地址;ip_02,客户端地址;int64_02,操作个数;int64_14,文件大小;int64_15,告警动作;str32_00,服务器用户;str32_20,运维访问策略;str32_21,运维操作备注;str32_22,运维用户帐号;str32_23,运维用户姓名;str32_24,审批用户帐号;str32_25,审批用户姓名;str32_26,阻断用户帐号;str32_27,阻断用户姓名;str32_28,回放文件;str32_30,事件信息;str32_31,告警对象"  type="hidden">
+	<!--系统日志-->
+	<input name="service_3" id="service_3" value="xtime_00,编号;xtime_01,入库时间;xtime_02,发生时间;int32_01,日志类型;ip_00,发生地址;str32_00,服务器用户;str32_01,操作;str32_06,返回信息;str32_08,模块" type="hidden">	
+	<input type="hidden" name="ha"  value="{{hash}}"/>
+</form>
+<form name="frm_search" method="post" action='/bhost/search_log'>
+	<!--session-->
+	<input type="hidden" name="a0" id = "a0" value=""/>
+	<input type="hidden" name="f1" id = "f1" value=""/>
+	<input type="hidden" name="i1" id = "i1" value=""/>
+	<input type="hidden" name="a1" id = "a1" value=""/>
+	<input type="hidden" name="a2" id = "a2" value=""/>
+	<input type="hidden" name="a4" id = "a4" value=""/>
+	<input type="hidden" name="a5" id = "a5" value=""/>
+	<input type="hidden" name="tasktype" id = "tasktype" value=""/>
+	<input type="hidden" name="ha"  value="{{hash}}"/>
+</form>
+<form action="/bhost/playback_index" method="get" name="frm_playback">
+	<input type="hidden" name="a0"  value="{{se}}" />
+	<input type="hidden" name="s1"  value="" />
+	<input type="hidden" name="st"  value="" />
+	<input type="hidden" name="et"  value="" />
+	<input type="hidden" name="stat"  value="" />
+	<input type="hidden" name="tp"  value="" />
+	<input type="hidden" name="su"  value="" />
+	<input type="hidden" name="si"  value="" />
+	<input type="hidden" name="lo"  value="" />
+	<input type="hidden" name="yu"  value="" />
+	<input type="hidden" name="ha"  value="{{hash}}"/>
+</form>
+<form action="/bhost/analysis_index" method="get" name="frm_analysis">
+	<input type="hidden" name="a0"  value="{{se}}" />
+	<input type="hidden" name="s1"  value="" />
+	<input type="hidden" name="st"  value="" />
+	<input type="hidden" name="et"  value="" />
+	<input type="hidden" name="stat"  value="" />
+	<input type="hidden" name="tp"  value="" />
+	<input type="hidden" name="su"  value="" />
+	<input type="hidden" name="si"  value="" />
+	<input type="hidden" name="lo"  value="" />
+	<input type="hidden" name="ot"  value="" />
+	<input type="hidden" name="yu"  value="" />
+	<input type="hidden" name="ha"  value="{{hash}}"/>
+</form>
+<!-- <form action="/bhost/download_file_log" method="POST" name="frm_download">
+	<input type="hidden" name="a0"  value="{{se}}" />
+	<input type="hidden" name="a1"  value="" />
+	<input type="hidden" name="a2"  value="" />
+	<input type="hidden" name="a3"  value="" />
+</form> -->
+{% endblock %} {% block script %}
+<style>
+	.tab-ctr a.m_ses_icon2 {
+		display: inline-block;
+		float: left;
+		width: 16px;
+		height: 20px;
+		overflow: hidden;
+		background: url(/manage/images/m_ses_icon.png) -16px 0px no-repeat;
+		margin: -1px 4px 0 4px;
+	}
+	.tab-ctr a.m_ses_icon3 {
+		display: inline-block;
+		float: left;
+		width: 16px;
+		height: 20px;
+		overflow: hidden;
+		background: url(/manage/images/m_ses_icon.png) -32px 0px no-repeat;
+		margin: -1px 4px 0 4px;
+	}
+	.tab-ctr a.m_ses_icon1 {
+		display: inline-block;
+		float: left;
+		width: 16px;
+		height: 20px;
+		overflow: hidden;
+		background: url(/manage/images/m_ses_icon.png) 0px 0px no-repeat;
+		margin: -1px 4px 0 4px;
+	}
+	.tab-ctr a.m_ses_icon4 {
+		display: inline-block;
+		float: left;
+		width: 16px;
+		height: 20px;
+		overflow: hidden;
+		background: url(/manage/images/m_ses_icon.png) -48px 0px no-repeat;
+		margin: -1px 4px 0 4px;
+	}
+	.tab-ctr a.m_ses_icon5 {
+		display: inline-block;
+		float: left;
+		width: 16px;
+		height: 20px;
+		overflow: hidden;
+		background: url(/manage/images/m_ses_icon.png) -64px 0px no-repeat;
+		margin: -1px 4px 0 4px;
+	}
+	.tab-ctr a.m_ses_icon6 {
+		display: inline-block;
+		float: left;
+		width: 16px;
+		height: 20px;
+		overflow: hidden;
+		background: url(/manage/images/m_ses_icon6.png) no-repeat 0 0;
+		margin: -1px 4px 0 4px;
+	}
+	.xTable-body tr:hover .tab-ctr {
+		position: absolute;
+		display: block;
+		padding: 13px;
+		background-color: #63c3d9;
+	}
+</style>
+<script>
+var screenWidth = window.screen.width;
+$('.jkWrap').find('.jk-m').attr('style','width: 69.5%;');
+if(screenWidth <= 1280){	//兼容MAC 1280* 分辨率
+	$('.jkWrap').find('.jk-s').attr('style','width: 35%;');
+	$('.jkWrap').find('.jk-m').attr('style','width: 64.5%;');
+}
+if(screenWidth < 1280){
+	$('body').removeAttr('style');
+}
+if(screenWidth <= 1440){
+	radius = [15,60];
+}else if(screenWidth > 1440){
+	radius = [25,90]
+}
+var myChart1, myChart2, myChart3, myChart4, showLen;
+var showHeight3,showHeight2;
+var resizeOut;
+//1 -- > 操作; 2 -- > 会话;
+var TYPE = document.data_dis_frm.a2.value;
+//2 - 时间趋势; 3 - 服务器; 4 - 运维用户; 5 - 协议; 6 - 最新会话;
+var CLASS = document.data_dis_frm.tasktype.value;
+if(CLASS == 8){
+	var CLASS = document.data_dis_frm.a6.value;
+	document.data_dis_frm.tasktype.value = document.data_dis_frm.a6.value;
+}
+var NORMAL = document.data_dis_frm.a3.value;
+var P1_PROTO_NUM = 15;			//协议线形图显示数量
+var BH_USER_NUM = 8;			//运维用户列表 显示数量
+var NEW_SESS_NUM = 15;			//会话列表加载数量
+var NEW_OPS_NUM = 15;			//操作列表加载数量
+var protocol_list = [];			//协议列表
+var button_status = [];			//记录当前页按钮状态
+var field_list_show = [];
+var logtype = 0;				//1：会话	2：操作
+var show_field = "";
+var display_field_list = [];
+var sess = window.parent.document.frm.se.value;
+var _btn;
+var intexception;
+var monitor_flag1 = {{monitor_flag1}};
+var btn_ses = [];
+var btn_ops = [];
+if(monitor_flag1 == 2){
+	btn_ses = [
+		{
+			class:'m_ses_icon1',
+			title:'指令查看',
+			cb: function(data){
+				//alert(data.id);
+				sessid = data['xtime_03'];
+				stime = data['xtime_04']==null?"":data['xtime_04'];
+				etime = data['xtime_05']==null?"":data['xtime_05'];
+				s =data['int08_03'] ;
+				if(s == '连接中') statue = 0;
+				else if (s == '异常退出') statue = 2;
+				else statue = 1;
+				
+				//
+					IfReplay = data['IfReplay'];//ir
+					IfReplayDrawing = data['IfReplayDrawing'];//ird			
+					document.frm_analysis.ot.value = IfReplay+"@"+IfReplayDrawing;
+				typ = data['int32_01'] ;
+				server_user = data['str32_00']==null?"":data['str32_00'];
+				y_user = data['str32_22']==null?"":data['str32_22'];
+				server_ip =data['ip_01']==null?"":data['ip_01'];  
+				$('form[name=frm_analysis]').attr('target','_blank');
+				$('form[name=frm_analysis]').attr('method','get');
+				document.frm_analysis.s1.value = sessid;
+				document.frm_analysis.st.value = stime.replace('T','  ').replace('+08:00','');;
+				document.frm_analysis.et.value = etime.replace('T','  ').replace('+08:00','');;
+				document.frm_analysis.stat.value = statue;
+				document.frm_analysis.tp.value = typ;
+				document.frm_analysis.su.value = server_user;
+				document.frm_analysis.yu.value = y_user;
+				document.frm_analysis.si.value = server_ip;
+				if (logtype == 'NORMAL') lo = 1;
+				else if(logtype == 'SESSION') lo = 2;
+				else lo = 3;
+				document.frm_analysis.lo.value = lo;
+				document.frm_analysis.submit();
+				//console.log(data);
+			}
+		},
+		{
+			class:'icon-block',
+			title:'阻断',
+			cb: function(data){
+				$.ajax({
+					url: "/bhost/block_session",
+					type:"POST",
+					async:true,		
+					data:{a0:sess,p1:data['int32_14'],s1:data['int32_!5'],s2:data['xtime_03']},
+					success:function(result){
+						var result=JSON.parse(result);
+						if(result.Result){
+							_alert(0,"实时监控","操作成功");
+							setTimeout("refresh(1)",700);
+						}else{
+							_alert(1,"实时监控",result.ErrMsg);
+						}
+					}
+				})
+			}
+		},{
+			class:'icon-moni',
+			title:'监控',
+			cb: function(data){
+				ifacc = false;
+				if(data['str32_28'].indexOf('acc') != -1){
+					ifacc = true;
+				}
+				_cowork(data['str32_22'],data['int32_14'],data['int32_01'],2,data['ip_01'],data['int16_01'],data['int16_02'],data['str32_00'],ifacc,data['xtime_03'],data['int32_15']);
+			}
+		},
+		{
+			class:'m_ses_icon2',
+			title:'回放',
+			cb: function(data){
+				if(data['IfReplay'] == true){
+					MapPort = '8080';
+					$.ajax({
+						url: "/bhost/get_MapPort",
+						type:"POST",
+						async:false,		
+						data:{a0:sess},
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+								MapPort = result.info;
+							}else{
+								_alert(1,"实时监控",result.ErrMsg);
+							}
+						}
+					})
+					var sesstimet = (new Date()).valueOf();
+					cmd_json ={
+						"Cmd":"\"D:\\Program Files\\Java\\jre1.8.0_131\\bin\\java.exe\" -jar CharReplay.jar",
+						"Protocol":data['int32_01']==null?"":data['int32_01'],
+						"ReplayPath":data['str32_28']==null?"":data['str32_28'],
+						"UrlIp":document.domain+ (location.port!=''?':'+location.port:''),
+						"ClientIp":data['ip_02']==null?"":data['ip_02'],
+						"ServerIp":data['ip_01']==null?"":data['ip_01'],
+						"StartTime":data['xtime_04']==null?"":((new Date(data['xtime_04']).valueOf())/1000),
+						"File":"pm02qgAra6HxipYvGc8czCBbrk8dM7NQ385dwKqhuor8cz9lAUMIeJfYQ+skvL6J3g==",//SlasEncode 加密？？？
+						"Sessid":data['xtime_03'],
+						"Usercode":data['str32_22']==null?"":data['str32_22'],
+						"Username":data['str32_23']==null?"":data['str32_23'],
+						"IfReplay":true,
+						"IfReplayDrawing":data['IfReplayDrawing'],
+						"MapPort":MapPort,
+						"sesstimet":sesstimet,
+						"sess":sess
+					}
+				
+					var if_html_client = false;
+					var base64_str = '';
+					$.ajax({
+						url: "/bhost/get_base64",
+						type:"POST",
+						async:false,		
+						data:{a0:sess,z1:JSON.stringify(cmd_json)},
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+								if_html_client = result.info;
+								base64_str = result.b64;
+							}else{
+								_alert(1,"数据检索",result.ErrMsg);
+							}
+						}
+					})
+					if(if_html_client) window.open('https://'+document.domain+'/bhost/test_html?se='+sess+'&z1='+JSON.stringify(cmd_json));
+					else{
+						//window.location.href = 'bhost://cmd&'+base64_str;
+						get_regedit('bhost', sess,'',sesstimet);
+						$('#YuFrame1').remove();
+						$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+						$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+					}
+					
+				
+					return false;
+				}
+				sessid = data['xtime_03'];
+				stime = data['xtime_04']==null?"":data['xtime_04'];
+				etime = data['xtime_05']==null?"":data['xtime_05'];
+				s =data['int08_03'] ;
+				if(s == '连接中') statue = 0;
+				else if (s == '异常退出') statue = 2;
+				else statue = 1;
+				typ = data['int32_01'] ;
+				server_user = data['str32_00']==null?"":data['str32_00'];
+				y_user = data['str32_22']==null?"":data['str32_22'];
+				server_ip = data['ip_01']==null?"":data['ip_01'];  
+				$('form[name=frm_playback]').attr('target','_blank');
+				$('form[name=frm_playback]').attr('method','get');
+				document.frm_playback.s1.value = sessid;
+				document.frm_playback.st.value = stime.replace('T','  ').replace('+08:00','');;
+				document.frm_playback.et.value = etime.replace('T','  ').replace('+08:00','');;
+				document.frm_playback.stat.value = statue;
+				document.frm_playback.tp.value = typ;
+				document.frm_playback.su.value = server_user;
+				document.frm_playback.si.value = server_ip;
+				document.frm_playback.yu.value = y_user;
+				if (logtype == 'NORMAL') lo = 1;
+				else if(logtype == 'SESSION') lo = 2;
+				else lo = 3;
+				document.frm_playback.lo.value = lo;
+				document.frm_playback.submit();
+				//console.log(data);
+			}
+		},
+		{
+			class:'m_ses_icon3',
+			title:'下载',			
+			cb: function(data){
+				download_file(data);
+			}
+		},
+		{
+			class:'msg1',
+			title:'确认',
+			cb: function(data,obj){
+				//console.log($(obj));
+				MarkWMsg(data.xtime_00,2,obj);
+			}
+		}
+		/*
+		{
+			class:'m_ses_icon4',
+			title:'指令导出',
+			cb: function(data){
+				alert(data.id);
+			}
+		},*/
+	];
+	var btn_ops = [
+		{
+			class:'m_ses_icon2',
+			title:'回放',
+			cb: function(data){
+				//alert(data.id);
+				/*
+				xtime_03 会话标志
+				xtime_04 起始时间
+				xtime_05 结束时间
+				int08_03 会话状态
+				int32_01 日志类型
+				str32_00 服务器用户
+				ip_01    服务端地址
+				*/
+				
+				if(data['IfReplay'] == true){
+					MapPort = '8080';
+					$.ajax({
+						url: "/bhost/get_MapPort",
+						type:"POST",
+						async:false,		
+						data:{a0:sess},
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+								MapPort = result.info;
+							}else{
+								_alert(1,"实时监控",result.ErrMsg);
+							}
+						}
+					})
+					var sesstimet = (new Date()).valueOf();
+					cmd_json ={
+						"Cmd":"\"D:\\Program Files\\Java\\jre1.8.0_131\\bin\\java.exe\" -jar CharReplay.jar",
+						"Protocol":data['int32_01']==null?"":data['int32_01'],
+						"ReplayPath":data['str32_28']==null?"":data['str32_28'],
+						"UrlIp":document.domain+ (location.port!=''?':'+location.port:''),
+						"ClientIp":data['ip_02']==null?"":data['ip_02'],
+						"ServerIp":data['ip_01']==null?"":data['ip_01'],
+						"StartTime":data['xtime_04']==null?"":((new Date(data['xtime_04']).valueOf())/1000),
+						"File":"pm02qgAra6HxipYvGc8czCBbrk8dM7NQ385dwKqhuor8cz9lAUMIeJfYQ+skvL6J3g==",//SlasEncode 加密？？？
+						"Sessid":data['xtime_03'],
+						"Usercode":data['str32_22']==null?"":data['str32_22'],
+						"Username":data['str32_23']==null?"":data['str32_23'],
+						"IfReplay":true,
+						"IfReplayDrawing":data['IfReplayDrawing'],
+						"MapPort":MapPort,
+						"sesstimet":sesstimet
+					}
+				
+					var if_html_client = false;
+					var base64_str = '';
+					$.ajax({
+						url: "/bhost/get_base64",
+						type:"POST",
+						async:false,		
+						data:{a0:sess,z1:JSON.stringify(cmd_json)},
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+								if_html_client = result.info;
+								base64_str = result.b64;
+							}else{
+								_alert(1,"数据检索",result.ErrMsg);
+							}
+						}
+					})
+					if(if_html_client) window.open('https://'+document.domain+'/bhost/test_html?se='+sess+'&z1='+JSON.stringify(cmd_json));
+					else{
+						//window.location.href = 'bhost://cmd&'+base64_str;
+						get_regedit('bhost', sess,'',sesstimet);
+						$('#YuFrame1').remove();
+						$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+						$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+					}
+					
+				
+					return false;
+				}
+				
+				sessid = data['xtime_03'];
+				stime = data['xtime_04']==null?"":data['xtime_04'];
+				etime = data['xtime_05']==null?"":data['xtime_05'];
+				s =data['int08_03'] ;
+				if(s == '连接中') statue = 0;
+				else if (s == '异常退出') statue = 2;
+				else statue = 1;
+
+				typ = data['int32_01'] ;
+				server_user = data['str32_00']==null?"":data['str32_00'];
+				y_user = data['str32_22']==null?"":data['str32_22'];
+				server_ip = data['ip_01']==null?"":data['ip_01'];  
+				$('form[name=frm_playback]').attr('target','_blank');
+				$('form[name=frm_playback]').attr('method','get');
+				document.frm_playback.s1.value = sessid;
+				document.frm_playback.st.value = stime.replace('T','  ').replace('+08:00','');;
+				document.frm_playback.et.value = etime.replace('T','  ').replace('+08:00','');;
+				document.frm_playback.stat.value = statue;
+				document.frm_playback.tp.value = typ;
+				document.frm_playback.su.value = server_user;
+				document.frm_playback.yu.value = y_user;
+				document.frm_playback.si.value = server_ip;
+				if (logtype == 'NORMAL') lo = 1;
+				else if(logtype == 'SESSION') lo = 2;
+				else lo = 3;
+				document.frm_playback.lo.value = lo;
+				document.frm_playback.submit();
+				//console.log(data);
+			}
+		},{
+			class:'m_ses_icon5',
+			title:'关联分析',
+			cb: function(data){
+				//alert(data.id);
+				sessid = data['xtime_03'];
+				stime = data['xtime_04']==null?"":data['xtime_04'];
+				etime = data['xtime_05']==null?"":data['xtime_05'];
+				s =data['int08_03'] ;
+				if(s == '连接中') statue = 0;
+				else if (s == '异常退出') statue = 2;
+				else statue = 1;
+				
+				typ = data['int32_01'] ;
+				server_user = data['str32_00']==null?"":data['str32_00'];
+				y_user = data['str32_22']==null?"":data['str32_22'];
+				server_ip =data['ip_01']==null?"":data['ip_01'];  
+				$('form[name=frm_analysis]').attr('target','_blank');
+				$('form[name=frm_analysis]').attr('method','get');
+				//
+					IfReplay = data['IfReplay'];//ir
+					IfReplayDrawing = data['IfReplayDrawing'];//ird			
+					document.frm_analysis.ot.value = IfReplay+"@"+IfReplayDrawing;
+				document.frm_analysis.s1.value = sessid;
+				document.frm_analysis.st.value = stime.replace('T','  ').replace('+08:00','');;
+				document.frm_analysis.et.value = etime.replace('T','  ').replace('+08:00','');;
+				document.frm_analysis.stat.value = statue;
+				document.frm_analysis.tp.value = typ;
+				document.frm_analysis.su.value = server_user;
+				document.frm_analysis.yu.value = y_user;
+				document.frm_analysis.si.value = server_ip;
+				if (logtype == 'NORMAL') lo = 1;
+				else if(logtype == 'SESSION') lo = 2;
+				else lo = 3;
+				document.frm_analysis.lo.value = lo;
+				document.frm_analysis.submit();
+				//console.log(data);
+			}
+		}
+		// ,{
+		// 	class:'m_ses_icon4',
+		// 	title:'关联导出',
+		// 	cb: function(data){
+		// 		alert(data.id);
+		// 	}
+		// }
+		,{
+			class:'m_ses_icon3',
+			title:'下载',
+			cb: function(data){
+				//console.log(data);
+				download_file(data);
+			}
+		},{
+			class:'m_ses_icon6',
+			title:'删除',
+			cb: function(data,obj){
+				delete_file(data,obj);
+			}
+		},{
+			class:'msg1',
+			title:'确认',
+			cb: function(data,obj){
+				MarkWMsg(data.xtime_00,1,obj);
+			}
+		}
+	];
+}else{
+	btn_ses = [
+		{
+			class:'m_ses_icon3',
+			title:'下载',			
+			cb: function(data){
+				download_file(data);
+			}
+		}
+	];
+	var btn_ops = [
+		{
+			class:'m_ses_icon3',
+			title:'下载',
+			cb: function(data){
+				//console.log(data);
+				download_file(data);
+			}
+		}
+	];
+}
+
+/*
+	条件
+*/
+var c_time = 0;
+var c_serv = 0;
+var c_user = 0;
+var c_prot = 0;
+var c_today1;
+var c_today2;
+var condition_json={
+	"starttime":null,
+	"endtime":null,
+	"serverip":null,
+	"usercode":null,
+	"inttype":null,
+	"intexception":null
+};
+$(function() {
+	c_time = "0";
+	c_serv = "0";
+	c_user = "0";
+	c_prot = "0";
+	//2 - 时间趋势; 3 - 服务器; 4 - 运维用户; 5 - 协议; 6 - 最新会话;
+	if(NORMAL != ""){
+		get_condition(NORMAL);
+	}else{
+		var btn_status = document.data_dis_frm.a4.value;
+		B = btn_status.charAt(13);
+		C = btn_status.charAt(14);
+		get_condition(B);
+		get_condition(C);
+	}
+
+	get_protocol_list();
+	_autoSize();
+
+	$('body').on('mouseover', '.mmg-bodyWrapper tr', function() {
+		var $_obj = $(this).find('.tab-ctr'),
+			$_p = $(this).parents('.mmGrid');
+		var w = $_p.width(),
+			ow = $_obj.outerWidth();
+		var sleft = $(this).parents('.mmg-bodyWrapper').scrollLeft();
+		var len = $_obj.children().length;
+		$_obj.css({ 'left': w - ow + sleft, width: len * 24 });
+	})
+})
+
+function get_condition(flag){
+	if(flag == 1){
+		intexception = null;
+	}else if(flag == 2){
+		intexception = 1;
+	}
+	c_today1 = "";
+	c_today2 = "";
+	getDate();
+	c_today1 = now_date+' '+'00:00:00%2B08';
+	c_today2 = now_date+' '+'23:59:59%2B08';
+	if(CLASS == 2){
+		var hour_s = document.data_dis_frm.a1.value;
+		if(hour_s < 10){
+			hour_s = '0'+hour_s;
+		}
+		var hour_f = (parseInt(hour_s)+1).toString();
+		if(hour_f == 24){
+			var hour_f = '00';
+		}
+		var timestamp1 = now_date+' '+hour_s+':00:00+08';
+		var timestamp2 = now_date+' '+hour_f+':00:00+08';
+		var time_str = timestamp1+'**'+timestamp2;
+		c_time = time_str;
+		var timestamp1_json = now_date+' '+hour_s+':00:00%2B08';
+		var timestamp2_json = now_date+' '+hour_f+':00:00%2B08';
+		condition_json ={
+			"starttime":timestamp1_json,
+			"endtime":timestamp2_json,
+			"intexception":intexception
+		}		
+	}else if(CLASS == 3){
+		condition_json ={
+			"starttime":c_today1,
+			"endtime":c_today2,
+			"serverip":document.data_dis_frm.a1.value,
+			"intexception":intexception
+		}		
+		c_serv = document.data_dis_frm.a1.value;
+	}else if(CLASS == 4){
+		condition_json ={
+			"starttime":c_today1,
+			"endtime":c_today2,
+			"usercode":document.data_dis_frm.a1.value,
+			"intexception":intexception
+		}		
+		c_user = document.data_dis_frm.a1.value;
+	}else if(CLASS == 5){
+		condition_json ={
+			"starttime":c_today1,
+			"endtime":c_today2,
+			"inttype":document.data_dis_frm.a1.value,
+			"intexception":intexception
+		}		
+		c_prot = document.data_dis_frm.a1.value;
+	}
+}
+$(window).resize(function() {
+	var normal_1;
+	var normal_2;
+	clearTimeout(resizeOut);
+	resizeOut = setTimeout(function(){
+		_autoSize();
+		if(myChart1 != undefined){
+			myChart1.resize();		
+		}
+		if(myChart2 != undefined){
+			myChart2.resize();		
+		}
+		if(myChart3 != undefined){
+			myChart3.resize();		
+		}
+		if(myChart4 != undefined){
+			myChart4.resize();		
+		}
+		if($("#btn_ses").children().eq(0).attr('class').indexOf('active') != -1){
+			normal_1 = 1;
+		}else{
+			normal_1 = 2;
+		}
+		if($("#btn_ops").children().eq(0).attr('class').indexOf('active') != -1){
+			normal_2 = 1;
+		}else{
+			normal_2 = 2;
+		}
+		$('#jkmMMG1').parents('.jkmCont').html('<div id="jkmMMG1" class="xTable"></div>');
+		$('#jkmMMG2').parents('.jkmCont').html('<div id="jkmMMG2" class="xTable"></div>');
+		inittitle(1,normal_1);
+		inittitle(2,normal_2);
+	},600);
+});
+Array.prototype.max = function() {
+	return Math.max.apply({}, this)
+}
+function _autoSize() {
+	var h = $(window).height();
+	showHeight3 = h / 3 - 60,
+	showHeight2 = h / 2 - 80;
+	$('div.jksCont').css('height', showHeight3);
+	$('div.jkmCont').css('height', showHeight2);
+	showLen = Math.floor((showHeight2 - 20)/41 - 1);
+}
+
+function show_btn(){
+}
+
+function init_list(){
+	//console.log(CLASS);//2 - 时间趋势; 3 - 服务器; 4 - 运维用户; 5 - 协议; 6 - 最新会话;
+	//console.log(TYPE);//1 -- > 操作; 2 -- > 会话;
+	//console.log(NORMAL);//1 - 全部; 2 - 异常;
+	var btn_status = document.data_dis_frm.a4.value;//回显按钮状态
+	//console.log(btn_status);
+	var normal = NORMAL;
+	if(btn_status.length == 15){
+		var A, B, C;
+		if(CLASS == 2){
+			$('.jk-s').find('h3').eq(0).text("协议");
+			$("#btn_0").hide();
+			B = btn_status.charAt(2);
+			C = btn_status.charAt(4);
+			if(B == 1){
+				$("#btn_5_1").children().eq(0).attr("class","a active");
+				$("#btn_5_1").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_5_1").children().eq(0).attr("class","a");
+				$("#btn_5_1").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_4_1").children().eq(0).attr("class","a active");
+				$("#btn_4_1").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_4_1").children().eq(0).attr("class","a");
+				$("#btn_4_1").children().eq(1).attr("class","b active");				
+			}
+			Chart4(C,0,1,B);
+			B = btn_status.charAt(5);
+			C = btn_status.charAt(7);
+			if(B == 1){
+				$("#btn_6").children().eq(0).attr("class","a active");
+				$("#btn_6").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_6").children().eq(0).attr("class","a");
+				$("#btn_6").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_2").children().eq(0).attr("class","a active");
+				$("#btn_2").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_2").children().eq(0).attr("class","a");
+				$("#btn_2").children().eq(1).attr("class","b active");				
+			}
+			Chart2(C,0,B);
+			B = btn_status.charAt(9);
+			C = btn_status.charAt(11);
+			if(B == 1){
+				$("#btn_7").children().eq(0).attr("class","a active");
+				$("#btn_7").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_7").children().eq(0).attr("class","a");
+				$("#btn_7").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_3").children().eq(0).attr("class","a active");
+				$("#btn_3").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_3").children().eq(0).attr("class","a");
+				$("#btn_3").children().eq(1).attr("class","b active");				
+			}
+			Chart3(C,0,B);
+		}else if(CLASS == 3){
+			$('.jk-s').find('h3').eq(1).text("协议");			
+			A = btn_status.charAt(0);
+			B = btn_status.charAt(1);
+			C = btn_status.charAt(3);
+			if(A == 1){
+				$("#btn_0").children().eq(0).attr("class","a active");
+				$("#btn_0").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_0").children().eq(0).attr("class","a");
+				$("#btn_0").children().eq(1).attr("class","b active");				
+			}			
+			if(B == 1){
+				$("#btn_5").children().eq(0).attr("class","a active");
+				$("#btn_5").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_5").children().eq(0).attr("class","a");
+				$("#btn_5").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_1").children().eq(0).attr("class","a active");
+				$("#btn_1").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_1").children().eq(0).attr("class","a");
+				$("#btn_1").children().eq(1).attr("class","b active");				
+			}
+			Chart1(C,A,0,B);
+			B = btn_status.charAt(6);
+			C = btn_status.charAt(8);
+			if(B == 1){
+				$("#btn_6_1").children().eq(0).attr("class","a active");
+				$("#btn_6_1").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_6_1").children().eq(0).attr("class","a");
+				$("#btn_6_1").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_4_2").children().eq(0).attr("class","a active");
+				$("#btn_4_2").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_4_2").children().eq(0).attr("class","a");
+				$("#btn_4_2").children().eq(1).attr("class","b active");				
+			}
+			Chart4(C,0,2,B);
+			B = btn_status.charAt(9);
+			C = btn_status.charAt(11);
+			if(B == 1){
+				$("#btn_7").children().eq(0).attr("class","a active");
+				$("#btn_7").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_7").children().eq(0).attr("class","a");
+				$("#btn_7").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_3").children().eq(0).attr("class","a active");
+				$("#btn_3").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_3").children().eq(0).attr("class","a");
+				$("#btn_3").children().eq(1).attr("class","b active");				
+			}
+			Chart3(C,0,B);
+		}else if(CLASS == 4){
+			$('.jk-s').find('h3').eq(2).text("协议");	
+			A = btn_status.charAt(0);
+			B = btn_status.charAt(1);
+			C = btn_status.charAt(3);
+			if(A == 1){
+				$("#btn_0").children().eq(0).attr("class","a active");
+				$("#btn_0").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_0").children().eq(0).attr("class","a");
+				$("#btn_0").children().eq(1).attr("class","b active");				
+			}			
+			if(B == 1){
+				$("#btn_5").children().eq(0).attr("class","a active");
+				$("#btn_5").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_5").children().eq(0).attr("class","a");
+				$("#btn_5").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_1").children().eq(0).attr("class","a active");
+				$("#btn_1").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_1").children().eq(0).attr("class","a");
+				$("#btn_1").children().eq(1).attr("class","b active");				
+			}
+			Chart1(C,A,0,B);
+			B = btn_status.charAt(5);
+			C = btn_status.charAt(7);
+			if(B == 1){
+				$("#btn_6").children().eq(0).attr("class","a active");
+				$("#btn_6").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_6").children().eq(0).attr("class","a");
+				$("#btn_6").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_2").children().eq(0).attr("class","a active");
+				$("#btn_2").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_2").children().eq(0).attr("class","a");
+				$("#btn_2").children().eq(1).attr("class","b active");				
+			}
+			Chart2(C,0,B);
+			B = btn_status.charAt(10);
+			C = btn_status.charAt(12);
+			if(B == 1){
+				$("#btn_7_1").children().eq(0).attr("class","a active");
+				$("#btn_7_1").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_7_1").children().eq(0).attr("class","a");
+				$("#btn_7_1").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_4_3").children().eq(0).attr("class","a active");
+				$("#btn_4_3").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_4_3").children().eq(0).attr("class","a");
+				$("#btn_4_3").children().eq(1).attr("class","b active");				
+			}
+			Chart4(C,0,3,B);
+		}else if(CLASS == 5){
+			// $('.jk-s').find('h3').eq(2).text("协议");	
+			A = btn_status.charAt(0);
+			B = btn_status.charAt(1);
+			C = btn_status.charAt(3);
+			if(A == 1){
+				$("#btn_0").children().eq(0).attr("class","a active");
+				$("#btn_0").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_0").children().eq(0).attr("class","a");
+				$("#btn_0").children().eq(1).attr("class","b active");				
+			}			
+			if(B == 1){
+				$("#btn_5").children().eq(0).attr("class","a active");
+				$("#btn_5").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_5").children().eq(0).attr("class","a");
+				$("#btn_5").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_1").children().eq(0).attr("class","a active");
+				$("#btn_1").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_1").children().eq(0).attr("class","a");
+				$("#btn_1").children().eq(1).attr("class","b active");				
+			}
+			Chart1(C,A,0,B);
+			B = btn_status.charAt(5);
+			C = btn_status.charAt(7);
+			if(B == 1){
+				$("#btn_6").children().eq(0).attr("class","a active");
+				$("#btn_6").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_6").children().eq(0).attr("class","a");
+				$("#btn_6").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_2").children().eq(0).attr("class","a active");
+				$("#btn_2").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_2").children().eq(0).attr("class","a");
+				$("#btn_2").children().eq(1).attr("class","b active");				
+			}
+			Chart2(C,0,B);
+			B = btn_status.charAt(9);
+			C = btn_status.charAt(11);
+			if(B == 1){
+				$("#btn_7").children().eq(0).attr("class","a active");
+				$("#btn_7").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_7").children().eq(0).attr("class","a");
+				$("#btn_7").children().eq(1).attr("class","b active");				
+			}
+			if(C == 1){
+				$("#btn_3").children().eq(0).attr("class","a active");
+				$("#btn_3").children().eq(1).attr("class","b");
+			}else{
+				$("#btn_3").children().eq(0).attr("class","a");
+				$("#btn_3").children().eq(1).attr("class","b active");				
+			}
+			Chart3(C,0,B);
+		}
+		B = btn_status.charAt(13);
+		C = btn_status.charAt(14);
+		if(B == 1){
+			$("#btn_ses").children().eq(0).attr("class","a active");
+			$("#btn_ses").children().eq(1).attr("class","b");
+		}else{
+			$("#btn_ses").children().eq(0).attr("class","a");
+			$("#btn_ses").children().eq(1).attr("class","b active");
+		}
+		if(C == 1){
+			$("#btn_ops").children().eq(0).attr("class","a active");
+			$("#btn_ops").children().eq(1).attr("class","b");
+		}else{
+			$("#btn_ops").children().eq(0).attr("class","a");
+			$("#btn_ops").children().eq(1).attr("class","b active");
+		}
+		get_condition(B);
+		inittitle(1,B);
+		get_condition(C);
+		inittitle(2,C);
+	}else{
+		if(CLASS == 2){
+			$('.jk-s').find('h3').eq(0).text("协议");
+			$("#btn_0").hide();
+			if(TYPE == 1){
+				Chart4(1,0,1,normal);
+				Chart2(1,0,normal);
+				Chart3(1,0,normal);
+			}else{
+				$("#btn_2").children().eq(0).attr("class","a");
+				$("#btn_2").children().eq(1).attr("class","b active");
+				$("#btn_3").children().eq(0).attr("class","a");
+				$("#btn_3").children().eq(1).attr("class","b active");
+				$("#btn_4_1").children().eq(0).attr("class","a");
+				$("#btn_4_1").children().eq(1).attr("class","b active");
+				Chart4(2,0,1,normal);
+				Chart2(2,0,normal);
+				Chart3(2,0,normal);
+			}
+		}else if(CLASS == 3){
+			$('.jk-s').find('h3').eq(1).text("协议");
+			if(TYPE == 1){
+				Chart1(1,1,0,normal);
+				Chart4(1,0,2,normal);
+				Chart3(1,0,normal);
+			}else{
+				$("#btn_1").children().eq(0).attr("class","a");
+				$("#btn_1").children().eq(1).attr("class","b active");
+				$("#btn_3").children().eq(0).attr("class","a");
+				$("#btn_3").children().eq(1).attr("class","b active");
+				$("#btn_4_2").children().eq(0).attr("class","a");
+				$("#btn_4_2").children().eq(1).attr("class","b active");
+				Chart1(2,1,0,normal);
+				Chart4(2,0,2,normal);
+				Chart3(2,0,normal);
+			}
+		}else if(CLASS == 4){
+			$('.jk-s').find('h3').eq(2).text("协议");
+			if(TYPE == 1){
+				Chart1(1,1,0,normal);
+				Chart2(1,0,normal);
+				Chart4(1,0,3,normal);
+			}else{
+				$("#btn_1").children().eq(0).attr("class","a");
+				$("#btn_1").children().eq(1).attr("class","b active");
+				$("#btn_2").children().eq(0).attr("class","a");
+				$("#btn_2").children().eq(1).attr("class","b active");
+				$("#btn_4_3").children().eq(0).attr("class","a");
+				$("#btn_4_3").children().eq(1).attr("class","b active");			
+				Chart1(1,1,0,normal);
+				Chart2(2,0,normal);
+				Chart4(2,0,3,normal);			
+			}
+		}else if(CLASS == 5){
+			if(TYPE == 1){
+				Chart1(1,1,0,normal);
+				Chart2(1,0,normal);
+				Chart3(1,0,normal);
+			}else{
+				$("#btn_1").children().eq(0).attr("class","a");
+				$("#btn_1").children().eq(1).attr("class","b active");
+				$("#btn_2").children().eq(0).attr("class","a");
+				$("#btn_2").children().eq(1).attr("class","b active");
+				$("#btn_3").children().eq(0).attr("class","a");
+				$("#btn_3").children().eq(1).attr("class","b active");
+				Chart1(2,1,0,normal);
+				Chart2(2,0,normal);
+				Chart3(2,0,normal);
+			}
+		}
+		if(normal == 2){
+			$("#btn_5").children().eq(0).attr("class","a");
+			$("#btn_5").children().eq(1).attr("class","b active");
+			$("#btn_5_1").children().eq(0).attr("class","a");
+			$("#btn_5_1").children().eq(1).attr("class","b active");
+			$("#btn_6").children().eq(0).attr("class","a");
+			$("#btn_6").children().eq(1).attr("class","b active");
+			$("#btn_6_1").children().eq(0).attr("class","a");
+			$("#btn_6_1").children().eq(1).attr("class","b active");
+			$("#btn_7").children().eq(0).attr("class","a");
+			$("#btn_7").children().eq(1).attr("class","b active");
+			$("#btn_7_1").children().eq(0).attr("class","a");
+			$("#btn_7_1").children().eq(1).attr("class","b active");
+
+			$("#btn_ses").children().eq(0).attr("class","a");
+			$("#btn_ses").children().eq(1).attr("class","b active");
+
+			$("#btn_ops").children().eq(0).attr("class","a");
+			$("#btn_ops").children().eq(1).attr("class","b active");
+			get_condition(2);
+			inittitle(1,2);
+			inittitle(2,2);
+		}else if(normal == 1){
+			get_condition(1);
+			inittitle(1,1);
+			inittitle(2,1);	
+		}	
+	}
+}
+
+var test = function(param){
+	//console.log(param);
+	get_button_status();
+	if(param.seriesType == 'pie'){
+		var type;		//1 -- > 操作; 2 -- > 会话;
+		var normal;		//1 -- > 全部; 2 -- > 异常;
+		if(param.seriesName == 'server'){
+			if($("#btn_6").children().eq(0).attr("class").indexOf('active') != -1){
+				normal = '1';
+			}else{
+				normal = '2';
+			}
+			if($("#btn_2").children().eq(0).attr("class").indexOf('active') != -1){
+				type = '2';
+			}else{
+				type = '1';
+			}
+			//console.log("server");
+			document.data_dis_frm.a6.value = document.data_dis_frm.tasktype.value;
+			document.data_dis_frm.tasktype.value = 6;
+			document.data_dis_frm.se.value = window.parent.document.frm.se.value;
+			document.data_dis_frm.a5.value = document.data_dis_frm.a1.value;
+			document.data_dis_frm.a1.value = 11;
+			document.data_dis_frm.a2.value = type;
+			document.data_dis_frm.a3.value = normal;
+			document.data_dis_frm.a4.value = button_status;
+			document.data_dis_frm.a8.value = "3-"+param.name;
+			document.data_dis_frm.submit();			
+		}else if(param.seriesName == 'protocol'){
+			if($("#btn_6_1").children().eq(0).attr("class").indexOf('active') != -1){
+				normal = '1';
+			}else{
+				normal = '2';
+			}
+			if($("#btn_4_2").children().eq(0).attr("class").indexOf('active') != -1){
+				type = '2';
+			}else{
+				type = '1';
+			}
+			//console.log("server_xieyi");
+			var protocol_name = param.name;
+			var protocol_id;
+			$.each(protocol_list,function(i,item){
+				if(item.protocolname == protocol_name){
+					protocol_id = item.protocolid;
+				}
+			})
+			document.data_dis_frm.a6.value = document.data_dis_frm.tasktype.value;
+			document.data_dis_frm.tasktype.value = 6;
+			document.data_dis_frm.se.value = window.parent.document.frm.se.value;
+			document.data_dis_frm.a5.value = document.data_dis_frm.a1.value;
+			document.data_dis_frm.a1.value = 11;
+			document.data_dis_frm.a2.value = type;
+			document.data_dis_frm.a3.value = normal;
+			document.data_dis_frm.a4.value = button_status;
+			document.data_dis_frm.a8.value = "4-"+protocol_id;
+			document.data_dis_frm.submit();			
+		}
+	}
+}
+
+//生成协议列表
+function get_protocol_list(){
+	var max_page = "null";
+	var ipage = "null";
+	var keyword = JSON.stringify([]);
+	$.ajax({
+		url:'/bhost/get_agreement_list',
+		type: "post",
+		async:true,
+		data: {a0:sess,data1:max_page,data2:ipage,data3:keyword},
+		success: function(result){
+			protocol_data = JSON.parse(result);
+			protocol_data = protocol_data.data;
+			protocol_list = [];
+			$.each(protocol_data,function(i,item){
+				var list = {
+					protocolname:"",
+					protocolid:""
+				}
+				list.protocolname = item.ProtocolName;
+				list.protocolid = item.ProtocolId;
+				protocol_list.push(list);
+			})
+			init_list();			
+			////console.log(protocol_list);
+		}
+	})
+}
+//获取date
+function GetDateStr(AddDayCount) { 
+	var dd = new Date(); 
+	dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期 
+	var y = dd.getFullYear(); 
+	var m = dd.getMonth()+1;//获取当前月份的日期 
+	var d = dd.getDate();
+	if (m < 10) m = "0" + m;
+	if (d < 10) d = "0" + d;
+	return m+"-"+d; 
+}
+//获取hour
+function GetHourStr(SubHourCount){
+	var d = new Date();
+	d.setTime(d.getTime()-SubHourCount*60*60*1000);
+	var now_Hour = d.getHours();
+	return now_Hour;
+};
+var FLAG;
+function ChangeLogFieldStatus(obj){
+	if($(FLAG).attr("id") == "jkmMMG1"){
+		logtype_i = 2;
+	}else if($(FLAG).attr("id") == "jkmMMG2"){
+		logtype_i = 1;
+	}
+	//console.log(logtype_i);
+	var field_json = 
+	{
+		"logtype": logtype_i,    //日志类型，1-操作，2-会话，3-系统
+		"logfieldset":[
+			
+		]
+	};
+	logfieldset = [];
+	$(obj).each(function(i,item){
+		if(item.hide == false) fStatus = 0;
+		else fStatus = 1;
+		////console.log(item.field_id);
+		logfieldset.push(JSON.parse('{"LogFieldId":'+item.field_id+',"Order":'+(i+1)+',"Status":'+fStatus+'}'));
+	})
+	field_json.logfieldset = logfieldset;
+	
+	msstr = aceg(JSON.stringify(field_json),sess);
+	$.ajax({
+		url:'/bhost/ChangeLogFieldStatus',
+		type:'post',
+		async:true,
+		data:{a0:{{se}},s1:JSON.stringify(field_json),m1:msstr},
+		success:function(result){
+		}
+	})
+}
+
+//获取操作数据分布data
+function get_ops_data_distribution(type,re,normal){
+	////console.log("ops"+type+re);
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#distri_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ops_data_distribution",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:type,a2:re,a3:normal,a4:c_time,a5:c_serv,a6:c_user,a7:c_prot},
+		success:function(result){
+			$("#jksChart1").show();
+			var result = JSON.parse(result);
+			$("#distri_re").attr("onclick","_setType(this,0,2)");
+			if(result.Result){
+				data = result.info;
+				type = result.Type;//1: hour 2: day
+				if($(".area.area2").children('.title').children().find('a:first').attr('class') == ""){		//防跳转
+					return false;
+				}
+				// if(data == false){
+				// 	return false;
+				// }
+				var list1 = [];
+				var list1_ = [];
+				var list2 = [];
+				var data_all = [];
+				var flag_date = 0;
+				var d = new Date();
+				var now_Hour = d.getHours();
+				var now_Date = Date().split(" ")[2];
+				var before_Date = GetDateStr(-1);
+				before_Date = before_Date.split('-')[1];
+				if(type == 1){
+					list1_ = [24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0]
+					list1 = [24,"","",21,"","",18,"","",15,"","",12,"","",9,"","",6,"","",3,"","",0];
+
+					if(data == ""){
+						list2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+					}else{
+						$.each(list1_,function(i,item){
+							var flag_date = 0;
+							$.each(data,function(i1,item1){
+								var data_date = item1.name.split(" ")[0];
+								data_date = data_date.split('-')[1];
+								var data_hour = item1.name.split(" ")[1];
+								if(i == 0){
+									if(item == data_hour && data_date == now_Date){
+										list2.push(item1.value);
+										flag_date = 1;
+										return false;
+									}
+								}else{
+									if(item == data_hour){
+										list2.push(item1.value);
+										flag_date = 1;
+										return false;
+									}
+								}
+							})
+							if(flag_date == 0){
+								list2.push("0");
+							}
+						})
+					}
+
+				}else if(type == 2){
+					for(i=0; i<14; i++){
+						var _i = i - 2 * i;
+						list1.push(GetDateStr(_i));
+						flag_date = 0;
+						$.each(data,function(i,item){
+							if(item.name == GetDateStr(_i)){
+								list2.push(item.value);
+								flag_date = 1;
+							}
+						})
+						if(flag_date == 0){
+							list2.push('0');
+						}
+					}
+				}
+				var a = list1;
+				var b = list2;
+				b = list2.reverse();
+				a = list1.reverse();
+				data_all.push(a);
+				data_all.push(b);
+				////console.log(data_all);
+
+				myChart1 = echarts.init(document.getElementById('jksChart1'));
+				myChart1.clear();
+				var category = data_all[0];
+				var lineData =data_all[1];
+				if(type == 1){
+					var option = {
+						backgroundColor: 'transparent',
+						tooltip: {
+							trigger: 'axis',
+							//formatter: '<span style="font-size:12px"><br><i class="dot-fix"></i>数量: {c}</span>',
+							formatter:function(params){
+								var html = '';
+								if(params.length>0){
+									_tempValue = params[0];
+									html+='<span style="font-size:12px">'+params[0].name+'<br><i class="dot-fix"></i>数量: '+params[0].value+'</span>';
+								}
+								return html;
+							},
+							axisPointer: {
+								type: 'shadow'
+							},
+							backgroundColor: 'rgba(62,60,88,0.6)'
+						},
+						grid: {
+							left: "15%",
+							x: 40,
+							x2: 0,
+							y: 40,
+							y2:30
+						},
+						legend: false,
+						xAxis: {
+							data: category,
+							axisLine: {
+								lineStyle: {
+									color: '#bebebe'
+								}
+							}
+						},
+						yAxis: {
+							axisLine: {
+								lineStyle: {
+									color: '#bebebe'
+								}
+							},
+							splitLine: {
+								lineStyle: {
+									color: '#DDD'
+								}
+							},
+							minInterval: 1
+						},
+						series: [{
+							name: 'hour',
+							type: 'line',
+							smooth: true,
+							showAllSymbol: true,
+							symbol: 'emptyCircle',
+							symbolSize: 8,
+							itemStyle: {
+								normal: {
+									color: '#25afe1'
+								},
+								emphasis: {
+									borderColor: '#cd426d',
+									borderWidth: 4
+								}
+							},
+							lineStyle:{
+								normal: {
+									width: 3
+								}
+							},
+							data: lineData
+						}, {
+							name: 'SSH',
+							type: 'bar',
+							barGap: '-100%',
+							barWidth: 10,
+							itemStyle: {
+								normal: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1, [
+											{ offset: 0, color: 'rgba(246,246,246,0)' },
+											{ offset: 0.5, color: 'rgba(246,246,246,0.2)' },
+											{ offset: 1, color: 'rgba(246,246,246,0.2)' }
+										]
+									)
+								}
+							},
+							z: -8,
+							data: lineData
+						}, {
+							name: 'SSH',
+							type: 'pictorialBar',
+							symbol: 'rect',
+							itemStyle: {
+								normal: {
+									color: '#3f88a7'
+								}
+							},
+							symbolRepeat: true,
+							symbolSize: [8, 1],
+							symbolMargin: 1,
+							z: -10,
+							data: lineData
+						}]
+					};
+				}else if(type == 2){
+					var option = {
+						backgroundColor: 'transparent',
+						tooltip: {
+							trigger: 'axis',
+							formatter: '<span style="font-size:12px">{b}<br><i class="dot-fix"></i>数量: {c}</span>',
+							axisPointer: {
+								type: 'shadow'
+							},
+							backgroundColor: 'rgba(62,60,88,0.6)'
+						},
+						grid: {
+							left: "15%",
+							x: 40,
+							x2: 0,
+							y: 40,
+							y2: 30
+						},
+						legend: false,
+						xAxis: {
+							data: category,
+							axisLine: {
+								lineStyle: {
+									color: '#bebebe'
+								}
+							}
+						},
+						yAxis: {
+							axisLine: {
+								lineStyle: {
+									color: '#bebebe'
+								}
+							},
+							splitLine: {
+								lineStyle: {
+									color: '#DDD'
+								}
+							},
+							minInterval: 1
+						},
+						series: [{
+							name: 'day',
+							type: 'line',
+							smooth: true,
+							showAllSymbol: true,
+							symbol: 'emptyCircle',
+							symbolSize: 8,
+							itemStyle: {
+								normal: {
+									color: '#25afe1'
+								},
+								emphasis: {
+									borderColor: '#cd426d',
+									borderWidth: 4
+								}
+							},
+							lineStyle:{
+								normal: {
+									width: 3
+								}
+							},
+							data: lineData
+						}, {
+							name: 'SSH',
+							type: 'bar',
+							barGap: '-100%',
+							barWidth: 10,
+							itemStyle: {
+								normal: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1, [
+											{ offset: 0, color: 'rgba(246,246,246,0)' },
+											{ offset: 0.5, color: 'rgba(246,246,246,0.2)' },
+											{ offset: 1, color: 'rgba(246,246,246,0.2)' }
+										]
+									)
+								}
+							},
+							z: -8,
+							data: lineData
+						}, {
+							name: 'SSH',
+							type: 'pictorialBar',
+							symbol: 'rect',
+							itemStyle: {
+								normal: {
+									color: '#3f88a7'
+								}
+							},
+							symbolRepeat: true,
+							symbolSize: [8, 1],
+							symbolMargin: 1,
+							z: -10,
+							data: lineData
+						}]
+					};
+				}
+				myChart1.setOption(option);
+				myChart1.on('click',test);
+				if(data == ""){
+					$("#jksChart1").hide();
+				}
+			}
+			else{
+				//alert('数据分布查询失败');
+			}
+		}
+	});
+	return data;
+}
+//获取会话数据分布data
+function get_ses_data_distribution(type,re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#distri_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ses_data_distribution",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:type,a2:re,a3:normal,a4:c_time,a5:c_serv,a6:c_user,a7:c_prot},
+		success:function(result){
+			$("#jksChart1").show();
+			var result = JSON.parse(result);
+			$("#distri_re").attr("onclick","_setType(this,0,2)");
+			if(result.Result){
+				data=result.info;
+				if($(".area.area2").children('.title').children().find('a:last').attr('class') == ""){
+					return false;
+				}
+				var list1 = [];
+				var list1_ = [];
+				var list2 = [];
+				var data_all = [];
+				var flag_date = 0;
+				var d = new Date();
+				var now_Hour = d.getHours();
+				var now_Date = Date().split(" ")[2];
+				var before_Date = GetDateStr(-1).split("-")[1];
+				if(type == 1){	
+					list1_ = [24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0]
+					list1 = [24,"","",21,"","",18,"","",15,"","",12,"","",9,"","",6,"","",3,"","",0];
+					$.each(list1_,function(i,item){
+						var flag_date = 0;
+						$.each(data,function(i1,item1){
+							var data_date = item1.name.split(" ")[0].split("-")[1];
+							var data_hour = item1.name.split(" ")[1];
+							if(i == 0){
+								////console.log("This is i：" +i+ "--"+item+"=="+ data_hour+ "&&" +data_date+ "==" +now_Date);
+								if(item == data_hour && data_date == now_Date){
+									list2.push(item1.value);
+									flag_date = 1;
+									return false;
+								}
+							}else{
+								if(item == data_hour){
+									list2.push(item1.value);
+									flag_date = 1;
+									return false;
+								}
+							}
+						})
+						if(flag_date == 0){
+							list2.push("0");
+						}
+					})
+					if(data == ""){
+						list2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+					}
+				}else if(type == 2){
+					for(i=0; i<14; i++){
+						var _i = i - 2 * i;
+						list1.push(GetDateStr(_i));
+						flag_date = 0;
+						$.each(data,function(i,item){
+							if(item.name == GetDateStr(_i)){
+								list2.push(item.value);
+								flag_date = 1;
+							}
+						})
+						if(flag_date == 0){
+							list2.push('0');
+						}
+					}
+				}
+				var a = list1;
+				var b = list2;
+				b = list2.reverse();
+				a = list1.reverse();
+				data_all.push(a);
+				data_all.push(b);
+				////console.log(data_all);
+				myChart1 = echarts.init(document.getElementById('jksChart1'));
+				myChart1.clear();
+				var category = data_all[0];
+				var lineData =data_all[1] ;
+				if(type == 1){
+					var option = {
+						backgroundColor: 'transparent',
+						tooltip: {
+							trigger: 'axis',
+							//formatter: '<span style="font-size:12px"><br><i class="dot-fix"></i>数量: {c}</span>',
+							formatter:function(params){
+								var html = '';
+								if(params.length>0){
+									_tempValue = params[0];
+									html+='<span style="font-size:12px">'+params[0].name+'<br><i class="dot-fix"></i>数量: '+params[0].value+'</span>';
+								}
+								return html;
+							},
+							axisPointer: {
+								type: 'shadow'
+							},
+							backgroundColor: 'rgba(62,60,88,0.6)'
+						},
+						grid: {
+							left: "15%",
+							x: 40,
+							x2: 0,							
+							y: 40,
+							y2: 30
+						},
+						legend: false,
+						xAxis: {
+							data: category,
+							axisLine: {
+								lineStyle: {
+									color: '#bebebe'
+								}
+							}
+						},
+						yAxis: {
+							axisLine: {
+								lineStyle: {
+									color: '#bebebe'
+								}
+							},
+							splitLine: {
+								lineStyle: {
+									color: '#DDD'
+								}
+							},
+							minInterval: 1
+						},
+						series: [{
+							name: 'hour',
+							type: 'line',
+							smooth: true,
+							showAllSymbol: true,
+							symbol: 'emptyCircle',
+							symbolSize: 8,
+							itemStyle: {
+								normal: {
+									color: '#25afe1'
+								},
+								emphasis: {
+									borderColor: '#cd426d',
+									borderWidth: 4
+								}
+							},
+							lineStyle:{
+								normal: {
+									width: 3
+								}
+							},							
+							data: lineData
+						}, {
+							name: 'SSH',
+							type: 'bar',
+							barGap: '-100%',
+							barWidth: 10,
+							itemStyle: {
+								normal: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1, [
+											{ offset: 0, color: 'rgba(246,246,246,0)' },
+											{ offset: 0.5, color: 'rgba(246,246,246,0.2)' },
+											{ offset: 1, color: 'rgba(246,246,246,0.2)' }
+										]
+									)
+								}
+							},
+							z: -8,
+							data: lineData
+						}, {
+							name: 'SSH',
+							type: 'pictorialBar',
+							symbol: 'rect',
+							itemStyle: {
+								normal: {
+									color: '#3f88a7'
+								}
+							},
+							symbolRepeat: true,
+							symbolSize: [8, 1],
+							symbolMargin: 1,
+							z: -10,
+							data: lineData
+						}]
+					};
+				}else if(type == 2){
+					var option = {
+						backgroundColor: 'transparent',
+						tooltip: {
+							trigger: 'axis',
+							formatter: '<span style="font-size:12px">{b}<br><i class="dot-fix"></i>数量: {c}</span>',
+							axisPointer: {
+								type: 'shadow'
+							},
+							backgroundColor: 'rgba(62,60,88,0.6)'
+						},
+						grid: {
+							left: "15%",
+							x: 40,
+							x2: 0,							
+							y: 40,
+							y2: 30
+						},
+						legend: false,
+						xAxis: {
+							data: category,
+							axisLine: {
+								lineStyle: {
+									color: '#bebebe'
+								}
+							}
+						},
+						yAxis: {
+							axisLine: {
+								lineStyle: {
+									color: '#bebebe'
+								}
+							},
+							splitLine: {
+								lineStyle: {
+									color: '#DDD'
+								}
+							},
+							minInterval: 1
+						},
+						series: [{
+							name: 'day',
+							type: 'line',
+							smooth: true,
+							showAllSymbol: true,
+							symbol: 'emptyCircle',
+							symbolSize: 8,
+							itemStyle: {
+								normal: {
+									color: '#25afe1'
+								},
+								emphasis: {
+									borderColor: '#cd426d',
+									borderWidth: 4
+								}
+							},
+							lineStyle:{
+								normal: {
+									width: 3
+								}
+							},							
+							data: lineData
+						}, {
+							name: 'SSH',
+							type: 'bar',
+							barGap: '-100%',
+							barWidth: 10,
+							itemStyle: {
+								normal: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1, [
+											{ offset: 0, color: 'rgba(246,246,246,0)' },
+											{ offset: 0.5, color: 'rgba(246,246,246,0.2)' },
+											{ offset: 1, color: 'rgba(246,246,246,0.2)' }
+										]
+									)
+								}
+							},
+							z: -8,
+							data: lineData
+						}, {
+							name: 'SSH',
+							type: 'pictorialBar',
+							symbol: 'rect',
+							itemStyle: {
+								normal: {
+									color: '#3f88a7'
+								}
+							},
+							symbolRepeat: true,
+							symbolSize: [8, 1],
+							symbolMargin: 1,
+							z: -10,
+							data: lineData
+						}]
+					};
+				}
+				
+				myChart1.setOption(option);
+				myChart1.on('click',test);
+				if(data == ""){
+					$("#jksChart1").hide();
+				}
+			}
+			else{
+				//alert('数据分布查询失败');
+			}
+		}
+	});
+	return data;
+}
+//时间趋势 #  1: hour    2: day
+function Chart1(type,i,re,normal){
+	////console.log(i);
+	if(type == 1){
+		get_ops_data_distribution(i,re,normal);
+	}else{
+		get_ses_data_distribution(i,re,normal);
+	}	
+}
+
+//获取会话服务器data
+function get_ses_service_data(re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#server_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ses_service_data",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:re,a2:normal,a4:c_time,a5:c_serv,a6:c_user,a7:c_prot},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#server_re").attr("onclick","_setType(this,0,3)");
+			if(result.Result){
+				data=result.info;
+				if($(".area.area3").children('.title').children().find('a:last').attr('class') == ""){
+					return false;
+				}
+				if(!data){
+					return false;
+				}
+				myChart2 = echarts.init(document.getElementById('jksChart2'));
+				myChart2.clear();
+				var color;
+				var len = data.length;
+				if(len < 5){
+					color = ['#f56ad4','#22d0f5','#716dae','#3574e6'];
+				}else {
+					color = ['#f56ad4','#22d0f5','#716dae','#3574e6','#fe509f','#bae7ed','#bc5ba5','#fdb7c5','#b8b8b8','#25afe1'];
+				}
+				if(data != ''){
+					var max = data[0].value;
+					var min = data[len-1].value;
+					var num = (parseInt(max) - parseInt(min))/10;
+				}else{
+					num = 0;
+				}
+                                num = parseInt(num);
+                                $.each(data,function(i,item){
+                                        item.percent = item.percent * 100;
+                                        item.percent = item.percent.toFixed(2);
+                                        item.value = parseInt(item.value) + num;
+                                })
+
+				var option = {
+					title: false,
+					color: color,
+					tooltip: {
+					    trigger: 'item',
+						formatter: function (params) {
+							var value = params.value - num;
+					                return '<span style="font-size:12px">'+params.data.name+"<br>"+value+" ("+params.data.percent+"%)"+'</span>'
+						},
+					    backgroundColor: 'rgba(62,60,88,0.6)'
+					},
+					grid: {
+						x: 0,
+						x2: 0
+					},
+					legend: false,
+					toolbox: false,
+					calculable: true,
+					series: [{
+						name: 'server',
+						type: 'pie',
+						radius: radius,
+						center: ['50%', '50%'],
+						roseType: 'area',
+						data: data,
+						itemStyle: {
+						    normal: {
+								shadowColor: 'rgba(0, 0, 0, 0.2)',
+								shadowBlur: 24
+						    },
+						    emphasis: {
+						        opacity: 0.8
+						    }
+						}
+				    }]
+				};
+
+				myChart2.setOption(option);
+				myChart2.on('click',test);
+			}
+			else{
+				//alert('服务器查询失败');
+			}
+		}
+	});
+	return data;
+}
+//获取操作服务器data
+function get_ops_service_data(re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#server_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ops_service_data",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:re,a2:normal,a4:c_time,a5:c_serv,a6:c_user,a7:c_prot},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#server_re").attr("onclick","_setType(this,0,3)");
+			if(result.Result){
+				data=result.info;
+				if($(".area.area3").children('.title').children().find('a:first').attr('class') == ""){
+					return false;
+				}
+				if(!data){
+					return false;
+				}
+
+				myChart2 = echarts.init(document.getElementById('jksChart2'));
+				myChart2.clear();
+				var color;
+				var len = data.length;
+				if(len < 5){
+					color = ['#f56ad4','#22d0f5','#716dae','#3574e6'];
+				}else {
+					color = ['#f56ad4','#22d0f5','#716dae','#3574e6','#fe509f','#bae7ed','#bc5ba5','#fdb7c5','#b8b8b8','#25afe1'];
+				}
+				if(data != ''){
+					var max = data[0].value;
+					var min = data[len-1].value;
+					var num = (parseInt(max) - parseInt(min))/10;
+				}else{
+					num = 0;
+				}
+                                num = parseInt(num);
+                                $.each(data,function(i,item){
+                                        item.percent = item.percent * 100;
+                                        item.percent = item.percent.toFixed(2);
+                                        item.value = parseInt(item.value) + num;
+                                })
+
+				var option = {
+					title: false,
+					color: color,
+					tooltip: {
+					    trigger: 'item',
+                                                formatter: function (params) {
+                                                        var value = params.value - num;
+                                                        return '<span style="font-size:12px">'+params.data.name+"<br>"+value+" ("+params.data.percent+"%)"+'</span>'
+                                                },
+
+					    backgroundColor: 'rgba(62,60,88,0.6)'
+					},
+					grid: {
+						x: 0,
+						x2: 0
+					},
+					legend: false,
+					toolbox: false,
+					calculable: true,
+					series: [{
+						name: 'server',
+						type: 'pie',
+						radius: radius,
+						center: ['50%', '50%'],
+						roseType: 'area',
+						data: data,
+						itemStyle: {
+						    normal: {
+								shadowColor: 'rgba(0, 0, 0, 0.2)',
+								shadowBlur: 6
+						    },
+						    emphasis: {
+						        opacity: 0.8
+						    }
+						}
+				    }]
+				};
+
+				myChart2.setOption(option);
+				myChart2.on('click',test);
+			}
+			else{
+				//alert('服务器查询失败');
+			}
+		}
+	});
+	return data;
+}
+//服务器
+function Chart2(type,re,normal){
+	var service_data;
+	if(type == 2){
+		get_ses_service_data(re,normal);
+	}else{
+		get_ops_service_data(re,normal);
+	}
+}
+
+//获取操作运维用户data
+function get_ops_user_data(re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#bhuser_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ops_user_data",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:re,a2:normal,a4:c_time,a5:c_serv,a6:c_user,a7:c_prot},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#jksChart3").show();
+			$("#bhuser_re").attr("onclick","_setType(this,0,4)");
+			if(result.Result){
+				data=result.info;
+				if($(".area.area4").children('.title').children().find('a:first').attr('class') == ""){
+					return false;
+				}
+				var list1 = [];
+				var list2 = [];
+				var data_all = [];
+				$.each(data,function(i,item){
+					if(i < BH_USER_NUM){
+						list1.push(item.name);
+						list2.push(item.value);
+					}
+				})
+				data_all.push(list1);
+				data_all.push(list2);
+				myChart3 = echarts.init(document.getElementById('jksChart3'));
+				myChart3.clear();
+				var dataAxis = data_all[0];
+				var data = data_all[1];
+
+
+				// var yMax = Math.max.apply(null, data);
+				// //最大值
+				// var dataShadow = [];
+
+				// for (var i = 0; i < data.length; i++) {
+				// 	dataShadow.push(yMax);
+				// }
+
+				option = {
+					title: false,
+					grid: {
+						left: "15%",
+						x: 40,
+						x2: 0,
+						y: 40,
+						y2: 50
+					},
+					xAxis: {
+						data: dataAxis,
+						axisLine: {
+							lineStyle: {
+								color: '#bebebe'
+							}
+						},
+						axisLabel:{
+							rotate:-45,
+							formatter: function (value) {
+								return (value.length > 5 ? (value.slice(0,5)+"...") : value );
+							}	
+						}
+					},
+					yAxis: {
+						axisLine: {
+							lineStyle: {
+								color: '#bebebe'
+							}
+						},
+						splitLine: {
+							lineStyle: {
+								color: '#DDD'
+							}
+						},
+						minInterval: 1
+					},
+					tooltip: {
+						trigger: 'axis',
+						//formatter: '<span style="font-size:12px">用户名称: {b}<br><i class="dot-fix"></i>数量: {c}</span>',
+						formatter:function(params){
+							var html = '';
+							if(params.length>0){
+								_tempValue = params[0];
+								for ( var int = 0; int < params.length; int++) {
+									html+='<span style="font-size:12px">用户名称: '+params[0].name+'<br><i class="dot-fix"></i>数量: '+params[0].value+'</span>';
+								}
+							}
+							return html;
+						},
+						axisPointer: {
+							lineStyle: {
+								color: 'transparent'
+							}
+						},
+						axisPointer: {
+							type: 'shadow'
+						},
+						backgroundColor: 'rgba(62,60,88,0.6)'
+					},
+					series: [// For shadow
+						// {	
+						// 	name: 'bhuser',
+						// 	type: 'bar',
+						// 	itemStyle: {
+						// 		normal: { color: 'rgba(0,0,0,0.05)' }
+						// 	},
+						// 	barGap: '-100%',
+						// 	barCategoryGap: '70%',
+						// 	data: dataShadow,
+						// 	animation: false
+						// },
+						{	
+							name: 'bhuser',
+							barMaxWidth:'50px',
+							type: 'bar',
+							itemStyle: {
+								normal: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1, [
+											{ offset: 0, color: '#46ddff' },
+											{ offset: 0.5, color: '#59abdb' },
+											{ offset: 1, color: '#716dae' }
+										]
+									),
+									backgroundColor: '#b8b8b8'
+								},
+								emphasis: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1, [
+											{ offset: 0, color: '#87e8fe' },
+											{ offset: 0.5, color: '#377f9b' },
+											{ offset: 1, color: '#292439' }
+										]
+									)
+								}
+							},
+							data: data
+						}
+					]
+				};
+
+				myChart3.setOption(option);
+				myChart3.on('click',test);
+				if(data == ""){
+					$("#jksChart3").hide();
+				}
+			}
+			else{
+				//alert('运维用户查询失败');
+			}
+		}
+	});
+	
+	return data;
+}
+//获取会话运维用户data
+function get_ses_user_data(re,normal){
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#bhuser_re").attr("onclick","");
+	}
+	var data=false;
+	$.ajax({
+		url: "/bhost/get_ses_user_data",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:re,a2:normal,a4:c_time,a5:c_serv,a6:c_user,a7:c_prot},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#jksChart3").show();
+			$("#bhuser_re").attr("onclick","_setType(this,0,4)");
+			if(result.Result){
+				data=result.info;
+				if($(".area.area4").children('.title').children().find('a:last').attr('class') == ""){
+					return false;
+				}
+				var list1 = [];
+				var list2 = [];
+				var data_all = [];
+				$.each(data,function(i,item){
+					if(i < BH_USER_NUM){
+						list1.push(item.name);
+						list2.push(item.value);
+					}
+				})
+				data_all.push(list1);
+				data_all.push(list2);
+
+				myChart3 = echarts.init(document.getElementById('jksChart3'));
+				myChart3.clear();
+				var dataAxis = data_all[0];
+				var data = data_all[1];
+
+				// var yMax = Math.ceil(data.max() / 100) * 100;
+				// var dataShadow = [];
+				// for (var i = 0; i < data.length; i++) {
+				// 	dataShadow.push(yMax);
+				// }
+				option = {
+					title: false,
+					grid: {
+						left: "15%",
+						x: 40,
+						x2: 0,
+						y: 40,
+						y2: 50
+					},
+					xAxis: {
+						data: dataAxis,
+						axisLine: {
+							lineStyle: {
+								color: '#bebebe'
+							}
+						},
+						axisLabel:{
+							rotate:-45,
+							formatter: function (value) {
+								return (value.length > 5 ? (value.slice(0,5)+"...") : value );
+							}	
+						}						
+					},
+					yAxis: {
+						axisLine: {
+							lineStyle: {
+								color: '#bebebe'
+							}
+						},
+						splitLine: {
+							lineStyle: {
+								color: '#DDD'
+							}
+						},
+						minInterval: 1
+					},
+					tooltip: {
+						trigger: 'axis',
+						//formatter: '<span style="font-size:12px">运维用户 :{b}<br><i class="dot-fix"></i>数量: {c}</span>',
+						formatter:function(params){
+							var html = '';
+							if(params.length>0){
+								_tempValue = params[0];
+								for ( var int = 0; int < params.length; int++) {
+									html+='<span style="font-size:12px">用户名称: '+params[0].name+'<br><i class="dot-fix"></i>数量: '+params[0].value+'</span>';
+								}
+							}
+							return html;
+						},
+						axisPointer: {
+							name: 'bhuser',
+							type: 'shadow'
+						},
+						backgroundColor: 'rgba(62,60,88,0.6)'
+					},
+					series: [// For shadow
+						// {
+						// 	name: 'bhuser',
+						// 	type: 'bar',
+						// 	itemStyle: {
+						// 		normal: { color: 'rgba(0,0,0,0.05)' }
+						// 	},
+						// 	barGap: '-100%',
+						// 	barCategoryGap: '70%',
+						// 	data: dataShadow,
+						// 	animation: false
+						// },
+						{
+							name: 'bhuser',
+							barMaxWidth:'50px',
+							type: 'bar',
+							itemStyle: {
+								normal: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1, [
+											{ offset: 0, color: '#46ddff' },
+											{ offset: 0.5, color: '#59abdb' },
+											{ offset: 1, color: '#716dae' }
+										]
+									),
+									backgroundColor: '#b8b8b8'
+								},
+								emphasis: {
+									color: new echarts.graphic.LinearGradient(
+										0, 0, 0, 1, [
+											{ offset: 0, color: '#87e8fe' },
+											{ offset: 0.5, color: '#377f9b' },
+											{ offset: 1, color: '#292439' }
+										]
+									)
+								}
+							},
+							data: data
+						}
+					]
+				};
+
+				myChart3.setOption(option);
+				myChart3.on('click',test);
+				if(data == ""){
+					$("#jksChart3").hide();
+				}
+			}
+			else{
+				//alert('运维用户查询失败');
+			}
+		}
+	});
+	
+	return data;
+}
+var _tempValue = "";
+//运维用户
+function Chart3(type,re,normal){
+	if(type == 1){
+		get_ops_user_data(re,normal);
+	}else{
+		get_ses_user_data(re,normal);
+	}
+}
+function _setMouseup(){
+	if(_tempValue == ""){
+		return false;
+	}
+	get_button_status();
+	if(_tempValue.seriesType == 'line'){
+		var type;		//1 -- > 操作; 2 -- > 会话;
+		var normal;		//1 -- > 全部; 2 -- > 异常;
+		if(_tempValue.seriesName == 'hour'){
+			if($("#btn_5").children().eq(0).attr("class").indexOf('active') != -1){
+				normal = '1';
+			}else{
+				normal = '2';
+			}
+			if($("#btn_1").children().eq(0).attr("class").indexOf('active') != -1){
+				type = '2';
+			}else{
+				type = '1';
+			}
+			//console.log("fenbu");
+			document.data_dis_frm.a6.value = document.data_dis_frm.tasktype.value;
+			document.data_dis_frm.tasktype.value = 6;
+			document.data_dis_frm.se.value = window.parent.document.frm.se.value;
+			document.data_dis_frm.a5.value = document.data_dis_frm.a1.value;
+			document.data_dis_frm.a1.value = 11;
+			document.data_dis_frm.a2.value = type;
+			document.data_dis_frm.a3.value = normal;
+			document.data_dis_frm.a4.value = button_status;
+			document.data_dis_frm.a8.value = "1-"+_tempValue.dataIndex;
+			document.data_dis_frm.submit();
+		}else if(_tempValue.seriesName == 'protocol'){
+			if($("#btn_5_1").children().eq(0).attr("class").indexOf('active') != -1){
+				normal = '1';
+			}else{
+				normal = '2';
+			}
+			if($("#btn_4_1").children().eq(0).attr("class").indexOf('active') != -1){
+				type = '2';
+			}else{
+				type = '1';
+			}
+			var protocol_name = _tempValue.name;
+			var protocol_id;
+			$.each(protocol_list,function(i,item){
+				if(item.protocolname == protocol_name){
+					protocol_id = item.protocolid;
+				}
+			})
+			//console.log("fenbu_xieyi");
+			document.data_dis_frm.a6.value = document.data_dis_frm.tasktype.value;
+			document.data_dis_frm.tasktype.value = 6;
+			document.data_dis_frm.se.value = window.parent.document.frm.se.value;
+			document.data_dis_frm.a5.value = document.data_dis_frm.a1.value;
+			document.data_dis_frm.a1.value = 11;
+			document.data_dis_frm.a2.value = type;
+			document.data_dis_frm.a3.value = normal;
+			document.data_dis_frm.a4.value = button_status;
+			document.data_dis_frm.a8.value = "2-"+protocol_id;
+			document.data_dis_frm.submit();
+		}
+	}else if(_tempValue.seriesName == 'bhuser'){
+		if($("#btn_7").children().eq(0).attr("class").indexOf('active') != -1){
+			normal = '1';
+		}else{
+			normal = '2';
+		}
+		if($("#btn_3").children().eq(0).attr("class").indexOf('active') != -1){
+			type = '2';
+		}else{
+			type = '1';
+		}
+		//console.log("bar");
+		document.data_dis_frm.a6.value = document.data_dis_frm.tasktype.value;
+		document.data_dis_frm.tasktype.value = 6;
+		document.data_dis_frm.se.value = window.parent.document.frm.se.value;
+		document.data_dis_frm.a5.value = document.data_dis_frm.a1.value;
+		document.data_dis_frm.a1.value = 11;
+		document.data_dis_frm.a2.value = type;
+		document.data_dis_frm.a3.value = normal;
+		document.data_dis_frm.a4.value = button_status;
+		document.data_dis_frm.a8.value = "5-"+_tempValue.name;
+		document.data_dis_frm.submit();			
+	}else if(_tempValue.seriesName == 'protocol'){
+		if($("#btn_7_1").children().eq(0).attr("class").indexOf('active') != -1){
+			normal = '1';
+		}else{
+			normal = '2';
+		}
+		if($("#btn_4_3").children().eq(0).attr("class").indexOf('active') != -1){
+			type = '2';
+		}else{
+			type = '1';
+		}
+		//console.log("bar_xieyi");
+		var protocol_name = _tempValue.name;
+		var protocol_id;
+		$.each(protocol_list,function(i,item){
+			if(item.protocolname == protocol_name){
+				protocol_id = item.protocolid;
+			}
+		})
+		document.data_dis_frm.a6.value = document.data_dis_frm.tasktype.value;
+		document.data_dis_frm.tasktype.value = 6;
+		document.data_dis_frm.se.value = window.parent.document.frm.se.value;
+		document.data_dis_frm.a5.value = document.data_dis_frm.a1.value;
+		document.data_dis_frm.a1.value = 11;
+		document.data_dis_frm.a2.value = type;
+		document.data_dis_frm.a3.value = normal;
+		document.data_dis_frm.a4.value = button_status;
+		document.data_dis_frm.a8.value = "6-"+protocol_id;
+		document.data_dis_frm.submit();			
+	}
+}
+
+//生成协议图
+function protocol_Chart(data,position){
+	var list1 = [];
+	var list2 = [];
+	var data_all = [];
+	$.each(data,function(i,item){
+		if(i < P1_PROTO_NUM){
+			$.each(protocol_list,function(i1,item1){
+				// ////console.log(item1.protocolid +"=="+ item.name);
+				if(item1.protocolid == item.name){
+					item.name = item1.protocolname;
+					list1.push(item.name);
+					list2.push(item.value);
+					return false;
+				}
+			});
+		}
+	});
+	data_all.push(list1);
+	data_all.push(list2);
+	if(position == 1){
+		$("#jksChart1").show();
+
+		myChart4 = echarts.init(document.getElementById('jksChart1'));
+		myChart4.clear();
+		var category = data_all[0];
+		var lineData = data_all[1];
+		var option = {
+			backgroundColor: 'transparent',
+			tooltip: {
+				trigger: 'axis',
+				//formatter: '<span style="font-size:12px">{b}<br><i class="dot-fix"></i>数量: {c}</span>',
+				formatter:function(params){
+					var html = '';
+					if(params.length>0){
+						_tempValue = params[0];
+						html+='<span style="font-size:12px">'+params[0].name+'<br><i class="dot-fix"></i>数量: '+params[0].value+'</span>';
+					}
+					return html;
+				},
+				axisPointer: {
+					type: 'shadow'
+				},
+				backgroundColor: 'rgba(62,60,88,0.6)'
+			},
+			grid: {
+				left: "15%",
+				x: 40,
+				x2: 0,
+				y: 40,
+				y2: 30
+			},
+			legend: false,
+			xAxis: {
+				data: category,
+				axisLine: {
+					lineStyle: {
+						color: '#bebebe'
+					}
+				}
+			},
+			yAxis: {
+				axisLine: {
+					lineStyle: {
+						color: '#bebebe'
+					}
+				},
+				splitLine: {
+					lineStyle: {
+						color: '#DDD'
+					}
+				},
+				minInterval:1
+			},
+			series: [{
+				name: 'protocol',
+				type: 'line',
+				smooth: true,
+				showAllSymbol: true,
+				symbol: 'emptyCircle',
+				symbolSize: 8,
+				itemStyle: {
+					normal: {
+						color: '#25afe1'
+					},
+					emphasis: {
+						borderColor: '#cd426d',
+						borderWidth: 4
+					}
+				},
+				lineStyle:{
+					normal: {
+						width: 3
+					}
+				},				
+				data: lineData
+			}, {
+				name: 'protocol',
+				type: 'bar',
+				barMaxWidth:'50px',
+				barGap: '-100%',
+				barWidth: 10,
+				itemStyle: {
+					normal: {
+						color: new echarts.graphic.LinearGradient(
+							0, 0, 0, 1, [
+								{ offset: 0, color: 'rgba(246,246,246,0)' },
+								{ offset: 0.5, color: 'rgba(246,246,246,0.2)' },
+								{ offset: 1, color: 'rgba(246,246,246,0.2)' }
+							]
+						)
+					}
+				},
+				z: -8,
+				data: lineData
+			}, {
+				name: 'protocol',
+				type: 'pictorialBar',
+				symbol: 'rect',
+				itemStyle: {
+					normal: {
+						color: '#3f88a7'
+					}
+				},
+				symbolRepeat: true,
+				symbolSize: [8, 1],
+				symbolMargin: 1,
+				z: -10,
+				data: lineData
+			}]
+		};
+		myChart4.setOption(option);
+		myChart4.on('click',test);
+		if(data == ""){
+			$("#jksChart1").hide();
+		}
+	}else if(position == 2){
+		myChart4 = echarts.init(document.getElementById('jksChart2'));
+		myChart4.clear();
+		var len = data.length;
+		var color;
+		if(len < 5){
+			color = ['#f56ad4','#22d0f5','#716dae','#3574e6'];
+		}else {
+			color = ['#f56ad4','#22d0f5','#716dae','#3574e6','#fe509f','#bae7ed','#bc5ba5','#fdb7c5','#b8b8b8','#25afe1'];
+		}
+		data.sort(function(a,b){return a.value - b.value});
+		$.each(data,function(i,item){
+			$.each(protocol_list,function(i1,item1){
+				// ////console.log(item1.protocolid +"=="+ item.name);
+				if(item1.protocolid == item.name){
+					item.name = item1.protocolname;
+					return false;
+				}
+			});
+		});
+		var option = {
+			title: false,
+			color: color,
+			tooltip: {
+			    trigger: 'item',
+			    formatter: '<span style="font-size:12px">{b} <br>{c} ({d}%)</span>',
+			    backgroundColor: 'rgba(62,60,88,0.6)'
+			},
+			grid: {
+				x: 0,
+				x2: 0
+			},
+			legend: false,
+			toolbox: false,
+			calculable: true,
+			series: [{
+				name: 'protocol',
+				type: 'pie',
+				radius: radius,
+				center: ['50%', '50%'],
+				roseType: 'area',
+				data: data,
+				itemStyle: {
+				    normal: {
+						shadowColor: 'rgba(0, 0, 0, 0.2)',
+						shadowBlur: 24
+				    },
+				    emphasis: {
+				        opacity: 0.8
+				    }
+				}
+		    }]
+		};
+		myChart4.setOption(option);
+		myChart4.on('click',test);
+	}else if(position == 3){
+		$("#jksChart3").show();
+		myChart4 = echarts.init(document.getElementById('jksChart3'));
+		myChart4.clear();
+		var dataAxis = data_all[0];
+		var data = data_all[1];
+		// var yMax = Math.ceil(data.max() / 100) * 100;
+		// var dataShadow = [];
+		// for (var i = 0; i < data.length; i++) {
+		// 	dataShadow.push(yMax);
+		// }
+		option = {
+			title: false,
+			grid: {
+				left: "15%",
+				x: 40,
+				x2: 0,
+				y: 40,
+				y2: 30
+			},
+			xAxis: {
+				data: dataAxis,
+				axisLine: {
+					lineStyle: {
+					    color: '#bebebe'
+					}
+				},
+				axisLabel:{
+					rotate:-45
+				}				
+			},
+			yAxis: {
+				axisLine: {
+					lineStyle: {
+						color: '#bebebe'
+					}
+				},
+				splitLine: {
+					lineStyle: {
+						color: '#DDD'
+					}
+				},
+				minInterval: 1
+			},
+			tooltip: {
+				trigger: 'axis',
+				//formatter: '<span style="font-size:12px">协议名称: {b}<br><i class="dot-fix"></i>数量: {c}</span>',
+				formatter:function(params){
+					var html = '';
+					if(params.length>0){
+						_tempValue = params[0];
+						for ( var int = 0; int < params.length; int++) {
+							html+='<span style="font-size:12px">协议名称: '+params[0].name+'<br><i class="dot-fix"></i>数量: '+params[0].value+'</span>';
+						}
+					}
+					return html;
+				},
+				axisPointer: {
+					type: 'shadow'
+				},
+				backgroundColor: 'rgba(62,60,88,0.6)'
+			},
+			series: [// For shadow
+				// {
+				// 	name: 'protocol',
+				// 	type: 'bar',
+				// 	itemStyle: {
+				// 		normal: { color: 'rgba(0,0,0,0.05)' }
+				// 	},
+				// 	barGap: '-100%',
+				// 	barCategoryGap: '70%',
+				// 	data: dataShadow,
+				// 	animation: false
+				// },
+				{
+					name: 'protocol',
+					type: 'bar',
+					barMaxWidth:'50px',
+					itemStyle: {
+						normal: {
+							color: new echarts.graphic.LinearGradient(
+								0, 0, 0, 1, [
+									{ offset: 0, color: '#46ddff' },
+									{ offset: 0.5, color: '#59abdb' },
+									{ offset: 1, color: '#716dae' }
+								]
+							),
+							backgroundColor: '#b8b8b8'
+						},
+						emphasis: {
+							color: new echarts.graphic.LinearGradient(
+								0, 0, 0, 1, [
+									{ offset: 0, color: '#87e8fe' },
+									{ offset: 0.5, color: '#377f9b' },
+									{ offset: 1, color: '#292439' }
+								]
+							)
+						}
+					},
+					data: data
+				}
+			]
+		};
+		myChart4.setOption(option);
+		myChart4.on('click',test);
+		if(data == ""){
+			$("#jksChart3").hide();	
+		}
+	}
+}
+//协议
+function Chart4(type,re,position,normal){ //type:2--session 1--option
+	if(position == 1){
+		$("#btn_1").hide();
+		$("#btn_5").hide();
+		$("#btn_5_1").show();
+		$("#btn_4_1").show();
+	}else if(position == 2){
+		$("#btn_2").hide();
+		$("#btn_6").hide();
+		$("#btn_6_1").show();		
+		$("#btn_4_2").show();
+	}else if(position == 3){
+		$("#btn_3").hide();
+		$("#btn_7").hide();
+		$("#btn_7_1").show();		
+		$("#btn_4_3").show();
+	}
+	if(re == undefined){
+		re = 0;
+	}else if(re == 1){
+		$("#bhuser_re").attr("onclick","");
+	}
+	if(type == 1){
+		type = 2;
+	}else if(type == 2){
+		type = 1;
+	}
+	$.ajax({
+		url: "/bhost/get_protocol_data",
+		type:"POST",
+		async:true,
+		data:{a0:sess,a1:re,a2:type,a3:normal,a4:c_time,a5:c_serv,a6:c_user,a7:c_prot},
+		success:function(result){
+			var result = JSON.parse(result);
+			$("#bhuser_re").attr("onclick","_setType(this,0,4)");
+			if(result.Result){
+				data = result.info;
+				protocol_Chart(data,position);
+			}
+		}
+	});
+}
+var now_date;
+function getDate(){
+	now_date = "";
+	var date = new Date();
+	var syear = date.getFullYear();
+	var smonth = date.getMonth()+1;
+	var sday = date.getDate();
+	if(String(smonth).length == 1){
+		smonth = '0' + String(smonth);
+	}
+	if(String(sday).length == 1){
+		sday = '0' + String(sday);
+	}
+	now_date = syear +'-'+ smonth +'-'+ sday;
+}
+
+function down(x, y) {
+	if(parseInt(x.Order) > parseInt(y.Order)){
+		return 1;
+	}else{
+		return -1;
+	}
+}
+
+function inittitle(type,normal,re){
+	if(type == 1){
+		_btn = btn_ses;
+		logtype = 'SESSION';
+	}else if(type == 2){
+		_btn = btn_ops;		
+		logtype = 'NORMAL';
+	}
+
+	//获取所有的字段
+	/*
+	[{"Content": "xtime_00","Translation": "编号"}]*/
+	field_list = [];
+	field_list_show = [];
+	$.ajax({
+		url:'/bhost/get_logfield',
+		type:'post',
+		async:false,
+		data:{a0:{{se}},o1:logtype},
+		success:function(result){
+			field_list_show = JSON.parse(result);
+			$(field_list_show).each(function(i,item){
+				field_list[item.Content] = item.Translation;
+			})
+		}
+	})
+	$(field_list_show).each(function(i,item){
+		$('#tabvList ul').append('<li><input type="checkbox" name="'+item.Content+'" id="" class="form-checkbox" >'+item.Translation+'</li>');
+	})		
+	//获取 显示得日志 字段
+	display_field_list = [];
+	show_field = "";
+	$.ajax({
+		url:'/bhost/get_displaylogfield',
+		type:'post',
+		async:false,
+		data:{a0:{{se}},o1:logtype},
+		success:function(result){
+			display_field_list = JSON.parse(result);
+			display_field_list.sort(down);
+			$(display_field_list).each(function(i,item){
+				show_field = show_field + item.Content + ',';
+			})
+			show_field = show_field.substring(0,show_field.length-1);
+			if(type == 1){
+				TableData1(normal,re);
+			}else if(type == 2){
+				TableData2(normal,re);
+			}
+		}
+	})
+}
+//会话
+function TableData1(normal,re) {
+	if(normal == 1){
+		normal = 0;
+	}
+	$("#ses_re").attr("onclick","");
+	var cols = [];
+	if(display_field_list.length > 0 ){
+		$(display_field_list).each(function(i,item){
+			if(item.Translation == '日志属性') return true;
+			var width_value=160;
+			if(item.Translation.indexOf('时间')>=0){
+				width_value=140;
+			}
+			else if(item.Translation.indexOf('地址')>=0){
+				width_value=110;
+			}
+			else if(item.Translation=='日志类型' || item.Translation=='是否告警' || 
+			item.Translation=='编号' || item.Translation=='会话状态' || 
+			item.Translation=='告警类型' || item.Translation=='告警等级' ||
+			item.Translation=='操作个数' || item.Translation=='告警处理' || item.Translation=='告警动作'){
+				width_value=100;
+			}
+			else if(item.Translation=='会话标识'){
+				width_value=160;
+			}
+			else if(item.Translation=='客户端端口' || item.Translation=='服务器端口'){
+				width_value=70;
+			}
+			else if(item.Translation=='文件大小'){
+				width_value=70;
+			}
+			if(item.Status == 0) 
+				cols.push(JSON.parse('{ "title": "'+item.Translation+'", "name": "'+item.Content+'","field_id":"'+item.LogFieldId+'" ,"width": '+width_value+', "align": "center" }'));
+			else 
+				cols.push(JSON.parse('{ "title": "'+item.Translation+'", "name": "'+item.Content+'", "field_id":"'+item.LogFieldId+'","width": '+width_value+', "align": "center","hide": true}'));
+		})
+	}
+	////console.log(c_time+"+++"+c_serv+"+++"+c_user+"+++"+c_prot);
+	//console.log(condition_json);
+	$('#jkmMMG1').data('xTable','');
+	$('#jkmMMG1').empty().xTable({
+		cols: cols,
+		url: '/bhost/get_log_list_monitor?a0={{se}}&t1='+NEW_SESS_NUM+'&t2='+JSON.stringify(condition_json)+'&t4='+logtype+'&t5='+show_field,
+		method: 'get',
+		data: {page:1,limit:10},
+		select: true,	//显示筛选
+		infoDiv: false,	/*  信息浮层 */
+		showPage: false,//页码
+		showLength: showLen,//显示数量
+		btns:_btn,
+		dblclick: function(data,items){	//双击
+			get_button_status();
+			page = $('li.jump input').val();
+			var taskid = data.xtime_00;
+			index = "";
+			$(items).each(function(i,trm){
+				if(i < showLen){
+					index = index + trm.xtime_00 +",";
+				}
+			})
+			index = index.substring(0,index.length-1);
+			var from_flag = "data_dis_info";
+			var logtype = "SESSION";
+			//location.href="/bhost/search_log?a0="+sess+"&f1="+from_flag+"&a1="+taskid+"&a2="+logtype+"&a4="+button_status+"&a5="+document.data_dis_frm.a1.value+"&tasktype="+CLASS+"&i1="+index;
+			document.frm_search.a0.value = sess;
+			document.frm_search.f1.value = from_flag;
+			document.frm_search.a1.value = taskid;
+			document.frm_search.a2.value = logtype;
+			document.frm_search.a4.value = button_status;
+			document.frm_search.a5.value = document.data_dis_frm.a1.value;
+			document.frm_search.tasktype.value = CLASS;
+			document.frm_search.i1.value = index;
+			document.frm_search.submit();
+		},
+		success: function(){	//加载完成
+			$("#btn_ses").children().eq(0).attr("onclick","change_mode(this,1)");
+			$("#btn_ses").children().eq(1).attr("onclick","change_mode(this,1)");
+			$("#ses_re").attr("onclick","refresh(1)");
+		}
+	})
+	// $(".tab-ctr").css ({
+	// 	"height": "14px",
+	// 	"overflow": "hidden",
+	// });
+}
+
+//操作
+function TableData2(normal,re) {
+	if(normal == 1){
+		normal = 0;
+	}
+	$("#ops_re").attr("onclick","");
+	var cols = [];
+	if(display_field_list.length > 0 ){	
+		$(display_field_list).each(function(i,item){
+			if(item.Translation == '日志属性') return true;
+			var width_value=160;
+			if(item.Translation.indexOf('时间')>=0){
+				width_value=140;
+			}
+			else if(item.Translation.indexOf('地址')>=0){
+				width_value=110;
+			}
+			else if(item.Translation=='日志类型' || item.Translation=='是否告警' || 
+			item.Translation=='编号' || item.Translation=='会话状态' || 
+			item.Translation=='告警类型' || item.Translation=='告警等级' ||
+			item.Translation=='操作个数' || item.Translation=='告警处理' || item.Translation=='告警动作'){
+				width_value=100;
+			}
+			else if(item.Translation=='会话标识'){
+				width_value=160;
+			}
+			else if(item.Translation=='客户端端口' || item.Translation=='服务器端口'){
+				width_value=70;
+			}
+			else if(item.Translation=='文件大小'){
+				width_value=70;
+			}
+			if(item.Status == 0) 
+				cols.push(JSON.parse('{ "title": "'+item.Translation+'", "name": "'+item.Content+'","field_id":"'+item.LogFieldId+'" ,"width": '+width_value+', "align": "center" }'));
+			else 
+				cols.push(JSON.parse('{ "title": "'+item.Translation+'", "name": "'+item.Content+'", "field_id":"'+item.LogFieldId+'","width": '+width_value+', "align": "center","hide": true}'));
+		})
+	}
+	////console.log(c_time+"+++"+c_serv+"+++"+c_user+"+++"+c_prot);
+	//console.log(condition_json);
+	$('#jkmMMG2').data('xTable','');
+	$('#jkmMMG2').empty().xTable({
+		cols: cols,
+		url: '/bhost/get_log_list_monitor?a0={{se}}&t1='+NEW_SESS_NUM+'&t2='+JSON.stringify(condition_json)+'&t4='+logtype+'&t5='+show_field,
+		method: 'get',
+		data: {page:1,limit:10},
+		select: true,	//显示筛选
+		infoDiv: false,	/*  信息浮层 */
+		showPage: false,//页码
+		showLength: showLen,//显示数量
+		btns:_btn,
+		dblclick: function(data,items){	//双击
+			get_button_status();
+			page = $('li.jump input').val();
+			taskid = data.xtime_00;
+			index = "";
+			$(items).each(function(i,trm){
+				if(i < showLen){
+					index = index + trm.xtime_00 +",";
+				}
+			})
+			index = index.substring(0,index.length-1);
+			var from_flag = "data_dis_info";
+			var logtype = "NORMAL";
+			//location.href="/bhost/search_log?a0="+sess+"&f1="+from_flag+"&a1="+taskid+"&a2="+logtype+"&a4="+button_status+"&a5="+document.data_dis_frm.a1.value+"&tasktype="+CLASS+"&i1="+index;
+			document.frm_search.a0.value = sess;
+			document.frm_search.f1.value = from_flag;
+			document.frm_search.a1.value = taskid;
+			document.frm_search.a2.value = logtype;
+			document.frm_search.a4.value = button_status;
+			document.frm_search.a5.value = document.data_dis_frm.a1.value;
+			document.frm_search.tasktype.value = CLASS;
+			document.frm_search.i1.value = index;
+			document.frm_search.submit();
+		},
+		success: function(){	//加载完成
+			$("#btn_ops").children().eq(0).attr("onclick","change_mode(this,2)");
+			$("#btn_ops").children().eq(1).attr("onclick","change_mode(this,2)");			
+			$("#ops_re").attr("onclick","refresh(2)");
+		}
+	})
+}
+
+//记录button状态
+/*
+0---> 1:小时  2：天	（0数据分布）	1---> 1:全部  2：异常（5数据分布）
+2---> 1:全部  2：异常（5-1线-协议）	3---> 1:操作  2：会话（1数据分布）
+4---> 1:操作  2：会话（4-1线-协议）	5---> 1:全部  2：异常（6服务器）
+6---> 1:全部  2：异常（6-1饼-协议）	7---> 1:操作  2：会话（2服务器）
+8---> 1:操作  2：会话（4-2饼-协议）	9---> 1:全部  2：异常（7运维用户）  
+10--->1:全部  2：异常（7-1条-协议）	11--->1:操作  2：会话（3运维用户）
+12--->1:操作  2：会话（4-3条-协议）	13--->1:全部  2：异常（btn_ses最新会话）
+14--->1:全部  2：异常（btn_ops最新操作）
+*/
+function get_button_status(){
+	button_status = "";
+	if($("#btn_0").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status = '1';
+	}else{
+		button_status = '2';
+	}
+	if($("#btn_5").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_5_1").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_1").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_4_1").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_6").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_6_1").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_2").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_4_2").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_7").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_7_1").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_3").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_4_3").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_ses").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}
+	if($("#btn_ops").children().eq(0).attr("class").indexOf('active') != -1){
+		button_status += '1';
+	}else{
+		button_status += '2';
+	}		
+}
+
+//type == 1 会话  ||||| type == 2 操作
+function refresh(type){
+	var normal;
+	if(type == 1){
+		if($("#btn_ses").children().eq(0).attr('class').indexOf('active') != -1){
+			normal = 1;
+		}else{
+			normal = 2;
+		}
+		get_condition(normal);
+		inittitle(1,normal);
+	}else if(type == 2){
+		if($("#btn_ops").children().eq(0).attr('class').indexOf('active') != -1){
+			normal = 1;
+		}else{
+			normal = 2;
+		}
+		get_condition(normal);		
+		inittitle(2,normal);
+	}
+}
+function more(type){
+	var normal;
+	if(type == 1){
+		if($("#btn_ses").children().eq(0).attr('class').indexOf('active') != -1){
+			normal = 1;
+		}else{
+			normal = 2;
+		}
+		get_button_status();
+		document.data_dis_frm.a6.value = document.data_dis_frm.tasktype.value;
+		document.data_dis_frm.tasktype.value = 6;
+		document.data_dis_frm.se.value = window.parent.document.frm.se.value;
+		document.data_dis_frm.a5.value = document.data_dis_frm.a1.value;
+		document.data_dis_frm.a1.value = 11;
+		document.data_dis_frm.a2.value = 1;
+		document.data_dis_frm.a3.value = normal;
+		document.data_dis_frm.a4.value = button_status;
+		document.data_dis_frm.submit();	
+	}else if(type == 2){
+		if($("#btn_ops").children().eq(0).attr('class').indexOf('active') != -1){
+			normal = 1;
+		}else{
+			normal = 2;
+		}
+		get_button_status();
+		document.data_dis_frm.a6.value = document.data_dis_frm.tasktype.value;
+		document.data_dis_frm.tasktype.value = 6;
+		document.data_dis_frm.se.value = window.parent.document.frm.se.value;
+		document.data_dis_frm.a5.value = document.data_dis_frm.a1.value;
+		document.data_dis_frm.a1.value = 11;
+		document.data_dis_frm.a2.value = 2;
+		document.data_dis_frm.a3.value = normal;
+		document.data_dis_frm.a4.value = button_status;	
+		document.data_dis_frm.submit();
+	}
+}
+
+/*
+* type --> 0: 刷新  1: 操作  2: 会话  3: 小时  4: 天  5:全部  6:异常
+* p	   --> 2:时间趋势 3:服务器 4:运维用户 5:协议(线形图) 6:协议(饼状图) 7:协议(条形图)
+*/
+function _setType(obj,type,p){
+	$(obj).addClass('active').siblings('.active').removeClass('active');
+	if(type == 2){
+		switch(p){
+			case 2:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_5").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#btn_0").children().eq(0).attr('class').indexOf('active') != -1){
+					Chart1(2,1,0,normal);
+					break;
+				}else{
+					Chart1(2,2,0,normal);
+					break;
+				}
+			case 3:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_6").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart2(2,0,normal);
+				break;
+			case 4:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_7").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart3(2,0,normal);
+				break;
+			case 5:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_5_1").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart4(2,0,1,normal);
+				break;
+			case 6:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_6_1").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}			
+				Chart4(2,0,2,normal);
+				break;
+			case 7:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_7_1").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}			
+				Chart4(2,0,3,normal);
+				break;												
+		}
+	}else if(type == 1){
+		switch(p){
+			case 2:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_5").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#btn_0").children().eq(0).attr('class').indexOf('active') != -1){
+					Chart1(1,1,0,normal);
+					break;
+				}else{
+					Chart1(1,2,0,normal);
+					break;
+				}
+			case 3:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_6").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart2(1,0,normal);
+				break;
+			case 4:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_7").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart3(1,0,normal);
+				break;
+			case 5:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_5_1").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart4(1,0,1,normal);
+				break;
+			case 6:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_6_1").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart4(1,0,2,normal);
+				break;
+			case 7:
+				var normal;
+				//判断全部或者异常
+				if($("#btn_7_1").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				Chart4(1,0,3,normal);
+				break;	
+		}
+	}else if(type == 3){
+		var normal;
+		//判断全部或者异常
+		if($("#btn_5").children().eq(0).attr('class').indexOf('active') != -1){
+			normal = 1;
+		}else{
+			normal = 2;
+		}
+		if($("#btn_1").children().eq(0).attr('class').indexOf('active') != -1){
+			Chart1(1,1,0,normal);
+		}else{
+			Chart1(2,1,0,normal);
+		}
+	}else if(type == 4){
+		var normal;
+		//判断全部或者异常
+		if($("#btn_5").children().eq(0).attr('class').indexOf('active') != -1){
+			normal = 1;
+		}else{
+			normal = 2;
+		}
+		if($("#btn_1").children().eq(0).attr('class').indexOf('active') != -1){
+			Chart1(1,2,0,normal);
+		}else{
+			Chart1(2,2,0,normal);
+		}
+	}else if(type == 5){
+		switch(p){
+			case 2:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_1").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#btn_0").children().eq(0).attr('class').indexOf('active') != -1){
+					Chart1(type2,1,0,1);
+					break;
+				}else{
+					Chart1(type2,2,0,1);
+					break;
+				}
+			case 3:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_2").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}		
+				Chart2(type2,0,1);
+				break;
+			case 4:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_3").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				Chart3(type2,0,1);
+				break;
+			case 5:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_4_1").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				Chart4(type2,0,1,1);
+				break;
+			case 6:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_4_2").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}		
+				Chart4(type2,0,2,1);
+				break;
+			case 7:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_4_3").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				Chart4(type2,0,3,1);
+				break;			
+		}
+	}else if(type == 6){
+		switch(p){
+			case 2:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_1").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#btn_0").children().eq(0).attr('class').indexOf('active') != -1){
+					Chart1(type2,1,0,2);
+					break;
+				}else{
+					Chart1(type2,2,0,2);
+					break;
+				}
+			case 3:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_2").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}		
+				Chart2(type2,0,2);
+				break;
+			case 4:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_3").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}			
+				Chart3(type2,0,2);
+				break;
+			case 5:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_4_1").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				Chart4(type2,0,1,2);
+				break;
+			case 6:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_4_2").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}		
+				Chart4(type2,0,2,2);
+				break;
+			case 7:
+				var type2;	//  1: 操作  2: 会话
+				//判断操作或者会话
+				if($("#btn_4_3").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				Chart4(type2,0,3,2);
+				break;			
+		}
+	}else if(type == 0){
+		$(obj).removeClass('active');
+		switch(p){
+			case 2:
+				var type1;	//  1: 小时  2: 天
+				var type2;	//  1: 操作  2: 会话
+				var flag_protocol = 0; // 1: 是协议
+				var normal;	//  1: 正常  2：异常
+				var normal_1;//(协议)
+				//判断全部或者异常
+				if($("#btn_5").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				if($("#btn_5_1").children().eq(0).attr('class').indexOf('active') != -1){
+					normal_1 = 1;
+				}else{
+					normal_1 = 2;
+				}
+				//判断是Hour 还是Day
+				if($("#btn_0").children().eq(0).attr('class').indexOf('active') != -1){
+					type1 = 1;
+				}else{
+					type1 = 2;
+				}
+				//判断操作或者会话
+				if($("#btn_1").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				if($("#btn_4_1").children().eq(0).attr('class').indexOf('active') != -1){
+					type2_1 = 1;
+				}else{
+					type2_1 = 2;
+				}
+				//判断是不是协议
+				if($("#btn_4_1").is(":hidden")){
+					flag_protocol = 0;
+					Chart1(type2,type1,1,normal);
+				}else{
+					flag_protocol = 1;
+					Chart4(type2_1,1,1,normal_1);
+				}
+
+				break;
+			case 3:
+				var type2;	//  1: 操作  2: 会话
+				var normal;	//  1: 正常  2：异常
+				var normal_1;//(协议)
+				//判断全部或者异常
+				if($("#btn_6").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				if($("#btn_6_1").children().eq(0).attr('class').indexOf('active') != -1){
+					normal_1 = 1;
+				}else{
+					normal_1 = 2;
+				}				
+				//判断操作或者会话
+				if($("#btn_2").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				if($("#btn_4_2").children().eq(0).attr('class').indexOf('active') != -1){
+					type2_1 = 1;
+				}else{
+					type2_1 = 2;
+				}
+				//判断是不是协议
+				if($("#btn_4_2").is(":hidden")){
+					flag_protocol = 0;
+					Chart2(type2,1,normal);
+				}else{
+					flag_protocol = 1;
+					Chart4(type2_1,1,2,normal_1);
+				}
+
+				break;
+			case 4:
+				var type2;	//  1: 操作  2: 会话
+				var normal;	//  1: 正常  2：异常
+				var normal_1;//(协议)
+				//判断全部或者异常
+				if($("#btn_7").children().eq(0).attr('class').indexOf('active') != -1){
+					normal = 1;
+				}else{
+					normal = 2;
+				}
+				if($("#btn_7_1").children().eq(0).attr('class').indexOf('active') != -1){
+					normal_1 = 1;
+				}else{
+					normal_1 = 2;
+				}				
+				//判断操作或者会话
+				if($("#btn_3").children().eq(0).attr('class').indexOf('active') != -1){
+					type2 = 1;
+				}else{
+					type2 = 2;
+				}
+				if($("#btn_4_3").children().eq(0).attr('class').indexOf('active') != -1){
+					type2_1 = 1;
+				}else{
+					type2_1 = 2;
+				}
+				//判断是不是协议
+				if($("#btn_4_3").is(":hidden")){
+					flag_protocol = 0;
+					Chart3(type2,1,normal);
+				}else{
+					flag_protocol = 1;
+					Chart4(type2_1,1,3,normal_1);
+				}
+				break;
+		}
+	}
+}
+/*
+* 1:ses 2:ops
+*/
+function change_mode(obj,type){
+	var normal;
+	$(obj).addClass('active').siblings('.active').removeClass('active');
+	if(type == 1){
+		$("#btn_ses").children().eq(0).attr("onclick","");
+		$("#btn_ses").children().eq(1).attr("onclick","");
+		if($("#btn_ses").children().eq(0).attr('class').indexOf('active') != -1){
+			get_condition(1);
+			normal = 1;
+		}else{
+			get_condition(2);
+			normal = 2;
+		}
+		$('#jkmMMG1').parents('.jkmCont').html('<div id="jkmMMG1" class="xTable"></div>');	
+		inittitle(1,normal)
+	}else if(type == 2){
+		$("#btn_ops").children().eq(0).attr("onclick","");
+		$("#btn_ops").children().eq(1).attr("onclick","");
+		if($("#btn_ops").children().eq(0).attr('class').indexOf('active') != -1){
+			get_condition(1);
+			normal = 1;
+		}else{
+			get_condition(2);
+			normal = 2;
+		}
+		$('#jkmMMG2').parents('.jkmCont').html('<div id="jkmMMG2" class="xTable"></div>');			
+		inittitle(2,normal)
+	}
+}
+
+function download_file(data){
+	var DownloadType = 0;		//1->回放文件  2->传输文件；
+	var log_id,log_name;
+	if(data.str32_28 != ""){
+		DownloadType = 1;
+		log_id = data.xtime_00;
+		log_name = data.str32_28;		
+	}else{
+		if(data.str32_28 == "" && (data.int32_01 == 'SFTP' || data.int32_01 == 'FTP' || data.int32_01 == 'SSH')){
+			if(data.str32_01.indexOf('Save') >= 0){
+				DownloadType = 2;
+				log_id = data.xtime_00;
+				log_name = data.str32_01.replace('Save ','');
+			}
+		}
+	}
+	if(log_name != ""){	
+		$.ajax({
+			url: "/bhost/download_fileCheck",
+			type:"POST",
+			async:true,		
+			data:{a0:sess,a1:log_id,a2:log_name,a3:DownloadType,a10:"实时监控"},
+			success:function(result){
+				var result=JSON.parse(result);
+				if(result.Result){
+					//console.log(document.referrer);
+					var referer_tmp = document.referrer.toString();
+					var referer_array_tmp = referer_tmp.split('/');
+					referer_array_tmp.pop();
+					var referer_new = referer_array_tmp.join('/');
+					//console.log(referer_new);
+					if(DownloadType == 1){
+						var index_tmp = data.str32_28.split('/').length;
+						log_name = data.str32_28.split('/')[index_tmp-1]
+					}		
+					var sesstimet = (new Date()).valueOf();
+					var json_download = {
+						"Type": "Download",
+						"Url": referer_new,
+						"Path": result.Path,
+						"Filename": log_name,
+						"Session": sess,
+						"sesstimet":sesstimet
+					}
+					// cmd_str = JSON.stringify(json_download);
+					// var evt = document.createEvent("CustomEvent");
+					// evt.initCustomEvent('LocalEvent', true, false, cmd_str);
+					// document.dispatchEvent(evt);
+					// window.open('https://'+window.location.host+'/bhost/test_html?se={{se}}&z1='+cmd_str);
+					var if_html_client = false;
+					var base64_str = '';
+					$.ajax({
+						url: "/bhost/get_base64",
+						type:"POST",
+						async:false,
+						data:{a0:window.parent.document.frm.se.value,z1:JSON.stringify(json_download)},
+						success:function(result){
+							var result=JSON.parse(result);
+							if(result.Result){
+								if_html_client = result.info;
+								base64_str = result.b64;
+							}else{
+								_alert(1,"实时监控",result.ErrMsg);
+							}
+						}
+					})
+					if(if_html_client) window.open('https://'+document.domain+'/bhost/test_html?se='+window.parent.document.frm.se.value+'&z1='+JSON.stringify(json_download));
+					else{
+						//window.location.href = 'bhost://cmd&'+base64_str;
+						get_regedit('bhost', window.parent.document.frm.se.value,'',sesstimet);
+						$('#YuFrame1').remove();
+						$("<iframe width='0px' height='0px' id='YuFrame1' style=\"display:none;\" name='YuFrame1' ></iframe>").prependTo('body');
+						$('#YuFrame1').attr('src','/bhost/test_html?t1=bhost&z1='+base64_str);
+					}
+					// var form = $("<form></form>").attr("action", '/bhost/download_file_log').attr("method", "post").attr('enctype','multipart/form-data');
+					// form.append($("<input></input>").attr("type", "hidden").attr("name", "a3").attr("value", DownloadType));
+					// form.append($("<input></input>").attr("type", "hidden").attr("name", "a2").attr("value", log_name));
+					// form.append($("<input></input>").attr("type", "hidden").attr("name", "a1").attr("value", log_id));
+					// form.append($("<input></input>").attr("type", "hidden").attr("name", "a0").attr("value", sess));
+					// form.appendTo('body').submit().remove();
+				}else{
+					_alert(1,$("#frist").children('span').text(),result.ErrMsg);
+				}
+			}
+		})
+	}	
+}
+
+function delete_file(data,obj){
+	parent.layer.open({
+		type:1,
+		title:"实时监控",
+		content: '<div class="layer-alert"><i class="alert warning"></i>是否删除</div>',
+		btn:['删&nbsp;&nbsp;除','取&nbsp;&nbsp;消'],
+		btnAlign:'c',
+		closeBtn: false,
+		skin:'layer-custom',
+		area:['380px','310px'],
+		move: false,
+		resize: false,
+		yes:function(i){	
+			//传输文件；
+			parent.layer.close(i);
+			var log_id = data.xtime_00;
+			var log_name = data.str32_01.replace('Save ','');
+			$.ajax({
+				url: "/bhost/delete_file_log",
+				type:"POST",
+				async:true,
+				data:{a0:sess,a1:log_id,a2:log_name,a10:"实时监控"},
+				success:function(result){
+					var re = JSON.parse(result);
+					if(re.Result == false){
+						_alert(1,"实时监控",re.ErrMsg);
+					}else{
+						_alert(0,"实时监控","删除成功");
+						$(obj).attr('class','m_ses_icon6 disabled').unbind();
+						$(obj).prev().attr('class','m_ses_icon3 disabled').unbind();
+					}
+				}
+			})
+		}	
+	})
+}
+//--hostname,port,username("bhuser@serveruser@sip:port:protocol@h5"),password(clientip:clientport@serverpassword)
+var url_str = "https://"+document.domain+':8443';
+function _cowork(bhname,pid,protoname,Type,ip,port1,port2,sername,ifacc,se_old,int32_15) {
+	var ip_domain='';
+	var getdomainpass=true;
+	$.ajax({
+		url: "/bhost/getdomain",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:int32_15},
+		success:function(result){
+			var result = JSON.parse(result);
+			if(result.Result == true){
+				if(result.ip!=''){
+					ip_domain=result.ip
+				}
+			}else{
+				_alert(1,"最新会话",result.ErrMsg);
+				getdomainpass=false;
+				return false;
+			}
+		}
+	});
+	if(!getdomainpass){
+		return false;
+	}
+	if(ip_domain!=''){
+		url_str = "https://"+ip_domain+':8443';
+	}
+	var timestamp = new Date().getTime();
+	var username1 = sess + '@' + timestamp;
+	var param_host = '{"name":"hostname","value":"127.0.0.1"}';
+	var username;
+	var paramStr = "";
+	$.ajax({
+		url:'/bhost/get_user_name',
+		type:'post',
+		async:false,
+		data:{a0:$("input[name=se]").val()},
+		success:function(result){
+			var re_result = JSON.parse(result);
+			username = re_result.info;
+		}
+	});	
+	$.ajax({
+		url:'/bhost/module_app_set_list',
+		type:'post',
+		async:false,
+		data:{a0:$("input[name=se]").val()},
+		success:function(result){
+			var re_result = JSON.parse(result);
+			$.each(re_result.data,function(i,item){
+				if (item.ApplicationName == 'TELNET'){
+					param_port = '{"name":"port","value":"'+item.ServicePort+'"}';
+					return false;
+				}else if(item.ApplicationName == 'RDP|VNC|X11'){
+					param_port1 = '{"name":"port","value":"'+item.ServicePort+'"}';
+				}
+			});
+		}
+	});
+	$.ajax({
+		url:'/bhost/get_Param',
+		type:'post',
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:bhname,a2:ip,a3:protoname,a4:sername},
+		success:function(result){
+			var re_result = JSON.parse(result);
+			paramStr = '\\t'+re_result.ServiceName+'\\t'+re_result.ConnMode+'\\t'+re_result.ConnParam+'\\t'+re_result.ClientName;
+		}
+	});
+	var username0 = "";
+	var Type1 = 0;
+	var param_array = [];
+	if(Type == 2){
+		if(protoname == "RDP" || ifacc==true || protoname == "VNC" || protoname == "X11"){
+			Type1 = 1;
+			username0 = bhname+'@'+sername+'@'+ip+':'+port1+':'+protoname+':'+port2+'@h5:1:'+se_old+':'+'{{us}}'+':'+username;
+                        if(ifacc == true){
+                                username0 += ':1';
+                        }else{
+                                username0 += ':0';
+                        }
+			param_array.push(JSON.parse(param_port1));
+			var pwd_str = parent.client_ip+':0@'+'d106f6959747';
+			param_password = '{"name":"password","value":"'+pwd_str+'"}';
+		}else{
+			username0 = '+'+'{{us}}'+'@'+username+'@'+pid+':'+protoname+'@ad';
+			param_array.push(JSON.parse(param_port));
+			param_password = '{"name":"password","value":"'+sess+'"}';
+		}
+	}
+	if(protoname == "SSH" || protoname == "TELNET" || protoname == "RLOGIN"){
+	}else{
+		username0 += paramStr;
+	}
+	var param_username = '{"name":"username","value":"'+username0+'"}';
+	param_array.push(JSON.parse(param_host));
+	param_array.push(JSON.parse(param_username.replace("\\","\\\\")));
+	param_array.push(JSON.parse(param_password));
+	var pwd = sess;
+	$.ajax({
+		url: "/bhost/get_token_remote_Monitor",
+		type:"POST",
+		async:false,
+		data:{a0:$("input[name=se]").val(),a1:url_str,a2:bhname,a3:pid,a4:protoname,a5:username1,a6:pwd,a7:JSON.stringify(param_array),a8:Type,a9:Type1},
+		success:function(result){
+			var result=JSON.parse(result);
+			$.ajax({
+				url: "/bhost/RealIPGet",
+				type: "POST",
+				async: false,
+				data: { a0: $("input[name=se]").val(), a1: document.domain},
+				success: function (result) {
+					var result = JSON.parse(result);
+					if(result.result == true){
+						if(result.dev_type == "gluster"){
+							document_domain = result.info;
+						}else{
+							document_domain = document.domain;
+						}
+					}else{
+						document_domain = document.domain;
+					}
+				}
+			})
+			var url_addr = 'https://'+(ip_domain==''?document_domain:ip_domain)+':8443/bhremote/?token='+result.authToken;
+			window.open(url_addr);
+		}
+	});
+}
+var $_hostGroupObj;
+var type_g;
+var s_id_g;
+function MarkWMsg(s_id,type,obj){
+	$_hostGroupObj = $(obj);
+	type_g = type;
+	s_id_g = s_id;
+	hglayer = layer.open({
+		type:2,
+		title:'确认备注',
+		content:'/bhost/mark_layer?a0={{se}}&a1='+s_id+'&a2='+type+'&a3=实时监控',
+		area:['650px','350px'],
+		btn:false,
+		shade:0.7
+	});
+}
+
+function _closeHgLayer(flag,content){
+	if(flag == 0){
+	//1-操作，2-会话，3-系统
+		$.ajax({
+			url: "/bhost/set_logstat",
+			type:"POST",
+			async:false,
+			data:{a0:$("input[name=se]").val(),a1:type_g,a2:s_id_g,a3:content,a10:"实时监控"},
+			success:function(result){
+				var result = JSON.parse(result);
+				if(result.Result == true){
+					_alert(0,"实时监控","操作成功");
+					$.each($_hostGroupObj.parent().parent().parent().children('td'),function(i,item){
+						if($(item).data('role') == 'int08_11'){
+							$obj1 = $(item);
+						}else if($(item).data('role') == 'str32_16'){
+							$obj2 = $(item);
+						}else if($(item).data('role') == 'str32_17'){
+							$obj3 = $(item);
+						}else if($(item).data('role') == 'str32_18'){
+							$obj4 = $(item);
+						}
+					});
+					//console.log($obj1);
+					$obj1.text("已处理");
+					$obj2.text(result.UserCode);
+					$obj3.text(result.UserName);
+					$obj4.text(content);
+					$_hostGroupObj.attr('class','msg1 disabled').unbind();
+				}else{
+					_alert(1,"实时监控","操作失败");
+				}
+			}
+		})
+	}else{
+
+	}
+	layer.close(hglayer);
+}
+</script>
+{% endblock %}

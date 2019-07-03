@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3 onclick="back(1);">邮件服务器</h3>
+				-->
+				<div class="manual-head" style="width:10%;float:left;">
+					<div class="manual-title">
+						<span id="mail_reload" style="cursor: pointer;">邮件</span>
+						<i class="mail_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			
+			<div class="container">
+				<div class="c-cont">
+					<div class="c-form" style="padding-bottom:10px;padding-left:130px;">
+						<div class="form">	
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>配置名称：</span>
+								<div class="form-c">
+									<input id="SmtpConfigName" name="SmtpConfigName" class="form-text" maxlength="128" type="text" onblur="NameCheck(this);"><i class="v-check"></i>
+									<p class="form-tip" style="width: 270px;margin-left: -5px;">特殊字符仅支持下划线、横杠、小数点</p>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>服务器地址：</span>
+								<div class="form-c">
+									<input id="SmtpServer" name="SmtpServer" class="form-text" type="text" style="width:238px;"  maxlength="128" onblur="IPCheck(this);"><i class="v-check"></i>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>发送邮箱地址：</span>
+								<div class="form-c">
+									<input id="SenderEmail" name="SenderEmail" class="form-text" maxlength="128" type="text" onblur="EmailCheck(this);fill_text();"><i class="v-check"></i>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag">服务器账号：</span>
+								<div class="form-c">
+									<input id="Sender" name="Sender" class="form-text" type="text" style="width: 238px;"  maxlength="128" onblur="fill_text();"><i class="v-check"></i>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>服务器验证：</span>
+								<div class="form-c" style="float:left;width:100px;padding: 4px 0 0 8px;">
+									<input id="ServerVerify_off" name="ServerVerify" class="form-radio" type="radio" checked="checked">
+									<span style="vertical-align:middle;font-size:14px;">否</span>
+									<input id="ServerVerify_on" name="ServerVerify" class="form-radio" type="radio">
+									<span style="vertical-align:middle;font-size:14px;">是</span>
+								</div>
+								<div class="form-c" style="float:left;padding: 0px 0 0 0;display:none;">
+									<input id="SenderEmailPass" name="SenderEmailPass" class="form-text" type="password" maxlength="128">
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>附件大小：</span>
+								<div class="form-c">
+									<input id="AttachMaxLimit" name="AttachMaxLimit" value="1" class="form-text" onblur="NumCheck(this);" type="text" style="width: 34px;padding: 0 3px 0px 3px;" maxlength="9">
+									<span style="vertical-align:middle;font-size:14px;">M(应用于邮件报表发送)</span>
+								</div>
+							</div>
+							
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>编码方式：</span>
+								<div class="form-c">
+									<select class="filter-select" id="EnCode" style="width:90px;">
+										<option value="0">UTF-8</option>
+										<option value="1">GBK</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-item">
+								<span class="form-tag"><em class="imp">*</em>方式：</span>
+								<div class="form-c">
+									<select class="filter-select" id="Flag" style="width:90px;">
+										<option value="2">默认</option>
+										<option value="1">备用</option>
+										<option value="0">其他</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-item tab-t s-hide" style="padding:20px 0 10px;">
+								<div class="ctr" style="margin-left:121px;width:76px;">
+									<a class="btn" href="javascript:;" style="line-height: 26px;" onclick="test_mail();">测试</a>
+								</div>
+								<div class="form-c" style="float:left;padding: 0px 0 0 0;margin-left:4px;">
+									<input id="revicer_Email" name="revicer_Email" class="form-text" type="text" placeholder="请输入邮箱地址">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="c-form">
+						<div class="btns s-hide">
+							<a href="javascript:;" class="btn btn-normal" onclick="mailserver_save();">保&nbsp;&nbsp;存</a>
+							<!--
+							<a href="javascript:;" class="btn btn-normal" onclick="back(1);">取&nbsp;&nbsp;消</a>
+							-->
+						</div>
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="back(1);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<form action="/bhost/manager_mailserver" method="POST" name="frm_mail" id="frm_mail">
+		<input type="hidden" name="tasktype" id = "tasktype" value="" />
+		<input type="hidden" name="z1" id = "z1" value="" />		
+		<input type="hidden" name="z2" id = "z2" value=""/>
+		<input type="hidden" name="z3" id = "z3" value=""/>
+		<input type="hidden" name="z4" id = "z4" value=""/>
+		<input type="hidden" name="a0" value=""/>
+	</form>
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+
+<style>
+.form-item{
+	padding: 15px 0 10px;
+}
+</style>
+
+<script>
+var mailset = {
+	"SmtpConfigId": 0, 
+	"SmtpConfigName": "邮件服务器1",
+	"SmtpServer": "10.17.251.5",
+	"DNS": null,
+	"Sender": "ithelp@fqnp.com",
+	"SenderEmail": "ithelp@fqnp.com",
+	"AttachMaxLimit": 20,
+	"ServerVerify": true,
+	"SenderEmailPass": "d106f6959747b5ac",
+	"Flag":0,
+	"EnCode":0
+}
+var now="{{now}}";
+var keyword_re = {{keyword|safe}};
+var edit = {{edit|safe}};
+var selectid = {{selectid|safe}};
+var se;
+$(function(){
+	_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+	if(_if_disable == '1'){
+		$('.s-hide').remove();
+	}
+	se = window.parent.document.frm.se.value;
+	$("#mail_reload").on("click",function(){
+		//back(1);
+		if (edit != "None"){
+			document.frm_mail.z3.value = JSON.stringify(edit);
+		}else{
+			document.frm_mail.z3.value = "None";
+		}
+		document.frm_mail.action = '/bhost/create_mailserver';
+		document.frm_mail.z1.value = 1;
+		document.frm_mail.z2.value = JSON.stringify(keyword_re);
+		document.frm_mail.z4.value = JSON.stringify(selectid);
+		document.frm_mail.a0.value = se;
+		document.frm_mail.submit();
+	});
+	
+	$("#AttachMaxLimit").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	if (edit != "None"){
+		mailset.SmtpConfigId=edit.data[0].SmtpConfigId;
+		$("#SmtpConfigName").val(edit.data[0].SmtpConfigName);
+		$("#SmtpConfigName").prop("disabled",true);
+		$("#SmtpServer").val(edit.data[0].SmtpServer);
+		$("#Sender").val(edit.data[0].Sender);
+		$("#SenderEmail").val(edit.data[0].SenderEmail);
+		$("#AttachMaxLimit").val(edit.data[0].AttachMaxLimit);
+		if (edit.data[0].ServerVerify){
+			$("#ServerVerify_on").iCheck("check");
+			$("#SenderEmailPass").parent().show();
+			$("#SenderEmailPass").val(edit.data[0].SenderEmailPass);
+		}else{
+			$("#ServerVerify_off").iCheck("check");
+			$("#SenderEmailPass").parent().hide();
+		}
+				$("#EnCode").val(edit.data[0].EnCode).trigger('change');
+		$("#Flag").val(edit.data[0].Flag).trigger('change');
+		if (edit.data[0].Flag == 2){
+			$.ajax({
+				url:'/bhost/get_mail_flag',
+				type:'post',
+				async:false,
+				data:{a0:se},
+				success:function(result){
+					var mail_flag = JSON.parse(result);
+					if (mail_flag.Result){
+						if (mail_flag.count_mail == 2){
+							$("#Flag").attr('disabled',true);
+						}
+					}
+				}
+			})
+		}
+	}else{
+		$.ajax({
+			url:'/bhost/get_mail_flag',
+			type:'post',
+			async:false,
+			data:{a0:se},
+			success:function(result){
+				var mail_flag = JSON.parse(result);
+				if (mail_flag.Result){
+					if (mail_flag.count_mail == 1){
+						$("#Flag").val(2).trigger('change');
+						$("#Flag").attr('disabled',true);
+					}else if (mail_flag.def_mail == 0){
+						$("#Flag").val(2).trigger('change');
+					}else if (mail_flag.spare_mail == 0){
+						$("#Flag").val(1).trigger('change');
+					}else{
+						$("#Flag").val(0).trigger('change');
+					}
+				}
+			}
+		})
+	}
+	
+	$("#ServerVerify_on").on("ifChanged",function(){
+		if ($(this).prop("checked")){
+			$("#SenderEmailPass").parent().show();
+		}else{
+			$("#SenderEmailPass").parent().hide();
+		}
+	})
+	
+	parent._switchBtn(0);//掩藏按钮
+})
+
+var emailReg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]+)+)$/;
+var ipcheck_route=/(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+var hostcheck1=/^(https?:\/\/)?(w{3}\.)?([a-zA-Z0-9-_.])+\.(com|cn|gov|info|us|hk|tw|cc|tv|uk|org)$/;
+var hostcheck2=/^(https?:\/\/)?((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/;
+var nameCheck = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+var numCheck = /\D/;
+//Email匹配
+function EmailCheck(obj){
+	var email = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check');
+	if (!emailReg.test(email)){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+function IPCheck(obj){
+	var ip = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check');
+	if (!ipcheck_route.test(ip) && (!hostcheck1.test(ip)) && (!hostcheck2.test(ip))){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+function NameCheck(obj){
+	var Name = $(obj).val();
+	var $i = $(obj).next('i.v-check');
+	if (!nameCheck.test(Name)){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+function fill_text(){
+	var SenderEmail = $("#SenderEmail").val();
+	if (SenderEmail != "" && $("#Sender").val() == ""){
+		$("#Sender").val(SenderEmail);
+	}
+}
+
+function NumCheck(obj){
+	obj.value = obj.value.replace(/\D/g,"");
+	var v = obj.value.trim();
+	if (v == ""){
+		obj.value = '0';
+	}
+}
+
+//保存配置
+function mailserver_save(){
+	var SmtpConfigName = $("#SmtpConfigName").val();
+	var SmtpServer = $("#SmtpServer").val().trim();
+	var Sender = $("#Sender").val();
+	var SenderEmail = $("#SenderEmail").val();
+	var AttachMaxLimit = $("#AttachMaxLimit").val();
+	var SenderEmailPass;
+	if (SmtpConfigName == ""){
+		_alert(2,"邮件","请输入名称",$("#SmtpConfigName"));
+		return false;
+	}else{
+		if (!nameCheck.test(SmtpConfigName)){
+			_alert(1,"邮件","名称格式不正确",$("#SmtpConfigName"));
+			return false;
+		}
+	}
+	if (SmtpServer == ""){
+		_alert(2,"邮件","请输入发送服务器",$("#SmtpServer"));
+		return false;
+	}else{
+		if (!ipcheck_route.test(SmtpServer) && (!hostcheck1.test(SmtpServer)) && (!hostcheck2.test(SmtpServer))){
+			_alert(1,"邮件","发送服务器格式不正确",$("#SmtpServer"));
+			return false;
+		}
+	}
+	if (SenderEmail == ""){
+		_alert(2,"邮件","请输入发送方邮件地址",$("#SenderEmail"));
+		return false;
+	}else{
+		if (!emailReg.test(SenderEmail)){
+			_alert(1,"邮件","发送方邮件地址格式不正确",$("#SenderEmail"));
+			return false;
+		}
+	}
+	if ($("#ServerVerify_on").prop("checked")){
+		if ($("#SenderEmailPass").val() == ""){
+			_alert(2,"邮件","请输入服务器验证",$("#SenderEmailPass"));
+			return false;
+		}else{
+			if($("#SenderEmailPass").val().length > 64){
+				_alert(2, '邮件', "密码不能超过系统限定64位", $("#SenderEmailPass"));
+				return false;
+			}
+			mailset.ServerVerify = true;
+			mailset.SenderEmailPass = $("#SenderEmailPass").val();
+		}
+	}else{
+		mailset.ServerVerify = false;
+		mailset.SenderEmailPass = null;
+	}
+	/*
+	if (AttachMaxLimit == ""){
+		AttachMaxLimit = 0;
+	}else{
+		if (numCheck.test(AttachMaxLimit)){
+			_alert(2,"邮件","请输入正确的邮件附件大小值",$("#AttachMaxLimit"));
+		}
+	}
+	*/
+	mailset.SmtpConfigName = SmtpConfigName;
+	mailset.SmtpServer = SmtpServer;
+	mailset.DNS = null;
+	mailset.Sender = Sender;
+	mailset.SenderEmail = SenderEmail;
+	mailset.AttachMaxLimit = parseInt(AttachMaxLimit);
+	mailset.Flag = parseInt($("#Flag").val());
+	mailset.EnCode = parseInt($("#EnCode").val());
+	msstr = aceg(JSON.stringify(mailset),se);
+	$.ajax({
+		url:'/bhost/save_mailserver',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:JSON.stringify(mailset),m1:msstr},
+		success:function(result){
+			data = JSON.parse(result);
+			if (data.Result == true){
+				parent.layer.open({
+					type:1,
+					title:"邮件",
+					content:'<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn:['确&nbsp;&nbsp;定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					btn1:function(i){
+						parent.layer.close(i);
+						back(2,mailset.Flag,data.SmtpConfigId);
+					},
+					btn2:function(i){
+						parent.layer.close(i);
+					}
+				});	
+			}else{
+				_alert(1,"邮件","执行失败：" + data.ErrMsg);
+			}
+		}
+	});
+}
+//返回
+function back(type,flag,id){
+	if (type == 2){
+		if (flag == 2){
+			now = 1;
+		}else{
+			keyword_re = [];
+			$.ajax({
+				url:'/bhost/get_index',
+				type:'post',
+				async:false,
+				data:{a0:se,z1:id,z2:22},
+				success:function(result){
+					now = Math.ceil(parseInt(result)/MAX_PAGE);
+				}
+			});
+			/*
+			if (edit != "None"){ //编辑保存
+				$.ajax({
+					url:'/bhost/get_index',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:edit.data[0].SmtpConfigId,z2:22},
+					success:function(result){
+						now = Math.ceil(parseInt(result)/MAX_PAGE);
+					}
+				});
+			}else{//创建取消
+				$.ajax({
+					url:'/bhost/select_mailserver_all',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:-1},
+					success:function(result){
+						var result = JSON.parse(result);
+						var remain = parseInt(result.totalrow) % MAX_PAGE;
+						if (remain > 0){
+							now = Math.ceil(parseInt(result.totalrow)/MAX_PAGE);
+						}else{
+							now = parseInt(result.totalrow)/MAX_PAGE + 1;
+						}
+					}
+				});
+			}
+			*/
+		}	
+	}
+	var deliver = JSON.stringify(keyword_re);
+	document.frm_mail.z1.value = now;
+	document.frm_mail.z2.value = deliver;
+	document.frm_mail.z3.value = JSON.stringify(selectid);
+	document.frm_mail.a0.value = se;
+	document.frm_mail.action='/bhost/mailserver_manage';
+	document.frm_mail.submit();
+}
+
+function test_mail(){
+	var SmtpServer = $("#SmtpServer").val();
+	var SenderEmail = $("#SenderEmail").val();
+	var revicer_Email = $("#revicer_Email").val();
+	if (SmtpServer == ""){
+		_alert(2,"邮件","请输入发送服务器",$("#SmtpServer"));
+		return false;
+	}else{
+		if (!ipcheck_route.test(SmtpServer) && (!hostcheck1.test(SmtpServer)) && (!hostcheck2.test(SmtpServer))){
+			_alert(1,"邮件","发送服务器格式不正确",$("#SmtpServer"));
+			return false;
+		}
+	}
+	if (SenderEmail == ""){
+		_alert(2,"邮件","请输入发送方邮件地址",$("#SenderEmail"));
+		return false;
+	}else{
+		if (!emailReg.test(SenderEmail)){
+			_alert(1,"邮件","发送方邮件地址格式不正确",$("#SenderEmail"));
+			return false;
+		}
+	}
+	if ($("#ServerVerify_on").prop("checked")){
+		if ($("#SenderEmailPass").val() == ""){
+			_alert(2,"邮件","请输入服务器验证",$("#SenderEmailPass"));
+			return false;
+		}else{
+			var SenderEmailPass = $("#SenderEmailPass").val();
+		}
+	}else{
+		var SenderEmailPass = null;
+	}
+	if (revicer_Email == ""){
+		_alert(2,"邮件","请输入接收方邮件地址",$("#revicer_Email"));
+		return false;
+	}else{
+		if (!emailReg.test(revicer_Email)){
+			_alert(1,"邮件","发送方邮件地址格式不正确",$("#revicer_Email"));
+			return false;
+		}
+	}
+	_showLoading();
+	$.ajax({
+		url:'/bhost/test_mail',
+		type:'post',
+		async:true,
+		data:{a0:se,z1:SmtpServer,z2:SenderEmail,z3:SenderEmailPass,z4:revicer_Email},
+		success:function(result){
+			_closeLoading();
+			var test_result = JSON.parse(result);
+			if (test_result.Result){
+				_alert(0,"邮件","测试成功");
+				return false;
+			}else{
+				_alert(1,"邮件","测试失败，失败原因：" + test_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+</script>

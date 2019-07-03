@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>manager</title>
+	<link rel="stylesheet" href="/manage/skin/icheck/minimal/blue.css">
+	<link rel="stylesheet" href="/manage/css/select2.min.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<!--script-->
+	<script src="/manage/js/jquery.min.js"></script>
+	<script src="/manage/js/jquery.easing.js"></script>
+	<script src="/manage/js/layer.js"></script>
+	<script src="/manage/js/common.js"></script>
+	<script src="/manage/js/common_e.js"></script>
+	<!--icheck-->
+	<script src="/manage/js/icheck.min.js"></script>
+	<!--select2-->
+	<script src="/manage/js/select2.full.min.js"></script>
+	<link rel="stylesheet" href="/manage/css/new-head.css">
+</head>
+<body style="overflow:hidden;" class="bg-white">
+		<div class="c-top">
+			<div class="c-title">
+				<!--
+				<h3 onclick="back(1);">Snmp trap</h3>
+				-->
+				<div class="manual-head" style="width:10%;float:left;">
+					<div class="manual-title">
+						<span id="snmp_reload" style="cursor: pointer;">SNMP</span>
+						<i class="snmp_icon"></i>
+					</div>
+				</div>
+				<div class="ctr">
+					<a href="javascript:;" class="ret" onclick="parent._closePage(this)"><i></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="mainer">
+			
+			<div class="container">
+				<div class="c-cont2">
+					<div class="c-form" style="padding-bottom:10px;" id="snmpset">
+						<div class="form">	
+							<div class="sel-type1" style="float: left;width: 100%;">
+								<div class="form-item" style="">
+									<span class="form-tag" style=""><em class="imp">*</em>配置名称：</span>
+									<div class="form-c" style="">
+										<input id="SnmpConfigName" name="SnmpConfigName" class="form-text" maxlength="128" style="width:235px;" type="text" onblur="NameCheck(this);"><i class="v-check"></i>
+										<p class="form-tip" style="width: 270px;margin-left: -5px;">特殊字符仅支持下划线、横杠、小数点</p>
+									</div>
+								</div>
+								<div class="form-item" style="">
+									<span class="form-tag" style=""><em class="imp">*</em>服务器地址：</span>
+									<div class="form-c" style="">
+										<input id="SnmpServerIP" name="SnmpServerIP" class="form-text" type="text" style="width:125px;"  maxlength="64" onblur="IPCheck(this);"><i class="v-check"></i>
+									</div>
+								</div>
+								<div class="form-item" style="">
+									<span class="form-tag" style=""><em class="imp">*</em>端口：</span>
+									<div class="form-c" style="">
+										<input id="SnmpPort" name="SnmpPort" class="form-text" type="text" maxlength="5" onblur="PortCheck(this);" style="width: 58px;"><i class="v-check"></i>
+										<p class="form-tip" style="width: 270px;margin-left: -5px;">0-65535之间</p>
+									</div>
+								</div>
+								<div class="form-item">
+									<span class="form-tag" style=""><em class="imp">*</em>编码方式：</span>
+									<div class="form-c" style="">
+										<select class="filter-select" id="EnCode" style="width:90px;">
+											<option value="0">UTF-8</option>
+											<option value="1">GBK</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-item">
+									<span class="form-tag" style=""><em class="imp">*</em>方式：</span>
+									<div class="form-c" style="">
+										<select class="filter-select" id="Flag" style="width:90px;">
+											<option value="2">默认</option>
+											<option value="1">备用</option>
+											<option value="0">其他</option>
+										</select>
+									</div>
+								</div>
+								<!--
+								{%if flag == "None" %}
+								<li style = "height:25px;margin-top: 24px;">
+									<i class="ctrl add" onclick="addsnmp(this)"></i>
+								</li>
+								{%endif%}
+								-->
+							</div>
+						</div>
+					</div>
+					<div class="c-form">
+						<div class="btns s-hide">
+							<a href="javascript:;" class="btn btn-normal" onclick="snmp_save();">保&nbsp;&nbsp;存</a>
+							<a href="javascript:;" class="btn btn-normal" onclick="test_snmp();">测&nbsp;&nbsp;试</a>
+						</div>
+						<div id="bBtn" style="position: fixed;z-index:5;">
+							<a href="javascript:;" class="btn" style="float: right;" onclick="back(1);"><i class="icon-c3-1"></i>返&nbsp;&nbsp;&nbsp;&nbsp;回</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	<form action="/bhost/manager_snmp" method="POST" name="frm_snmp" id="frm_snmp">
+		<input type="hidden" name="tasktype" id = "tasktype" value="" />
+		<input type="hidden" name="z1" id = "z1" value="" />		
+		<input type="hidden" name="z2" id = "z2" value=""/>
+		<input type="hidden" name="z3" id = "z3" value=""/>
+		<input type="hidden" name="z4" id = "z4" value=""/>
+		<input type="hidden" name="a0" value=""/>
+	</form>
+<script>
+$('.form-checkbox,.form-radio').iCheck({
+	checkboxClass: 'icheckbox_minimal-blue',
+	radioClass: 'iradio_minimal-blue',
+	increaseArea: '0' // optional
+});
+$('.filter-select').select2({minimumResultsForSearch: -1});
+</script>
+
+
+<script>
+var snmp = {
+	"SnmpConfigId": 0, 
+	"SnmpConfigName": "SYSLOG配置1",           
+	"SnmpServerIP": "192.168.0.54",
+	"SnmpPort": 514,
+	"Flag":0,
+	"EnCode":0
+}
+var flag = "{{flag}}";
+var now="{{now}}";
+var keyword_re = {{keyword|safe}};
+var edit = {{edit|safe}};
+var selectid = {{selectid|safe}};
+var se;
+$(function(){
+	_if_disable = $('#nav-s1 li[data-modeid=7]',parent.parent.document).attr('_if_disable');
+	if(_if_disable == '1'){
+		$('.s-hide').remove();
+	}
+	$("#snmp_reload").on("click",function(){
+		//back(1);
+		document.frm_snmp.action = '/bhost/create_snmp';
+		document.frm_snmp.z1.value = now;
+		document.frm_snmp.z2.value = JSON.stringify(keyword_re);
+		if (edit != "None" && edit != ""){
+			document.frm_snmp.z3.value = JSON.stringify(edit);
+		}else{
+			document.frm_snmp.z3.value = "None";
+		}
+		document.frm_snmp.z4.value = JSON.stringify(selectid);
+		document.frm_snmp.a0.value = se;
+		document.frm_snmp.submit();
+	});
+	se = window.parent.document.frm.se.value;
+	$("#SnmpPort").bind('keydown', function(e){
+		DigitInput(e);
+	});
+	if (edit != "None"){
+		snmp.SnmpConfigId=edit.data[0].SnmpConfigId;
+		$("#SnmpConfigName").val(edit.data[0].SnmpConfigName);
+		$("#SnmpConfigName").prop("disabled",true);
+		$("#SnmpServerIP").val(edit.data[0].SnmpServerIP);
+		$("#SnmpPort").val(edit.data[0].SnmpPort);
+		$("#EnCode").val(edit.data[0].EnCode).trigger('change');
+		$("#Flag").val(edit.data[0].Flag).trigger('change');
+		if (edit.data[0].Flag == 2){
+			$.ajax({
+				url:'/bhost/get_snmp_flag',
+				type:'post',
+				async:false,
+				data:{a0:se},
+				success:function(result){
+					var snmp_flag = JSON.parse(result);
+					if (snmp_flag.Result){
+						if (snmp_flag.count_snmp == 2){
+							$("#Flag").attr('disabled',true);
+						}
+					}
+				}
+			})
+		}
+	}else{
+		$.ajax({
+			url:'/bhost/get_snmp_flag',
+			type:'post',
+			async:false,
+			data:{a0:se},
+			success:function(result){
+				var snmp_flag = JSON.parse(result);
+				if (snmp_flag.Result){
+					if (snmp_flag.count_snmp == 1){
+						$("#Flag").val(2).trigger('change');
+						$("#Flag").attr('disabled',true);
+					}else if (snmp_flag.def_snmp == 0){
+						$("#Flag").val(2).trigger('change');
+					}else if (snmp_flag.spare_snmp == 0){
+						$("#Flag").val(1).trigger('change');
+					}else{
+						$("#Flag").val(0).trigger('change');
+					}
+				}
+			}
+		})
+	}
+	
+	parent._switchBtn(0);//掩藏按钮
+})
+
+
+var numCheck = /\D/;
+var nameCheck = /^[\u4e00-\u9fa5a-zA-Z\d_\-\.]+$/;
+var ipcheck_route=/(^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.(25[0-4]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$)/;
+function PortCheck(obj){
+	var num = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check');
+	if (numCheck.test(num) || num == "" || parseInt(num) < 1 || parseInt(num) > 65534){	
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+
+function NameCheck(obj){
+	var Name = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check');
+	if (!nameCheck.test(Name)){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+function IPCheck(obj){
+	var IP = $(obj).val().trim();
+	var $i = $(obj).next('i.v-check');
+	if (!ipcheck_route.test(IP)){
+		$i.show().attr('class','v-check v-wrong');
+	}else{
+		$i.show().attr('class','v-check v-right');
+	}
+}
+
+//检查名称是否存在
+function check_name(name,obj){
+	var add = 0;
+	$.ajax({
+		url:'/bhost/check_snmpconfig_name',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:name},
+		success:function(result){
+			if (result != "0"){
+				add = 1;
+				_alert(2,"SNMP","相同的名称已存在",$(obj));
+				return false;
+			}
+		}
+	})
+	if (add == 1){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+
+//添加设置
+var $a = $("#snmpset>div:first").clone();
+function addsnmp(obj){
+	var $b = $(obj).parent().parent().parent();
+	var $c = $a.clone().wrap('<div class="form"></div>');
+	var snmpConfigName = $b.find('input').eq(0).val();
+	var input1;
+	var add = 0;
+	if (snmpConfigName == ""){
+		_alert(2,"SNMP","请输入名称",$b.find('input').eq(0));
+		return false;
+	}else{
+		if (!nameCheck.test(snmpConfigName)){
+			_alert(1,"SNMP","名称格式不正确",$b.find('input').eq(0));
+			return false;
+		}
+		var isexist = check_name(snmpConfigName,$b.find('input').eq(0));
+		if (!isexist){
+			return false;
+		}
+	}
+	$("#snmpset").children('div').not('div:first').each(function(i,item){
+		input1 = $(item).find('input:first').val();
+		if (input1 == snmpConfigName){
+			add = 1;
+			_alert(1,"SNMP","相同的名称已存在",$b.find('input').eq(0));
+			return false;
+		}
+	})
+	if (add == 1){
+		return false;
+	}
+	var snmpServerIP = $b.find('input').eq(1).val();
+	if (snmpServerIP == ""){
+		_alert(2,"SNMP","请输入服务器地址",$b.find('input').eq(1));
+		return false;
+	}else{
+		if (!ipcheck_route.test(snmpServerIP)){
+			_alert(1,"Snmp trap","服务器地址格式不正确",$b.find('input').eq(1));
+			return false;
+		}
+	}
+	var snmpPort = $b.find('input').eq(2).val();
+	if (snmpPort == ""){
+		_alert(2,"SNMP","请输入端口",$b.find('input').eq(2));
+		return false;
+	}else{
+		if (numCheck.test(snmpPort)){
+			_alert(1,"SNMP","端口格式不正确",$b.find('input').eq(2));
+			return false;
+		}
+		if (snmpPort < 1){
+			_alert(1,"SNMP","端口不能小于1",$b.find('input').eq(2));
+			return false;
+		}
+		if (snmpPort > 65534){
+			_alert(1,"SNMP","端口不能大于65534",$b.find('input').eq(2));
+			return false;
+		}
+	}
+	$b.find('.v-check:first').remove();
+	//$b.find('input:first').attr("disabled",true);
+	$b.find('p').remove();
+	$b.find('li').append('<i class="ctrl del" onclick="_delsnmp(this)"></i>').children('i.add').remove();
+	$b.before($c);
+	$c.find('input').eq(0).focus();
+}
+//删除设置
+function _delsnmp(obj){
+	$(obj).parent().parent().parent().remove();
+}
+
+//保存配置
+function snmp_save(){
+	var snmp_list = [];
+	var isexist;
+	var SnmpConfigName = $("#SnmpConfigName").val();
+	var SnmpServerIP = $("#SnmpServerIP").val();
+	var SnmpPort = $("#SnmpPort").val();
+	var Flag = $("#Flag").val();
+	var EnCode = $("#EnCode").val();
+	
+	if (SnmpConfigName == ""){
+		_alert(2,"SNMP","请输入名称",$("#SnmpConfigName"));
+		return false;
+	}else{
+		if (!nameCheck.test(SnmpConfigName)){
+			_alert(1,"SNMP","名称格式不正确",$("#SnmpConfigName"));
+			return false;
+		}
+	}
+	if (edit == "None"){
+		isexist = check_name(SnmpConfigName,$("#SnmpConfigName"));
+		if (!isexist){
+			return false;
+		}
+	}
+
+	if (SnmpServerIP == ""){
+		_alert(2,"SNMP","请输入服务器地址",$("#SnmpServerIP"));
+		return false;
+	}else{
+		if (!ipcheck_route.test(SnmpServerIP)){
+			_alert(1,"SNMP","服务器地址格式不正确",$("#SnmpServerIP"));
+			return false;
+		}
+	}
+	if (SnmpPort == ""){
+		_alert(2,"SNMP","请输入端口",$("#SnmpPort"));
+		return false
+	}else{
+		if (numCheck.test(parseInt(SnmpPort))){
+			_alert(1,"SNMP","端口格式不正确",$("#SnmpPort"));
+			return false;
+		}
+		if (parseInt(SnmpPort) < 1){
+			_alert(1,"SNMP","端口不能小于1",$("#SnmpPort"));
+			return false;
+		}
+		if (parseInt(SnmpPort) > 65534){
+			add = 1;
+			_alert(1,"SNMP","端口不能大于65534",$("#SnmpPort"));
+			return false;
+		}
+	}
+	snmp.SnmpConfigName = SnmpConfigName;
+	snmp.SnmpServerIP = SnmpServerIP;
+	snmp.SnmpPort = parseInt(SnmpPort);
+	snmp.Flag = parseInt(Flag);
+	snmp.EnCode = parseInt(EnCode);
+	if (edit == "None"){
+		snmp.SnmpConfigId = 0;
+	}
+	snmp_list.push(JSON.stringify(snmp));
+	msstr = aceg(JSON.stringify(snmp_list),se);
+	$.ajax({
+		url:'/bhost/save_snmp',
+		type:'post',
+		async:false,
+		data:{a0:se,z1:JSON.stringify(snmp_list),m1:msstr},
+		success:function(result){
+			data = JSON.parse(result);
+			if (data.Result == true){
+				parent.layer.open({
+					type:1,
+					title:"SNMP",
+					content:'<div class="layer-alert"><i class="alert succ"></i>保存成功</div>',
+					btn:['确&nbsp;&nbsp;定'],
+					btnAlign:'c',
+					closeBtn: false,
+					skin:'layer-custom',
+					area:['380px','310px'],
+					move: false,
+					resize: false,
+					btn1:function(i){
+						parent.layer.close(i);
+						back(2,snmp.Flag,data.SnmpConfigId);
+					},
+					btn2:function(i){
+						parent.layer.close(i);
+					}
+				});	
+			}else{
+				_alert(1,"SNMP","执行失败：" + data.ErrMsg);
+			}
+		}
+	});
+}
+//返回
+function back(type,flag,id){
+	if (type == 2){
+		if (flag == 2){
+			now = 1;
+		}else{
+			$.ajax({
+				url:'/bhost/get_index',
+				type:'post',
+				async:false,
+				data:{a0:se,z1:id,z2:23},
+				success:function(result){
+					now = Math.ceil(parseInt(result)/MAX_PAGE);
+				}
+			});
+			/*
+			if (edit != "None"){ //编辑保存
+				$.ajax({
+					url:'/bhost/get_index',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:edit.data[0].SnmpConfigId,z2:23},
+					success:function(result){
+						now = Math.ceil(parseInt(result)/MAX_PAGE);
+					}
+				});
+			}else{
+				$.ajax({
+					url:'/bhost/select_snmp_all',
+					type:'post',
+					async:false,
+					data:{a0:se,z1:-1},
+					success:function(result){
+						var result = JSON.parse(result);
+						var remain = parseInt(result.totalrow) % MAX_PAGE;
+						if (remain > 0){
+							now = Math.ceil(parseInt(result.totalrow)/MAX_PAGE);
+						}else{
+							now = parseInt(result.totalrow)/MAX_PAGE + 1;
+						}	
+					}
+				});
+			}
+			*/
+		}
+		
+	}
+	var deliver = JSON.stringify(keyword_re);
+	document.frm_snmp.z1.value = now;
+	document.frm_snmp.z2.value = deliver;
+	document.frm_snmp.z3.value = JSON.stringify(selectid);
+	document.frm_snmp.a0.value = se;
+	document.frm_snmp.action='/bhost/manage_snmp';
+	document.frm_snmp.submit();
+}
+
+function test_snmp(){
+	var SnmpServerIP = $("#SnmpServerIP").val();
+	var SnmpPort = $("#SnmpPort").val();
+
+	if (SnmpServerIP == ""){
+		_alert(2,"SNMP","请输入服务器地址",$("#SnmpServerIP"));
+		return false;
+	}else{
+		if (!ipcheck_route.test(SnmpServerIP)){
+			_alert(1,"SNMP","服务器地址格式不正确",$("#SnmpServerIP"));
+			return false;
+		}
+	}
+	if (SnmpPort == ""){
+		_alert(2,"SNMP","请输入端口",$("#SnmpPort"));
+		return false
+	}else{
+		if (numCheck.test(parseInt(SnmpPort))){
+			_alert(1,"SNMP","端口格式不正确",$("#SnmpPort"));
+			return false;
+		}
+		if (parseInt(SnmpPort) < 1){
+			_alert(1,"SNMP","端口不能小于1",$("#SnmpPort"));
+			return false;
+		}
+		if (parseInt(SnmpPort) > 65534){
+			add = 1;
+			_alert(1,"SNMP","端口不能大于65534",$("#SnmpPort"));
+			return false;
+		}
+	}
+	//_showLoading();
+	$.ajax({
+		url:'/bhost/test_snmp',
+		type:'post',
+		async:true,
+		data:{a0:se,z1:SnmpServerIP,z2:SnmpPort},
+		success:function(result){
+			//_closeLoading();
+			var test_result = JSON.parse(result);
+			if (test_result.Result){
+				_alert(0,"SNMP","测试成功");
+				return false;
+			}else{
+				_alert(1,"SNMP","测试失败，失败原因：" + test_result.ErrMsg);
+				return false;
+			}
+		}
+	});
+}
+</script>
