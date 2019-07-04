@@ -1,5 +1,5 @@
 #coding=utf8
 from VMwareAPI.vmwareautoapi import VCenter
 username = 'sunhaibao@kedacom.com'
-password = 'shbmyy0615..'
+password = 'Shbmyy0615..'
 conn = VCenter(username, password)
