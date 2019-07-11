@@ -20,4 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('VMwareAPI.urls', namespace='vmware')),
     path('ldap/', include('kdldapapi.urls', namespace='ldapapi')),
+    path('itomap/', include('itomap.urls', namespace='itomap')),
+    path('kedamonitor/', include('kedamonitor.urls', namespace='kedamonitor'))
 ]

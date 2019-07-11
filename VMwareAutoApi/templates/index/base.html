@@ -28,8 +28,8 @@
         <ul id="navu" class="nav nav-pills">
               <li id="navi"><a id="nava" class="active" href={% url 'vmware:index' %}>VMWare平台</a></li>
               <li id="navi"><a id="nava" href={% url 'ldapapi:index' %}>LDAP自助运维</a></li>
-              <li id="navi"><a id="nava" href="#">监控平台自助运维</a></li>
-              <li id="navi"><a id="nava" href="#">OA自助运维</a></li>
+              <li id="navi"><a id="nava" href={% url 'kedamonitor:index' %}>监控平台自助运维</a></li>
+              <li id="navi"><a id="nava" href={% url 'itomap:index' %}>OA自助运维</a></li>
         </ul>
         </div>
         {% endblock topmenu %}

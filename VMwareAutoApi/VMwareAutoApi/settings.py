@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'VMwareAPI.apps.VmwareapiConfig',
     'kdldapapi',
     'django_cas_ng',
+    'itomap',
+    'kedamonitor'
 ]
 
 MIDDLEWARE = [

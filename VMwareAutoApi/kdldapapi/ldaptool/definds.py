@@ -1,0 +1,6 @@
+#coding=utf8
+DOMAIN = 'kedacom.com'
+SERVER = 'kedacom.com'
+UCENTERDC = 'OU=UCenter,dc=kedacom,dc=com'
+USER = 'sunhaibao'
+PASSWORD = 'D8F9F30C0632B2F8D7254CAFB0770864:DB37FE1060F87340BCA8B257C2B51783'
