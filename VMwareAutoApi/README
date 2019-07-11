@@ -1,0 +1,2 @@
+1、启动uwsgi
+uwsgi --ini ./uwsgi.ini
