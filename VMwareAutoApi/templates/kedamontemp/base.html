@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href={% static 'css/index.css' %}>
+    <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.css' %}>
+    <link rel="stylesheet" href={% static 'bootstrap-table/bootstrap-table.css' %}>
+    <script type="text/javascript" src={% static 'js/jquery-1.12.4.min.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap/js/bootstrap.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table-locale-all.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/locale/bootstrap-table-zh-CN.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}></script>
+    <script type="text/javascript" src={% static 'tableExport/tableExport.min.js' %}></script>
+    {% block topfiles %}{% endblock topfiles %}
+</head>
+<body>
+<div id="main" style="width:auto;">
+    <div id="top" style="width:auto;float:top;">
+        <a>登录用户：</a>
+        <a>{{ username }}</a>&nbsp;&nbsp;
+        <a class="navigatorButton" href="logout">退出登录</a>
+        {% block topmenu %}
+        {% endblock topmenu %}
+    </div>
+{% block menu %}
+{% endblock menu %}
+    {% block vmhost %}
+        <div class="toolbar">
+          <select class="form-control" id="locale">
+            <option value="en-US">en-US</option>
+            <option value="zh-CN" selected>zh-CN</option>
+          </select>
+        </div>
+        {% block tbodyh %}
+             <tbody id="countTab">
+        {% endblock tbodyh %}
+        {% block tbodyd %}
+            </tbody>
+        {% endblock tbodyd %}
+    {% endblock vmhost %}
+</div>
+</body>
+<script type="text/javascript">
+    var $table = $('#table')
+      $(function() {
+        $table.bootstrapTable()
+        $('#locale').change(function () {
+          $table.bootstrapTable('refreshOptions', {
+            locale: $(this).val()
+          })
+        })
+      })
+      $table.bootstrapTable(
+        {
+            columns: [{
+                title: '序号',
+                field: '',
+                align: 'center',
+                width:5 ,
+                formatter: function (value, row, index) {
+                    //var options = $table.bootstrapTable('getOptions');
+                    //return options.pageSize * (options.pageNumber - 1) + index + 1;
+                    return index+1;
+                }
+            }]
+        }
+    )
+</script>
+</html>

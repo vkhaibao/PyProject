@@ -1,0 +1,124 @@
+{% extends 'kedamontemp/base.html' %}
+{% load staticfiles %}
+{% block title %}LDAP运维管理平台{% endblock title %}
+{% block topfiles %}{% endblock topfiles %}
+{% block topmenu %}
+        <div>
+        <ul id="navu" class="nav nav-pills">
+              <li id="navi"><a id="nava" href={% url 'vmware:index' %}>VMWare平台</a></li>
+              <li id="navi"><a id="nava" href={% url 'ldapapi:index' %}>LDAP自助运维</a></li>
+              <li id="navi"><a id="nava" class="active" href={% url 'kedamonitor:index' %}>监控平台自助运维</a></li>
+              <li id="navi"><a id="nava" href={% url 'itomap:index' %}>OA自助运维</a></li>
+        </ul>
+        </div>
+{% endblock topmenu %}
+{% block menu %}
+<div id="left" style="width:auto;float:left;">
+        <ul id="nav">
+              <li><a href="index">账户管理</a></li>
+              <li><a href="accountm">权限管理</a></li>
+              <li><a class="active" href="orgm">组织管理</a></li>
+              <li><a href="plicm">策略管理</a></li>
+        </ul>
+</div>
+{% endblock menu %}
+{% block vmhost %}
+    <div id="right" style="width:1100px;float:left;">
+        &nbsp;<button id="btncreatevm" onclick="window.location.href='index/createvm'">模板部署虚拟机</button>
+        <br/>
+        <br/>
+        {{ block.super }}
+            <table id ="table"
+                   data-toggle="table"
+                   data-locale="zh-CN"
+                   data-height="700"
+                   data-toolbar=".toolbar"
+                   data-search="true"
+                   data-sortable="true"
+                   data-show-refresh="true"
+                   data-show-toggle="true"
+                   data-show-columns="true"
+                   data-show-export="true"
+                   data-pagination="true"
+                   data-page-size="50">
+                <thead>
+                    <tr>
+                        <th data-sortable="true"></th>
+                        <th data-sortable="true">虚拟机名</th>
+                        <th data-sortable="true">是否是模板</th>
+                        <th data-sortable="true"></th>
+                        <th>详情</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                {% block tbodyh %}
+                    {{ block.super }}
+                {% endblock tbodyh %}
+                    {% for vmname in vmlist %}
+                        {% if vmname.istemplate == 0 %}
+                            <tr>
+                                <td id="num"></td>
+                                <td id="vmname">{{ vmname.vmname }}</td>
+                                <td id="model">虚拟机</td>
+                                {% if vmname.vmstatus == "poweredOn" %}
+                                    <td id="vmstatus">运行</td>
+                                {% else %}
+                                    <td id="vmstatus">关机</td>
+                                {% endif %}
+                                <td><button onclick="window.open('/index/vmdetail/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=200,resizable=no')">详情</button></td>
+                                <td>
+                                    <button onclick="window.open('/index/webconsole/'+{{ vmname.id }},'_blank')">控制台</button>
+                                    <button onclick="window.open('/index/vmshudown/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=400,resizable=no')">关机</button>
+                                    <button onclick="window.open('/index/vmreboot/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=400,resizable=no')">重启</button>
+                                    <button onclick="window.open('/index/vmreset/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=400,resizable=no')">重置</button>
+                                    <button onclick="window.open('/index/vmdel/'+{{ vmname.id }},'_blank','height=400, width=800,top=200,left=400,resizable=no')">删除</button>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% block tbodyd %}
+                    {{ block.super }}
+                {% endblock tbodyd %}
+            </table>
+    </div>
+    <script>
+    var $table = $('#table')
+    $table.bootstrapTable(
+        {
+            columns: [{
+                    title: '序列',
+                    field: '',
+                    align: 'center',
+                    width:5 ,
+                    formatter: function (value, row, index) {
+                        return index+1;
+                    }
+                },
+                {
+                    title: '虚拟机名',
+                },
+                {
+                    title: '是否是模板'
+                },
+                {
+                    title: '状态',
+                    cellStyle:function(value,row,index) {
+                        if (value == "关机") {
+                            return {css: {"background-color": "red"}}
+                        } else {
+                            return {css: {"background-color": "green"}}
+                        }
+                    }
+                },
+                {
+                    title: '详情'
+                },
+                {
+                    title: '操作'
+                }
+            ]
+
+        }
+    )
+    </script>
+{% endblock vmhost %}
