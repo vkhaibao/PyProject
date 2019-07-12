@@ -171,11 +171,11 @@ def logincheck(func):
 
 def authcheck(func):
     def login(request, *args, **kwargs):
-        auth = ['xuchenglong@kedacom.com', 'sunhaibao@kedacom.com']
-        for userinfo in auth:
+        rightlist = Rightlist.objects.all()
+        for userinfo in rightlist:
             loginuser = str(request.user)
             authdict = {"username": request.user}
-            if userinfo == loginuser:
+            if userinfo.username == loginuser:
                 return func(request, *args, **kwargs)
             continue
         return render(request, "altervm/authcheck.html", authdict)
