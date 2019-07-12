@@ -25,8 +25,8 @@
 
     <div id="left" style="width:auto;float:left;">
         <ul id="nav">
-              <li><a class="active" href="adminop">权限列表</a></li>
-              <li><a href="userlist">用户列表</a></li>
+              <li><a href="adminop">权限列表</a></li>
+              <li><a class="active" href="userlist">用户列表</a></li>
               <li><a href="modelist">模块列表</a></li>
         </ul>
     </div>
@@ -40,7 +40,7 @@
         </div>
     <tbody id="countTab">
     </tbody>
-        &nbsp;<button id="btncreatevm" onclick="window.location.href='addright'">添加权限</button>
+        &nbsp;<button id="btncreatevm" onclick="window.location.href='adduser'">添加用户</button>
             <table id ="table"
                    data-toggle="table"
                    data-locale="zh-CN"
@@ -62,12 +62,14 @@
                     </tr>
                 </thead>
                 <tbody id="countTab">
-                {% for user in rightlist %}
+                {% for userinfo in userlist %}
+                    {% if userinfo.username != 'admin' %}
                             <tr>
                                 <td id="num"></td>
-                                <td id="vmname">{{ user.username }}</td>
-                                <td id="model">{{ user.rmodelname.modelname }}</td>
+                                <td id="vmname">{{ userinfo.username }}</td>
+                                <td id="model">{{ userinfo.password }}</td>
                             </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
@@ -89,7 +91,7 @@
                     title: '用户',
                 },
                 {
-                    title: '用户权限',
+                    title: '密码',
                     width:500
                 },
                 ]

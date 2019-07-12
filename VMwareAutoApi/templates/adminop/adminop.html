@@ -1,10 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load staticfiles %}
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>权限管理</title>
+    <link rel="stylesheet" href={% static 'css/index.css' %}>
+    <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.css' %}>
+    <link rel="stylesheet" href={% static 'bootstrap-table/bootstrap-table.css' %}>
+    <script type="text/javascript" src={% static 'js/jquery-1.12.4.min.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap/js/bootstrap.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table-locale-all.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/locale/bootstrap-table-zh-CN.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}></script>
+    <script type="text/javascript" src={% static 'tableExport/tableExport.min.js' %}></script>
 </head>
 <body>
-$END$
+<div id="main" style="width:auto;">
+    <div id="top" style="width:auto;float:top;">
+        <a>登录用户：</a>
+        <a>{{ username }}</a>&nbsp;&nbsp;
+        <a class="navigatorButton" href="logout">退出登录</a>
+    </div>
+
+    <div id="left" style="width:auto;float:left;">
+        <ul id="nav">
+              <li><a class="active" href="adminop">权限列表</a></li>
+              <li><a href="userlist">用户列表</a></li>
+              <li><a href="modelist">模块列表</a></li>
+        </ul>
+    </div>
+
+    <div id="right" style="width:1100px;float:left;">
+        <div class="toolbar">
+              <select class="form-control" id="locale">
+                <option value="en-US">en-US</option>
+                <option value="zh-CN" selected>zh-CN</option>
+              </select>
+        </div>
+    <tbody id="countTab">
+    </tbody>
+        &nbsp;<button id="btncreatevm" onclick="window.location.href='addright'">添加权限</button>
+            <table id ="table"
+                   data-toggle="table"
+                   data-locale="zh-CN"
+                   data-height="700"
+                   data-toolbar=".toolbar"
+                   data-search="true"
+                   data-sortable="true"
+                   data-show-refresh="true"
+                   data-show-toggle="true"
+                   data-show-columns="true"
+                   data-show-export="true"
+                   data-pagination="true"
+                   data-page-size="50">
+                <thead>
+                    <tr>
+                        <th data-sortable="true"></th>
+                        <th data-sortable="true"></th>
+                        <th data-sortable="true"></th>
+                    </tr>
+                </thead>
+                <tbody id="countTab">
+                {% for useright in rightlist %}
+                            <tr>
+                                <td id="num"></td>
+                                <td id="vmname">{{ useright.username }}</td>
+                                <td id="model">{{ useright.rmodelname.modelname }}</td>
+                            </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    <script>
+    var $table = $('#table')
+    $table.bootstrapTable(
+        {
+            columns: [
+                {
+                    title: '序列',
+                    field: '',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return index+1;
+                    }
+                },
+                {
+                    title: '用户',
+                },
+                {
+                    title: '用户权限',
+                    width:500
+                },
+                ]
+        }
+    )
+    </script>
+</div>
 </body>
 </html>

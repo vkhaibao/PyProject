@@ -38,7 +38,6 @@ class VMVirtual(models.Model):
     class Meta:
         db_table = 'VMVirtual'
 
-
 """        
 class VMFloder(models.Model):
 
@@ -50,10 +49,22 @@ class VMResouce(models.Model):
     class Meta:
         db_table = 'VMResouce'
 """
-
-
 class VMDatacenter(models.Model):
     datacentername = models.CharField(max_length=250)
     class Meta:
         db_table = 'VMDatacenter'
+
+class ModelList(models.Model):
+    modelname = models.CharField(max_length=250, null=True)
+    class Meta:
+        db_table = 'ModelList'
+
+class Rightlist(models.Model):
+    username = models.CharField(max_length=250)
+    rmodelname = models.ForeignKey('ModelList', null=True, on_delete=models.CASCADE)
+    class Meta:
+        db_table = 'Rightlist'
+
+
+
 

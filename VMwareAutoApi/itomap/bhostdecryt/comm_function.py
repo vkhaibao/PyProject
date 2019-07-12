@@ -4,13 +4,13 @@ from ctypes import *
 import psycopg2
 def decrypt_pwd(passwork,pwd_rc4_value='0'*512):
     if os.path.exists('/usr/lib64/logproxy.so') == False:
-        return (-1,"系统繁忙")
+        return (-1, "系统繁忙")
     lib = cdll.LoadLibrary("/usr/lib64/logproxy.so")
     pwd_rc4 = c_char_p()# 定义一个指针
     pwd_rc4.value = pwd_rc4_value.encode('ascii') # 初始化 指针
-    lib.decrypt_pwd.argtypes = [c_char_p,c_char_p]; #定义函数参数
+    lib.decrypt_pwd.argtypes = [c_char_p, c_char_p]; #定义函数参数
     lib.decrypt_pwd.restype = None #定义函数返回值
-    ret = lib.decrypt_pwd(passwork.encode('ascii'),pwd_rc4);#执行函数
+    ret = lib.decrypt_pwd(passwork.encode('ascii'), pwd_rc4);#执行函数
     return pwd_rc4.value.decode()
 
 def connpsqp(dbserver):
@@ -50,3 +50,4 @@ def decrypt():
             server['hpassword'] = password
     return serverlist
 
+print(decrypt())

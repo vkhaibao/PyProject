@@ -30,6 +30,9 @@ urlpatterns = [
     path('updatepop', views.updatevm_db, name='update'),
     path('host', views.showhost, name='showhost'),
     path('alltasks', views.alltasks, name="alltasks"),
+    path('adminop', views.adminop, name="adminop"),
+    path('userlist', views.userlist, name="userlist"),
+    path('modelist', views.modelist, name="modelist"),
 
     path('index/vmdetail/<int:id>', views.vmdetail, name='vmdetail'),
     path('index/webconsole/<int:id>', views.webconsole, name='webconsole'),

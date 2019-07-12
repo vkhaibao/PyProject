@@ -25,9 +25,9 @@
 
     <div id="left" style="width:auto;float:left;">
         <ul id="nav">
-              <li><a class="active" href="adminop">权限列表</a></li>
+              <li><a href="adminop">权限列表</a></li>
               <li><a href="userlist">用户列表</a></li>
-              <li><a href="modelist">模块列表</a></li>
+              <li><a class="active" href="modelist">模块列表</a></li>
         </ul>
     </div>
 
@@ -40,7 +40,7 @@
         </div>
     <tbody id="countTab">
     </tbody>
-        &nbsp;<button id="btncreatevm" onclick="window.location.href='addright'">添加权限</button>
+        &nbsp;<button id="btncreatevm" onclick="window.location.href='addmodel'">添加模块</button>
             <table id ="table"
                    data-toggle="table"
                    data-locale="zh-CN"
@@ -58,15 +58,13 @@
                     <tr>
                         <th data-sortable="true"></th>
                         <th data-sortable="true"></th>
-                        <th data-sortable="true"></th>
                     </tr>
                 </thead>
                 <tbody id="countTab">
-                {% for user in rightlist %}
+                {% for model in modellist %}
                             <tr>
                                 <td id="num"></td>
-                                <td id="vmname">{{ user.username }}</td>
-                                <td id="model">{{ user.rmodelname.modelname }}</td>
+                                <td id="vmname">{{ model.modelname }}</td>
                             </tr>
                 {% endfor %}
                 </tbody>
@@ -86,11 +84,7 @@
                     }
                 },
                 {
-                    title: '用户',
-                },
-                {
-                    title: '用户权限',
-                    width:500
+                    title: '模块名',
                 },
                 ]
         }

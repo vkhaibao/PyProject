@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from VMwareAPI.models import *
 from VMwareAPI.connvcenter import *
 from VMwareAPI.webconsole import *
+from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from pyVmomi import vim, vmodl
 from VMwareAPI.vmtools.clone_vm import *
@@ -370,5 +371,21 @@ def alltasks(request):
     alltasks = {"alltaks": conn.get_task()}
     return render(request, "index/alltasks.html", alltasks)
 
+@logincheck
+def adminop(request):
+    rightlist = Rightlist.objects.all()
+    modellist = {"rightlist": rightlist}
+    return render(request, 'adminop/adminop.html', modellist)
 
+@logincheck
+def userlist(request):
+    userlist = User.objects.all()
+    modellist = {"userlist": userlist}
+    return render(request, 'adminop/userlist.html', modellist)
+
+@logincheck
+def modelist(request):
+    modellist = ModelList.objects.all()
+    modellists = {"modellist": modellist}
+    return render(request, 'adminop/modelist.html', modellists)
 
