@@ -374,18 +374,18 @@ def alltasks(request):
 @logincheck
 def adminop(request):
     rightlist = Rightlist.objects.all()
-    modellist = {"rightlist": rightlist}
+    modellist = {"rightlist": rightlist, "username": request.user}
     return render(request, 'adminop/adminop.html', modellist)
 
 @logincheck
 def userlist(request):
     userlist = User.objects.all()
-    modellist = {"userlist": userlist}
+    modellist = {"userlist": userlist, "username": request.user}
     return render(request, 'adminop/userlist.html', modellist)
 
 @logincheck
 def modelist(request):
     modellist = ModelList.objects.all()
-    modellists = {"modellist": modellist}
+    modellists = {"modellist": modellist, "username": request.user}
     return render(request, 'adminop/modelist.html', modellists)
 

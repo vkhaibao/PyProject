@@ -20946,3 +20946,94 @@ UnboundLocalError: local variable 'acquireTickets' referenced before assignment
 [pid: 28395|app: 0|req: 6/33] 10.186.170.173 () {46 vars in 1378 bytes} [Fri Jul 12 11:11:22 2019] GET /itomap/index => generated 413358 bytes in 172 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 3)
 [pid: 28396|app: 0|req: 22/34] 10.186.170.173 () {46 vars in 1378 bytes} [Fri Jul 12 11:11:23 2019] GET /itomap/index => generated 413358 bytes in 177 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
 [pid: 28395|app: 0|req: 7/35] 10.186.170.173 () {46 vars in 1378 bytes} [Fri Jul 12 11:11:28 2019] GET /itomap/index => generated 413358 bytes in 171 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
+[pid: 28392|app: 0|req: 7/36] 10.186.170.173 () {46 vars in 1378 bytes} [Fri Jul 12 11:22:45 2019] GET /itomap/index => generated 413358 bytes in 172 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 23/37] 10.186.170.173 () {46 vars in 1384 bytes} [Fri Jul 12 11:22:47 2019] GET /itomap/accountm => generated 406777 bytes in 75 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 24/38] 10.186.170.173 () {46 vars in 1381 bytes} [Fri Jul 12 11:22:48 2019] GET /itomap/index => generated 413358 bytes in 145 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 25/39] 10.186.170.173 () {46 vars in 1364 bytes} [Fri Jul 12 11:22:49 2019] GET /index => generated 407391 bytes in 82 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
+[pid: 28396|app: 0|req: 26/40] 10.186.170.173 () {46 vars in 1367 bytes} [Fri Jul 12 11:22:51 2019] GET /ldap/index => generated 406905 bytes in 71 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 3)
+[pid: 28396|app: 0|req: 27/41] 10.186.170.173 () {46 vars in 1386 bytes} [Fri Jul 12 11:22:52 2019] GET /kedamonitor/index => generated 406905 bytes in 72 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 1)
+[pid: 28392|app: 0|req: 8/42] 10.186.170.173 () {46 vars in 1383 bytes} [Fri Jul 12 11:22:53 2019] GET /itomap/index => generated 413358 bytes in 189 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 3)
+[pid: 28396|app: 0|req: 28/43] 10.186.170.173 () {46 vars in 1364 bytes} [Fri Jul 12 11:44:22 2019] GET /index => generated 407391 bytes in 64 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 29/44] 10.186.170.173 () {46 vars in 1367 bytes} [Fri Jul 12 11:44:23 2019] GET /ldap/index => generated 406905 bytes in 68 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
+[pid: 28392|app: 0|req: 9/45] 10.186.170.173 () {46 vars in 1386 bytes} [Fri Jul 12 11:44:24 2019] GET /kedamonitor/index => generated 406905 bytes in 59 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 1)
+[pid: 28395|app: 0|req: 8/46] 10.186.170.173 () {46 vars in 1383 bytes} [Fri Jul 12 11:44:25 2019] GET /itomap/index => generated 413358 bytes in 145 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 30/47] 10.186.170.173 () {46 vars in 1378 bytes} [Fri Jul 12 11:44:28 2019] GET /itomap/index => generated 413358 bytes in 166 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 3)
+[pid: 28395|app: 0|req: 9/48] 10.186.170.173 () {46 vars in 1378 bytes} [Fri Jul 12 11:44:30 2019] GET /itomap/index => generated 413358 bytes in 140 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 3)
+[pid: 28396|app: 0|req: 31/49] 10.186.170.173 () {46 vars in 1388 bytes} [Fri Jul 12 11:44:38 2019] GET /kedamonitor/index => generated 406905 bytes in 65 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 1)
+[pid: 28392|app: 0|req: 10/50] 10.186.170.173 () {46 vars in 1379 bytes} [Fri Jul 12 11:44:39 2019] GET /ldap/index => generated 406905 bytes in 62 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
+[pid: 28396|app: 0|req: 32/51] 10.186.170.173 () {46 vars in 1362 bytes} [Fri Jul 12 11:44:40 2019] GET /index => generated 407391 bytes in 60 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 33/52] 10.186.170.173 () {46 vars in 1367 bytes} [Fri Jul 12 11:44:45 2019] GET /ldap/index => generated 406905 bytes in 64 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
+[pid: 28395|app: 0|req: 10/53] 10.186.170.173 () {46 vars in 1386 bytes} [Fri Jul 12 11:44:46 2019] GET /kedamonitor/index => generated 406905 bytes in 64 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 1)
+[pid: 28392|app: 0|req: 11/54] 10.186.170.173 () {46 vars in 1383 bytes} [Fri Jul 12 11:44:47 2019] GET /itomap/index => generated 413358 bytes in 140 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 34/55] 10.186.170.173 () {46 vars in 1378 bytes} [Fri Jul 12 11:44:50 2019] GET /itomap/index => generated 413358 bytes in 141 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 3)
+[pid: 28396|app: 0|req: 35/56] 10.186.170.173 () {46 vars in 1378 bytes} [Fri Jul 12 11:48:42 2019] GET /itomap/index => generated 413861 bytes in 143 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 36/57] 10.186.170.173 () {44 vars in 1311 bytes} [Fri Jul 12 11:54:20 2019] GET /admin => generated 0 bytes in 2 msecs (HTTP/1.1 301) 3 headers in 112 bytes (1 switches on core 4)
+[pid: 28396|app: 0|req: 37/58] 10.186.170.173 () {44 vars in 1313 bytes} [Fri Jul 12 11:54:20 2019] GET /admin/ => generated 0 bytes in 26 msecs (HTTP/1.1 302) 7 headers in 265 bytes (1 switches on core 1)
+[pid: 28396|app: 0|req: 38/59] 10.186.170.173 () {44 vars in 1350 bytes} [Fri Jul 12 11:54:20 2019] GET /admin/login/?next=/admin/ => generated 2116 bytes in 30 msecs (HTTP/1.1 200) 8 headers in 479 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 39/60] 10.186.170.173 () {54 vars in 1533 bytes} [Fri Jul 12 11:54:23 2019] POST /admin/login/?next=/admin/ => generated 0 bytes in 170 msecs (HTTP/1.1 302) 9 headers in 559 bytes (1 switches on core 3)
+[pid: 28396|app: 0|req: 40/61] 10.186.170.173 () {48 vars in 1340 bytes} [Fri Jul 12 11:54:24 2019] GET /admin/ => generated 6230 bytes in 27 msecs (HTTP/1.1 200) 6 headers in 227 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 41/62] 10.186.170.173 () {46 vars in 1330 bytes} [Fri Jul 12 11:54:28 2019] GET /admin/VMwareAPI/datastore/ => generated 40244 bytes in 260 msecs (HTTP/1.1 200) 7 headers in 396 bytes (1 switches on core 4)
+[pid: 28396|app: 0|req: 42/63] 10.186.170.173 () {44 vars in 1207 bytes} [Fri Jul 12 11:54:28 2019] GET /admin/jsi18n/ => generated 7684 bytes in 9 msecs (HTTP/1.1 200) 4 headers in 132 bytes (1 switches on core 1)
+[pid: 28392|app: 0|req: 12/64] 10.186.170.173 () {46 vars in 1372 bytes} [Fri Jul 12 11:54:33 2019] GET /admin/VMwareAPI/datastore/181/change/ => generated 7881 bytes in 95 msecs (HTTP/1.1 200) 7 headers in 395 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 43/65] 10.186.170.173 () {44 vars in 1218 bytes} [Fri Jul 12 11:54:33 2019] GET /admin/jsi18n/ => generated 7684 bytes in 8 msecs (HTTP/1.1 200) 4 headers in 132 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 44/66] 10.186.170.173 () {46 vars in 1341 bytes} [Fri Jul 12 11:54:36 2019] GET /admin/VMwareAPI/ => generated 4323 bytes in 26 msecs (HTTP/1.1 200) 6 headers in 227 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 45/67] 10.186.170.173 () {46 vars in 1300 bytes} [Fri Jul 12 11:54:39 2019] GET /admin/ => generated 6230 bytes in 32 msecs (HTTP/1.1 200) 6 headers in 227 bytes (1 switches on core 4)
+[pid: 28396|app: 0|req: 46/68] 10.186.170.173 () {46 vars in 1336 bytes} [Fri Jul 12 11:54:41 2019] GET /admin/VMwareAPI/vmdatacenter/ => generated 4912 bytes in 45 msecs (HTTP/1.1 200) 7 headers in 395 bytes (1 switches on core 1)
+[pid: 28396|app: 0|req: 47/69] 10.186.170.173 () {44 vars in 1210 bytes} [Fri Jul 12 11:54:41 2019] GET /admin/jsi18n/ => generated 7684 bytes in 7 msecs (HTTP/1.1 200) 4 headers in 132 bytes (1 switches on core 3)
+[pid: 28396|app: 0|req: 48/70] 10.186.170.173 () {46 vars in 1333 bytes} [Fri Jul 12 11:54:43 2019] GET /admin/VMwareAPI/ => generated 4323 bytes in 25 msecs (HTTP/1.1 200) 6 headers in 227 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 49/71] 10.186.170.173 () {46 vars in 1300 bytes} [Fri Jul 12 11:54:45 2019] GET /admin/ => generated 6230 bytes in 31 msecs (HTTP/1.1 200) 6 headers in 227 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 50/72] 10.186.170.173 () {46 vars in 1310 bytes} [Fri Jul 12 11:54:46 2019] GET /admin/auth/user/ => generated 7935 bytes in 68 msecs (HTTP/1.1 200) 7 headers in 395 bytes (1 switches on core 4)
+[pid: 28396|app: 0|req: 51/73] 10.186.170.173 () {44 vars in 1197 bytes} [Fri Jul 12 11:54:46 2019] GET /admin/jsi18n/ => generated 7684 bytes in 8 msecs (HTTP/1.1 200) 4 headers in 132 bytes (1 switches on core 1)
+[pid: 28392|app: 0|req: 13/74] 10.186.170.173 () {46 vars in 1338 bytes} [Fri Jul 12 11:54:54 2019] GET /admin/auth/user/2/change/ => generated 15979 bytes in 99 msecs (HTTP/1.1 200) 7 headers in 396 bytes (1 switches on core 4)
+[pid: 28396|app: 0|req: 52/75] 10.186.170.173 () {44 vars in 1206 bytes} [Fri Jul 12 11:54:54 2019] GET /admin/jsi18n/ => generated 7684 bytes in 10 msecs (HTTP/1.1 200) 4 headers in 132 bytes (1 switches on core 3)
+[pid: 28396|app: 0|req: 53/76] 10.186.170.173 () {46 vars in 1309 bytes} [Fri Jul 12 11:54:58 2019] GET /admin/ => generated 6230 bytes in 28 msecs (HTTP/1.1 200) 6 headers in 227 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 54/77] 10.186.170.173 () {46 vars in 1278 bytes} [Fri Jul 12 12:34:58 2019] GET / => generated 407375 bytes in 67 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
+[pid: 28392|app: 0|req: 14/78] 10.186.170.173 () {44 vars in 1243 bytes} [Fri Jul 12 12:35:06 2019] GET /admin/ => generated 6230 bytes in 31 msecs (HTTP/1.1 200) 6 headers in 227 bytes (1 switches on core 2)
+[pid: 28392|app: 0|req: 15/79] 10.186.170.173 () {44 vars in 1231 bytes} [Fri Jul 12 12:37:05 2019] GET / => generated 407375 bytes in 68 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 55/80] 10.186.170.173 () {42 vars in 1171 bytes} [Fri Jul 12 12:37:16 2019] GET / => generated 407375 bytes in 71 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 1)
+[pid: 28396|app: 0|req: 56/81] 10.186.170.173 () {46 vars in 1292 bytes} [Fri Jul 12 12:37:34 2019] GET /ldap/index => generated 406889 bytes in 62 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 57/82] 10.186.170.173 () {46 vars in 1316 bytes} [Fri Jul 12 12:37:36 2019] GET /kedamonitor/index => generated 406889 bytes in 64 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
+[pid: 28392|app: 0|req: 16/83] 10.186.170.173 () {46 vars in 1313 bytes} [Fri Jul 12 12:37:38 2019] GET /itomap/index => generated 446 bytes in 10 msecs (HTTP/1.1 200) 4 headers in 123 bytes (1 switches on core 3)
+[pid: 28395|app: 0|req: 11/84] 10.186.170.173 () {46 vars in 1284 bytes} [Fri Jul 12 12:37:46 2019] GET / => generated 407375 bytes in 77 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
+/usr/local/lib/python3.6/site-packages/django_cas_ng/utils.py:78: UserWarning: `CAS_VERIFY_SSL_CERTIFICATE` is disabled, meaning that SSL certificates are not being verified by a certificate authority. This can expose your system to various attacks and should _never_ be disabled in a production environment.
+  "`CAS_VERIFY_SSL_CERTIFICATE` is disabled, meaning that SSL certificates "
+[pid: 28392|app: 0|req: 17/85] 10.186.170.173 () {46 vars in 1284 bytes} [Fri Jul 12 12:37:51 2019] GET /logout => generated 0 bytes in 30 msecs (HTTP/1.1 302) 5 headers in 290 bytes (1 switches on core 4)
+/usr/local/lib/python3.6/site-packages/django_cas_ng/utils.py:78: UserWarning: `CAS_VERIFY_SSL_CERTIFICATE` is disabled, meaning that SSL certificates are not being verified by a certificate authority. This can expose your system to various attacks and should _never_ be disabled in a production environment.
+  "`CAS_VERIFY_SSL_CERTIFICATE` is disabled, meaning that SSL certificates "
+Internal Server Error: /login
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.6/site-packages/django/core/handlers/exception.py", line 34, in inner
+    response = get_response(request)
+  File "/usr/local/lib/python3.6/site-packages/django/core/handlers/base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/usr/local/lib/python3.6/site-packages/django/core/handlers/base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django/utils/decorators.py", line 45, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django_cas_ng/views.py", line 39, in dispatch
+    return super(LoginView, self).dispatch(request, *args, **kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/usr/local/lib/python3.6/site-packages/django_cas_ng/views.py", line 58, in post
+    clean_sessions(client, request)
+  File "/usr/local/lib/python3.6/site-packages/django_cas_ng/views.py", line 200, in clean_sessions
+    for slo in client.get_saml_slos(request.POST.get('logoutRequest')):
+AttributeError: 'CASClientV2' object has no attribute 'get_saml_slos'
+[pid: 28396|app: 0|req: 58/86] 10.5.0.80 () {44 vars in 647 bytes} [Fri Jul 12 12:37:51 2019] POST /login?next=%2F => generated 88178 bytes in 66 msecs (HTTP/1.1 500) 4 headers in 129 bytes (1 switches on core 0)
+[pid: 28395|app: 0|req: 12/87] 10.186.170.173 () {44 vars in 1187 bytes} [Fri Jul 12 12:37:57 2019] GET / => generated 0 bytes in 1 msecs (HTTP/1.1 302) 4 headers in 128 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 59/88] 10.186.170.173 () {44 vars in 1197 bytes} [Fri Jul 12 12:37:57 2019] GET /login => generated 0 bytes in 2 msecs (HTTP/1.1 302) 5 headers in 242 bytes (1 switches on core 1)
+/usr/local/lib/python3.6/site-packages/django_cas_ng/utils.py:78: UserWarning: `CAS_VERIFY_SSL_CERTIFICATE` is disabled, meaning that SSL certificates are not being verified by a certificate authority. This can expose your system to various attacks and should _never_ be disabled in a production environment.
+  "`CAS_VERIFY_SSL_CERTIFICATE` is disabled, meaning that SSL certificates "
+/usr/local/lib/python3.6/site-packages/urllib3/connectionpool.py:847: InsecureRequestWarning: Unverified HTTPS request is being made. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  InsecureRequestWarning)
+[pid: 28395|app: 0|req: 13/89] 10.186.170.173 () {44 vars in 1300 bytes} [Fri Jul 12 12:37:57 2019] GET /login?next=%2F&ticket=ST-13792-i5WHD1hSdEk4WvhJMQ5R-sso80 => generated 0 bytes in 116 msecs (HTTP/1.1 302) 7 headers in 473 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 60/90] 10.186.170.173 () {44 vars in 1377 bytes} [Fri Jul 12 12:37:58 2019] GET / => generated 407391 bytes in 75 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 4)
+[pid: 28396|app: 0|req: 61/91] 10.186.170.173 () {46 vars in 1442 bytes} [Fri Jul 12 12:40:15 2019] GET /itomap/index => generated 413861 bytes in 143 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 0)
+[pid: 28392|app: 0|req: 18/92] 10.186.170.173 () {46 vars in 1464 bytes} [Fri Jul 12 12:40:18 2019] GET /kedamonitor/index => generated 406905 bytes in 63 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 0)
+[pid: 28396|app: 0|req: 62/93] 10.186.170.173 () {46 vars in 1455 bytes} [Fri Jul 12 12:40:19 2019] GET /ldap/index => generated 406905 bytes in 60 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 2)
+[pid: 28396|app: 0|req: 63/94] 10.186.170.173 () {46 vars in 1438 bytes} [Fri Jul 12 12:40:21 2019] GET /index => generated 407391 bytes in 78 msecs (HTTP/1.1 200) 4 headers in 126 bytes (1 switches on core 1)
+[pid: 28396|app: 0|req: 64/95] 10.186.170.173 () {46 vars in 1441 bytes} [Fri Jul 12 12:43:02 2019] GET /updatepop => generated 12 bytes in 14175 msecs (HTTP/1.1 200) 3 headers in 108 bytes (1 switches on core 3)
