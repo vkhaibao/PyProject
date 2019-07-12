@@ -167,6 +167,20 @@ def logincheck(func):
             return redirect('/login')
     return login
 
+
+def authcheck(func):
+    def login(request, *args, **kwargs):
+        auth = ['xuchenglong@kedacom.com', 'sunhaibao@kedacom.com']
+        for userinfo in auth:
+            loginuser = str(request.user)
+            authdict = {"username": request.user}
+            if userinfo == loginuser:
+                return func(request, *args, **kwargs)
+            continue
+        return render(request, "altervm/authcheck.html", authdict)
+    return login
+
+
 @logincheck
 def index(request):
     listobj = VMVirtual.objects.all()

@@ -50,4 +50,3 @@ def decrypt():
             server['hpassword'] = password
     return serverlist
 
-print(decrypt())
