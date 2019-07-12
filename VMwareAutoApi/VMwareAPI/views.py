@@ -172,11 +172,14 @@ def logincheck(func):
 def authcheck(func):
     def login(request, *args, **kwargs):
         rightlist = Rightlist.objects.all()
+        modellist = ModelList.objects.all()
         for userinfo in rightlist:
             loginuser = str(request.user)
             authdict = {"username": request.user}
             if userinfo.username == loginuser:
-                return func(request, *args, **kwargs)
+                for model in modellist:
+                    if model.modelname == 'OA自助运维':
+                        return func(request, *args, **kwargs)
             continue
         return render(request, "altervm/authcheck.html", authdict)
     return login
