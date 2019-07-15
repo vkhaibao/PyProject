@@ -7,6 +7,7 @@ from VMwareAPI.views import logincheck, authcheck
 # Create your views here.
 
 @logincheck
+@authcheck
 def adminop(request):
     rightlist = Rightlist.objects.all()
     modellist = {"rightlist": rightlist, "username": request.user}
