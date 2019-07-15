@@ -3,7 +3,7 @@
 {% load staticfiles %}
 <head>
     <meta charset="UTF-8">
-    <title>权限管理</title>
+    <title>{% block title %}权限管理{% endblock title %}</title>
     <link rel="stylesheet" href={% static 'css/index.css' %}>
     <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.css' %}>
     <link rel="stylesheet" href={% static 'bootstrap-table/bootstrap-table.css' %}>
