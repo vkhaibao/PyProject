@@ -5,6 +5,12 @@
               <li><a href="modelist">模块列表</a></li>
 {% endblock list %}
 
+{% block thnum %}
+                <th data-sortable="true"></th>
+                <th data-sortable="true"></th>
+                <th data-sortable="true"></th>
+{% endblock thnum %}
+
 {% block tablelist %}
                 {% for useright in rightlist %}
                             <tr>

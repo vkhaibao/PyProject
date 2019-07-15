@@ -55,9 +55,8 @@
                    data-page-size="50">
                 <thead>
                     <tr>
-                        <th data-sortable="true"></th>
-                        <th data-sortable="true"></th>
-                        <th data-sortable="true"></th>
+                        {% block thnum %}
+                        {% endblock thnum %}
                     </tr>
                 </thead>
                 <tbody id="countTab">
@@ -69,27 +68,6 @@
     <script>
     var $table = $('#table')
     {% block bootstrapcolums %}
-    $table.bootstrapTable(
-        {
-            columns: [
-                {
-                    title: '序列',
-                    field: '',
-                    align: 'center',
-                    formatter: function (value, row, index) {
-                        return index+1;
-                    }
-                },
-                {
-                    title: '用户',
-                },
-                {
-                    title: '用户权限',
-                    width:500
-                },
-                ]
-        }
-    )
     {% endblock bootstrapcolums %}
     </script>
 </div>
