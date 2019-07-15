@@ -37,8 +37,8 @@
                 <option value="zh-CN" selected>zh-CN</option>
               </select>
         </div>
-    <tbody id="countTab">
-    </tbody>
+        <tbody id="countTab">
+        </tbody>
         &nbsp;<button id="btncreatevm" onclick="window.location.href='addright'">添加权限</button>
             <table id ="table"
                    data-toggle="table"
@@ -65,11 +65,19 @@
                 </tbody>
             </table>
     </div>
-    <script>
-    var $table = $('#table')
-    {% block bootstrapcolums %}
-    {% endblock bootstrapcolums %}
-    </script>
 </div>
 </body>
+<script type="text/javascript">
+    var $table = $('#table')
+      $(function() {
+        $table.bootstrapTable()
+        $('#locale').change(function () {
+          $table.bootstrapTable('refreshOptions', {
+            locale: $(this).val()
+          })
+        })
+      })
+    {% block bootstrapcolums %}
+    {% endblock bootstrapcolums %}
+</script>
 </html>

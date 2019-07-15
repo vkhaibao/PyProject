@@ -1,56 +1,20 @@
 {% extends 'itomaptemp/base.html' %}
 {% load staticfiles %}
-{% block title %}LDAP运维管理平台{% endblock title %}
-{% block topfiles %}{% endblock topfiles %}
 {% block topmenu %}
-        <div>
-        <ul id="navu" class="nav nav-pills">
               <li id="navi"><a id="nava" href={% url 'vmware:index' %}>VMWare平台</a></li>
               <li id="navi"><a id="nava" href={% url 'ldapapi:index' %}>LDAP自助运维</a></li>
               <li id="navi"><a id="nava" href={% url 'kedamonitor:index' %}>监控平台自助运维</a></li>
-              <li id="navi"><a id="nava" class="active" href={% url 'itomap:index' %}>OA自助运维</a></li>
-        </ul>
-        </div>
+                <li id="navi"><a id="nava" class="active" href={% url 'itomap:index' %}>OA自助运维</a></li>
 {% endblock topmenu %}
+
 {% block menu %}
-<div id="left" style="width:auto;float:left;">
-        <ul id="nav">
               <li><a class="active" href="index">堡垒机管理</a></li>
               <li><a href="accountm">权限管理</a></li>
               <li><a href="orgm">组织管理</a></li>
               <li><a href="plicm">策略管理</a></li>
-        </ul>
-</div>
 {% endblock menu %}
+
 {% block vmhost %}
-    <div id="right" style="width:1100px;float:left;">
-        {{ block.super }}
-            <table id ="table"
-                   data-toggle="table"
-                   data-locale="zh-CN"
-                   data-height="700"
-                   data-toolbar=".toolbar"
-                   data-search="true"
-                   data-sortable="true"
-                   data-show-refresh="true"
-                   data-show-toggle="true"
-                   data-show-columns="true"
-                   data-show-export="true"
-                   data-pagination="true"
-                   data-page-size="50">
-                <thead>
-                    <tr>
-                        <th data-sortable="true"></th>
-                        <th data-sortable="true">服务器</th>
-                        <th data-sortable="true">服务</th>
-                        <th data-sortable="true"></th>
-                        <th>帐号</th>
-                        <th>密码</th>
-                    </tr>
-                </thead>
-                {% block tbodyh %}
-                    {{ block.super }}
-                {% endblock tbodyh %}
                     {% for serlist in vmlist %}
                         {% if serlist.hpassword != '' and serlist.hpassword is not None %}
                             <tr>
@@ -63,13 +27,9 @@
                             </tr>
                         {% endif %}
                     {% endfor %}
-                {% block tbodyd %}
-                    {{ block.super }}
-                {% endblock tbodyd %}
-            </table>
-    </div>
-    <script>
-    var $table = $('#table')
+{% endblock vmhost %}
+
+{% block bootstrapcolums %}
     $table.bootstrapTable(
         {
             columns: [{
@@ -100,5 +60,4 @@
 
         }
     )
-    </script>
-{% endblock vmhost %}
+{% endblock bootstrapcolums %}
