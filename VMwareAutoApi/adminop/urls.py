@@ -1,3 +1,4 @@
+#coding=utf8
 """VMwareAutoApi URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -13,14 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-
+from django.urls import path
+from adminop import views
+import django_cas_ng.views
+app_name = 'adminop'
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('VMwareAPI.urls', namespace='vmware')),
-    path('ldap/', include('kdldapapi.urls', namespace='ldapapi')),
-    path('itomap/', include('itomap.urls', namespace='itomap')),
-    path('kedamonitor/', include('kedamonitor.urls', namespace='kedamonitor')),
-    path('adminop/', include('adminop.urls', namespace='adminop'))
+    path('', views.adminop, name='root'),
+    path('index', views.adminop, name='index'),
+    path('adminop', views.adminop, name="adminop"),
+    path('userlist', views.userlist, name="userlist"),
+    path('modelist', views.modelist, name="modelist"),
+
+    path('login', django_cas_ng.views.LoginView.as_view(), name='cas_ng_login'),
+    path('logout', django_cas_ng.views.LogoutView.as_view(), name='cas_ng_logout'),
+    path('callback', django_cas_ng.views.CallbackView.as_view(), name='cas_ng_proxy_callback'),
 ]

@@ -19,7 +19,7 @@
 <body>
 <div id="main" style="width:auto;">
     <div id="top" style="width:auto;float:top;">
-        <a class="navigatorButton" href="adminop">权限管理</a>
+        <a class="navigatorButton" href={% url 'adminop:index' %}>权限管理</a>
         <button id="btnupdate" onclick="punch()" onmouseout="mouseOut()" onmousemove="mouseOver()">更新数据</button>
         <a>登录用户：</a>
         <a>{{ username }}</a>&nbsp;&nbsp;

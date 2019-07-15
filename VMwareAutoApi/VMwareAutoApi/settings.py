@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'kdldapapi',
     'django_cas_ng',
     'itomap',
-    'kedamonitor'
+    'kedamonitor',
+    'adminop'
 ]
 
 MIDDLEWARE = [
