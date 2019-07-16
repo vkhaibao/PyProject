@@ -15,78 +15,77 @@
     <script type="text/javascript" src={% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}></script>
     <script type="text/javascript" src={% static 'tableExport/tableExport.min.js' %}></script>
 </head>
+
 <body>
-<div id="main" style="width:auto;">
-    <div id="top" style="width:auto;float:top;">
-        <a class="navigatorButton" href={% url 'adminop:index' %}>权限管理</a>
-        <a>登录用户：</a><a>{{ username }}</a>&nbsp;&nbsp;
-        <a class="navigatorButton" href="logout">退出登录</a>
-        <div>
-            <ul id="navu" class="nav nav-pills">
-                {% block topmenu %}
-                {% endblock topmenu %}
-            </ul>
+    <div id="main" style="width:auto;">
+        <div id="top" style="width:auto;float:top;">
+            <a class="navigatorButton" href={% url 'adminop:index' %}>权限管理</a>
+            <a>登录用户：</a><a>{{ username }}</a>&nbsp;&nbsp;
+            <a class="navigatorButton" href="logout">退出登录</a>
+            <div>
+                <ul id="navu" class="nav nav-pills">
+                    {% block topmenu %}
+                    {% endblock topmenu %}
+                </ul>
+            </div>
+        </div>
+
+        <div id="left" style="width:auto;float:left;">
+                <ul id="nav">
+                    {% block menu %}
+                    {% endblock menu %}
+                </ul>
+        </div>
+
+        <div id="right" style="width:1100px;float:left;">
+                <div class="toolbar">
+                      <select class="form-control" id="locale">
+                        <option value="en-US">en-US</option>
+                        <option value="zh-CN" selected>zh-CN</option>
+                      </select>
+                </div>
+                    <table id ="table"
+                           data-toggle="table"
+                           data-locale="zh-CN"
+                           data-height="700"
+                           data-toolbar=".toolbar"
+                           data-search="true"
+                           data-sortable="true"
+                           data-show-refresh="true"
+                           data-show-toggle="true"
+                           data-show-columns="true"
+                           data-show-export="true"
+                           data-pagination="true"
+                           data-page-size="50">
+                        <thead>
+                            <tr>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                            </tr>
+                        </thead>
+                         <tbody id="countTab">
+                             {% block vmhost %}
+                             {% endblock vmhost %}
+                        </tbody>
+                    </table>
         </div>
     </div>
-
-    <div id="left" style="width:auto;float:left;">
-            <ul id="nav">
-                {% block menu %}
-                {% endblock menu %}
-            </ul>
-    </div>
-
-
-
-    <div id="right" style="width:1100px;float:left;">
-            <div class="toolbar">
-              <select class="form-control" id="locale">
-                <option value="en-US">en-US</option>
-                <option value="zh-CN" selected>zh-CN</option>
-              </select>
-            </div>
-                <table id ="table"
-                       data-toggle="table"
-                       data-locale="zh-CN"
-                       data-height="700"
-                       data-toolbar=".toolbar"
-                       data-search="true"
-                       data-sortable="true"
-                       data-show-refresh="true"
-                       data-show-toggle="true"
-                       data-show-columns="true"
-                       data-show-export="true"
-                       data-pagination="true"
-                       data-page-size="50">
-                    <thead>
-                        <tr>
-                            <th data-sortable="true"></th>
-                            <th data-sortable="true"></th>
-                            <th data-sortable="true"></th>
-                            <th data-sortable="true"></th>
-                            <th data-sortable="true"></th>
-                            <th data-sortable="true"></th>
-                        </tr>
-                    </thead>
-                     <tbody id="countTab">
-                         {% block vmhost %}
-                         {% endblock vmhost %}
-                    </tbody>
-                </table>
-    </div>
-</div>
 </body>
-<script type="text/javascript">
-    var $table = $('#table')
-      $(function() {
-        $table.bootstrapTable()
-        $('#locale').change(function () {
-          $table.bootstrapTable('refreshOptions', {
-            locale: $(this).val()
+    <script type="text/javascript">
+        var $table = $('#table')
+          $(function() {
+            $table.bootstrapTable()
+            $('#locale').change(function () {
+              $table.bootstrapTable('refreshOptions', {
+                locale: $(this).val()
+              })
+            })
           })
-        })
-      })
-    {% block bootstrapcolums %}
-    {% endblock bootstrapcolums %}
-</script>
+        {% block bootstrapcolums %}
+        {% endblock bootstrapcolums %}
+    </script>
 </html>
