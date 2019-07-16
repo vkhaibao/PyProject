@@ -1,4 +1,4 @@
-{% extends 'itomaptemp/base.html' %}
+{% extends 'kedamontemp/base.html' %}
 {% load staticfiles %}
 {% block topmenu %}
               <li id="navi"><a id="nava" href={% url 'vmware:index' %}>VMWare平台</a></li>
@@ -8,7 +8,7 @@
 {% endblock topmenu %}
 
 {% block leftmenu %}
-              <li><a href="index">账户管理</a></li>
+              <li><a href="index">告警通知</a></li>
               <li><a href="accountm">权限管理</a></li>
               <li><a class="active" href="orgm">组织管理</a></li>
               <li><a href="plicm">策略管理</a></li>

@@ -1,4 +1,4 @@
-{% extends 'itomaptemp/base.html' %}
+{% extends 'kedamontemp/base.html' %}
 {% load staticfiles %}
 {% block topmenu %}
               <li id="navi"><a id="nava" href={% url 'vmware:index' %}>VMWare平台</a></li>
@@ -8,25 +8,30 @@
 {% endblock topmenu %}
 
 {% block leftmenu %}
-              <li><a class="active" href="index">账户管理</a></li>
+              <li><a class="active" href="index">告警通知</a></li>
               <li><a href="accountm">权限管理</a></li>
               <li><a href="orgm">组织管理</a></li>
               <li><a href="plicm">策略管理</a></li>
 {% endblock leftmenu %}
 
+{% block theaders %}
+    <th data-sortable="true"></th>
+    <th data-sortable="true"></th>
+    <th data-sortable="true"></th>
+    <th data-sortable="true"></th>
+    <th data-sortable="true"></th>
+{% endblock theaders %}
+
 {% block tablelist %}
-{#                    {% for serlist in vmlist %}#}
-{#                        {% if serlist.hpassword != '' and serlist.hpassword is not None %}#}
-{#                            <tr>#}
-{#                                <td id="num"></td>#}
-{#                                <td id="vmname">{{ serlist.hname }}</td>#}
-{#                                <td id="model">{{ serlist.hsname }}</td>#}
-{#                                <td id="vmstatus">{{ serlist.hport }}</td>#}
-{#                                <td>{{ serlist.haccount }}</td>#}
-{#                                <td>{{ serlist.hpassword }}</td>#}
-{#                            </tr>#}
-{#                        {% endif %}#}
-{#                    {% endfor %}#}
+                    {% for alerthost in alertinfo %}
+                            <tr>
+                                <td></td>
+                                <td>{{ alerthost.hostname }}</td>
+                                <td>{{ alerthost.alertinfo }}</td>
+                                <td>{{ alerthost.alertstatus }}</td>
+                                <td>{{ alerthost.alerttime }}</td>
+                            </tr>
+                    {% endfor %}
 {% endblock tablelist %}
 
 {% block bootstrapcolums %}
@@ -45,17 +50,14 @@
                     title: '服务器',
                 },
                 {
-                    title: '服务'
+                    title: '告警信息'
                 },
                 {
-                    title: '端口'
+                    title: '异常状态'
                 },
                 {
-                    title: '帐号'
+                    title: '告警时间'
                 },
-                {
-                    title: '密码'
-                }
             ]
 
         }

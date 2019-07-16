@@ -59,12 +59,13 @@
                            data-page-size="50">
                         <thead>
                             <tr>
+                                {% block theaders %}
                                 <th data-sortable="true"></th>
                                 <th data-sortable="true"></th>
                                 <th data-sortable="true"></th>
                                 <th data-sortable="true"></th>
                                 <th data-sortable="true"></th>
-                                <th data-sortable="true"></th>
+                                {% endblock theaders %}
                             </tr>
                         </thead>
                          <tbody id="countTab">
