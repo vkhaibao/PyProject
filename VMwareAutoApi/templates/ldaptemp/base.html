@@ -3,7 +3,7 @@
 {% load staticfiles %}
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock title %}</title>
+    <title>{% block title %}LDAP自助运维{% endblock title %}</title>
     <link rel="stylesheet" href={% static 'css/index.css' %}>
     <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.css' %}>
     <link rel="stylesheet" href={% static 'bootstrap-table/bootstrap-table.css' %}>
@@ -14,60 +14,78 @@
     <script type="text/javascript" src={% static 'bootstrap-table/locale/bootstrap-table-zh-CN.js' %}></script>
     <script type="text/javascript" src={% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}></script>
     <script type="text/javascript" src={% static 'tableExport/tableExport.min.js' %}></script>
-    {% block topfiles %}{% endblock topfiles %}
 </head>
+
 <body>
-<div id="main" style="width:auto;">
-    <div id="top" style="width:auto;float:top;">
-        <a class="navigatorButton" href={% url 'adminop:index' %}>权限管理</a>
-        <a>登录用户：</a>
-        <a>{{ username }}</a>&nbsp;&nbsp;
-        <a class="navigatorButton" href="logout">退出登录</a>
-        {% block topmenu %}
-        {% endblock topmenu %}
-    </div>
-{% block menu %}
-{% endblock menu %}
-    {% block vmhost %}
-        <div class="toolbar">
-          <select class="form-control" id="locale">
-            <option value="en-US">en-US</option>
-            <option value="zh-CN" selected>zh-CN</option>
-          </select>
+    <div id="main" style="width:auto;">
+        <div id="top" style="width:auto;float:top;">
+            <a class="navigatorButton" href={% url 'adminop:index' %}>权限管理</a>
+            <a>登录用户：</a><a>{{ username }}</a>&nbsp;&nbsp;
+            <a class="navigatorButton" href="logout">退出登录</a>
+            <div>
+                <ul id="navu" class="nav nav-pills">
+                    {% block topmenu %}
+                    {% endblock topmenu %}
+                </ul>
+            </div>
         </div>
-        {% block tbodyh %}
-             <tbody id="countTab">
-        {% endblock tbodyh %}
-        {% block tbodyd %}
-            </tbody>
-        {% endblock tbodyd %}
-    {% endblock vmhost %}
-</div>
+
+        <div id="left" style="width:auto;float:left;">
+                <ul id="nav">
+                    {% block leftmenu %}
+                    {% endblock leftmenu %}
+                </ul>
+        </div>
+
+        <div id="right" style="width:1100px;float:left;">
+                <div class="toolbar">
+                      <select class="form-control" id="locale">
+                        <option value="en-US">en-US</option>
+                        <option value="zh-CN" selected>zh-CN</option>
+                      </select>
+                </div>
+                    <table id ="table"
+                           data-toggle="table"
+                           data-locale="zh-CN"
+                           data-height="700"
+                           data-toolbar=".toolbar"
+                           data-search="true"
+                           data-sortable="true"
+                           data-show-refresh="true"
+                           data-show-toggle="true"
+                           data-show-columns="true"
+                           data-show-export="true"
+                           data-pagination="true"
+                           data-page-size="50">
+                        <thead>
+                            <tr>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                                <th data-sortable="true"></th>
+                            </tr>
+                        </thead>
+                         <tbody id="countTab">
+                             {% block tablelist %}
+                             {% endblock tablelist %}
+                        </tbody>
+                    </table>
+        </div>
+    </div>
 </body>
-<script type="text/javascript">
-    var $table = $('#table')
-      $(function() {
-        $table.bootstrapTable()
-        $('#locale').change(function () {
-          $table.bootstrapTable('refreshOptions', {
-            locale: $(this).val()
+    <script type="text/javascript">
+        var $table = $('#table')
+          $(function() {
+            $table.bootstrapTable()
+            $('#locale').change(function () {
+              $table.bootstrapTable('refreshOptions', {
+                locale: $(this).val()
+              })
+            })
           })
-        })
-      })
-      $table.bootstrapTable(
-        {
-            columns: [{
-                title: '序号',
-                field: '',
-                align: 'center',
-                width:5 ,
-                formatter: function (value, row, index) {
-                    //var options = $table.bootstrapTable('getOptions');
-                    //return options.pageSize * (options.pageNumber - 1) + index + 1;
-                    return index+1;
-                }
-            }]
-        }
-    )
-</script>
+        {% block bootstrapcolums %}
+        {% endblock bootstrapcolums %}
+    </script>
 </html>

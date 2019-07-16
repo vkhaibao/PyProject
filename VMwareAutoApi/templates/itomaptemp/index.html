@@ -4,17 +4,17 @@
               <li id="navi"><a id="nava" href={% url 'vmware:index' %}>VMWare平台</a></li>
               <li id="navi"><a id="nava" href={% url 'ldapapi:index' %}>LDAP自助运维</a></li>
               <li id="navi"><a id="nava" href={% url 'kedamonitor:index' %}>监控平台自助运维</a></li>
-                <li id="navi"><a id="nava" class="active" href={% url 'itomap:index' %}>OA自助运维</a></li>
+              <li id="navi"><a id="nava" class="active" href={% url 'itomap:index' %}>OA自助运维</a></li>
 {% endblock topmenu %}
 
-{% block menu %}
+{% block leftmenu %}
               <li><a class="active" href="index">堡垒机管理</a></li>
               <li><a href="accountm">权限管理</a></li>
               <li><a href="orgm">组织管理</a></li>
               <li><a href="plicm">策略管理</a></li>
-{% endblock menu %}
+{% endblock leftmenu %}
 
-{% block vmhost %}
+{% block tablelist %}
                     {% for serlist in vmlist %}
                         {% if serlist.hpassword != '' and serlist.hpassword is not None %}
                             <tr>
@@ -27,7 +27,7 @@
                             </tr>
                         {% endif %}
                     {% endfor %}
-{% endblock vmhost %}
+{% endblock tablelist %}
 
 {% block bootstrapcolums %}
     $table.bootstrapTable(
