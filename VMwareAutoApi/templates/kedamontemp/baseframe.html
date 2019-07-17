@@ -17,39 +17,37 @@
 </head>
 
 <body>
-    <div id="main" style="width:auto;">
-                <div class="toolbar">
-                      <select class="form-control" id="locale">
-                        <option value="en-US">en-US</option>
-                        <option value="zh-CN" selected>zh-CN</option>
-                      </select>
-                </div>
-                    <table id ="table"
-                           striped = "True"
-                           data-toggle="table"
-                           data-locale="zh-CN"
-                           data-height="650"
-                           data-toolbar=".toolbar"
-                           data-search="true"
-                           data-sortable="true"
-                           data-show-refresh="true"
-                           data-show-toggle="true"
-                           data-show-columns="true"
-                           data-show-export="true"
-                           data-pagination="true"
-                           data-page-size="25">
-                        <thead>
-                            <tr>
-                                {% block theaders %}
-                                {% endblock theaders %}
-                            </tr>
-                        </thead>
-                         <tbody id="countTab">
-                             {% block tablelist %}
-                             {% endblock tablelist %}
-                        </tbody>
-                    </table>
-    </div>
+<div class="toolbar">
+    <select class="form-control" id="locale">
+        <option value="en-US">en-US</option>
+        <option value="zh-CN" selected>zh-CN</option>
+    </select>
+</div>
+<table id ="table"
+       striped = "True"
+       data-toggle="table"
+       data-locale="zh-CN"
+       data-height="650"
+       data-toolbar=".toolbar"
+       data-search="true"
+       data-sortable="true"
+       data-show-refresh="true"
+       data-show-toggle="true"
+       data-show-columns="true"
+       data-show-export="true"
+       data-pagination="true"
+       data-page-size="25">
+    <thead>
+    <tr>
+        {% block theaders %}
+        {% endblock theaders %}
+    </tr>
+    </thead>
+    <tbody id="countTab">
+    {% block tablelist %}
+    {% endblock tablelist %}
+    </tbody>
+</table>
 </body>
     <script type="text/javascript">
         var $table = $('#table')
