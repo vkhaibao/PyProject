@@ -3,11 +3,6 @@
             border-collapse: collapse;
             text-align: center;
         }
-        /*table td*/
-        /*{*/
-            /*border: 1px solid #cad9ea;*/
-            /*color: #666;*/
-        /*}*/
         table thead,table th
         {
             border: 1px solid #cad9ea;
@@ -15,10 +10,6 @@
             font-size: 15px;
             font-weight: bold;
         }
-        /*table tr*/
-        /*{*/
-            /*line-height: 20px;*/
-        /*}*/
         #vmname
         {
             text-align: left;

@@ -13,53 +13,7 @@
               <li><a href="orgm">组织管理</a></li>
               <li><a href="plicm">策略管理</a></li>
 {% endblock leftmenu %}
-
-{% block theaders %}
-    <th data-sortable="true"></th>
-    <th data-sortable="true"></th>
-    <th data-sortable="true"></th>
-    <th data-sortable="true"></th>
-    <th data-sortable="true"></th>
-{% endblock theaders %}
-
-{% block tablelist %}
-                    {% for alerthost in alertinfo %}
-                            <tr>
-                                <td></td>
-                                <td>{{ alerthost.hostname }}</td>
-                                <td>{{ alerthost.alertinfo }}</td>
-                                <td>{{ alerthost.alertstatus }}</td>
-                                <td>{{ alerthost.alerttime }}</td>
-                            </tr>
-                    {% endfor %}
-{% endblock tablelist %}
-
-{% block bootstrapcolums %}
-    $table.bootstrapTable(
-        {
-            columns: [{
-                    title: '序列',
-                    field: '',
-                    align: 'center',
-                    width:5 ,
-                    formatter: function (value, row, index) {
-                        return index+1;
-                    }
-                },
-                {
-                    title: '服务器',
-                },
-                {
-                    title: '告警信息'
-                },
-                {
-                    title: '异常状态'
-                },
-                {
-                    title: '告警时间'
-                },
-            ]
-
-        }
-    )
-{% endblock bootstrapcolums %}
+{% block frame %}
+    <iframe name="topFrame" scrolling="auto" frameborder="0" src="getalerts" height="680" width="100%">
+    </iframe>
+{% endblock frame %}

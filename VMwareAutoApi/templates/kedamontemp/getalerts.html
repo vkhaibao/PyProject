@@ -1,0 +1,50 @@
+{% extends 'kedamontemp/baseframe.html' %}
+{% block theaders %}
+    <th data-sortable="true"></th>
+    <th data-sortable="true"></th>
+    <th data-sortable="true"></th>
+    <th data-sortable="true"></th>
+    <th data-sortable="true"></th>
+{% endblock theaders %}
+
+{% block tablelist %}
+    {% for alert in opalerts %}
+        <tr>
+            <td></td>
+            <td>{{ alert.hostname }}</td>
+            <td>{{ alert.alertinfo }}</td>
+            <td>{{ alert.alertstatus }}</td>
+            <td>{{ alert.alerttime }}</td>
+        </tr>
+    {% endfor %}
+{% endblock tablelist %}
+
+{% block bootstrapcolums %}
+     $table.bootstrapTable(
+        {
+            columns: [{
+                    title: '序列',
+                    field: '',
+                    align: 'center',
+                    width:5 ,
+                    formatter: function (value, row, index) {
+                        return index+1;
+                    }
+                },
+                {
+                    title: '服务器',
+                },
+                {
+                    title: '告警信息'
+                },
+                {
+                    title: '状态'
+                },
+                {
+                    title: '告警时间'
+                },
+            ]
+
+        }
+    )
+{% endblock bootstrapcolums %}

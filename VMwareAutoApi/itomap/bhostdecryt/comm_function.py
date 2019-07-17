@@ -49,5 +49,3 @@ def decrypt():
             password = decrypt_pwd(server['hpassword'])
             server['hpassword'] = password
     return serverlist
-
-print(decrypt())

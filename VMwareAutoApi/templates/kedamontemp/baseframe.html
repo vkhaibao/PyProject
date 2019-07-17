@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}监控平台自助运维{% endblock title %}</title>
+    <link rel="stylesheet" href={% static 'css/index.css' %}>
+    <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.css' %}>
+    <link rel="stylesheet" href={% static 'bootstrap-table/bootstrap-table.css' %}>
+    <script type="text/javascript" src={% static 'js/jquery-1.12.4.min.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap/js/bootstrap.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/bootstrap-table-locale-all.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/locale/bootstrap-table-zh-CN.js' %}></script>
+    <script type="text/javascript" src={% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}></script>
+    <script type="text/javascript" src={% static 'tableExport/tableExport.min.js' %}></script>
+</head>
+
+<body>
+    <div id="main" style="width:auto;">
+                <div class="toolbar">
+                      <select class="form-control" id="locale">
+                        <option value="en-US">en-US</option>
+                        <option value="zh-CN" selected>zh-CN</option>
+                      </select>
+                </div>
+                    <table id ="table"
+                           striped = "True"
+                           data-toggle="table"
+                           data-locale="zh-CN"
+                           data-height="650"
+                           data-toolbar=".toolbar"
+                           data-search="true"
+                           data-sortable="true"
+                           data-show-refresh="true"
+                           data-show-toggle="true"
+                           data-show-columns="true"
+                           data-show-export="true"
+                           data-pagination="true"
+                           data-page-size="25">
+                        <thead>
+                            <tr>
+                                {% block theaders %}
+                                {% endblock theaders %}
+                            </tr>
+                        </thead>
+                         <tbody id="countTab">
+                             {% block tablelist %}
+                             {% endblock tablelist %}
+                        </tbody>
+                    </table>
+    </div>
+</body>
+    <script type="text/javascript">
+        var $table = $('#table')
+          $(function() {
+            $table.bootstrapTable()
+            $('#locale').change(function () {
+              $table.bootstrapTable('refreshOptions', {
+                locale: $(this).val()
+              })
+            })
+          })
+        {% block bootstrapcolums %}
+        {% endblock bootstrapcolums %}
+    </script>
+</html>

@@ -1,20 +1,22 @@
 #coding=utf8
 from VMwareAPI.models import *
-from django.contrib.sessions.models import Session
-from django.shortcuts import render
 from django.shortcuts import render, redirect, HttpResponse
 from VMwareAPI.views import logincheck, authcheck
-from kedamonitor.kedaopmanage import kedaopm
+from time import sleep
+from .tasks import getinfo
 # Create your views here.
 
 @logincheck
 def index(request):
-    url = "http://10.2.2.33:8086/fault/AlarmView.do?viewId=ActiveAlarms"
-    username = "admin"
-    password = "admin"
-    alertinfo = kedaopm.getalertinfo(url, username, password)
-    opalerts = {"alertinfo": alertinfo, "username": request.user}
-    return render(request, 'kedamontemp/index.html', opalerts)
+    userinfo = {"username": request.user}
+    return render(request, 'kedamontemp/index.html', userinfo)
+
+@logincheck
+def getalerts(request):
+    alertinfo = getinfo.delay()
+    opalerts = {"opalerts": alertinfo.get(), "username": request.user}
+    return render(request, 'kedamontemp/getalerts.html', opalerts)
+
 
 @logincheck
 def accountm(request):
