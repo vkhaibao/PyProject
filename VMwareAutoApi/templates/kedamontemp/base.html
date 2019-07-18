@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}监控平台自助运维{% endblock title %}</title>
     <link rel="stylesheet" href={% static 'css/index.css' %}>
+    <link rel="stylesheet" href={% static 'css/loaddata.css' %}>
     <link rel="stylesheet" href={% static 'bootstrap/css/bootstrap.css' %}>
     <link rel="stylesheet" href={% static 'bootstrap-table/bootstrap-table.css' %}>
     <script type="text/javascript" src={% static 'js/jquery-1.12.4.min.js' %}></script>
@@ -14,9 +15,20 @@
     <script type="text/javascript" src={% static 'bootstrap-table/locale/bootstrap-table-zh-CN.js' %}></script>
     <script type="text/javascript" src={% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}></script>
     <script type="text/javascript" src={% static 'tableExport/tableExport.min.js' %}></script>
-</head>
+    <script type="text/javascript" src={% static 'js/progress.js' %}></script>
 
-<body>
+<script language="JavaScript" type="text/javascript">
+document.write('<div id="loader_container">' +
+    '<div id="loader">' +
+    '<div align="center">数据加载中,请稍等</div>' +
+    '<div id="loader_bg">' +
+    '<img src="{% static 'img/ReportServer.gif' %}">' +
+    '</div>' +
+    '</div>' +
+    '</div>');
+</script>
+</head>
+<body onload="remove_loading()">
     <div id="main" style="width:auto;">
         <div id="top" style="width:auto;float:top;">
             <a class="navigatorButton" href={% url 'adminop:index' %}>权限管理</a>
