@@ -13,40 +13,7 @@
               <li><a href="orgm">组织管理</a></li>
               <li><a href="plicm">策略管理</a></li>
 {% endblock leftmenu %}
-
-{% block tablelist %}
-    {#               填充数据     #}
-{% endblock tablelist %}
-
-{% block bootstrapcolums %}
-    $table.bootstrapTable(
-        {
-            columns: [{
-                    title: '序列',
-                    field: '',
-                    align: 'center',
-                    width:5 ,
-                    formatter: function (value, row, index) {
-                        return index+1;
-                    }
-                },
-                {
-                    title: '服务器',
-                },
-                {
-                    title: '服务'
-                },
-                {
-                    title: '端口'
-                },
-                {
-                    title: '帐号'
-                },
-                {
-                    title: '密码'
-                }
-            ]
-
-        }
-    )
-{% endblock bootstrapcolums %}
+{% block frame %}
+    <iframe name="topFrame" scrolling="no" frameborder="0" src="getalerts" height="680" width="100%">
+    </iframe>
+{% endblock frame %}
