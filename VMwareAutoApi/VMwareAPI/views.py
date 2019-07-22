@@ -186,7 +186,6 @@ def authcheck(func):
 
 
 @logincheck
-@authcheck
 def index(request):
     listobj = VMVirtual.objects.all()
     vmdict = {"vmlist": listobj, "username": request.user}

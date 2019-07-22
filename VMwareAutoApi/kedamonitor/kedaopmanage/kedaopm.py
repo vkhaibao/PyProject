@@ -10,7 +10,7 @@ def getalertinfo(opurl, opusername, oppassword):
     browser = webdriver.Chrome(options=chrome_options)
     #print(dir(browser))
 
-    browser.get("http://10.2.2.33:8086/Logout.do")
+    browser.get("http://10.2.2.33:8086/LoginPage.do")
 
     def is_element_exist(css):
         s = browser.find_elements_by_id(css)

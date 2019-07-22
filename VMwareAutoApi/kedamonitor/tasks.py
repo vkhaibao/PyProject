@@ -9,3 +9,5 @@ def getinfo():
     password = "admin"
     resultinfo = getalertinfo(url, username, password)
     return resultinfo
+
+print(getinfo())
