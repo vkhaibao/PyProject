@@ -59,7 +59,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 CAS_SERVER_URL = 'https://sso.kedacom.com:8443/CasServer/login'
-CAS_VERIFY_SSL_CERTIFICATE = False
+CAS_VERIFY_SSL_CERTIFICATE = True
 ROOT_URLCONF = 'VMwareAutoApi.urls'
 
 TEMPLATES = [

@@ -6,7 +6,8 @@ def getalertinfo(opurl, opusername, oppassword):
     chrome_options = Options()
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--headless')
-    browser = webdriver.Chrome(chrome_options=chrome_options)
+    chrome_options.add_argument('--proxy-server=http://10.8.2.2:3128')
+    browser = webdriver.Chrome(options=chrome_options)
     #print(dir(browser))
 
     browser.get("http://10.2.2.33:8086/Logout.do")
