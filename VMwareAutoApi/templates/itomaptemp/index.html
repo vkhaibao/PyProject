@@ -18,10 +18,11 @@
                     {% for serlist in vmlist %}
                         {% if serlist.hpassword != '' and serlist.hpassword is not None %}
                             <tr>
-                                <td id="num"></td>
-                                <td id="vmname">{{ serlist.hname }}</td>
-                                <td id="model">{{ serlist.hsname }}</td>
-                                <td id="vmstatus">{{ serlist.hport }}</td>
+                                <td></td>
+                                <td>{{ serlist.hname }}</td>
+                                <td>{{ serlist.hip }}</td>
+                                <td>{{ serlist.hsname }}</td>
+                                <td>{{ serlist.hport }}</td>
                                 <td>{{ serlist.haccount }}</td>
                                 <td>{{ serlist.hpassword }}</td>
                             </tr>
@@ -43,6 +44,9 @@
                 },
                 {
                     title: '服务器',
+                },
+                {
+                    title: 'IP',
                 },
                 {
                     title: '服务'

@@ -21,6 +21,7 @@ def connpsqp(dbserver):
         #print("Connect Success")
         cur = conn.cursor()
         cur.execute('SELECT h."HostName" hname,\
+                    h."HostIP",\
                     hs."HostServiceName" hsname,\
                     hs."Port" hport,\
                     acu."AccountName" haccount,\
@@ -34,10 +35,11 @@ def connpsqp(dbserver):
         rows = cur.fetchall()
         for row in rows:
             serverdict['hname']=row[0]
-            serverdict['hsname']=row[1]
-            serverdict['hport']=row[2]
-            serverdict['haccount']=row[3]
-            serverdict['hpassword']=row[4]
+            serverdict['hip']=row[1]
+            serverdict['hsname']=row[2]
+            serverdict['hport']=row[3]
+            serverdict['haccount']=row[4]
+            serverdict['hpassword']=row[5]
             serverlist.append(serverdict.copy())
     conn.close
     return  serverlist
